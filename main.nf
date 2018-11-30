@@ -98,6 +98,20 @@ if( workflow.profile == 'awsbatch') {
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
 
+
+//Set up channels for 
+Channel.fromPath("${params.cprimers}")
+       .ifEmpty(exit 1, "Please specify CPRimers FastA File!")
+       .into {ch_cprimers_fasta}
+Channel.fromPath("${params.vprimers}")
+       .ifEmpty(exit 1, "Please specify VPrimers FastA File!")
+       .into { ch_vprimers_fasta }
+
+
+
+
+
+
 /*
  * Create a channel for input read files
  */
@@ -223,33 +237,6 @@ process fastqc {
     """
 }
 
-
-
-/*
- * STEP 2 - MultiQC
- */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file multiqc_config
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    file ('fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file ('software_versions/*') from software_versions_yaml
-    file workflow_summary from create_workflow_summary(summary)
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
-    """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
-    """
-}
 
 
 
