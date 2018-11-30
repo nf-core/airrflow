@@ -36,7 +36,6 @@ def helpMessage() {
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
     Options:
-      --singleEnd                   Specifies that the input is single end reads
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --fasta                       Path to Fasta reference
@@ -99,7 +98,7 @@ multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
 
 
-//Set up channels for 
+//Set up channels for input primers
 Channel.fromPath("${params.cprimers}")
        .ifEmpty(exit 1, "Please specify CPRimers FastA File!")
        .into {ch_cprimers_fasta}
@@ -107,33 +106,53 @@ Channel.fromPath("${params.vprimers}")
        .ifEmpty(exit 1, "Please specify VPrimers FastA File!")
        .into { ch_vprimers_fasta }
 
+//Define defaults for DB storage variables
+igblast_base = "./igblast_base"
+imgt_base = "./imgt_base"
+
+//TODO don't download if specified DB location by users
+
+saveDBs = true
+
+//Other parameters
+filterseq_q=20
 
 
+//Download data process
+process fetchDBs{
+    tag "fetchBlastDBs"
 
+    publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
+    saveAs: { params.saveDBs ? it : null }, mode: 'copy' 
+
+    output:
+    file "$igblast_base" into ch_igblast_db_for_process_A
+    file "$imgt_base" into ch_imgt_db_for_process_A
+
+    script:
+    """
+    fetch_igblastdb.sh -o $igblast_base
+    fetch_imgtdb.sh -o $imgt_base
+    imgt2igblast.sh -i $imgt_base -o $igblast_base
+    """
+}
 
 
 /*
  * Create a channel for input read files
  */
  if(params.readPaths){
-     if(params.singleEnd){
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
-     } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
+             .into { ch_read_files_for_merge_r1_umi }
      }
  } else {
      Channel
-         .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_fastqc; read_files_trimming }
+         .fromFilePairs( params.reads, 3 )
+         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\n" }
+         .into { ch_read_files_for_merge_r1_umi }
  }
 
 
@@ -154,7 +173,6 @@ summary['Run Name']     = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
 summary['Reads']        = params.reads
 summary['Fasta Ref']    = params.fasta
-summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -216,24 +234,52 @@ process get_software_versions {
 }
 
 
-
-/*
- * STEP 1 - FastQC
- */
-process fastqc {
-    tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+//Merge I1 UMIs into R1 file
+process merge_r1_umi {
+    tag $read 
 
     input:
-    set val(name), file(reads) from read_files_fastqc
+    set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
 
     output:
-    file "*_fastqc.{zip,html}" into fastqc_results
+    file "{*_UMI_*,*_R2_*}.fastq.gz" into ch_umi_merged_for_decompression
 
     script:
     """
-    fastqc -q $reads
+    merge_R1_umi.py -R1 $reads[0] -I1 $reads[3] -o "${reads[0].baseName}_UMI_R1.fastq.gz"
+    """
+}
+
+//Decompress all the stuff
+process decompress {
+    tag "$reads[0]"
+    
+    input:
+    file(reads) from ch_umi_merged_for_decompression
+
+    output:
+    file "*.fastq" into ch_fastqs_for_processing
+
+    script:
+    """
+    gunzip *.fastq.gz 
+    """
+}
+
+//Filter by Sequence Quality
+process filter_by_sequence_quality {
+    tag "$reads[0]"
+
+    input:
+    file(reads) fom ch_fastqs_for_processing
+
+    output:
+    file "*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking
+
+    script:
+    """
+    FilterSeq.py quality -s "$reads[0]" -q $filterseq_q --outname "${reads[0].baseName}"
+    FilterSeq.py quality -s "$reads[1]" -q $filterseq_q --outname "${reads[1].baseName}"
     """
 }
 
