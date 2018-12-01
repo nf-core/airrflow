@@ -155,7 +155,6 @@ process fetchDBs{
          .into { ch_read_files_for_merge_r1_umi }
  }
 
-
 // Header log info
 log.info """=======================================================
                                           ,--./,-.
@@ -234,6 +233,8 @@ process get_software_versions {
 }
 
 
+//Sorting output maybe?
+
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
     tag $read 
@@ -274,12 +275,51 @@ process filter_by_sequence_quality {
     file(reads) fom ch_fastqs_for_processing
 
     output:
-    file "*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking
+    file "${reads[0]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${reads[1]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
 
     script:
     """
     FilterSeq.py quality -s "$reads[0]" -q $filterseq_q --outname "${reads[0].baseName}"
     FilterSeq.py quality -s "$reads[1]" -q $filterseq_q --outname "${reads[1].baseName}"
+    """
+}
+
+//Mask them primers
+process mask_primers {
+    tag "${umi_file.baseName}"
+
+    input:
+    file(umi_file) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file(r2_file) from ch_filtered_by_seq_quality_for_primerMasking_R2
+    file(cprimers) from ch_cprimers_fasta 
+    file(vprimers) from ch_vprimers_fasta
+
+    output:
+    file "${umi_file.baseName}_UMI_R1_primers-pass.fastq" into ch_for_pair_seq_umi_file
+    file "${r2_file.baseName}_R2_primers-pass.fastq" into ch_for_pair_seq_r2_file
+
+    script:
+    """
+    MaskPrimers.py score -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
+    MaskPrimers.py score -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
+    """
+}
+
+//Pair the UMI_R1 and R2
+process pair_seq{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_for_pair_seq_umi_file
+    file r2 from ch_for_pair_seq_r2_file
+
+    output:
+    
+
+    script:
+    """
+    PairSeq.py -1 $umi -2 $r2 --1f BARCODE --coord illumina
     """
 }
 
