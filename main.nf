@@ -343,6 +343,42 @@ process build_consensus{
     """
 }
 
+//Repair again UMI_R1+R2
+process repair{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_consensus_passed_umi
+    file r2 from ch_consensus_passed_r2
+
+    output:
+    file "*UMI_R1_consensus-pass_pair-pass.fastq" into ch_repaired_UMI_for_assembly
+    file "*R2_consensus-pass_pair-pass.fastq" into ch_repaired_r2_for_assembly
+
+    script:
+    """
+    PairSeq.py -1 $umi -2 $r2 --coord presto
+    """
+}
+
+//Assemble the UMI consensus mate pairs
+process assemble{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_repaired_UMI_for_assembly
+    file r2 from ch_repaired_r2_for_assembly
+
+    output:
+    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_assembled_umi_consensus_for_combine_UMI
+
+    script:
+    """
+    AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2
+    """
+}
+
+
 
 
 
