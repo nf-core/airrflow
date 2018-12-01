@@ -315,11 +315,31 @@ process pair_seq{
     file r2 from ch_for_pair_seq_r2_file
 
     output:
-    
+    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_consensus
+    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_consensus
 
     script:
     """
     PairSeq.py -1 $umi -2 $r2 --1f BARCODE --coord illumina
+    """
+}
+
+//Build UMI consensus
+process build_consensus{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_umi_for_umi_consensus
+    file r2 from ch_r2_for_umi_consensus
+
+    output:
+    file "${umi.baseName}_UMI_R1_consensus-pass.fastq" into ch_consensus_passed_umi
+    file "${r2.baseName}_R2_consensus-pass.fastq" into ch_consensus_passed_r2
+
+    script:
+    """
+    BuildConsensus.py -s $umi --bf BARCODE --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
+    BuildConsensus.py -s $r2 --bf BARCODE --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
     """
 }
 
