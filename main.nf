@@ -36,7 +36,6 @@ def helpMessage() {
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
     Options:
-      --singleEnd                   Specifies that the input is single end reads
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --fasta                       Path to Fasta reference
@@ -98,30 +97,63 @@ if( workflow.profile == 'awsbatch') {
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
 
+
+//Set up channels for input primers
+Channel.fromPath("${params.cprimers}")
+       .ifEmpty(exit 1, "Please specify CPRimers FastA File!")
+       .into {ch_cprimers_fasta}
+Channel.fromPath("${params.vprimers}")
+       .ifEmpty(exit 1, "Please specify VPrimers FastA File!")
+       .into { ch_vprimers_fasta }
+
+//Define defaults for DB storage variables
+igblast_base = "./igblast_base"
+imgt_base = "./imgt_base"
+
+//TODO don't download if specified DB location by users
+
+saveDBs = true
+
+//Other parameters
+filterseq_q=20
+
+
+//Download data process
+process fetchDBs{
+    tag "fetchBlastDBs"
+
+    publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
+    saveAs: { params.saveDBs ? it : null }, mode: 'copy' 
+
+    output:
+    file "$igblast_base" into ch_igblast_db_for_process_A
+    file "$imgt_base" into ch_imgt_db_for_process_A
+
+    script:
+    """
+    fetch_igblastdb.sh -o $igblast_base
+    fetch_imgtdb.sh -o $imgt_base
+    imgt2igblast.sh -i $imgt_base -o $igblast_base
+    """
+}
+
+
 /*
  * Create a channel for input read files
  */
  if(params.readPaths){
-     if(params.singleEnd){
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
-     } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
+             .into { ch_read_files_for_merge_r1_umi }
      }
  } else {
      Channel
-         .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_fastqc; read_files_trimming }
+         .fromFilePairs( params.reads, 3 )
+         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\n" }
+         .into { ch_read_files_for_merge_r1_umi }
  }
-
 
 // Header log info
 log.info """=======================================================
@@ -140,7 +172,6 @@ summary['Run Name']     = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
 summary['Reads']        = params.reads
 summary['Fasta Ref']    = params.fasta
-summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -202,54 +233,152 @@ process get_software_versions {
 }
 
 
+//Sorting output maybe?
 
-/*
- * STEP 1 - FastQC
- */
-process fastqc {
-    tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+//Merge I1 UMIs into R1 file
+process merge_r1_umi {
+    tag $read 
 
     input:
-    set val(name), file(reads) from read_files_fastqc
+    set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
 
     output:
-    file "*_fastqc.{zip,html}" into fastqc_results
+    file "{*_UMI_*,*_R2_*}.fastq.gz" into ch_umi_merged_for_decompression
 
     script:
     """
-    fastqc -q $reads
+    merge_R1_umi.py -R1 $reads[0] -I1 $reads[3] -o "${reads[0].baseName}_UMI_R1.fastq.gz"
+    """
+}
+
+//Decompress all the stuff
+process decompress {
+    tag "$reads[0]"
+    
+    input:
+    file(reads) from ch_umi_merged_for_decompression
+
+    output:
+    file "*.fastq" into ch_fastqs_for_processing
+
+    script:
+    """
+    gunzip *.fastq.gz 
+    """
+}
+
+//Filter by Sequence Quality
+process filter_by_sequence_quality {
+    tag "$reads[0]"
+
+    input:
+    file(reads) fom ch_fastqs_for_processing
+
+    output:
+    file "${reads[0]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${reads[1]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
+
+    script:
+    """
+    FilterSeq.py quality -s "$reads[0]" -q $filterseq_q --outname "${reads[0].baseName}"
+    FilterSeq.py quality -s "$reads[1]" -q $filterseq_q --outname "${reads[1].baseName}"
+    """
+}
+
+//Mask them primers
+process mask_primers {
+    tag "${umi_file.baseName}"
+
+    input:
+    file(umi_file) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file(r2_file) from ch_filtered_by_seq_quality_for_primerMasking_R2
+    file(cprimers) from ch_cprimers_fasta 
+    file(vprimers) from ch_vprimers_fasta
+
+    output:
+    file "${umi_file.baseName}_UMI_R1_primers-pass.fastq" into ch_for_pair_seq_umi_file
+    file "${r2_file.baseName}_R2_primers-pass.fastq" into ch_for_pair_seq_r2_file
+
+    script:
+    """
+    MaskPrimers.py score -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
+    MaskPrimers.py score -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
+    """
+}
+
+//Pair the UMI_R1 and R2
+process pair_seq{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_for_pair_seq_umi_file
+    file r2 from ch_for_pair_seq_r2_file
+
+    output:
+    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_consensus
+    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_consensus
+
+    script:
+    """
+    PairSeq.py -1 $umi -2 $r2 --1f BARCODE --coord illumina
+    """
+}
+
+//Build UMI consensus
+process build_consensus{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_umi_for_umi_consensus
+    file r2 from ch_r2_for_umi_consensus
+
+    output:
+    file "${umi.baseName}_UMI_R1_consensus-pass.fastq" into ch_consensus_passed_umi
+    file "${r2.baseName}_R2_consensus-pass.fastq" into ch_consensus_passed_r2
+
+    script:
+    """
+    BuildConsensus.py -s $umi --bf BARCODE --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
+    BuildConsensus.py -s $r2 --bf BARCODE --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
+    """
+}
+
+//Repair again UMI_R1+R2
+process repair{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_consensus_passed_umi
+    file r2 from ch_consensus_passed_r2
+
+    output:
+    file "*UMI_R1_consensus-pass_pair-pass.fastq" into ch_repaired_UMI_for_assembly
+    file "*R2_consensus-pass_pair-pass.fastq" into ch_repaired_r2_for_assembly
+
+    script:
+    """
+    PairSeq.py -1 $umi -2 $r2 --coord presto
+    """
+}
+
+//Assemble the UMI consensus mate pairs
+process assemble{
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_repaired_UMI_for_assembly
+    file r2 from ch_repaired_r2_for_assembly
+
+    output:
+    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_assembled_umi_consensus_for_combine_UMI
+
+    script:
+    """
+    AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2
     """
 }
 
 
-
-/*
- * STEP 2 - MultiQC
- */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file multiqc_config
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    file ('fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file ('software_versions/*') from software_versions_yaml
-    file workflow_summary from create_workflow_summary(summary)
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
-    """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
-    """
-}
 
 
 
