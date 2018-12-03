@@ -27,4 +27,4 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline, fou
 <!-- TODO nf-core: Add a brief overview of what the pipeline does and how it works -->
 
 ### Credits
-nf-core/bcellmagic was originally written by Gisela Gabernet.
+nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos and Alexander Peltzer.
