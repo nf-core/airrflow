@@ -61,20 +61,6 @@ if (params.help){
     exit 0
 }
 
-// TODO nf-core: Add any reference files that are needed
-// Configurable reference genomes
-fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
-//
-
 
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
@@ -99,19 +85,16 @@ output_docs = Channel.fromFile("$baseDir/docs/output.md")
 
 //Set up channels for input primers
 Channel.fromPath("${params.cprimers}")
-       .ifEmpty(exit 1, "Please specify CPRimers FastA File!")
+       .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
        .into {ch_cprimers_fasta}
 Channel.fromPath("${params.vprimers}")
-       .ifEmpty(exit 1, "Please specify VPrimers FastA File!")
+       .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
        .into { ch_vprimers_fasta }
-//Empty channels for mixing
-ch_igblast = Channel.empty()
-ch_imgt_base = Channel.empty()
 
 //Check for supplied databases using groovy syntax
-params.igblast_base ?: ch_igblast = Channel.fromPath(igblast_base, checkIfExists: true) : false
+params.igblast_base ? ch_igblast = Channel.fromPath(igblast_base, checkIfExists: true) : igblast_base = false
 
-params.imgt_base ?: ch_imgt_base = Channel.fromPath(imgt_base, checkIfExists: true) : false
+params.imgt_base ? ch_imgt_base = Channel.fromPath(imgt_base, checkIfExists: true) : imgt_base = false
 
 saveDBs = false
 
@@ -134,7 +117,7 @@ process fetchDBs{
     
     script:
     """
-    fetch_igblastdb.sh -o $igblast_base
+    fetch_igblastdb.sh -o $igblast_basew
     fetch_imgtdb.sh -o $imgt_base
     imgt2igblast.sh -i $imgt_base -o $igblast_base
     """
