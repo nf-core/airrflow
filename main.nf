@@ -91,15 +91,6 @@ Channel.fromPath("${params.vprimers}")
        .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
        .set { ch_vprimers_fasta }
 
-//Create two empty channels for mixing
-ch_igblast = Channel.empty()
-ch_imgt_base = Channel.empty()
-
-//Check for supplied databases using groovy syntax
-params.igblast_base ? ch_igblast = Channel.fromPath(igblast_base, checkIfExists: true) : false
-
-params.imgt_base ? ch_imgt_base = Channel.fromPath(imgt_base, checkIfExists: true) : false
-
 saveDBs = false
 
 //Other parameters
@@ -113,25 +104,17 @@ process fetchDBs{
     publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
     saveAs: { params.saveDBs ? it : null }, mode: 'copy'
 
-    when: (!"${params.igblast_base}" || !"${params.imgt_base}")
-
     output:
-    file "$igblast_base" into ch_igblast_for_mixing
-    file "$imgt_base" into ch_imgt_for_mixing
+    file "igblast_base" into ch_igblast_db_for_process_igblast
+    file "imgtdb_base" into (ch_imgt_db_for_igblast_filter,ch_imgt_db_for_shazam,ch_imgt_db_for_germline_sequences)
     
     script:
     """
-    fetch_igblastdb.sh -o $igblast_basew
-    fetch_imgtdb.sh -o $imgt_base
-    imgt2igblast.sh -i $imgt_base -o $igblast_base
+    fetch_igblastdb.sh -o igblast_base
+    fetch_imgtdb.sh -o imgtdb_base
+    imgt2igblast.sh -i imgtdb_base -o igblast_base
     """
 }
-
-//Mix channels for DBs
-//Igblast DB
-ch_igblast.mix(ch_igblast_for_mixing).set { ch_igblast_db_for_process_igblast }
-//IMGT DB
-ch_imgt_base.mix(ch_imgt_for_mixing).into {ch_imgt_db_for_igblast_filter;ch_imgt_db_for_shazam;ch_imgt_db_for_germline_sequences}
 
 /*
  * Create a channel for metadata and raw files
