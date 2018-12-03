@@ -140,8 +140,8 @@ ch_imgt_base.mix(ch_imgt_for_mixing).into {ch_imgt_db_for_igblast_filter;ch_imgt
  file_meta = file(params.metadata)
  ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
                 .splitCsv(header: true, sep:'\t')
-                .map { col -> tuple("${col.id}", "${col.source}", "${col.treatment}","${col.extraction_time}","${col.population}","${col.R1}","${col.R2}","${col.I1}")}
-
+                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
+                .dump()
 // Header log info
 log.info """=======================================================
                                           ,--./,-.
@@ -181,16 +181,15 @@ log.info "========================================="
 
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
-    tag "${reads[0].baseName}"
+    tag "${R1.baseName}"
 
     input:
-    "${col.id}", "${col.source}", "${col.treatment}","${col.extraction_time}","${col.population}","${col.R1}","${col.R2}","${col.I1}")}
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), val(R1), val(R2), val(I1)
-
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
 
     output:
     file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
     file "${R2.baseName}" into ch_fastqs_for_processing_r2
+    set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
 
     script:
     """
@@ -385,19 +384,19 @@ process copy_prcons{
 }
 
 //Add Metadata annotation to headers
-//TODO check TREATMENT,EXTRACT_TIME and POPULATION as well! 
 process metadata_anno{
     tag "${prcons.baseName}"
 
     input:
     file prcons from ch_for_metadata_anno
+    set val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
 
     output:
     file "*_reheader_reheader_reheader.fastq" into ch_for_dedup 
 
     script:
     """
-    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u ${TREATMENT} ${EXTRACT_TIME} ${POPULATION}
+    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
     """
 }
 
@@ -543,3 +542,10 @@ process alakazam{
     """
 }
 
+//Useful functions
+
+ // Return file if it exists
+  static def returnFile(it) {
+    if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+    return file(it)
+}
