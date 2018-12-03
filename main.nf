@@ -315,8 +315,8 @@ process pair_seq{
     file r2 from ch_for_pair_seq_r2_file
 
     output:
-    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_consensus
-    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_consensus
+    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_cluster_sets
+    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_cluster_sets
 
     script:
     """
@@ -324,13 +324,52 @@ process pair_seq{
     """
 }
 
+//Deal with too low UMI diversity
+process cluster_sets {
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_umi_for_umi_cluster_sets
+    file r2 from ch_r2_for_umi_cluster_sets
+
+    output:
+    file "${umi.baseName}_UMI_R1_cluster-pass.fastq" into ch_umi_for_reheader
+    file "${r2.baseName}_R2_cluster-pass.fastq" into ch_r2_for_reheader
+
+    script:
+    """
+    ClusterSets.py set -s $umi --outname ${umi.baseName}_UMI_R1 
+    ClusterSets.py set -s $r2 --outname ${r2.baseName}_R2
+    """
+}
+
+//ParseHeaders to annotate barcode into cluster names
+process reheader {
+    tag "${umi.baseName}" 
+
+    input:
+    file umi from ch_umi_for_reheader
+    file r2 from ch_r2_for_reheader
+
+    output:
+    file "${umi.baseName}_reheader.fastq" into ch_umi_for_consensus
+    file "${r2.baseName}_reheader.fastq" into ch_r2_for_consensus
+    
+    script:
+    """
+    ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat
+    ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat 
+    """
+}
+
+
 //Build UMI consensus
 process build_consensus{
     tag "${umi.baseName}"
 
     input:
-    file umi from ch_umi_for_umi_consensus
-    file r2 from ch_r2_for_umi_consensus
+    file umi from ch_umi_for_consensus
+    file r2 from ch_r2_for_consensus
 
     output:
     file "${umi.baseName}_UMI_R1_consensus-pass.fastq" into ch_consensus_passed_umi
@@ -378,6 +417,10 @@ process assemble{
     """
 }
 
+//Combine UMI read group size annotations
+process combine_umi_read_groups{
+    
+}
 
 
 
