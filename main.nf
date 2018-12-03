@@ -94,8 +94,7 @@ if( workflow.profile == 'awsbatch') {
 }
 
 // Stage config files
-multiqc_config = file(params.multiqc_config)
-output_docs = file("$baseDir/docs/output.md")
+output_docs = Channel.fromFile("$baseDir/docs/output.md")
 
 
 //Set up channels for input primers
@@ -233,9 +232,6 @@ process get_software_versions {
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
-
-
-//Sorting output maybe?
 
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
@@ -597,7 +593,6 @@ process germline_sequences{
 //Alakazam!
 process alakazam{
     tag "${tab.baseName}"
-    publishDir
 
     input:
     file tab from ch_for_alakazam
@@ -618,7 +613,7 @@ process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
     input:
-    file output_docs
+    file output_docs from output_docs
 
     output:
     file "results_description.html"
