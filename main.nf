@@ -196,12 +196,12 @@ process merge_r1_umi {
     set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
 
     output:
-    file "*UMI*.fastq.gz" into ch_umi_merged_for_decompression_umi
+    file "*UMI_R1.fastq.gz" into ch_umi_merged_for_decompression_umi
     file "*_R2_*.fastq.gz" into ch_umi_merged_for_decompression_r2
 
     script:
     """
-    merge_R1_umi.py -R1 $reads[0] -I1 $reads[3] -o "${reads[0].baseName}_UMI_R1.fastq.gz"
+    merge_R1_umi.py -R1 "${reads[1].baseName}" -I1 "${reads[0].baseName}" -o "${reads[0].baseName}_UMI_R1.fastq.gz"
     """
 }
 
@@ -565,20 +565,3 @@ process alakazam{
     """
 }
 
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
-
-    input:
-    file output_docs from output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
