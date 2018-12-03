@@ -126,7 +126,7 @@ process fetchDBs{
     saveAs: { params.saveDBs ? it : null }, mode: 'copy' 
 
     output:
-    file "$igblast_base" into ch_igblast_db_for_process_A
+    file "$igblast_base" into ch_igblast_db_for_process_igblast
     file "$imgt_base" into ch_imgt_db_for_process_A
 
     script:
@@ -354,7 +354,7 @@ process reheader {
     output:
     file "${umi.baseName}_reheader.fastq" into ch_umi_for_consensus
     file "${r2.baseName}_reheader.fastq" into ch_r2_for_consensus
-    
+
     script:
     """
     ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat
@@ -409,7 +409,7 @@ process assemble{
     file r2 from ch_repaired_r2_for_assembly
 
     output:
-    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_assembled_umi_consensus_for_combine_UMI
+    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_for_combine_UMI
 
     script:
     """
@@ -417,13 +417,103 @@ process assemble{
     """
 }
 
-//Combine UMI read group size annotations
+//combine UMI read group size annotations
 process combine_umi_read_groups{
-    
+    tag "${assembled.baseName}"
+
+    input:
+    file assembled from ch_for_combine_UMI
+
+    output:
+    file "*_reheader.fastq" into ch_for_prcons_parseheaders
+
+    script:
+    """
+    ParseHeaders.py collapse -s $assembled -f CONSCOUNT --act min
+    """
 }
 
+//Copy field PRCONS to have annotation for C_primer and V_primer independently
+process copy_prcons{
+    tag "${combined.baseName}"
 
+    input:
+    file combined from ch_for_prcons_parseheaders
 
+    output:
+    file "*reheader_reheader.fastq" into ch_for_metadata_anno
+
+    script:
+    """
+    ParseHeaders.py copy -s $combined -f PRCONS PRCONS --act first last -k C_PRIMER V_PRIMER
+    """
+}
+
+//Add Metadata annotation to headers
+//TODO check TREATMENT,EXTRACT_TIME and POPULATION as well! 
+process metadata_anno{
+    tag "${prcons.baseName}"
+
+    input:
+    file prcons from ch_for_metadata_anno
+
+    output:
+    file "*_reheader_reheader_reheader.fastq" into ch_for_dedup 
+
+    script:
+    """
+    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u ${TREATMENT} ${EXTRACT_TIME} ${POPULATION}
+    """
+}
+
+//Removal of duplicate sequences
+process dedup {
+    tag "${dedup.baseName}"
+
+    input:
+    file dedup from ch_for_dedup
+
+    output:
+    file "${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq" into ch_for_filtering
+
+    script:
+    """
+    CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2
+    """
+}
+
+//Filtering to sequences with at least two representative reads and convert to FastA
+process filter_seqs{
+    tag "${dedupped.baseName}"
+
+    input:
+    file dedupped from ch_for_filtering
+
+    output:
+    file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta" into ch_fasta_for_igblast
+
+    script:
+    """
+    SplitSeq.py group -s $dedupped -f CONSCOUNT --num 2 --outname ${dedupped.baseName}_UMI_R1_R2
+    sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
+    """
+}
+
+//Run IGBlast
+process igblast{
+    tag "${fasta.baseName}"
+
+    input:
+    file fasta from ch_fasta_for_igblast
+    file igblast from ch_igblast_db_for_process_igblast 
+
+    output:
+
+    script:
+    """
+    AssignGenes.py igblast -s $fasta -b $igblast --organism human --loci ig --format blast
+    """
+}
 
 /*
  * STEP 3 - Output Description HTML
