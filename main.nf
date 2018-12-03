@@ -127,7 +127,7 @@ process fetchDBs{
 
     output:
     file "$igblast_base" into ch_igblast_db_for_process_igblast
-    file "$imgt_base" into ch_imgt_db_for_process_A
+    file "$imgt_base" into ch_imgt_db_for_igblast_filter
 
     script:
     """
@@ -508,10 +508,30 @@ process igblast{
     file igblast from ch_igblast_db_for_process_igblast 
 
     output:
+    file "*igblast.fmt7" into ch_igblast_filter
 
     script:
     """
     AssignGenes.py igblast -s $fasta -b $igblast --organism human --loci ig --format blast
+    """
+}
+
+//Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
+process igblast_filter {
+    tag "${blast.baseName}"
+
+    input: 
+    file blast from ch_igblast_filter
+    file imgtbase from ch_imgt_db_for_igblast_filter
+
+    output:
+
+    script:
+    """
+    MakeDb.py igblast -i $blast -s ${blast.baseName}_UMI_R1_R2_atleast-2.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
+    ParseDb.py split -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T
+    ConvertDb.py fasta -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     """
 }
 

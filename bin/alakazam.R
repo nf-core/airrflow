@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 library(igraph)
 #library(dplyr)
 library(alakazam)
