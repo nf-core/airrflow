@@ -234,7 +234,8 @@ process merge_r1_umi {
     set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
 
     output:
-    file "{*_UMI_*,*_R2_*}.fastq.gz" into ch_umi_merged_for_decompression
+    file "*UMI*.fastq.gz" into ch_umi_merged_for_decompression_umi
+    file "*_R2_*.fastq.gz" into ch_umi_merged_for_decompression_r2
 
     script:
     """
@@ -244,13 +245,15 @@ process merge_r1_umi {
 
 //Decompress all the stuff
 process decompress {
-    tag "$reads[0]"
+    tag "${umi.baseName}"
     
     input:
-    file(reads) from ch_umi_merged_for_decompression
+    file(umi) from ch_umi_merged_for_decompression_umi
+    file(r2) from ch_umi_merged_for_decompression_r2
 
     output:
-    file "*.fastq" into ch_fastqs_for_processing
+    file "*UMI*.fastq" into ch_fastqs_for_processing_umi
+    file "*R2*.fastq" into ch_fastqs_for_processing_r2
 
     script:
     """
@@ -260,19 +263,20 @@ process decompress {
 
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
-    tag "$reads[0]"
+    tag "${umi.baseName}"
 
     input:
-    file(reads) fom ch_fastqs_for_processing
+    file(umi) from ch_fastqs_for_processing_umi
+    file(r2) from ch_fastqs_for_processing_r2
 
     output:
-    file "${reads[0]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${reads[1]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
+    file "${umi}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${r2}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
 
     script:
     """
-    FilterSeq.py quality -s "$reads[0]" -q $filterseq_q --outname "${reads[0].baseName}"
-    FilterSeq.py quality -s "$reads[1]" -q $filterseq_q --outname "${reads[1].baseName}"
+    FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}"
+    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}"
     """
 }
 
