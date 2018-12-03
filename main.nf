@@ -228,7 +228,7 @@ process get_software_versions {
 
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
-    tag $read 
+    tag "${reads[0].baseName}"
 
     input:
     set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
