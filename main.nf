@@ -134,20 +134,13 @@ ch_igblast.mix(ch_igblast_for_mixing).set { ch_igblast_db_for_process_igblast }
 ch_imgt_base.mix(ch_imgt_for_mixing).into {ch_imgt_db_for_igblast_filter;ch_imgt_db_for_shazam;ch_imgt_db_for_germline_sequences}
 
 /*
- * Create a channel for input read files
+ * Create a channel for metadata and raw files
+ * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
- if(params.readPaths){
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { ch_read_files_for_merge_r1_umi }
- } else {
-     Channel
-         .fromFilePairs( params.reads, size: 3 )
-         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\n" }
-         .into { ch_read_files_for_merge_r1_umi }
- }
+ file_meta = file(params.metadata)
+ ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+                .splitCsv(header: true, sep:'\t')
+                .map { col -> tuple("${col.id}", "${col.source}", "${col.treatment}","${col.extraction_time}","${col.population}","${col.R1}","${col.R2}","${col.I1}")}
 
 // Header log info
 log.info """=======================================================
@@ -163,8 +156,7 @@ def summary = [:]
 summary['Pipeline Name']  = 'nf-core/bcellmagic'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
-// TODO nf-core: Report custom parameters here
-summary['Reads']        = params.reads
+summary['MetaData']        = params.metadata
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -192,17 +184,19 @@ process merge_r1_umi {
     tag "${reads[0].baseName}"
 
     input:
-    set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
+    "${col.id}", "${col.source}", "${col.treatment}","${col.extraction_time}","${col.population}","${col.R1}","${col.R2}","${col.I1}")}
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), val(R1), val(R2), val(I1)
+
 
     output:
     file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
-    file "${reads[2].baseName}" into ch_fastqs_for_processing_r2
+    file "${R2.baseName}" into ch_fastqs_for_processing_r2
 
     script:
     """
-    merge_R1_umi.py -R1 "${reads[1]}" -I1 "${reads[0]}" -o "${reads[0].baseName}_UMI_R1.fastq.gz"
-    gunzip "${reads[0].baseName}_UMI_R1.fastq.gz"
-    gunzip -f "${reads[2]}"
+    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o "${R1.baseName}_UMI_R1.fastq.gz"
+    gunzip "${R1.baseName}_UMI_R1.fastq.gz"
+    gunzip -f "${R2}"
     """
 }
 
