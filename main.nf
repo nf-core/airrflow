@@ -216,8 +216,8 @@ process filter_by_sequence_quality {
     file(r2) from ch_fastqs_for_processing_r2
 
     output:
-    file "${umi}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${r2}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
+    file "${umi.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${r2.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
 
     script:
     """
