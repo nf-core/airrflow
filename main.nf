@@ -123,11 +123,13 @@ process fetchDBs{
     tag "fetchBlastDBs"
 
     publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
-    saveAs: { params.saveDBs ? it : null }, mode: 'copy' 
+    saveAs: { params.saveDBs ? it : null }, mode: 'copy'
+
+    when: (!"${params.igblast_base}" || !"${params.imgt_base}")
 
     output:
     file "$igblast_base" into ch_igblast_db_for_process_igblast
-    file "$imgt_base" into ch_imgt_db_for_igblast_filter
+    file "$imgt_base" into (ch_imgt_db_for_igblast_filter,ch_imgt_db_for_shazam,ch_imgt_db_for_germline_sequences)
 
     script:
     """
@@ -525,6 +527,7 @@ process igblast_filter {
     file imgtbase from ch_imgt_db_for_igblast_filter
 
     output:
+    file "${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T_parse-select.tab" into ch_for_shazam
 
     script:
     """
@@ -532,6 +535,79 @@ process igblast_filter {
     ParseDb.py split -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass.tab -f FUNCTIONAL
     ParseDb.py select -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T
     ConvertDb.py fasta -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    """
+}
+
+//Shazam! 
+process shazam{
+    tag "${tab.baseName}"
+
+    input:
+    file tab from ch_for_shazam
+    file imgtbase from ch_imgt_db_for_shazam
+
+    output:
+    file "threshold.txt" into ch_threshold_for_clone_definition
+    file "igh_genotyped.tab" into ch_genotyped_tab_for_clone_definition
+    file "v_genotype.fasta" into ch_genotype_fasta_for_germline
+
+    script:
+    """
+    TIgGER-shazam.R $tab ${imgtbase}/human/vdj/imgt_human_IGHV.fasta
+    """
+}
+
+//Assign clones
+process assign_clones{
+    tag "${geno.baseName}" 
+
+    input:
+    file geno from ch_genotyped_tab_for_clone_definition
+    file threshold from ch_threshold_for_clone_definition
+
+    output:
+    file "${geno.baseName}_clone-pass.tab" into ch_for_germlines
+
+    script:
+    """
+    thr=`cat $threshold`
+    DefineClones.py -d $geno --act set --model ham --norm len --dist ${thr} --outname
+    ${geno.baseName}
+    """
+}
+
+//Reconstruct germline sequences
+process germline_sequences{
+    tag "${clones.baseName}"
+
+    input: 
+    file clones from ch_for_germlines
+    file imgtbase from ch_imgt_db_for_germline_sequences
+    file geno_fasta from ch_genotype_fasta_for_germline
+
+    output:
+    file "${clones.baseName}_clone-pass.tab" into ch_for_alakazam
+
+    script:
+    """
+    CreateGermlines.py -d ${clones.baseName} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta
+    """
+}
+
+//Alakazam!
+process alakazam{
+    tag "${tab.baseName}"
+    publishDir
+
+    input:
+    file tab from ch_for_alakazam
+
+    output:
+    file "*"
+
+    script:
+    """
+    alakazam.R $tab
     """
 }
 
