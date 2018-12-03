@@ -24,7 +24,19 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline, fou
 4. [Output and how to interpret the results](docs/output.md)
 5. [Troubleshooting](docs/troubleshooting.md)
 
-<!-- TODO nf-core: Add a brief overview of what the pipeline does and how it works -->
+Input needs to be a TSV file following this format in general:
+
+```
+ID	Source	Treatment	Extraction_time	Population	R1	R2	I1
+QMKMK072AD	Patient 2	Terifluomid	baseline	p	sample_S8_L001_R1_001.fastq.gz	sample_S8_L001_R2_001.fastq.gz	sample_S8_L001_I1_001.fastq.gz
+```
+Attention, the R1/R2 and I1 naming patterns are crucial!
+
+An example call of the pipeline could be then:
+
+```
+nextflow run ggabernet/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers_IG.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8 -resume 
+```
 
 ### Credits
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos and Alexander Peltzer.
