@@ -165,7 +165,6 @@ summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
 summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -196,32 +195,17 @@ process merge_r1_umi {
     set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
 
     output:
-    file "*UMI_R1.fastq.gz" into ch_umi_merged_for_decompression_umi
-    file "*_R2_*.fastq.gz" into ch_umi_merged_for_decompression_r2
+    file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
+    file "${reads[2].baseName}" into ch_fastqs_for_processing_r2
 
     script:
     """
-    merge_R1_umi.py -R1 "${reads[1].baseName}" -I1 "${reads[0].baseName}" -o "${reads[0].baseName}_UMI_R1.fastq.gz"
+    merge_R1_umi.py -R1 "${reads[1]}" -I1 "${reads[0]}" -o "${reads[0].baseName}_UMI_R1.fastq.gz"
+    gunzip "${reads[0].baseName}_UMI_R1.fastq.gz"
+    gunzip -f "${reads[2]}"
     """
 }
 
-//Decompress all the stuff
-process decompress {
-    tag "${umi.baseName}"
-    
-    input:
-    file(umi) from ch_umi_merged_for_decompression_umi
-    file(r2) from ch_umi_merged_for_decompression_r2
-
-    output:
-    file "*UMI*.fastq" into ch_fastqs_for_processing_umi
-    file "*R2*.fastq" into ch_fastqs_for_processing_r2
-
-    script:
-    """
-    gunzip *.fastq.gz 
-    """
-}
 
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
