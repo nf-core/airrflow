@@ -104,14 +104,16 @@ Channel.fromPath("${params.cprimers}")
 Channel.fromPath("${params.vprimers}")
        .ifEmpty(exit 1, "Please specify VPrimers FastA File!")
        .into { ch_vprimers_fasta }
+//Empty channels for mixing
+ch_igblast = Channel.empty()
+ch_imgt_base = Channel.empty()
 
-//Define defaults for DB storage variables
-igblast_base = "./igblast_base"
-imgt_base = "./imgt_base"
+//Check for supplied databases using groovy syntax
+params.igblast_base ?: ch_igblast = Channel.fromPath(igblast_base, checkIfExists: true) : false
 
-//TODO don't download if specified DB location by users
+params.imgt_base ?: ch_imgt_base = Channel.fromPath(imgt_base, checkIfExists: true) : false
 
-saveDBs = true
+saveDBs = false
 
 //Other parameters
 filterseq_q=20
@@ -127,9 +129,9 @@ process fetchDBs{
     when: (!"${params.igblast_base}" || !"${params.imgt_base}")
 
     output:
-    file "$igblast_base" into ch_igblast_db_for_process_igblast
-    file "$imgt_base" into (ch_imgt_db_for_igblast_filter,ch_imgt_db_for_shazam,ch_imgt_db_for_germline_sequences)
-
+    file "$igblast_base" into ch_igblast_for_mixing
+    file "$imgt_base" into ch_imgt_for_mixing
+    
     script:
     """
     fetch_igblastdb.sh -o $igblast_base
@@ -138,6 +140,11 @@ process fetchDBs{
     """
 }
 
+//Mix channels for DBs
+//Igblast DB
+ch_igblast.mix(ch_igblast_for_mixing).into { ch_igblast_db_for_process_igblast }
+//IMGT DB
+ch_imgt_base.mix(ch_imgt_for_mixing).into {ch_imgt_db_for_igblast_filter;ch_imgt_db_for_shazam;ch_imgt_db_for_germline_sequences}
 
 /*
  * Create a channel for input read files
