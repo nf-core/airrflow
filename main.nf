@@ -80,21 +80,25 @@ if( workflow.profile == 'awsbatch') {
 }
 
 // Stage config files
-output_docs = Channel.fromFile("$baseDir/docs/output.md")
+output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
 
 //Set up channels for input primers
 Channel.fromPath("${params.cprimers}")
        .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
-       .into {ch_cprimers_fasta}
+       .set {ch_cprimers_fasta}
 Channel.fromPath("${params.vprimers}")
        .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
-       .into { ch_vprimers_fasta }
+       .set { ch_vprimers_fasta }
+
+//Create two empty channels for mixing
+ch_igblast = Channel.empty()
+ch_imgt_base = Channel.empty()
 
 //Check for supplied databases using groovy syntax
-params.igblast_base ? ch_igblast = Channel.fromPath(igblast_base, checkIfExists: true) : igblast_base = false
+params.igblast_base ? ch_igblast = Channel.fromPath(igblast_base, checkIfExists: true) : false
 
-params.imgt_base ? ch_imgt_base = Channel.fromPath(imgt_base, checkIfExists: true) : imgt_base = false
+params.imgt_base ? ch_imgt_base = Channel.fromPath(imgt_base, checkIfExists: true) : false
 
 saveDBs = false
 
@@ -125,7 +129,7 @@ process fetchDBs{
 
 //Mix channels for DBs
 //Igblast DB
-ch_igblast.mix(ch_igblast_for_mixing).into { ch_igblast_db_for_process_igblast }
+ch_igblast.mix(ch_igblast_for_mixing).set { ch_igblast_db_for_process_igblast }
 //IMGT DB
 ch_imgt_base.mix(ch_imgt_for_mixing).into {ch_imgt_db_for_igblast_filter;ch_imgt_db_for_shazam;ch_imgt_db_for_germline_sequences}
 
@@ -138,10 +142,9 @@ ch_imgt_base.mix(ch_imgt_for_mixing).into {ch_imgt_db_for_igblast_filter;ch_imgt
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
              .into { ch_read_files_for_merge_r1_umi }
-     }
  } else {
      Channel
-         .fromFilePairs( params.reads, 3 )
+         .fromFilePairs( params.reads, size: 3 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\n" }
          .into { ch_read_files_for_merge_r1_umi }
  }
