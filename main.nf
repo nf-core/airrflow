@@ -173,6 +173,7 @@ process merge_r1_umi {
     file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
     file "${R2.baseName}" into ch_fastqs_for_processing_r2
     set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
+    val("$id") into ch_sample_for_alakazam
 
     script:
     """
@@ -510,23 +511,27 @@ process germline_sequences{
     file geno_fasta from ch_genotype_fasta_for_germline
 
     output:
-    file "${clones.baseName}_clone-pass.tab" into ch_for_alakazam
+    file "${clones.baseName}_germ-pass.tab" into ch_for_alakazam
 
     script:
     """
-    CreateGermlines.py -d ${clones.baseName} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta
+    CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta
     """
 }
 
 //Alakazam!
 process alakazam{
     tag "${tab.baseName}"
+    publishDir "${params.outdir}/alakazam/$id", mode: 'copy'
+
 
     input:
     file tab from ch_for_alakazam
+    val id from ch_sample_for_alakazam
 
     output:
-    file "*"
+    file "*.pdf"
+    file "$tab"
 
     script:
     """
