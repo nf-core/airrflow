@@ -407,7 +407,7 @@ process filter_seqs{
     file dedupped from ch_for_filtering
 
     output:
-    file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta" into ch_fasta_for_igblast
+    file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta" into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
 
     script:
     """
@@ -436,22 +436,31 @@ process igblast{
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
     tag "${blast.baseName}"
+    
 
     input: 
-    file blast from ch_igblast_filter
+    file blast name 'blast.fmt7' from ch_igblast_filter
+    file fasta name 'fasta.fasta' from ch_fasta_for_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter
 
     output:
-    file "${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T_parse-select.tab" into ch_for_shazam
+    file "${blast.baseName}_parse-select.tab" into ch_for_shazam
+    file "${blast.baseName}_parse-select_sequences.fasta"
 
     script:
     """
-    MakeDb.py igblast -i $blast -s ${blast.baseName}_UMI_R1_R2_atleast-2.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass_FUNCTIONAL-T
-    ConvertDb.py fasta -d ${blast.baseName}_UMI_R1_R2_atleast-2_igblast_db-pass.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    MakeDb.py igblast -i ${blast} -s ${fasta} -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
+    ParseDb.py split -d ${blast.baseName}_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d ${blast.baseName}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}
+    ConvertDb.py fasta -d ${blast.baseName}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     """
 }
+
+
+
+/*
+    
+*/
 
 //Shazam! 
 process shazam{
@@ -478,16 +487,16 @@ process assign_clones{
 
     input:
     file geno from ch_genotyped_tab_for_clone_definition
-    file threshold from ch_threshold_for_clone_definition
+    val threshold from ch_threshold_for_clone_definition
 
     output:
     file "${geno.baseName}_clone-pass.tab" into ch_for_germlines
 
     script:
+    thr = file(threshold).text
+    thr = thr.trim()
     """
-    thr=`cat $threshold`
-    DefineClones.py -d $geno --act set --model ham --norm len --dist ${thr} --outname
-    ${geno.baseName}
+    DefineClones.py -d $geno --act set --model ham --norm len --dist $thr --outname ${geno.baseName}
     """
 }
 
