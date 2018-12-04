@@ -173,7 +173,7 @@ process merge_r1_umi {
     file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
     file "${R2.baseName}" into ch_fastqs_for_processing_r2
     set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
-    val("$id") into ch_sample_for_alakazam
+    val("$id") into (ch_sample_for_alakazam,ch_sample_for_shazam)
 
     script:
     """
@@ -465,16 +465,20 @@ process igblast_filter {
 
 //Shazam! 
 process shazam{
-    tag "${tab.baseName}"
+    tag "${tab.baseName}"    
+    publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
     file tab from ch_for_shazam
     file imgtbase from ch_imgt_db_for_shazam
+    val id from ch_sample_for_shazam
 
     output:
     file "threshold.txt" into ch_threshold_for_clone_definition
     file "igh_genotyped.tab" into ch_genotyped_tab_for_clone_definition
     file "v_genotype.fasta" into ch_genotype_fasta_for_germline
+    file "Hamming_distance_threshold.pdf" 
+    file "genotype.pdf"
 
     script:
     """
