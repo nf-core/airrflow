@@ -61,20 +61,6 @@ if (params.help){
     exit 0
 }
 
-// TODO nf-core: Add any reference files that are needed
-// Configurable reference genomes
-fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
-//
-
 
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
@@ -94,25 +80,18 @@ if( workflow.profile == 'awsbatch') {
 }
 
 // Stage config files
-multiqc_config = file(params.multiqc_config)
-output_docs = file("$baseDir/docs/output.md")
+output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
 
 //Set up channels for input primers
 Channel.fromPath("${params.cprimers}")
-       .ifEmpty(exit 1, "Please specify CPRimers FastA File!")
-       .into {ch_cprimers_fasta}
+       .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
+       .set {ch_cprimers_fasta}
 Channel.fromPath("${params.vprimers}")
-       .ifEmpty(exit 1, "Please specify VPrimers FastA File!")
-       .into { ch_vprimers_fasta }
+       .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
+       .set { ch_vprimers_fasta }
 
-//Define defaults for DB storage variables
-igblast_base = "./igblast_base"
-imgt_base = "./imgt_base"
-
-//TODO don't download if specified DB location by users
-
-saveDBs = true
+saveDBs = false
 
 //Other parameters
 filterseq_q=20
@@ -123,38 +102,29 @@ process fetchDBs{
     tag "fetchBlastDBs"
 
     publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
-    saveAs: { params.saveDBs ? it : null }, mode: 'copy' 
+    saveAs: { params.saveDBs ? it : null }, mode: 'copy'
 
     output:
-    file "$igblast_base" into ch_igblast_db_for_process_A
-    file "$imgt_base" into ch_imgt_db_for_process_A
-
+    file "igblast_base" into ch_igblast_db_for_process_igblast
+    file "imgtdb_base" into (ch_imgt_db_for_igblast_filter,ch_imgt_db_for_shazam,ch_imgt_db_for_germline_sequences)
+    
     script:
     """
-    fetch_igblastdb.sh -o $igblast_base
-    fetch_imgtdb.sh -o $imgt_base
-    imgt2igblast.sh -i $imgt_base -o $igblast_base
+    fetch_igblastdb.sh -o igblast_base
+    fetch_imgtdb.sh -o imgtdb_base
+    imgt2igblast.sh -i imgtdb_base -o igblast_base
     """
 }
 
-
 /*
- * Create a channel for input read files
+ * Create a channel for metadata and raw files
+ * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
- if(params.readPaths){
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { ch_read_files_for_merge_r1_umi }
-     }
- } else {
-     Channel
-         .fromFilePairs( params.reads, 3 )
-         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\n" }
-         .into { ch_read_files_for_merge_r1_umi }
- }
-
+ file_meta = file(params.metadata)
+ ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+                .splitCsv(header: true, sep:'\t')
+                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
+                .dump()
 // Header log info
 log.info """=======================================================
                                           ,--./,-.
@@ -169,9 +139,7 @@ def summary = [:]
 summary['Pipeline Name']  = 'nf-core/bcellmagic'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
-// TODO nf-core: Report custom parameters here
-summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
+summary['MetaData']        = params.metadata
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -194,94 +162,44 @@ if(params.email) summary['E-mail Address'] = params.email
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
-
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-bcellmagic-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/bcellmagic Workflow Summary'
-    section_href: 'https://github.com/nf-core/bcellmagic'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
-
-
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-
-    output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
-
-    script:
-    // TODO nf-core: Get all tools to print their version number here
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    multiqc --version > v_multiqc.txt
-    scrape_software_versions.py > software_versions_mqc.yaml
-    """
-}
-
-
-//Sorting output maybe?
-
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
-    tag $read 
+    tag "${R1.baseName}"
 
     input:
-    set val(name), file(reads) from ch_read_files_for_merge_r1_umi 
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
 
     output:
-    file "{*_UMI_*,*_R2_*}.fastq.gz" into ch_umi_merged_for_decompression
+    file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
+    file "${R2.baseName}" into ch_fastqs_for_processing_r2
+    set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
+    val("$id") into ch_sample_for_alakazam
 
     script:
     """
-    merge_R1_umi.py -R1 $reads[0] -I1 $reads[3] -o "${reads[0].baseName}_UMI_R1.fastq.gz"
+    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o "${R1.baseName}_UMI_R1.fastq.gz"
+    gunzip "${R1.baseName}_UMI_R1.fastq.gz"
+    gunzip -f "${R2}"
     """
 }
 
-//Decompress all the stuff
-process decompress {
-    tag "$reads[0]"
-    
-    input:
-    file(reads) from ch_umi_merged_for_decompression
-
-    output:
-    file "*.fastq" into ch_fastqs_for_processing
-
-    script:
-    """
-    gunzip *.fastq.gz 
-    """
-}
 
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
-    tag "$reads[0]"
+    tag "${umi.baseName}"
 
     input:
-    file(reads) fom ch_fastqs_for_processing
+    file(umi) from ch_fastqs_for_processing_umi
+    file(r2) from ch_fastqs_for_processing_r2
 
     output:
-    file "${reads[0]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${reads[1]}*quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
+    file "${umi.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${r2.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
 
     script:
     """
-    FilterSeq.py quality -s "$reads[0]" -q $filterseq_q --outname "${reads[0].baseName}"
-    FilterSeq.py quality -s "$reads[1]" -q $filterseq_q --outname "${reads[1].baseName}"
+    FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}"
+    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}"
     """
 }
 
@@ -315,8 +233,8 @@ process pair_seq{
     file r2 from ch_for_pair_seq_r2_file
 
     output:
-    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_consensus
-    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_consensus
+    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_cluster_sets
+    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_cluster_sets
 
     script:
     """
@@ -324,13 +242,52 @@ process pair_seq{
     """
 }
 
+//Deal with too low UMI diversity
+process cluster_sets {
+    tag "${umi.baseName}"
+
+    input:
+    file umi from ch_umi_for_umi_cluster_sets
+    file r2 from ch_r2_for_umi_cluster_sets
+
+    output:
+    file "${umi.baseName}_UMI_R1_cluster-pass.fastq" into ch_umi_for_reheader
+    file "${r2.baseName}_R2_cluster-pass.fastq" into ch_r2_for_reheader
+
+    script:
+    """
+    ClusterSets.py set -s $umi --outname ${umi.baseName}_UMI_R1 
+    ClusterSets.py set -s $r2 --outname ${r2.baseName}_R2
+    """
+}
+
+//ParseHeaders to annotate barcode into cluster names
+process reheader {
+    tag "${umi.baseName}" 
+
+    input:
+    file umi from ch_umi_for_reheader
+    file r2 from ch_r2_for_reheader
+
+    output:
+    file "${umi.baseName}_reheader.fastq" into ch_umi_for_consensus
+    file "${r2.baseName}_reheader.fastq" into ch_r2_for_consensus
+
+    script:
+    """
+    ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat
+    ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat 
+    """
+}
+
+
 //Build UMI consensus
 process build_consensus{
     tag "${umi.baseName}"
 
     input:
-    file umi from ch_umi_for_umi_consensus
-    file r2 from ch_r2_for_umi_consensus
+    file umi from ch_umi_for_consensus
+    file r2 from ch_r2_for_consensus
 
     output:
     file "${umi.baseName}_UMI_R1_consensus-pass.fastq" into ch_consensus_passed_umi
@@ -338,8 +295,8 @@ process build_consensus{
 
     script:
     """
-    BuildConsensus.py -s $umi --bf BARCODE --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
-    BuildConsensus.py -s $r2 --bf BARCODE --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
+    BuildConsensus.py -s $umi --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
+    BuildConsensus.py -s $r2 --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
     """
 }
 
@@ -370,7 +327,7 @@ process assemble{
     file r2 from ch_repaired_r2_for_assembly
 
     output:
-    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_assembled_umi_consensus_for_combine_UMI
+    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_for_combine_UMI
 
     script:
     """
@@ -378,104 +335,214 @@ process assemble{
     """
 }
 
-
-
-
-
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
+//combine UMI read group size annotations
+process combine_umi_read_groups{
+    tag "${assembled.baseName}"
 
     input:
-    file output_docs
+    file assembled from ch_for_combine_UMI
 
     output:
-    file "results_description.html"
+    file "*_reheader.fastq" into ch_for_prcons_parseheaders
 
     script:
     """
-    markdown_to_html.r $output_docs results_description.html
+    ParseHeaders.py collapse -s $assembled -f CONSCOUNT --act min
+    """
+}
+
+//Copy field PRCONS to have annotation for C_primer and V_primer independently
+process copy_prcons{
+    tag "${combined.baseName}"
+
+    input:
+    file combined from ch_for_prcons_parseheaders
+
+    output:
+    file "*reheader_reheader.fastq" into ch_for_metadata_anno
+
+    script:
+    """
+    ParseHeaders.py copy -s $combined -f PRCONS PRCONS --act first last -k C_PRIMER V_PRIMER
+    """
+}
+
+//Add Metadata annotation to headers
+process metadata_anno{
+    tag "${prcons.baseName}"
+
+    input:
+    file prcons from ch_for_metadata_anno
+    set val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
+
+    output:
+    file "*_reheader_reheader_reheader.fastq" into ch_for_dedup 
+
+    script:
+    """
+    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
+    """
+}
+
+//Removal of duplicate sequences
+process dedup {
+    tag "${dedup.baseName}"
+
+    input:
+    file dedup from ch_for_dedup
+
+    output:
+    file "${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq" into ch_for_filtering
+
+    script:
+    """
+    CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2
+    """
+}
+
+//Filtering to sequences with at least two representative reads and convert to FastA
+process filter_seqs{
+    tag "${dedupped.baseName}"
+
+    input:
+    file dedupped from ch_for_filtering
+
+    output:
+    file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta" into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
+
+    script:
+    """
+    SplitSeq.py group -s $dedupped -f CONSCOUNT --num 2 --outname ${dedupped.baseName}_UMI_R1_R2
+    sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
+    """
+}
+
+//Run IGBlast
+process igblast{
+    tag "${fasta.baseName}"
+
+    input:
+    file fasta from ch_fasta_for_igblast
+    file igblast from ch_igblast_db_for_process_igblast 
+
+    output:
+    file "*igblast.fmt7" into ch_igblast_filter
+
+    script:
+    """
+    AssignGenes.py igblast -s $fasta -b $igblast --organism human --loci ig --format blast
+    """
+}
+
+//Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
+process igblast_filter {
+    tag "${blast.baseName}"
+    
+
+    input: 
+    file blast name 'blast.fmt7' from ch_igblast_filter
+    file fasta name 'fasta.fasta' from ch_fasta_for_igblast_filter
+    file imgtbase from ch_imgt_db_for_igblast_filter
+
+    output:
+    file "${blast.baseName}_parse-select.tab" into ch_for_shazam
+    file "${blast.baseName}_parse-select_sequences.fasta"
+
+    script:
+    """
+    MakeDb.py igblast -i ${blast} -s ${fasta} -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
+    ParseDb.py split -d ${blast.baseName}_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d ${blast.baseName}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}
+    ConvertDb.py fasta -d ${blast.baseName}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     """
 }
 
 
 
 /*
- * Completion e-mail notification
- */
-workflow.onComplete {
+    
+*/
 
-    // Set up the e-mail variables
-    def subject = "[nf-core/bcellmagic] Successful: $workflow.runName"
-    if(!workflow.success){
-      subject = "[nf-core/bcellmagic] FAILED: $workflow.runName"
-    }
-    def email_fields = [:]
-    email_fields['version'] = workflow.manifest.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
-    email_fields['success'] = workflow.success
-    email_fields['dateComplete'] = workflow.complete
-    email_fields['duration'] = workflow.duration
-    email_fields['exitStatus'] = workflow.exitStatus
-    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-    email_fields['commandLine'] = workflow.commandLine
-    email_fields['projectDir'] = workflow.projectDir
-    email_fields['summary'] = summary
-    email_fields['summary']['Date Started'] = workflow.start
-    email_fields['summary']['Date Completed'] = workflow.complete
-    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-    if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-    if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-    if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-    email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
-    email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
-    email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+//Shazam! 
+process shazam{
+    tag "${tab.baseName}"
 
-    // Render the TXT template
-    def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
-    def txt_template = engine.createTemplate(tf).make(email_fields)
-    def email_txt = txt_template.toString()
+    input:
+    file tab from ch_for_shazam
+    file imgtbase from ch_imgt_db_for_shazam
 
-    // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
-    def html_template = engine.createTemplate(hf).make(email_fields)
-    def email_html = html_template.toString()
+    output:
+    file "threshold.txt" into ch_threshold_for_clone_definition
+    file "igh_genotyped.tab" into ch_genotyped_tab_for_clone_definition
+    file "v_genotype.fasta" into ch_genotype_fasta_for_germline
 
-    // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
-    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-    def sendmail_html = sendmail_template.toString()
+    script:
+    """
+    TIgGER-shazam.R $tab ${imgtbase}/human/vdj/imgt_human_IGHV.fasta
+    """
+}
 
-    // Send the HTML e-mail
-    if (params.email) {
-        try {
-          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
-          // Try to send HTML e-mail using sendmail
-          [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nf-core/bcellmagic] Sent summary e-mail to $params.email (sendmail)"
-        } catch (all) {
-          // Catch failures and try with plaintext
-          [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[nf-core/bcellmagic] Sent summary e-mail to $params.email (mail)"
-        }
-    }
+//Assign clones
+process assign_clones{
+    tag "${geno.baseName}" 
 
-    // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/Documentation/" )
-    if( !output_d.exists() ) {
-      output_d.mkdirs()
-    }
-    def output_hf = new File( output_d, "pipeline_report.html" )
-    output_hf.withWriter { w -> w << email_html }
-    def output_tf = new File( output_d, "pipeline_report.txt" )
-    output_tf.withWriter { w -> w << email_txt }
+    input:
+    file geno from ch_genotyped_tab_for_clone_definition
+    val threshold from ch_threshold_for_clone_definition
 
-    log.info "[nf-core/bcellmagic] Pipeline Complete"
+    output:
+    file "${geno.baseName}_clone-pass.tab" into ch_for_germlines
 
+    script:
+    thr = file(threshold).text
+    thr = thr.trim()
+    """
+    DefineClones.py -d $geno --act set --model ham --norm len --dist $thr --outname ${geno.baseName}
+    """
+}
+
+//Reconstruct germline sequences
+process germline_sequences{
+    tag "${clones.baseName}"
+
+    input: 
+    file clones from ch_for_germlines
+    file imgtbase from ch_imgt_db_for_germline_sequences
+    file geno_fasta from ch_genotype_fasta_for_germline
+
+    output:
+    file "${clones.baseName}_germ-pass.tab" into ch_for_alakazam
+
+    script:
+    """
+    CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta
+    """
+}
+
+//Alakazam!
+process alakazam{
+    tag "${tab.baseName}"
+    publishDir "${params.outdir}/alakazam/$id", mode: 'copy'
+
+
+    input:
+    file tab from ch_for_alakazam
+    val id from ch_sample_for_alakazam
+
+    output:
+    file "*.pdf"
+    file "$tab"
+
+    script:
+    """
+    alakazam.R $tab
+    """
+}
+
+//Useful functions
+
+ // Return file if it exists
+  static def returnFile(it) {
+    if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+    return file(it)
 }

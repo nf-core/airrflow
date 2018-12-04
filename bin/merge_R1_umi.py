@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
 from Bio import SeqIO
 from gzip import open as gzopen
 import argparse
