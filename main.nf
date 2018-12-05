@@ -443,7 +443,7 @@ process igblast{
 
     input:
     file fasta name 'input_igblast.fasta' from ch_fasta_for_igblast
-    file igblast from ch_igblast_db_for_process_igblast 
+    file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix) 
 
     output:
     file "*igblast.fmt7" into ch_igblast_filter
