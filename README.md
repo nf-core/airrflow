@@ -1,6 +1,6 @@
 # nf-core/bcellmagic
 
-A pipeline to analyze B-cell and T-cell repertoires based on [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/).
+A pipeline to analyze B-cell repertoires based on [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/).
 
 [![Build Status](https://travis-ci.org/nf-core/bcellmagic.svg?branch=master)](https://travis-ci.org/nf-core/bcellmagic)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.32.0-brightgreen.svg)](https://www.nextflow.io/)
