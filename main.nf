@@ -30,15 +30,17 @@ def helpMessage() {
     nextflow run nf-core/bcellmagic --reads '*_R{1,2}.fastq.gz' -profile standard,docker
 
     Mandatory arguments:
-      --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
+      --cprimers                    Path to CPrimers FASTA File
+      --vprimers                    Path to VPrimers FASTA File
+      --metadata                    Path to Metadata TSV
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
     Options:
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
+      --imgtdb_base                 Path to predownloaded imgtDB 
+      --igblast_base                Path to predownloaded igblastDB
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -81,8 +83,21 @@ if( workflow.profile == 'awsbatch') {
 
 // Stage config files
 output_docs = Channel.fromPath("$baseDir/docs/output.md")
+//Defaults for igblast
+igblast_base = false
+imgtdb_base = false
 
-
+// If paths to DBS are provided 
+if( params.igblast_base ){
+    Channel.fromPath("${params.igblast_base}")
+    .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+    .set { ch_igblast_db_for_process_igblast_mix }
+}
+if( params.imgtdb_base ){
+    Channel.fromPath("${params.imgtdb_base}")
+    .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+    .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
+}
 //Set up channels for input primers
 Channel.fromPath("${params.cprimers}")
        .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
@@ -103,6 +118,9 @@ process fetchDBs{
 
     publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
     saveAs: { params.saveDBs ? it : null }, mode: 'copy'
+
+    when:
+    !params.igblast_base | !params.imgtdb_base
 
     output:
     file "igblast_base" into ch_igblast_db_for_process_igblast
@@ -143,6 +161,8 @@ summary['MetaData']        = params.metadata
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
+summary['IGDB Path']    = params.igblast_base
+summary['IMGT Path']    = params.imgtdb_base
 summary['Output dir']   = params.outdir
 summary['Working dir']  = workflow.workDir
 summary['Container Engine'] = workflow.containerEngine
@@ -422,7 +442,7 @@ process igblast{
     tag "${fasta.baseName}"
 
     input:
-    file fasta from ch_fasta_for_igblast
+    file fasta name 'input_igblast.fasta' from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast 
 
     output:
@@ -442,7 +462,7 @@ process igblast_filter {
     input: 
     file blast name 'blast.fmt7' from ch_igblast_filter
     file fasta name 'fasta.fasta' from ch_fasta_for_igblast_filter
-    file imgtbase from ch_imgt_db_for_igblast_filter
+    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix)
 
     output:
     file "${blast.baseName}_parse-select.tab" into ch_for_shazam
@@ -470,7 +490,7 @@ process shazam{
 
     input:
     file tab from ch_for_shazam
-    file imgtbase from ch_imgt_db_for_shazam
+    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix)
     val id from ch_sample_for_shazam
 
     output:
@@ -511,7 +531,7 @@ process germline_sequences{
 
     input: 
     file clones from ch_for_germlines
-    file imgtbase from ch_imgt_db_for_germline_sequences
+    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix)
     file geno_fasta from ch_genotype_fasta_for_germline
 
     output:
