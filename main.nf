@@ -422,7 +422,7 @@ process igblast{
     tag "${fasta.baseName}"
 
     input:
-    file fasta from ch_fasta_for_igblast
+    file fasta name 'input_igblast.fasta' from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast 
 
     output:
