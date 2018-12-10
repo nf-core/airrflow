@@ -99,10 +99,10 @@ if( params.imgtdb_base ){
     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
 }
 //Set up channels for input primers
-Channel.fromPath(file("${params.cprimers}"))
+Channel.fromPath("${params.cprimers}")
        .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
        .set {ch_cprimers_fasta}
-Channel.fromPath(file("${params.vprimers}"))
+Channel.fromPath("${params.vprimers}")
        .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
        .set { ch_vprimers_fasta }
 
@@ -230,8 +230,8 @@ process mask_primers {
     input:
     file(umi_file) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file(r2_file) from ch_filtered_by_seq_quality_for_primerMasking_R2
-    file(cprimers) from ch_cprimers_fasta 
-    file(vprimers) from ch_vprimers_fasta
+    file(cprimers) from ch_cprimers_fasta.collect() 
+    file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
     file "${umi_file.baseName}_UMI_R1_primers-pass.fastq" into ch_for_pair_seq_umi_file
