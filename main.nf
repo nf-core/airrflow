@@ -443,7 +443,7 @@ process igblast{
 
     input:
     file fasta name 'input_igblast.fasta' from ch_fasta_for_igblast
-    file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix) 
+    file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
     file "*igblast.fmt7" into ch_igblast_filter
@@ -462,7 +462,7 @@ process igblast_filter {
     input: 
     file blast name 'blast.fmt7' from ch_igblast_filter
     file fasta name 'fasta.fasta' from ch_fasta_for_igblast_filter
-    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix)
+    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
     file "${blast.baseName}_parse-select.tab" into ch_for_shazam
@@ -490,7 +490,7 @@ process shazam{
 
     input:
     file tab from ch_for_shazam
-    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix)
+    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
     val id from ch_sample_for_shazam
 
     output:
@@ -531,7 +531,7 @@ process germline_sequences{
 
     input: 
     file clones from ch_for_germlines
-    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix)
+    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
     file geno_fasta from ch_genotype_fasta_for_germline
 
     output:
