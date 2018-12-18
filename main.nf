@@ -239,8 +239,8 @@ process mask_primers {
 
     script:
     """
-    MaskPrimers.py score -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
-    MaskPrimers.py score -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
+    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
     """
 }
 
