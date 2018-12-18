@@ -276,8 +276,8 @@ process cluster_sets {
 
     script:
     """
-    ClusterSets.py set -s $umi --outname ${umi.baseName}_UMI_R1 
-    ClusterSets.py set -s $r2 --outname ${r2.baseName}_R2
+    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 
+    ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2
     """
 }
 
@@ -315,8 +315,8 @@ process build_consensus{
 
     script:
     """
-    BuildConsensus.py -s $umi --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
-    BuildConsensus.py -s $r2 --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
+    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
+    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
     """
 }
 
