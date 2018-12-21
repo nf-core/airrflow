@@ -192,7 +192,7 @@ process merge_r1_umi {
     output:
     file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
     file "${R2.baseName}" into ch_fastqs_for_processing_r2
-    set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
+    set val("$id"),val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
     val("$id") into (ch_sample_for_alakazam,ch_sample_for_shazam)
 
     script:
@@ -393,14 +393,14 @@ process metadata_anno{
 
     input:
     file prcons from ch_for_metadata_anno
-    set val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
+    set val(id),val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
 
     output:
     file "*_reheader_reheader_reheader.fastq" into ch_for_dedup 
 
     script:
     """
-    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
+    ParseHeaders.py add -s $prcons -f ID TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
     """
 }
 
