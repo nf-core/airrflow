@@ -192,7 +192,7 @@ process merge_r1_umi {
     output:
     file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
     file "${R2.baseName}" into ch_fastqs_for_processing_r2
-    set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
+    set val("$id"),val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
     val("$id") into (ch_sample_for_alakazam,ch_sample_for_shazam)
 
     script:
@@ -230,8 +230,8 @@ process mask_primers {
     input:
     file(umi_file) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file(r2_file) from ch_filtered_by_seq_quality_for_primerMasking_R2
-    file(cprimers) from ch_cprimers_fasta 
-    file(vprimers) from ch_vprimers_fasta
+    file(cprimers) from ch_cprimers_fasta.collect() 
+    file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
     file "${umi_file.baseName}_UMI_R1_primers-pass.fastq" into ch_for_pair_seq_umi_file
@@ -239,8 +239,8 @@ process mask_primers {
 
     script:
     """
-    MaskPrimers.py score -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
-    MaskPrimers.py score -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
+    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
     """
 }
 
@@ -276,8 +276,8 @@ process cluster_sets {
 
     script:
     """
-    ClusterSets.py set -s $umi --outname ${umi.baseName}_UMI_R1 
-    ClusterSets.py set -s $r2 --outname ${r2.baseName}_R2
+    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 
+    ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2
     """
 }
 
@@ -315,8 +315,8 @@ process build_consensus{
 
     script:
     """
-    BuildConsensus.py -s $umi --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
-    BuildConsensus.py -s $r2 --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
+    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
+    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
     """
 }
 
@@ -393,14 +393,14 @@ process metadata_anno{
 
     input:
     file prcons from ch_for_metadata_anno
-    set val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
+    set val(id),val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
 
     output:
     file "*_reheader_reheader_reheader.fastq" into ch_for_dedup 
 
     script:
     """
-    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
+    ParseHeaders.py add -s $prcons -f ID TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
     """
 }
 
@@ -443,7 +443,7 @@ process igblast{
 
     input:
     file fasta name 'input_igblast.fasta' from ch_fasta_for_igblast
-    file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix) 
+    file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
     file "*igblast.fmt7" into ch_igblast_filter
@@ -462,7 +462,7 @@ process igblast_filter {
     input: 
     file blast name 'blast.fmt7' from ch_igblast_filter
     file fasta name 'fasta.fasta' from ch_fasta_for_igblast_filter
-    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix)
+    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
     file "${blast.baseName}_parse-select.tab" into ch_for_shazam
@@ -490,7 +490,7 @@ process shazam{
 
     input:
     file tab from ch_for_shazam
-    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix)
+    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
     val id from ch_sample_for_shazam
 
     output:
@@ -531,7 +531,7 @@ process germline_sequences{
 
     input: 
     file clones from ch_for_germlines
-    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix)
+    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
     file geno_fasta from ch_genotype_fasta_for_germline
 
     output:
