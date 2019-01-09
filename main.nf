@@ -258,12 +258,10 @@ process cluster_sets {
     tag "${umi.baseName}"
 
     input:
-    file umi from ch_umi_for_umi_cluster_sets
-    file r2 from ch_r2_for_umi_cluster_sets
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
 
     output:
-    file "${umi.baseName}_UMI_R1_cluster-pass.fastq" into ch_umi_for_reheader
-    file "${r2.baseName}_R2_cluster-pass.fastq" into ch_r2_for_reheader
+    set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
 
     script:
     """
@@ -277,13 +275,11 @@ process reheader {
     tag "${umi.baseName}" 
 
     input:
-    file umi from ch_umi_for_reheader
-    file r2 from ch_r2_for_reheader
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
 
     output:
-    file "${umi.baseName}_reheader.fastq" into ch_umi_for_consensus
-    file "${r2.baseName}_reheader.fastq" into ch_r2_for_consensus
-
+    set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
+    
     script:
     """
     ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat
