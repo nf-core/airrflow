@@ -190,10 +190,7 @@ process merge_r1_umi {
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
 
     output:
-    file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
-    file "${R2.baseName}" into ch_fastqs_for_processing_r2
-    set val("$id"),val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
-    val("$id") into (ch_sample_for_alakazam,ch_sample_for_shazam)
+    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
 
     script:
     """
@@ -209,12 +206,10 @@ process filter_by_sequence_quality {
     tag "${umi.baseName}"
 
     input:
-    file(umi) from ch_fastqs_for_processing_umi
-    file(r2) from ch_fastqs_for_processing_r2
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population)
 
     output:
-    file "${umi.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${r2.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
+    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population")  into ch_filtered_by_seq_quality_for_primer_Masking_UMI
 
     script:
     """
@@ -228,8 +223,7 @@ process mask_primers {
     tag "${umi_file.baseName}"
 
     input:
-    file(umi_file) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file(r2_file) from ch_filtered_by_seq_quality_for_primerMasking_R2
+    set file(umi_file), file(r2_file), val(id), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
 
