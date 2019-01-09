@@ -25,17 +25,18 @@ output_folder = dirname(args[1])
 db <- readChangeoDb(inputtable)
 ighv <- readIgFasta(IGHV_fasta, strip_down_name = TRUE, force_caps = TRUE)
 
-nv <- findNovelAlleles(db, germline_db = ighv, germline_min = 20)
+#nv <- findNovelAlleles(db, germline_db = ighv, germline_min = 20)
 gt <- inferGenotype(db, germline_db = ighv, find_unmutated = FALSE)
 
-sel_nv <- selectNovel(nv)
+#sel_nv <- selectNovel(nv)
 
-if (nrow(sel_nv) > 0){
-  ggsave(paste(output_folder,"novel_alleles.pdf",sep="/"), plotNovel(db, novel_row = sel_nv))
-}
+#if (nrow(sel_nv) > 0){
+#  ggsave(paste(output_folder,"novel_alleles.pdf",sep="/"), plotNovel(db, novel_row = sel_nv))
+#}
 
 # Save genotype
-gtseq <- genotypeFasta(gt, ighv, nv)
+#gtseq <- genotypeFasta(gt, ighv, nv)
+gtseq <- genotypeFasta(gt, ighv)
 writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
 # Plot genotype
