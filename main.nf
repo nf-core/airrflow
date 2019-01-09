@@ -242,12 +242,10 @@ process pair_seq{
     tag "${umi.baseName}"
 
     input:
-    file umi from ch_for_pair_seq_umi_file
-    file r2 from ch_for_pair_seq_r2_file
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
 
     output:
-    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_cluster_sets
-    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_cluster_sets
+    set file("${umi.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_umi_cluster_sets
 
     script:
     """
