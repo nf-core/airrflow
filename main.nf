@@ -279,7 +279,7 @@ process reheader {
 
     output:
     set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
-    
+
     script:
     """
     ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat
@@ -293,12 +293,10 @@ process build_consensus{
     tag "${umi.baseName}"
 
     input:
-    file umi from ch_umi_for_consensus
-    file r2 from ch_r2_for_consensus
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
 
     output:
-    file "${umi.baseName}_UMI_R1_consensus-pass.fastq" into ch_consensus_passed_umi
-    file "${r2.baseName}_R2_consensus-pass.fastq" into ch_consensus_passed_r2
+    set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
 
     script:
     """
@@ -463,12 +461,6 @@ process igblast_filter {
     ConvertDb.py fasta -d ${blast.baseName}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     """
 }
-
-
-
-/*
-    
-*/
 
 //Shazam! 
 process shazam{
