@@ -209,7 +209,7 @@ process filter_by_sequence_quality {
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population)
 
     output:
-    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population")  into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
 
     script:
     """
@@ -228,8 +228,7 @@ process mask_primers {
     file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
-    file "${umi_file.baseName}_UMI_R1_primers-pass.fastq" into ch_for_pair_seq_umi_file
-    file "${r2_file.baseName}_R2_primers-pass.fastq" into ch_for_pair_seq_r2_file
+    set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
 
     script:
     """
