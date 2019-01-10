@@ -206,7 +206,7 @@ process filter_by_sequence_quality {
     tag "${umi.baseName}"
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population)
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
 
     output:
     set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
@@ -427,7 +427,7 @@ process igblast{
     tag "${fasta.baseName}"
 
     input:
-    set file(fasta name 'input_igblast.fasta'), val(id), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
+    set file('input_igblast.fasta'), val(id), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
@@ -435,7 +435,7 @@ process igblast{
 
     script:
     """
-    AssignGenes.py igblast -s $fasta -b $igblast --organism human --loci ig --format blast
+    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism human --loci ig --format blast
     """
 }
 
@@ -446,20 +446,21 @@ process igblast_filter {
     
 
     input: 
-    set file(blast name 'blast.fmt7'), val(id), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
-    set file(fasta name 'fasta.fasta'), val(id2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
+    set file('blast.fmt7'), val(id), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
+    set file('fasta.fasta'), val(id2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${blast.baseName}_parse-select.tab"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_shazam
-    file "${blast.baseName}_parse-select_sequences.fasta"
+    set file("${base}_parse-select.tab"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_shazam
+    file "${base}_parse-select_sequences.fasta"
 
     script:
+    def base = 'blast'
     """
-    MakeDb.py igblast -i ${blast} -s ${fasta} -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d ${blast.baseName}_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${blast.baseName}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}
-    ConvertDb.py fasta -d ${blast.baseName}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
+    ParseDb.py split -d ${base}_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d ${base}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${base}
+    ConvertDb.py fasta -d ${base}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     """
 }
 
