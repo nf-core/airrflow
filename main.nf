@@ -455,7 +455,7 @@ process igblast_filter {
     file "${base}_parse-select_sequences.fasta"
 
     script:
-    def base = 'blast'
+    base = "blast"
     """
     MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
     ParseDb.py split -d ${base}_db-pass.tab -f FUNCTIONAL
