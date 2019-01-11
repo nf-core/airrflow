@@ -184,7 +184,7 @@ log.info "========================================="
 
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
-    tag "${R1.baseName}"
+    tag "${id}" 
 
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
@@ -203,7 +203,7 @@ process merge_r1_umi {
 
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
@@ -220,7 +220,7 @@ process filter_by_sequence_quality {
 
 //Mask them primers
 process mask_primers {
-    tag "${umi_file.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi_file), file(r2_file), val(id), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
@@ -239,7 +239,7 @@ process mask_primers {
 
 //Pair the UMI_R1 and R2
 process pair_seq{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
@@ -255,7 +255,7 @@ process pair_seq{
 
 //Deal with too low UMI diversity
 process cluster_sets {
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
@@ -272,7 +272,7 @@ process cluster_sets {
 
 //ParseHeaders to annotate barcode into cluster names
 process reheader {
-    tag "${umi.baseName}" 
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
@@ -290,7 +290,7 @@ process reheader {
 
 //Build UMI consensus
 process build_consensus{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
@@ -307,7 +307,7 @@ process build_consensus{
 
 //Repair again UMI_R1+R2
 process repair{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
@@ -324,7 +324,7 @@ process repair{
 
 //Assemble the UMI consensus mate pairs
 process assemble{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
     set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
@@ -341,7 +341,7 @@ process assemble{
     
 //combine UMI read group size annotations
 process combine_umi_read_groups{
-    tag "${assembled.baseName}"
+    tag "${id}" 
 
     input:
     set file(assembled), val(id), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
@@ -358,7 +358,7 @@ process combine_umi_read_groups{
 
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
-    tag "${combined.baseName}"
+    tag "${id}" 
 
     input:
     set file(combined), val(id), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
@@ -375,7 +375,7 @@ process copy_prcons{
 
 //Add Metadata annotation to headers
 process metadata_anno{
-    tag "${prcons.baseName}"
+    tag "${id}" 
 
     input:
     set file(prcons), val(id), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
@@ -391,7 +391,7 @@ process metadata_anno{
 
 //Removal of duplicate sequences
 process dedup {
-    tag "${dedup.baseName}"
+    tag "${id}" 
 
     input:
     set file(dedup), val(id), val(treatment), val(extraction_time), val(population) from ch_for_dedup
@@ -424,7 +424,7 @@ process filter_seqs{
 
 //Run IGBlast
 process igblast{
-    tag "${fasta.baseName}"
+    tag "${id}"
 
     input:
     set file('input_igblast.fasta'), val(id), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
@@ -442,7 +442,7 @@ process igblast{
 
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
-    tag "${blast.baseName}"
+    tag "${id}"
     
 
     input: 
@@ -466,7 +466,7 @@ process igblast_filter {
 
 //Shazam! 
 process shazam{
-    tag "${tab.baseName}"    
+    tag "${id}"    
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
@@ -486,7 +486,7 @@ process shazam{
 
 //Assign clones
 process assign_clones{
-    tag "${geno.baseName}" 
+    tag "${id}" 
 
     input:
     set val(threshold), file(geno), file(geno_fasta), val(id), val(treatment), val(extraction_time), val(population) from ch_threshold_for_clone_definition
@@ -505,7 +505,7 @@ process assign_clones{
 
 //Reconstruct germline sequences
 process germline_sequences{
-    tag "${clones.baseName}"
+    tag "${id}" 
 
     input: 
     set file(clones), file(geno_fasta), val(id), val(treatment), val(extraction_time), val(population) from ch_for_germlines
@@ -522,7 +522,7 @@ process germline_sequences{
 
 //Alakazam!
 process alakazam{
-    tag "${tab.baseName}"
+    tag "${id}" 
     publishDir "${params.outdir}/alakazam/$id", mode: 'copy'
 
 
