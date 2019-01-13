@@ -385,7 +385,7 @@ process metadata_anno{
 
     script:
     """
-    ParseHeaders.py add -s $prcons -f ID SOURCE TREATMENT EXTRACT_TIME POPULATION -u $id $source $treatment $extraction_time $population
+    ParseHeaders.py add -s $prcons -f SAMPLE_CODE SOURCE TREATMENT EXTRACT_TIME POPULATION -u $id $source $treatment $extraction_time $population
     """
 }
 
