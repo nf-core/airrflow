@@ -184,16 +184,13 @@ log.info "========================================="
 
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
-    tag "${R1.baseName}"
+    tag "${id}" 
 
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
 
     output:
-    file "*UMI_R1.fastq" into ch_fastqs_for_processing_umi
-    file "${R2.baseName}" into ch_fastqs_for_processing_r2
-    set val("$treatment"),val("$extraction_time"),val("$population") into ch_meta_env_for_anno
-    val("$id") into (ch_sample_for_alakazam,ch_sample_for_shazam)
+    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
 
     script:
     """
@@ -206,15 +203,13 @@ process merge_r1_umi {
 
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
-    file(umi) from ch_fastqs_for_processing_umi
-    file(r2) from ch_fastqs_for_processing_r2
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
 
     output:
-    file "${umi.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${r2.baseName}_quality-pass.fastq" into ch_filtered_by_seq_quality_for_primerMasking_R2
+    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
 
     script:
     """
@@ -225,36 +220,32 @@ process filter_by_sequence_quality {
 
 //Mask them primers
 process mask_primers {
-    tag "${umi_file.baseName}"
+    tag "${id}" 
 
     input:
-    file(umi_file) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file(r2_file) from ch_filtered_by_seq_quality_for_primerMasking_R2
-    file(cprimers) from ch_cprimers_fasta 
-    file(vprimers) from ch_vprimers_fasta
+    set file(umi_file), file(r2_file), val(id), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file(cprimers) from ch_cprimers_fasta.collect() 
+    file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
-    file "${umi_file.baseName}_UMI_R1_primers-pass.fastq" into ch_for_pair_seq_umi_file
-    file "${r2_file.baseName}_R2_primers-pass.fastq" into ch_for_pair_seq_r2_file
+    set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
 
     script:
     """
-    MaskPrimers.py score -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
-    MaskPrimers.py score -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
+    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2
     """
 }
 
 //Pair the UMI_R1 and R2
 process pair_seq{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
-    file umi from ch_for_pair_seq_umi_file
-    file r2 from ch_for_pair_seq_r2_file
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
 
     output:
-    file "${umi.baseName}_pair-pass.fastq" into ch_umi_for_umi_cluster_sets
-    file "${r2.baseName}_pair-pass.fastq" into ch_r2_for_umi_cluster_sets
+    set file("${umi.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_umi_cluster_sets
 
     script:
     """
@@ -264,34 +255,30 @@ process pair_seq{
 
 //Deal with too low UMI diversity
 process cluster_sets {
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
-    file umi from ch_umi_for_umi_cluster_sets
-    file r2 from ch_r2_for_umi_cluster_sets
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
 
     output:
-    file "${umi.baseName}_UMI_R1_cluster-pass.fastq" into ch_umi_for_reheader
-    file "${r2.baseName}_R2_cluster-pass.fastq" into ch_r2_for_reheader
+    set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
 
     script:
     """
-    ClusterSets.py set -s $umi --outname ${umi.baseName}_UMI_R1 
-    ClusterSets.py set -s $r2 --outname ${r2.baseName}_R2
+    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 
+    ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2
     """
 }
 
 //ParseHeaders to annotate barcode into cluster names
 process reheader {
-    tag "${umi.baseName}" 
+    tag "${id}" 
 
     input:
-    file umi from ch_umi_for_reheader
-    file r2 from ch_r2_for_reheader
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
 
     output:
-    file "${umi.baseName}_reheader.fastq" into ch_umi_for_consensus
-    file "${r2.baseName}_reheader.fastq" into ch_r2_for_consensus
+    set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
 
     script:
     """
@@ -303,51 +290,47 @@ process reheader {
 
 //Build UMI consensus
 process build_consensus{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
-    file umi from ch_umi_for_consensus
-    file r2 from ch_r2_for_consensus
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
 
     output:
-    file "${umi.baseName}_UMI_R1_consensus-pass.fastq" into ch_consensus_passed_umi
-    file "${r2.baseName}_R2_consensus-pass.fastq" into ch_consensus_passed_r2
+    set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
 
     script:
     """
-    BuildConsensus.py -s $umi --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
-    BuildConsensus.py -s $r2 --bf CLUSTER --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
+    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1
+    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2
     """
 }
 
 //Repair again UMI_R1+R2
 process repair{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
-    file umi from ch_consensus_passed_umi
-    file r2 from ch_consensus_passed_r2
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
 
     output:
-    file "*UMI_R1_consensus-pass_pair-pass.fastq" into ch_repaired_UMI_for_assembly
-    file "*R2_consensus-pass_pair-pass.fastq" into ch_repaired_r2_for_assembly
+    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_repaired_UMI_for_assembly
 
     script:
     """
     PairSeq.py -1 $umi -2 $r2 --coord presto
     """
 }
+   
 
 //Assemble the UMI consensus mate pairs
 process assemble{
-    tag "${umi.baseName}"
+    tag "${id}" 
 
     input:
-    file umi from ch_repaired_UMI_for_assembly
-    file r2 from ch_repaired_r2_for_assembly
+    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
 
     output:
-    file "${umi.baseName}_UMI_R1_R2_assemble-pass.fastq" into ch_for_combine_UMI
+    set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
 
     script:
     """
@@ -355,15 +338,16 @@ process assemble{
     """
 }
 
+    
 //combine UMI read group size annotations
 process combine_umi_read_groups{
-    tag "${assembled.baseName}"
+    tag "${id}" 
 
     input:
-    file assembled from ch_for_combine_UMI
+    set file(assembled), val(id), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
 
     output:
-    file "*_reheader.fastq" into ch_for_prcons_parseheaders
+    set file("*_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_prcons_parseheaders
 
     script:
     """
@@ -371,15 +355,16 @@ process combine_umi_read_groups{
     """
 }
 
+
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
-    tag "${combined.baseName}"
+    tag "${id}" 
 
     input:
-    file combined from ch_for_prcons_parseheaders
+    set file(combined), val(id), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
 
     output:
-    file "*reheader_reheader.fastq" into ch_for_metadata_anno
+    set file("*reheader_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_metadata_anno
 
     script:
     """
@@ -387,32 +372,32 @@ process copy_prcons{
     """
 }
 
+
 //Add Metadata annotation to headers
 process metadata_anno{
-    tag "${prcons.baseName}"
+    tag "${id}" 
 
     input:
-    file prcons from ch_for_metadata_anno
-    set val(treatment),val(extraction_time),val(population) from ch_meta_env_for_anno
+    set file(prcons), val(id), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
     output:
-    file "*_reheader_reheader_reheader.fastq" into ch_for_dedup 
+    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_dedup
 
     script:
     """
-    ParseHeaders.py add -s $prcons -f TREATMENT EXTRACT_TIME POPULATION -u $treatment $extraction_time $population
+    ParseHeaders.py add -s $prcons -f ID TREATMENT EXTRACT_TIME POPULATION -u $id $treatment $extraction_time $population
     """
 }
 
 //Removal of duplicate sequences
 process dedup {
-    tag "${dedup.baseName}"
+    tag "${id}" 
 
     input:
-    file dedup from ch_for_dedup
+    set file(dedup), val(id), val(treatment), val(extraction_time), val(population) from ch_for_dedup
 
     output:
-    file "${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq" into ch_for_filtering
+    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_filtering
 
     script:
     """
@@ -425,10 +410,10 @@ process filter_seqs{
     tag "${dedupped.baseName}"
 
     input:
-    file dedupped from ch_for_filtering
+    set file(dedupped), val(id), val(treatment), val(extraction_time), val(population) from ch_for_filtering
 
     output:
-    file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta" into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
 
     script:
     """
@@ -439,64 +424,57 @@ process filter_seqs{
 
 //Run IGBlast
 process igblast{
-    tag "${fasta.baseName}"
+    tag "${id}"
 
     input:
-    file fasta name 'input_igblast.fasta' from ch_fasta_for_igblast
-    file igblast from ch_igblast_db_for_process_igblast 
+    set file('input_igblast.fasta'), val(id), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
+    file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    file "*igblast.fmt7" into ch_igblast_filter
+    set file("*igblast.fmt7"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_igblast_filter
 
     script:
     """
-    AssignGenes.py igblast -s $fasta -b $igblast --organism human --loci ig --format blast
+    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism human --loci ig --format blast
     """
 }
+
 
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
-    tag "${blast.baseName}"
+    tag "${id}"
     
 
     input: 
-    file blast name 'blast.fmt7' from ch_igblast_filter
-    file fasta name 'fasta.fasta' from ch_fasta_for_igblast_filter
-    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix)
+    set file('blast.fmt7'), val(id), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
+    set file('fasta.fasta'), val(id2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
+    file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    file "${blast.baseName}_parse-select.tab" into ch_for_shazam
-    file "${blast.baseName}_parse-select_sequences.fasta"
+    set file("${base}_parse-select.tab"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_shazam
+    file "${base}_parse-select_sequences.fasta"
 
     script:
+    base = "blast"
     """
-    MakeDb.py igblast -i ${blast} -s ${fasta} -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d ${blast.baseName}_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${blast.baseName}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${blast.baseName}
-    ConvertDb.py fasta -d ${blast.baseName}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
+    ParseDb.py split -d ${base}_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d ${base}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${base}
+    ConvertDb.py fasta -d ${base}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     """
 }
 
-
-
-/*
-    
-*/
-
 //Shazam! 
 process shazam{
-    tag "${tab.baseName}"    
+    tag "${id}"    
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    file tab from ch_for_shazam
-    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix)
-    val id from ch_sample_for_shazam
+    set file(tab), val(id), val(treatment), val(extraction_time), val(population) from ch_for_shazam
+    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
-    file "threshold.txt" into ch_threshold_for_clone_definition
-    file "igh_genotyped.tab" into ch_genotyped_tab_for_clone_definition
-    file "v_genotype.fasta" into ch_genotype_fasta_for_germline
+    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_threshold_for_clone_definition
     file "Hamming_distance_threshold.pdf" 
     file "genotype.pdf"
 
@@ -508,14 +486,13 @@ process shazam{
 
 //Assign clones
 process assign_clones{
-    tag "${geno.baseName}" 
+    tag "${id}" 
 
     input:
-    file geno from ch_genotyped_tab_for_clone_definition
-    val threshold from ch_threshold_for_clone_definition
+    set val(threshold), file(geno), file(geno_fasta), val(id), val(treatment), val(extraction_time), val(population) from ch_threshold_for_clone_definition
 
     output:
-    file "${geno.baseName}_clone-pass.tab" into ch_for_germlines
+    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_germlines
 
     script:
     thr = file(threshold).text
@@ -525,17 +502,17 @@ process assign_clones{
     """
 }
 
+
 //Reconstruct germline sequences
 process germline_sequences{
-    tag "${clones.baseName}"
+    tag "${id}" 
 
     input: 
-    file clones from ch_for_germlines
-    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix)
-    file geno_fasta from ch_genotype_fasta_for_germline
+    set file(clones), file(geno_fasta), val(id), val(treatment), val(extraction_time), val(population) from ch_for_germlines
+    file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    file "${clones.baseName}_germ-pass.tab" into ch_for_alakazam
+    set file("${clones.baseName}_germ-pass.tab"), val("$id") into ch_for_alakazam
 
     script:
     """
@@ -545,13 +522,12 @@ process germline_sequences{
 
 //Alakazam!
 process alakazam{
-    tag "${tab.baseName}"
+    tag "${id}" 
     publishDir "${params.outdir}/alakazam/$id", mode: 'copy'
 
 
     input:
-    file tab from ch_for_alakazam
-    val id from ch_sample_for_alakazam
+    set file(tab), val(id) from ch_for_alakazam
 
     output:
     file "*.pdf"
