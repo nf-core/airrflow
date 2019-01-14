@@ -190,7 +190,7 @@ process merge_r1_umi {
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
 
     output:
-    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
+    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
 
     script:
     """
@@ -206,10 +206,10 @@ process filter_by_sequence_quality {
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
 
     output:
-    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
 
     script:
     """
@@ -223,12 +223,12 @@ process mask_primers {
     tag "${id}" 
 
     input:
-    set file(umi_file), file(r2_file), val(id), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
-    set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
+    set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
 
     script:
     """
@@ -242,10 +242,10 @@ process pair_seq{
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
 
     output:
-    set file("${umi.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_umi_cluster_sets
+    set file("${umi.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_umi_cluster_sets
 
     script:
     """
@@ -258,10 +258,10 @@ process cluster_sets {
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
 
     output:
-    set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
+    set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
 
     script:
     """
@@ -275,10 +275,10 @@ process reheader {
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
 
     output:
-    set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
+    set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
 
     script:
     """
@@ -293,10 +293,10 @@ process build_consensus{
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
 
     output:
-    set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
+    set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
 
     script:
     """
@@ -310,10 +310,10 @@ process repair{
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
 
     output:
-    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_repaired_UMI_for_assembly
+    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_repaired_UMI_for_assembly
 
     script:
     """
@@ -327,10 +327,10 @@ process assemble{
     tag "${id}" 
 
     input:
-    set file(umi), file(r2), val(id), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
 
     output:
-    set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
+    set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
 
     script:
     """
@@ -344,10 +344,10 @@ process combine_umi_read_groups{
     tag "${id}" 
 
     input:
-    set file(assembled), val(id), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
+    set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
 
     output:
-    set file("*_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_prcons_parseheaders
+    set file("*_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_prcons_parseheaders
 
     script:
     """
@@ -361,10 +361,10 @@ process copy_prcons{
     tag "${id}" 
 
     input:
-    set file(combined), val(id), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
+    set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
 
     output:
-    set file("*reheader_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_metadata_anno
+    set file("*reheader_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_metadata_anno
 
     script:
     """
@@ -378,14 +378,14 @@ process metadata_anno{
     tag "${id}" 
 
     input:
-    set file(prcons), val(id), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
+    set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
     output:
-    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_dedup
+    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_dedup
 
     script:
     """
-    ParseHeaders.py add -s $prcons -f ID TREATMENT EXTRACT_TIME POPULATION -u $id $treatment $extraction_time $population
+    ParseHeaders.py add -s $prcons -f SAMPLE_CODE SOURCE TREATMENT EXTRACT_TIME POPULATION -u $id $source $treatment $extraction_time $population
     """
 }
 
@@ -394,10 +394,10 @@ process dedup {
     tag "${id}" 
 
     input:
-    set file(dedup), val(id), val(treatment), val(extraction_time), val(population) from ch_for_dedup
+    set file(dedup), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_dedup
 
     output:
-    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_filtering
+    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_filtering
 
     script:
     """
@@ -407,13 +407,13 @@ process dedup {
 
 //Filtering to sequences with at least two representative reads and convert to FastA
 process filter_seqs{
-    tag "${dedupped.baseName}"
+    tag "${id}"
 
     input:
-    set file(dedupped), val(id), val(treatment), val(extraction_time), val(population) from ch_for_filtering
+    set file(dedupped), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_filtering
 
     output:
-    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
 
     script:
     """
@@ -427,11 +427,11 @@ process igblast{
     tag "${id}"
 
     input:
-    set file('input_igblast.fasta'), val(id), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
+    set file('input_igblast.fasta'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    set file("*igblast.fmt7"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_igblast_filter
+    set file("*igblast.fmt7"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_igblast_filter
 
     script:
     """
@@ -446,12 +446,12 @@ process igblast_filter {
     
 
     input: 
-    set file('blast.fmt7'), val(id), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
+    set file('blast.fmt7'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
     set file('fasta.fasta'), val(id2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${base}_parse-select.tab"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_shazam
+    set file("${base}_parse-select.tab"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_shazam
     file "${base}_parse-select_sequences.fasta"
 
     script:
@@ -470,11 +470,11 @@ process shazam{
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    set file(tab), val(id), val(treatment), val(extraction_time), val(population) from ch_for_shazam
+    set file(tab), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_shazam
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
-    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_threshold_for_clone_definition
+    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_threshold_for_clone_definition
     file "Hamming_distance_threshold.pdf" 
     file "genotype.pdf"
 
@@ -489,10 +489,10 @@ process assign_clones{
     tag "${id}" 
 
     input:
-    set val(threshold), file(geno), file(geno_fasta), val(id), val(treatment), val(extraction_time), val(population) from ch_threshold_for_clone_definition
+    set val(threshold), file(geno), file(geno_fasta), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_threshold_for_clone_definition
 
     output:
-    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_germlines
+    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_germlines
 
     script:
     thr = file(threshold).text
@@ -508,7 +508,7 @@ process germline_sequences{
     tag "${id}" 
 
     input: 
-    set file(clones), file(geno_fasta), val(id), val(treatment), val(extraction_time), val(population) from ch_for_germlines
+    set file(clones), file(geno_fasta), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_germlines
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
