@@ -413,7 +413,7 @@ process filter_seqs{
     set file(dedupped), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_filtering
 
     output:
-    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_fasta_for_igblast,ch_fasta_for_igblast_filter)
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fasta_for_igblast
 
     script:
     """
@@ -431,7 +431,7 @@ process igblast{
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    set file("*igblast.fmt7"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_igblast_filter
+    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_igblast_filter
 
     script:
     """
@@ -446,8 +446,7 @@ process igblast_filter {
     
 
     input: 
-    set file('blast.fmt7'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
-    set file('fasta.fasta'), val(id2), val(source2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
+    set file('blast.fmt7'), file('fasta.fasta'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
