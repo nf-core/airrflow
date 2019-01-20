@@ -447,7 +447,7 @@ process igblast_filter {
 
     input: 
     set file('blast.fmt7'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
-    set file('fasta.fasta'), val(id2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
+    set file('fasta.fasta'), val(id2), val(source2), val(treatment2), val(extraction_time2), val(population2) from ch_fasta_for_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
