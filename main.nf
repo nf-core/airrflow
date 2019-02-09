@@ -246,8 +246,8 @@ process mask_primers {
 
     output:
     set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
-    file ${umi_file.baseName}_UMI_R1.log
-    file ${r2_file.baseName}_R2.log
+    file "${umi_file.baseName}_UMI_R1.log"
+    file "${r2_file.baseName}_R2.log"
 
     script:
     """
