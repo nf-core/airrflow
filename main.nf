@@ -224,7 +224,7 @@ process filter_by_sequence_quality {
     output:
     set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file "${umi.baseName}_UMI_R1.log"
-    file "${r2.basename}_R2.log"
+    file "${r2.baseName}_R2.log"
 
     script:
     """
