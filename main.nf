@@ -42,6 +42,10 @@ def helpMessage() {
       --imgtdb_base                 Path to predownloaded imgtDB 
       --igblast_base                Path to predownloaded igblastDB
 
+    Set clonal cluster threshold:
+      --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
+      --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
+
     Other options:
       --outdir                      The output directory where the results will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
@@ -57,7 +61,7 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Show help emssage
+// Show help message
 if (params.help){
     helpMessage()
     exit 0
@@ -109,7 +113,15 @@ Channel.fromPath("${params.vprimers}")
 saveDBs = false
 
 //Other parameters
-filterseq_q=20
+filterseq_q = 20
+
+//Cluster threshold settings
+params.set_cluster_threshold = false
+if (params.set_cluster_threshold){
+    params.cluster_threshold = 0.0
+}
+
+
 
 
 //Download data process
@@ -494,8 +506,12 @@ process assign_clones{
     set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_germlines
 
     script:
-    thr = file(threshold).text
-    thr = thr.trim()
+    if (params.set_cluster_threshold) {
+        thr = params.cluster_threshold
+    } else {
+        thr = file(threshold).text
+        thr = thr.trim()
+    }
     """
     DefineClones.py -d $geno --act set --model ham --norm len --dist $thr --outname ${geno.baseName}
     """
