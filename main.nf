@@ -215,18 +215,21 @@ process merge_r1_umi {
 
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
-    tag "${id}" 
+    tag "${id}"
+    publishDir "${params.outdir}/Filtered/$id", mode: 'copy'
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
 
     output:
     set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${umi.baseName}_UMI_R1.log"
+    file "${r2.basename}_R2.log"
 
     script:
     """
-    FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}"
-    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}"
+    FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}" --log "${umi.baseName}_UMI_R1.log"
+    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.basename}_R2.log"
     """
 }
 
