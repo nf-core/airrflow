@@ -216,7 +216,14 @@ process merge_r1_umi {
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
     tag "${id}"
-    publishDir "${params.outdir}/filtered/$id", mode: 'copy'
+    publishDir "${params.outdir}/filter_by_sequence_quality/$id", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf("fastq") > 0) "fastq/$filename"
+            else if (filename.indexOf("log") > 0) null
+            else if (filename.indexOf("table") > 0) "info/$filename"
+            else if (filename == ".command.out") "$filename"
+            else null
+        }
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
@@ -225,6 +232,9 @@ process filter_by_sequence_quality {
     set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file "${umi.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
+    file "${umi.baseName}_UMI_R1_table.tab"
+    file "${r2.baseName}_R2_table.tab"
+    file ".command.out"
 
     script:
     """
@@ -237,7 +247,13 @@ process filter_by_sequence_quality {
 //Mask them primers
 process mask_primers {
     tag "${id}"
-    publishDir "${params.outdir}/primers_masked/$id", mode: 'copy'
+    publishDir "${params.outdir}/mask_primers/$id", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf("fastq") > 0) "fastq/$filename"
+            else if (filename.indexOf("log") > 0) null
+            else if (filename.indexOf("table") > 0) "info/$filename"
+            else null
+        }
 
     input:
     set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
@@ -253,6 +269,7 @@ process mask_primers {
     """
     MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log
     MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log
+    ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
 
@@ -313,7 +330,13 @@ process reheader {
 //Build UMI consensus
 process build_consensus{
     tag "${id}"
-    publishDir "${params.outdir}/build_consensus/$id", mode: 'copy'
+    publishDir "${params.outdir}/build_consensus/$id", mode: 'copy',
+    saveAs: {filename ->
+            if (filename.indexOf("fastq") > 0) "fastq/$filename"
+            else if (filename.indexOf("log") > 0) null
+            else if (filename.indexOf("table") > 0) "info/$filename"
+            else null
+        }
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
@@ -322,11 +345,14 @@ process build_consensus{
     set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
     file "${umi.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
+    file "${umi.baseName}_UMI_R1_table.tab"
+    file "${r2.baseName}_R2_table.tab"
 
     script:
     """
     BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1 --log ${umi.baseName}_UMI_R1.log
     BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log
+    ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
     """
 }
 
@@ -350,7 +376,13 @@ process repair{
 //Assemble the UMI consensus mate pairs
 process assemble{
     tag "${id}"
-    publishDir "${params.outdir}/assembled_pairs/$id", mode: 'copy'
+    publishDir "${params.outdir}/assemble_pairs/$id", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf("fastq") > 0) "fastq/$filename"
+            else if (filename.indexOf("log") > 0) null
+            else if (filename.indexOf("table") > 0) "info/$filename"
+            else null
+        }
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
@@ -358,10 +390,12 @@ process assemble{
     output:
     set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
     file "${umi.baseName}_UMI_R1_R2.log"
+    file "${umi.baseName}_UMI_R1_R2_table.tab"
 
     script:
     """
     AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2 --log ${umi.baseName}_UMI_R1_R2.log
+    ParseLog.py -l "${umi.baseName}_UMI_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
 }
 
@@ -419,7 +453,14 @@ process metadata_anno{
 //Removal of duplicate sequences
 process dedup {
     tag "${id}"
-    publishDir "${params.outdir}/deduplication/$id", mode: 'copy'
+    publishDir "${params.outdir}/deduplicates/$id", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf("fastq") > 0) "fastq/$filename"
+            else if (filename.indexOf("log") > 0) null
+            else if (filename.indexOf("table") > 0) "info/$filename"
+            else if (filename == ".command.out") "$filename"
+            else null
+        }
 
     input:
     set file(dedup), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_dedup
@@ -427,10 +468,13 @@ process dedup {
     output:
     set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_filtering
     file "${dedup.baseName}_UMI_R1_R2.log"
+    file "${dedup.baseName}_UMI_R1_R2_table.tab"
+    file ".command.out"
 
     script:
     """
     CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2 --log ${dedup.baseName}_UMI_R1_R2.log
+    ParseLog.py -l "${umi.baseName}_UMI_R1_R2.log" -f HEADER DUPCOUNT
     """
 }
 
