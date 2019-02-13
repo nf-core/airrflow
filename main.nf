@@ -234,12 +234,13 @@ process filter_by_sequence_quality {
     file "${r2.baseName}_R2.log"
     file "${umi.baseName}_UMI_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
-    file ".command.out"
+    file "command_out.txt"
 
     script:
     """
     FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}" --log "${umi.baseName}_UMI_R1.log"
     FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log"
+    cp ".command.out" "command_out.txt"
     ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
