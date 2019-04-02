@@ -124,7 +124,6 @@ if (params.define_clones_only){
         .ifEmpty { exit 1, "Cannot find any changeo_tsv matching: ${params.changeo_tsv}\nNB: Path needs to be enclosed in quotes!" }
         .map { tsv_file -> [file(tsv_file), "${tsv_file.baseName}"] }
         .into { ch_input_tsvs }
-    ch_for_shazam = Channel.empty()
 } else {
     ch_input_tsvs = Channel.empty()
 }
