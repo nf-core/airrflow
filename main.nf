@@ -137,6 +137,9 @@ if  (!params.define_clones_only){
     Channel.fromPath("${params.vprimers}")
            .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
            .set { ch_vprimers_fasta }
+} else {
+    ch_cprimers_fasta = Channel.empty()
+    ch_vprimers_fasta = Channel.empty()
 }
 
 
@@ -173,6 +176,8 @@ process fetchDBs{
                     .splitCsv(header: true, sep:'\t')
                     .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
                     .dump()
+ } else {
+     ch_read_files_for_merge_r1_umi = Channel.empty()
  }
 
 // Header log info
