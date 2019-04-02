@@ -104,15 +104,6 @@ if( params.imgtdb_base ){
     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
 }
-//Set up channels for input primers
-if  (!params.define_clones_only){
-    Channel.fromPath("${params.cprimers}")
-           .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
-           .set {ch_cprimers_fasta}
-    Channel.fromPath("${params.vprimers}")
-           .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
-           .set { ch_vprimers_fasta }
-}
 saveDBs = false
 
 //Other parameters
@@ -136,6 +127,16 @@ if (params.define_clones_only){
     ch_for_shazam = Channel.empty()
 } else {
     ch_input_tsvs = Channel.empty()
+}
+
+//Set up channels for input primers
+if  (!params.define_clones_only){
+    Channel.fromPath("${params.cprimers}")
+           .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
+           .set {ch_cprimers_fasta}
+    Channel.fromPath("${params.vprimers}")
+           .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
+           .set { ch_vprimers_fasta }
 }
 
 
