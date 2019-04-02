@@ -45,6 +45,8 @@ def helpMessage() {
     Set clonal cluster threshold:
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
+      --define_clones_only          If set, expects tables as produced by change-O as input, tab delimited. Only performs clonal and germline assignment.
+      --changeo_tsv                 Once define_clones_only is specified, set the path to the change-O tsv file.
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -121,6 +123,19 @@ if (params.set_cluster_threshold){
     params.cluster_threshold = 0.0
 }
 
+//Define clones only
+params.define_clones_only = false
+if (params.define_clones_only){
+    params.changeo_tsv = params.changeo_tsv ?: { log.error "No changeo data provided. Make sure you have used the '--changeo_tsv' option."; exit 1 }()
+    Channel
+        .fromPath( params.changeo_tsv )
+        .ifEmpty { exit 1, "Cannot find any changeo_tsv matching: ${params.changeo_tsv}\nNB: Path needs to be enclosed in quotes!" }
+        .map { tsv_file -> [file(tsv_file), val("${tsv_file.baseName}")] }
+        .into { ch_input_tsvs }
+    ch_for_shazam = Channel.empty()
+} else {
+    ch_input_tsvs = Channel.empty()
+}
 
 
 
@@ -150,11 +165,14 @@ process fetchDBs{
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
- file_meta = file(params.metadata)
- ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
-                .splitCsv(header: true, sep:'\t')
-                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
-                .dump()
+ if  (!params.define_clones_only){
+     file_meta = file(params.metadata)
+     ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+                    .splitCsv(header: true, sep:'\t')
+                    .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
+                    .dump()
+ }
+
 // Header log info
 log.info """=======================================================
                                           ,--./,-.
@@ -196,7 +214,10 @@ log.info "========================================="
 
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
-    tag "${id}" 
+    tag "${id}"
+
+    when:
+    !params.define_clones_only
 
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
@@ -224,6 +245,9 @@ process filter_by_sequence_quality {
             else if (filename == "command_log.txt") "$filename"
             else null
         }
+
+    when:
+    !params.define_clones_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
@@ -257,6 +281,9 @@ process mask_primers {
             else null
         }
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file(cprimers) from ch_cprimers_fasta.collect() 
@@ -289,6 +316,9 @@ process pair_seq{
             else null
         }
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
 
@@ -318,6 +348,9 @@ process cluster_sets {
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
 
+    when:
+    !params.define_clones_only
+
     output:
     set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
     file "command_log.txt"
@@ -333,6 +366,9 @@ process cluster_sets {
 //ParseHeaders to annotate barcode into cluster names
 process reheader {
     tag "${id}"
+
+    when:
+    !params.define_clones_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
@@ -359,6 +395,9 @@ process build_consensus{
             else if (filename == "command_log.txt") "$filename"
             else null
         }
+
+    when:
+    !params.define_clones_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
@@ -392,6 +431,9 @@ process repair{
             else null
         }
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
 
@@ -419,6 +461,9 @@ process assemble{
             else null
         }
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
 
@@ -441,6 +486,9 @@ process assemble{
 process combine_umi_read_groups{
     tag "${id}" 
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
 
@@ -458,6 +506,9 @@ process combine_umi_read_groups{
 process copy_prcons{
     tag "${id}" 
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
 
@@ -474,6 +525,9 @@ process copy_prcons{
 //Add Metadata annotation to headers
 process metadata_anno{
     tag "${id}"
+
+    when:
+    !params.define_clones_only
 
     input:
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
@@ -498,6 +552,9 @@ process dedup {
             else if (filename == "command_log.txt") "$filename"
             else null
         }
+
+    when:
+    !params.define_clones_only
 
     input:
     set file(dedup), val(id) from ch_for_dedup
@@ -528,6 +585,9 @@ process filter_seqs{
             else null
         }
 
+    when:
+    !params.define_clones_only
+
     input:
     set file(dedupped), val(id) from ch_for_filtering
 
@@ -547,6 +607,9 @@ process filter_seqs{
 //Run IGBlast
 process igblast{
     tag "${id}"
+
+    when:
+    !params.define_clones_only
 
     input:
     set file('input_igblast.fasta'), val(id) from ch_fasta_for_igblast
@@ -575,6 +638,9 @@ process igblast_filter {
             else null
         }
 
+    when:
+    !params.define_clones_only
+
     input: 
     set file('blast.fmt7'), file('fasta.fasta'), val(id) from ch_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
@@ -602,7 +668,7 @@ process shazam{
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    set file(tab), val(id) from ch_for_shazam
+    set file(tab), val(id) from ch_for_shazam.mix(ch_input_tsvs)
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
