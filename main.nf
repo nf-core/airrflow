@@ -479,7 +479,7 @@ process metadata_anno{
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
     output:
-    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_dedup
+    set file("*_reheader_reheader_reheader.fastq"), val("$id") into ch_for_dedup
 
     script:
     """
@@ -500,10 +500,10 @@ process dedup {
         }
 
     input:
-    set file(dedup), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_dedup
+    set file(dedup), val(id) from ch_for_dedup
 
     output:
-    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_filtering
+    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id") into ch_for_filtering
     file "${dedup.baseName}_UMI_R1_R2.log"
     file "${dedup.baseName}_UMI_R1_R2_table.tab"
     file "command_log.txt"
@@ -529,10 +529,10 @@ process filter_seqs{
         }
 
     input:
-    set file(dedupped), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_filtering
+    set file(dedupped), val(id) from ch_for_filtering
 
     output:
-    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fasta_for_igblast
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id") into ch_fasta_for_igblast
     file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"
     file "command_log.txt"
 
@@ -549,11 +549,11 @@ process igblast{
     tag "${id}"
 
     input:
-    set file('input_igblast.fasta'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fasta_for_igblast
+    set file('input_igblast.fasta'), val(id) from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_igblast_filter
+    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id") into ch_igblast_filter
 
     script:
     """
@@ -576,11 +576,11 @@ process igblast_filter {
         }
 
     input: 
-    set file('blast.fmt7'), file('fasta.fasta'), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_igblast_filter
+    set file('blast.fmt7'), file('fasta.fasta'), val(id) from ch_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${base}_parse-select.tab"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_shazam
+    set file("${base}_parse-select.tab"), val("$id") into ch_for_shazam
     file "${base}_parse-select_sequences.fasta"
     file "${base}_parse-select.tab"
     file "command_log.txt"
@@ -602,11 +602,11 @@ process shazam{
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    set file(tab), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_shazam
+    set file(tab), val(id) from ch_for_shazam
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
-    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_threshold_for_clone_definition
+    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition
     file "Hamming_distance_threshold.pdf" 
     file "genotype.pdf"
 
@@ -631,10 +631,10 @@ process assign_clones{
         }
 
     input:
-    set val(threshold), file(geno), file(geno_fasta), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_threshold_for_clone_definition
+    set val(threshold), file(geno), file(geno_fasta), val(id) from ch_threshold_for_clone_definition
 
     output:
-    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_germlines
+    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id") into ch_for_germlines
     file "${geno.baseName}_clone-pass.tab"
     file "${geno.baseName}_table.tab"
     file "command_log.txt"
@@ -668,7 +668,7 @@ process germline_sequences{
         }
 
     input: 
-    set file(clones), file(geno_fasta), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_germlines
+    set file(clones), file(geno_fasta), val(id) from ch_for_germlines
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
