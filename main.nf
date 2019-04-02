@@ -196,6 +196,7 @@ summary['Max Time']     = params.max_time
 summary['IGDB Path']    = params.igblast_base
 summary['IMGT Path']    = params.imgtdb_base
 summary['Output dir']   = params.outdir
+summary['Define clones only']  = params.define_clones_only
 summary['Working dir']  = workflow.workDir
 summary['Container Engine'] = workflow.containerEngine
 if(workflow.containerEngine) summary['Container'] = workflow.container
