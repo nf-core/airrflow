@@ -18,6 +18,12 @@ processes = ["filter_by_sequence_quality",
              "define_clones",
              "create_germlines"]
 
+# Path of logs will be:
+# process_name/sample_name/command_log.txt
+
+# How to modify for log parsing in nextflow pipeline:
+# take all low files as input
+# output parsed table that will be published as PublishDir.
 
 df_process_list = []
 
@@ -36,7 +42,6 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         s_code.append(logfile.split("/")[1])
@@ -317,4 +322,39 @@ for process in processes:
         df_process_list.append(df_process)
 
 
+colnames = ["Sample",
+            "Sequences_R1",
+            "Sequences_R2",
+            "Filtered_quality_R1",
+            "Filtered_quality_R2",
+            "Mask_primers_R1",
+            "Mask_primers_R2",
+            "Paired",
+            "Build_consensus",
+            "Assemble_pairs",
+            "Unique",
+            "Representative_2",
+            "Igblast",
+            "Define_clones",
+            "Germline_found"]
 
+values = [df_process_list[0].iloc[:,0].tolist(),
+          df_process_list[0].loc[:,"start_R1"].tolist(),
+          df_process_list[0].loc[:,"start_R2"].tolist(),
+          df_process_list[0].loc[:,"pass_R1"].tolist(),
+          df_process_list[0].loc[:,"pass_R2"].tolist(),
+          df_process_list[1].loc[:,"pass_R1"].tolist(),
+          df_process_list[1].loc[:,"pass_R2"].tolist(),
+          df_process_list[2].loc[:,"pass_pairs"].tolist(),
+          df_process_list[5].loc[:,"pass_pairs"].tolist(),
+          df_process_list[6].loc[:,"pass_pairs"].tolist(),
+          df_process_list[7].loc[:,"unique"].tolist(),
+          df_process_list[8].loc[:,"repres_2"].tolist(),
+          df_process_list[8].loc[:,"pass_igblast"].tolist(),
+          df_process_list[9].loc[:,"pass_clones"].tolist(),
+          df_process_list[10].loc[:,"pass_clones"].tolist()]
+
+final_table = (zip(colnames, values))
+df_final_table = pd.DataFrame.from_items(final_table)
+df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
+df_final_table.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
