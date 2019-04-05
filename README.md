@@ -29,14 +29,14 @@ Input needs to be a TSV file following this format in general:
 
 ```
 ID	Source	Treatment	Extraction_time	Population	R1	R2	I1
-QMKMK072AD	Patient 2	Terifluomid	baseline	p	sample_S8_L001_R1_001.fastq.gz	sample_S8_L001_R2_001.fastq.gz	sample_S8_L001_I1_001.fastq.gz
+QMKMK072AD	Patient_2	Drug_treatment	baseline	p	sample_S8_L001_R1_001.fastq.gz	sample_S8_L001_R2_001.fastq.gz	sample_S8_L001_I1_001.fastq.gz
 ```
 Attention, the R1/R2 and I1 naming patterns are crucial!
 
 An example call of the pipeline could be then:
 
 ```
-nextflow run ggabernet/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers_IG.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8 -resume 
+nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8 -resume 
 ```
 
 ### Credits
