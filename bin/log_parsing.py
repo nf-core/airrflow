@@ -22,7 +22,7 @@ processes = ["filter_by_sequence_quality",
 # process_name/sample_name/command_log.txt
 
 # How to modify for log parsing in nextflow pipeline:
-# take all low files as input
+# take all log files as input
 # output parsed table that will be published as PublishDir.
 
 df_process_list = []
