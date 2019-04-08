@@ -153,7 +153,7 @@ Path to fasta file containing your V-primer sequences. Specify like this:
 --vprimers 'path/to/vprimers.fasta'
 ```
 
-#### `--cprimers``
+#### `--cprimers`
 
 Path to fasta file containing your C-primer sequences. Specify like this:
 ```bash
@@ -163,7 +163,7 @@ Path to fasta file containing your C-primer sequences. Specify like this:
 ## Reference databases
 By default, the pipeline will download the needed igblast and IMGT human databases unless the path to already downloaded databases is specified. To specify the paths set the `--igblast_base` and `--imgtdb_base` parameters.
 
-### `--igblast_base``
+### `--igblast_base`
 
 Path to igblast downloaded database. Set as follows:
 
@@ -171,7 +171,7 @@ Path to igblast downloaded database. Set as follows:
 --igblast_base 'path/to/igblast_base'
 ```
 
-### `--imgtdb_base``
+### `--imgtdb_base`
 
 Path to imgt downloaded database. Set as follows:
 
