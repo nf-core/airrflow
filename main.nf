@@ -172,6 +172,7 @@ process fetchDBs{
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
+ params.metadata = false
  if  (!params.define_clones_only){
      file_meta = file(params.metadata)
      ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
