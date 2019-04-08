@@ -137,7 +137,7 @@ This metadata will then be automatically annotated in a column with the same hea
 - *Population*: B-cell population (e.g. naive, double-negative, memory, plasmablast).
 - *R1*: path to fastq file with first mates of paired-end sequencing.
 - *R2*: path to fastq file with second mates of paired-end sequencing.
-- *I1*: path to 
+- *I1*: path to fastq with illumina index and UMI (unique molecular identifier) barcode.
 
 
 Specify the location of your metadata file like this:
@@ -146,68 +146,37 @@ Specify the location of your metadata file like this:
 --metadata 'path/to/metadata/metadata_sheet.tsv'
 ```
 
+#### `--vprimers`
 
-
-Please note the following requirements:
-
-1. The path must be enclosed in quotes
-2. The path must have at least one `*` wildcard character
-3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.
-
-If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
-
-### `--singleEnd`
-By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
-
+Path to fasta file containing your V-primer sequences. Specify like this:
 ```bash
---singleEnd --reads '*.fastq'
+--vprimers 'path/to/vprimers.fasta'
 ```
 
-It is not possible to run a mixture of single-end and paired-end files in one run.
+#### `--cprimers``
 
-
-## Reference Genomes
-
-The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
-
-### `--genome` (using iGenomes)
-There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
-
-You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
-
-* Human
-  * `--genome GRCh37`
-* Mouse
-  * `--genome GRCm38`
-* _Drosophila_
-  * `--genome BDGP6`
-* _S. cerevisiae_
-  * `--genome 'R64-1-1'`
-
-> There are numerous others - check the config file for more.
-
-Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
-
-The syntax for this reference configuration is as follows:
-
-<!-- TODO nf-core: Update reference genome example according to what is needed -->
-```nextflow
-params {
-  genomes {
-    'GRCh37' {
-      fasta   = '<path to the genome fasta file>' // Used if no star index given
-    }
-    // Any number of additional genomes, key is used with --genome
-  }
-}
+Path to fasta file containing your C-primer sequences. Specify like this:
+```bash
+--cprimers 'path/to/cprimers.fasta'
 ```
 
-<!-- TODO nf-core: Describe reference path flags -->
-### `--fasta`
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+## Reference databases
+By default, the pipeline will download the needed igblast and IMGT human databases unless the path to already downloaded databases is specified. To specify the paths set the `--igblast_base` and `--imgtdb_base` parameters.
+
+### `--igblast_base``
+
+Path to igblast downloaded database. Set as follows:
 
 ```bash
---fasta '[path to Fasta reference]'
+--igblast_base 'path/to/igblast_base'
+```
+
+### `--imgtdb_base``
+
+Path to imgt downloaded database. Set as follows:
+
+```bash
+--imgtdb_base 'path/to/imgtdb_base'
 ```
 
 ## Job Resources
