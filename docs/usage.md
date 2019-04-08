@@ -21,6 +21,9 @@
 * [Reference Databases](#reference-databases)
     * [`--igblast_base`](#--igblast_base)
     * [`--imgtdb_base`](#--imgtdb_base)
+* [Define clones](#Define-clones)
+    * [Manually set cluster  threshold](#manually-set-cluster-threshold)
+    * [Only define clones](#only-define-clones)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
 * [Custom resource requests](#custom-resource-requests)
@@ -81,7 +84,6 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 First, go to the [nf-core/bcellmagic releases page](https://github.com/nf-core/bcellmagic/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
-
 
 ## Main Arguments
 
@@ -161,6 +163,7 @@ Path to fasta file containing your C-primer sequences. Specify like this:
 ```
 
 ## Reference databases
+
 By default, the pipeline will download the needed igblast and IMGT human databases unless the path to already downloaded databases is specified. To specify the paths set the `--igblast_base` and `--imgtdb_base` parameters.
 
 ### `--igblast_base`
@@ -178,6 +181,27 @@ Path to imgt downloaded database. Set as follows:
 ```bash
 --imgtdb_base 'path/to/imgtdb_base'
 ```
+
+## Define clones
+
+By default the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment and junction lenght. Additionally, the similarity of the junction region sequences  will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters as follows:
+
+### Manually set cluster threshold
+
+Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter as follows:
+
+```bash
+--set_cluster_threshold --cluster_threshold 0.14
+```
+
+### Only define clones
+
+In some occasions you might just  want to run the pipeline to define clones for  some  samples for which you have already run the rest of the steps. For example, after pulling the results for the same patient together. In this case, run the pipeline setting the `--define_clones_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tsv` as follows:
+
+```bash
+--define_clones_only --changeo_tsv 'path/to/changeo/tables/*.tab'
+```
+
 
 ## Job Resources
 ### Automatic resubmission

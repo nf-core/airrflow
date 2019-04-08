@@ -38,11 +38,11 @@ def helpMessage() {
 
     Options:
 
-    References                      If not specified in the configuration file or you wish to overwrite any of the references.
+    References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --imgtdb_base                 Path to predownloaded imgtDB 
       --igblast_base                Path to predownloaded igblastDB
 
-    Set clonal cluster threshold:
+    Define clones:
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
       --define_clones_only          If set, expects tables as produced by change-O as input, tab delimited. Only performs clonal and germline assignment.
