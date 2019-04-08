@@ -14,11 +14,13 @@
         * [`binac`](#binac)
         * [`cfc`](#cfc)
         * [`none`](#none)
-    * [`--reads`](#--reads)
-    * [`--singleEnd`](#--singleend)
-* [Reference Genomes](#reference-genomes)
-    * [`--genome`](#--genome)
-    * [`--fasta`](#--fasta)
+    * [Input files](#input-files)
+        * [`--metadata`](#--metadata)
+        * [`--cprimers`](#--cprimers)
+        * [`--vprimers`](#--vprimers)
+* [Reference Databases](#reference-databases)
+    * [`--igblast_base`](#--igblast_base)
+    * [`--imgtdb_base`](#--imgtdb_base)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
 * [Custom resource requests](#custom-resource-requests)
@@ -112,13 +114,39 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 * `none`
     * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile (not recommended).
 
-<!-- TODO nf-core: Document required command line parameters -->
-### `--reads`
-Use this to specify the location of your input FastQ files. For example:
+### Input files
+Use this to specify the location of your input files. Three input files are required for running the pipeline: a metadata sheet, the a fasta file containing the primer sequences for the C-region genes (cprimers) and a fasta file containing the primer sequences for the V-region genes (vprimers). This pipeline was originally designed for a special MiSEQ sequencing read setup requiring 3 fastq files: R1 (250bp), R2 (250bp), and I1 (14bp).
+- R1: C-Primer + V(D)J
+- R2: V-Primer + V(D)J
+- I1: Illumina Index (6bp) + UMI (8bp)
+
+#### `--metadata`
+
+The metadata file is a TSV file with the following columns, including the exact same headers:
+
+```
+ID	Source	Treatment	Extraction_time	Population	R1	R2	I1
+QMKMK072AD	Patient_2	Drug_treatment	baseline	p	sample_S8_L001_R1_001.fastq.gz	sample_S8_L001_R2_001.fastq.gz	sample_S8_L001_I1_001.fastq.gz
+```
+
+This metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:
+- *ID*: sample ID.
+- *Source*: patient or organism code.
+- *Treatment*: treatment condition applied to the sample.
+- *Extraction_time*: time of cell extraction for the sample.
+- *Population*: B-cell population (e.g. naive, double-negative, memory, plasmablast).
+- *R1*: path to fastq file with first mates of paired-end sequencing.
+- *R2*: path to fastq file with second mates of paired-end sequencing.
+- *I1*: path to 
+
+
+Specify the location of your metadata file like this:
 
 ```bash
---reads 'path/to/data/sample_*_{1,2}.fastq'
+--metadata 'path/to/metadata/metadata_sheet.tsv'
 ```
+
+
 
 Please note the following requirements:
 
