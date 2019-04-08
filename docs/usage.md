@@ -14,11 +14,16 @@
         * [`binac`](#binac)
         * [`cfc`](#cfc)
         * [`none`](#none)
-    * [`--reads`](#--reads)
-    * [`--singleEnd`](#--singleend)
-* [Reference Genomes](#reference-genomes)
-    * [`--genome`](#--genome)
-    * [`--fasta`](#--fasta)
+    * [Input files](#input-files)
+        * [`--metadata`](#--metadata)
+        * [`--cprimers`](#--cprimers)
+        * [`--vprimers`](#--vprimers)
+* [Reference Databases](#reference-databases)
+    * [`--igblast_base`](#--igblast_base)
+    * [`--imgtdb_base`](#--imgtdb_base)
+* [Define clones](#Define-clones)
+    * [Manually set cluster  threshold](#manually-set-cluster-threshold)
+    * [Only define clones](#only-define-clones)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
 * [Custom resource requests](#custom-resource-requests)
@@ -52,9 +57,10 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
-nextflow run nf-core/bcellmagic --reads '*_R{1,2}.fastq.gz' -profile standard,docker
+nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
 ```
 
+For more information about the parameters, read the corresponding sections.
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -79,7 +85,6 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 First, go to the [nf-core/bcellmagic releases page](https://github.com/nf-core/bcellmagic/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
-
 
 ## Main Arguments
 
@@ -112,75 +117,92 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 * `none`
     * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile (not recommended).
 
-<!-- TODO nf-core: Document required command line parameters -->
-### `--reads`
-Use this to specify the location of your input FastQ files. For example:
+### Input files
+Use this to specify the location of your input files. Three input files are required for running the pipeline: a metadata sheet, the a fasta file containing the primer sequences for the C-region genes (cprimers) and a fasta file containing the primer sequences for the V-region genes (vprimers). This pipeline was originally designed for a special MiSEQ sequencing read setup requiring 3 fastq files: R1 (250bp), R2 (250bp), and I1 (14bp).
+- R1: C-Primer + V(D)J
+- R2: V-Primer + V(D)J
+- I1: Illumina Index (6bp) + UMI (8bp)
+
+#### `--metadata`
+
+The metadata file is a TSV file with the following columns, including the exact same headers:
+
+```
+ID	Source	Treatment	Extraction_time	Population	R1	R2	I1
+QMKMK072AD	Patient_2	Drug_treatment	baseline	p	sample_S8_L001_R1_001.fastq.gz	sample_S8_L001_R2_001.fastq.gz	sample_S8_L001_I1_001.fastq.gz
+```
+
+This metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:
+- *ID*: sample ID.
+- *Source*: patient or organism code.
+- *Treatment*: treatment condition applied to the sample.
+- *Extraction_time*: time of cell extraction for the sample.
+- *Population*: B-cell population (e.g. naive, double-negative, memory, plasmablast).
+- *R1*: path to fastq file with first mates of paired-end sequencing.
+- *R2*: path to fastq file with second mates of paired-end sequencing.
+- *I1*: path to fastq with illumina index and UMI (unique molecular identifier) barcode.
+
+
+Specify the location of your metadata file like this:
 
 ```bash
---reads 'path/to/data/sample_*_{1,2}.fastq'
+--metadata 'path/to/metadata/metadata_sheet.tsv'
 ```
 
-Please note the following requirements:
+#### `--vprimers`
 
-1. The path must be enclosed in quotes
-2. The path must have at least one `*` wildcard character
-3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.
+Path to fasta file containing your V-primer sequences. Specify like this:
+```bash
+--vprimers 'path/to/vprimers.fasta'
+```
 
-If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
+#### `--cprimers`
 
-### `--singleEnd`
-By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
+Path to fasta file containing your C-primer sequences. Specify like this:
+```bash
+--cprimers 'path/to/cprimers.fasta'
+```
+
+## Reference databases
+
+By default, the pipeline will download the needed igblast and IMGT human databases unless the path to already downloaded databases is specified. To specify the paths set the `--igblast_base` and `--imgtdb_base` parameters.
+
+### `--igblast_base`
+
+Path to igblast downloaded database. Set as follows:
 
 ```bash
---singleEnd --reads '*.fastq'
+--igblast_base 'path/to/igblast_base'
 ```
 
-It is not possible to run a mixture of single-end and paired-end files in one run.
+### `--imgtdb_base`
 
-
-## Reference Genomes
-
-The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
-
-### `--genome` (using iGenomes)
-There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
-
-You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
-
-* Human
-  * `--genome GRCh37`
-* Mouse
-  * `--genome GRCm38`
-* _Drosophila_
-  * `--genome BDGP6`
-* _S. cerevisiae_
-  * `--genome 'R64-1-1'`
-
-> There are numerous others - check the config file for more.
-
-Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
-
-The syntax for this reference configuration is as follows:
-
-<!-- TODO nf-core: Update reference genome example according to what is needed -->
-```nextflow
-params {
-  genomes {
-    'GRCh37' {
-      fasta   = '<path to the genome fasta file>' // Used if no star index given
-    }
-    // Any number of additional genomes, key is used with --genome
-  }
-}
-```
-
-<!-- TODO nf-core: Describe reference path flags -->
-### `--fasta`
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+Path to imgt downloaded database. Set as follows:
 
 ```bash
---fasta '[path to Fasta reference]'
+--imgtdb_base 'path/to/imgtdb_base'
 ```
+
+## Define clones
+
+By default the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment and junction lenght. Additionally, the similarity of the junction region sequences  will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters as follows:
+
+### Manually set cluster threshold
+
+Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter as follows:
+
+```bash
+--set_cluster_threshold --cluster_threshold 0.14
+```
+
+### Only define clones
+
+In some occasions you might just  want to run the pipeline to define clones for  some  samples for which you have already run the rest of the steps. For example, after pulling the results for the same patient together. In this case, run the pipeline setting the `--define_clones_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tsv` as follows:
+
+```bash
+--define_clones_only --changeo_tsv 'path/to/changeo/tables/*.tab'
+```
+
 
 ## Job Resources
 ### Automatic resubmission
