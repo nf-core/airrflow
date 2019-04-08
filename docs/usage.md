@@ -57,7 +57,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
-nextflow run nf-core/bcellmagic --reads '*_R{1,2}.fastq.gz' -profile standard,docker
+nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

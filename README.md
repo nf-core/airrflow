@@ -26,11 +26,5 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline, fou
 5. [Troubleshooting](docs/troubleshooting.md)
 
 
-An example call of the pipeline would be:
-
-```
-nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8 -resume 
-```
-
 ### Credits
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos and Alexander Peltzer.
