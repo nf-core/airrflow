@@ -90,8 +90,8 @@ if( workflow.profile == 'awsbatch') {
 // Stage config files
 output_docs = Channel.fromPath("$baseDir/docs/output.md")
 //Defaults for igblast
-igblast_base = false
-imgtdb_base = false
+params.igblast_base = false
+params.imgtdb_base = false
 
 // If paths to DBS are provided 
 if( params.igblast_base ){
@@ -117,6 +117,7 @@ if (params.set_cluster_threshold){
 
 //Define clones only
 params.define_clones_only = false
+params.changeo_tsv = false
 if (params.define_clones_only){
     params.changeo_tsv = params.changeo_tsv ?: { log.error "No changeo data provided. Make sure you have used the '--changeo_tsv' option."; exit 1 }()
     Channel
@@ -129,6 +130,8 @@ if (params.define_clones_only){
 }
 
 //Set up channels for input primers
+params.cprimers = false
+params.vprimers = false
 if  (!params.define_clones_only){
     Channel.fromPath("${params.cprimers}")
            .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
