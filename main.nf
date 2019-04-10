@@ -158,6 +158,10 @@ process fetchDBs{
     
     script:
     """
+    wget -q -r -nH --cut-dirs=5 --no-parent \
+    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
+    -P igblast_base/internal_data
+
     fetch_igblastdb.sh -o igblast_base
     fetch_imgtdb.sh -o imgtdb_base
     imgt2igblast.sh -i imgtdb_base -o igblast_base
