@@ -107,7 +107,6 @@ if( params.imgtdb_base ){
     ch_imgt_db_for_germline_sequences_mix = Channel.empty()
     ch_imgt_db_for_shazam_mix = Channel.empty()
 }
-saveDBs = false
 
 //Other parameters
 filterseq_q = 20
