@@ -159,26 +159,31 @@ process fetchDBs{
     script:
     """
     echo "Fetching databases..."
-    wget -q -r -nH --cut-dirs=5 --no-parent \
-    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
-    -P igblast_base/internal_data
 
-    wget -q -r -nH --cut-dirs=5 --no-parent \
-    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
-    -P igblast_base/database
+    wget https://raw.githubusercontent.com/nf-core/test-datasets/bcellmagic/database-cache/databases.zip
 
-    wget -q -r -nH --cut-dirs=5 --no-parent \
-    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
-    -P igblast_base/optional_file
+    unzip databases.zip
+
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
+    #-P igblast_base/internal_data
+
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
+    #-P igblast_base/database
+
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
+    #-P igblast_base/optional_file
     
-    echo "Igblast database is fetched."
+    #echo "Igblast database is fetched."
 
-    fetch_imgtdb.sh -o imgtdb_base
+    #fetch_imgtdb.sh -o imgtdb_base
 
-    echo "Imgtdb database is fetched."
+    #echo "Imgtdb database is fetched."
 
-    imgt2igblast.sh -i imgtdb_base -o igblast_base
-    echo "FetchDBs process finished."
+    #imgt2igblast.sh -i imgtdb_base -o igblast_base
+    #echo "FetchDBs process finished."
     """
 }
 
