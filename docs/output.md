@@ -17,6 +17,14 @@ and processes data using the following steps:
 ## Fetching databases
 Fetching igblast and imgt databases.
 
+**Output directory: `results/dbs`**
+If saveDBs parameter is set, then database cache will be saved in the results directory.
+
+* `igblast_base`
+    * Contains igblast database cache.
+* `imgtdb_base`
+    * Contains imgt database cache.
+
 ## FastQC
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
 
