@@ -13,7 +13,7 @@ before_install:
   # Pull the docker image first so the test doesn't wait for this
   - docker pull nfcore/bcellmagic:dev
   # Fake the tag locally so that the pipeline runs properly
-  - docker tag nfcore/bcellmagic:dev nfcore/bcellmagic:latest
+  - docker tag nfcore/bcellmagic:dev nfcore/bcellmagic:dev
 
 install:
   # Install Nextflow

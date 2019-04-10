@@ -9,7 +9,6 @@
 ----------------------------------------------------------------------------------------
 */
 
-
 def helpMessage() {
     // TODO nf-core: Add to this help message with new command line parameters
     log.info"""
@@ -89,35 +88,35 @@ if( workflow.profile == 'awsbatch') {
 
 // Stage config files
 output_docs = Channel.fromPath("$baseDir/docs/output.md")
-//Defaults for igblast
-params.igblast_base = false
-params.imgtdb_base = false
 
 // If paths to DBS are provided 
 if( params.igblast_base ){
     Channel.fromPath("${params.igblast_base}")
     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
     .set { ch_igblast_db_for_process_igblast_mix }
+} else {
+    ch_igblast_db_for_process_igblast_mix = Channel.empty()
 }
 if( params.imgtdb_base ){
     Channel.fromPath("${params.imgtdb_base}")
     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
+} else {
+    ch_imgt_db_for_igblast_filter_mix = Channel.empty()
+    ch_imgt_db_for_germline_sequences_mix = Channel.empty()
+    ch_imgt_db_for_shazam_mix = Channel.empty()
 }
-saveDBs = false
 
 //Other parameters
 filterseq_q = 20
 
 //Cluster threshold settings
-params.set_cluster_threshold = false
 if (params.set_cluster_threshold){
     params.cluster_threshold = 0.0
 }
 
 //Define clones only
-params.define_clones_only = false
-params.changeo_tsv = false
+
 if (params.define_clones_only){
     params.changeo_tsv = params.changeo_tsv ?: { log.error "No changeo data provided. Make sure you have used the '--changeo_tsv' option."; exit 1 }()
     Channel
@@ -130,8 +129,7 @@ if (params.define_clones_only){
 }
 
 //Set up channels for input primers
-params.cprimers = false
-params.vprimers = false
+
 if  (!params.define_clones_only){
     Channel.fromPath("${params.cprimers}")
            .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
@@ -143,8 +141,6 @@ if  (!params.define_clones_only){
     ch_cprimers_fasta = Channel.empty()
     ch_vprimers_fasta = Channel.empty()
 }
-
-
 
 //Download data process
 process fetchDBs{
@@ -162,9 +158,32 @@ process fetchDBs{
     
     script:
     """
-    fetch_igblastdb.sh -o igblast_base
-    fetch_imgtdb.sh -o imgtdb_base
-    imgt2igblast.sh -i imgtdb_base -o igblast_base
+    echo "Fetching databases..."
+
+    wget https://raw.githubusercontent.com/nf-core/test-datasets/bcellmagic/database-cache/databases.zip
+
+    unzip databases.zip
+
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
+    #-P igblast_base/internal_data
+
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
+    #-P igblast_base/database
+
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
+    #-P igblast_base/optional_file
+    
+    #echo "Igblast database is fetched."
+
+    #fetch_imgtdb.sh -o imgtdb_base
+
+    #echo "Imgtdb database is fetched."
+
+    #imgt2igblast.sh -i imgtdb_base -o igblast_base
+    #echo "FetchDBs process finished."
     """
 }
 
@@ -172,7 +191,6 @@ process fetchDBs{
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
- params.metadata = false
  if  (!params.define_clones_only){
      file_meta = file(params.metadata)
      ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
@@ -771,7 +789,6 @@ process alakazam{
     set file(tab), val(id) from ch_for_alakazam
 
     output:
-    file "*.pdf"
     file "$tab"
 
     script:
@@ -782,8 +799,8 @@ process alakazam{
 
 //Useful functions
 
- // Return file if it exists
-  static def returnFile(it) {
+// Return file if it exists
+static def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
     return file(it)
 }

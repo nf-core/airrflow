@@ -8,8 +8,22 @@ This document describes the output produced by the pipeline. Most of the plots a
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
+* [Fetching databases](#fetching-db) - Fetching igblast and imgt databases
 * [FastQC](#fastqc) - read quality control
+* [Filter sequence quality](#filter-seq-q) - filter sequences by quality
+* [Mask primers](#mask-primers) - Masking primers
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+
+## Fetching databases
+Fetching igblast and imgt databases.
+
+**Output directory: `results/dbs`**
+If saveDBs parameter is set, then database cache will be saved in the results directory.
+
+* `igblast_base`
+    * Contains igblast database cache.
+* `imgtdb_base`
+    * Contains imgt database cache.
 
 ## FastQC
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
@@ -25,6 +39,27 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 * `zips/sample_fastqc.zip`
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
+## Filter sequence quality
+Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/FilterSeq.html) from the Presto Immcantation toolset. The default quality threshold is 20.
+
+**Output directory: `results/filter_by_sequence_quality`**
+
+* `command_log.txt`
+    * Log of the process that will be parsed to generate a report.
+* `fastq/*.fastq`
+    * fastq with only reads that passed the quality filter.
+* `fastq/*.tab`
+    * table containing read ID and quality.
+* `fastq/*.log`
+    * Log of the process.
+
+## Mask primers
+Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/version-0.5.11/tools/MaskPrimers.html) of the Presto Immcantation toolset.
+
+**Output directory: `results/
+
+## Pair sequences
+Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the Presto Immcantation toolset.
 
 ## MultiQC
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
