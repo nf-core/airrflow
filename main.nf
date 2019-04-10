@@ -767,7 +767,6 @@ process alakazam{
     set file(tab), val(id) from ch_for_alakazam
 
     output:
-    file "*.pdf"
     file "$tab"
 
     script:
