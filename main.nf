@@ -777,8 +777,8 @@ process alakazam{
 
 //Useful functions
 
- // Return file if it exists
-  static def returnFile(it) {
+// Return file if it exists
+static def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
     return file(it)
 }
