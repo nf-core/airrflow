@@ -159,17 +159,17 @@ process fetchDBs{
     script:
     """
     echo "Fetching databases..."
-    wget -q -r -nH --cut-dirs=5 --no-parent \
-    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
-    -P igblast_base/internal_data
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
+    #-P igblast_base/internal_data
 
-    wget -q -r -nH --cut-dirs=5 --no-parent \
-    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
-    -P igblast_base/database
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
+    #-P igblast_base/database
 
-    wget -q -r -nH --cut-dirs=5 --no-parent \
-    ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
-    -P igblast_base/optional_file
+    #wget -q -r -nH --cut-dirs=5 --no-parent \
+    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
+    #-P igblast_base/optional_file
     
     echo "Igblast database is fetched."
 
