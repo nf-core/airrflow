@@ -95,13 +95,18 @@ if( params.igblast_base ){
     Channel.fromPath("${params.igblast_base}")
     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
     .set { ch_igblast_db_for_process_igblast_mix }
+} else {
+    ch_igblast_db_for_process_igblast_mix = Channel.empty()
 }
 if( params.imgtdb_base ){
     Channel.fromPath("${params.imgtdb_base}")
     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
+} else {
+    ch_imgt_db_for_igblast_filter_mix = Channel.empty()
+    ch_imgt_db_for_germline_sequences_mix = Channel.empty()
+    ch_imgt_db_for_shazam_mix = Channel.empty()
 }
-saveDBs = false
 
 //Other parameters
 filterseq_q = 20
@@ -762,7 +767,6 @@ process alakazam{
     set file(tab), val(id) from ch_for_alakazam
 
     output:
-    file "*.pdf"
     file "$tab"
 
     script:
@@ -773,8 +777,8 @@ process alakazam{
 
 //Useful functions
 
- // Return file if it exists
-  static def returnFile(it) {
+// Return file if it exists
+static def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
     return file(it)
 }
