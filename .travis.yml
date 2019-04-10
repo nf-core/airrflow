@@ -33,7 +33,5 @@ env:
 script:
   # Lint the pipeline code
   - nf-core lint ${TRAVIS_BUILD_DIR}
-  - curl -LJo testdata.zip https://github.com/nf-core/test-datasets/blob/bcellmagic/testdata/testdata.zip?raw=true
-  - unzip testdata.zip
   # Run the pipeline with the test profile
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
