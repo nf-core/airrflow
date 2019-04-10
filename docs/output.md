@@ -8,10 +8,14 @@ This document describes the output produced by the pipeline. Most of the plots a
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
+* [Fetching databases](#fetching-db) - Fetching igblast and imgt databases
 * [FastQC](#fastqc) - read quality control
 * [Filter sequence quality](#filter-seq-q) - filter sequences by quality
 * [Mask primers](#mask-primers) - Masking primers
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+
+## Fetching databases
+Fetching igblast and imgt databases.
 
 ## FastQC
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
@@ -36,7 +40,7 @@ Filters reads that are below a quality threshold by using the tool [FilterSeq](h
     * Log of the process that will be parsed to generate a report.
 * `fastq/*.fastq`
     * fastq with only reads that passed the quality filter.
-* `fastq/*.tab``
+* `fastq/*.tab`
     * table containing read ID and quality.
 * `fastq/*.log`
     * Log of the process.
