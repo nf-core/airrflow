@@ -34,4 +34,4 @@ script:
   # Lint the pipeline code
   - nf-core lint ${TRAVIS_BUILD_DIR}
   # Run the pipeline with the test profile
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  - travis_wait 10 nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
