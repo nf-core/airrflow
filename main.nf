@@ -95,11 +95,16 @@ if( params.igblast_base ){
     Channel.fromPath("${params.igblast_base}")
     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
     .set { ch_igblast_db_for_process_igblast_mix }
+} else {
+    ch_igblast_db_for_process_igblast_mix = Channel.empty()
 }
 if( params.imgtdb_base ){
     Channel.fromPath("${params.imgtdb_base}")
     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
+} else {
+    ch_imgt_db_for_igblast_filter_mix = Channel.emtpy()
+    ch_imgt_db_for_germline_sequences_mix = Channel.empty()
 }
 saveDBs = false
 
