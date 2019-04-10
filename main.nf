@@ -105,6 +105,7 @@ if( params.imgtdb_base ){
 } else {
     ch_imgt_db_for_igblast_filter_mix = Channel.empty()
     ch_imgt_db_for_germline_sequences_mix = Channel.empty()
+    ch_imgt_db_for_shazam_mix = Channel.empty()
 }
 saveDBs = false
 
