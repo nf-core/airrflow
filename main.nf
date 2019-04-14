@@ -164,26 +164,7 @@ process fetchDBs{
 
     unzip databases.zip
 
-    #wget -q -r -nH --cut-dirs=5 --no-parent \
-    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
-    #-P igblast_base/internal_data
-
-    #wget -q -r -nH --cut-dirs=5 --no-parent \
-    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
-    #-P igblast_base/database
-
-    #wget -q -r -nH --cut-dirs=5 --no-parent \
-    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
-    #-P igblast_base/optional_file
-    
-    #echo "Igblast database is fetched."
-
-    #fetch_imgtdb.sh -o imgtdb_base
-
-    #echo "Imgtdb database is fetched."
-
-    #imgt2igblast.sh -i imgtdb_base -o igblast_base
-    #echo "FetchDBs process finished."
+    echo "FetchDBs process finished."
     """
 }
 
@@ -392,7 +373,7 @@ process cluster_sets {
     """
 }
 
-//ParseHeaders to annotate barcode into cluster names
+//ParseHeaders to annotate barcode into cluster field
 process reheader {
     tag "${id}"
 
