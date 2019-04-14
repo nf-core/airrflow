@@ -6,13 +6,13 @@ This document describes the output produced by the pipeline. Most of the plots a
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-* [Fetching databases](#fetching-db) - Fetching igblast and imgt databases
+* [Fetching databases](#fetching-databases) - Fetching igblast and imgt databases
 * [FastQC](#fastqc) - read quality control
-* [Filter sequence quality](#filter-seq-q) - filter sequences by quality
+* [Filter sequence quality](#filter-sequence-quality) - filter sequences by quality
 * [Mask primers](#mask-primers) - Masking primers
 * [Pair mates](#pair-mates) - Pairing sequence mates.
 * [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
-* [Build consensus](#build-consensus) - Build UMI consensus
+* [Build consensus](#build-UMI-consensus) - Build UMI consensus
 * [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
 * [Assemble mates](#assemble-mates) - Assemble sequence mates.
 * [Remove duplicates](#remove-duplicates) - Remove read duplicates.
@@ -154,7 +154,7 @@ Remove duplicates using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.
 * `info/*.tab`
   * Parsed log contaning the sequence barcodes and split seq information.
 
-## Assign genes with IG Blast
+## Assign genes with IgBlast
 Assign genes from the IGblast database using [AssignGenes](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#running-igblast) and generating a table with [MakeDB](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#processing-the-output-of-igblast). Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html). Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ConvertDb.html?highlight=convertdb) tool.
 
 **Output directory: `results/igblast`**
@@ -204,7 +204,7 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 * `table/igh_genotyped_clone-pass_germ-pass.tab`
   * Table in ChangeO format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
 
-## Alakazam - repertoire analysis
+## Alakazam
 Repertoire analysis with the Alakazam R package from the Immcantation toolset.
 
 **Output directory: `results/alakazam`**
