@@ -89,7 +89,7 @@ Cluster sequences according to similarity, using [ClusterSets set](https://prest
 
 **Output directory: `results/cluster_sets`**
 
-* `command_log.txt``
+* `command_log.txt`
   * Log of the process that will be parsed to generate a report.
 * `fastq/*.fastq`
   * Fastq with reads and annotation in their headers of cluster group.
