@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 from Bio import SeqIO
-from gzip import open as gzopen
+import gzip
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -10,12 +10,12 @@ parser.add_argument("-o", "--outname", type=str, default="UMI_R1.fastq.gz", help
 
 args = parser.parse_args()
 
-records_I1 = SeqIO.parse(gzopen(args.I1_filename, "rt"), format="fastq")
-records_R1 = SeqIO.parse(gzopen(args.R1_filename, "rt"), format="fastq")
+records_I1 = SeqIO.parse(gzip.open(args.I1_filename, "rt"), format="fastq")
+records_R1 = SeqIO.parse(gzip.open(args.R1_filename, "rt"), format="fastq")
 
 i = 0
 
-with gzopen(args.outname, "wt") as out_handle:
+with gzip.open(args.outname, "wt") as out_handle:
     for record_I1 in records_I1:
         i += 1
         record_R1 = next(records_R1)
