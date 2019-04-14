@@ -343,7 +343,7 @@ process pair_seq{
     """
 }
 
-//Deal with too low UMI diversity
+//Cluster sets to deal with too low UMI diversity
 process cluster_sets {
     tag "${id}"
     publishDir "${params.outdir}/cluster_sets/$id", mode: 'copy',
@@ -459,7 +459,7 @@ process repair{
 }
    
 
-//Assemble the UMI consensus mate pairs
+//Assemble the mate pairs
 process assemble{
     tag "${id}"
     publishDir "${params.outdir}/assemble_pairs/$id", mode: 'copy',

@@ -10,7 +10,18 @@ and processes data using the following steps:
 * [FastQC](#fastqc) - read quality control
 * [Filter sequence quality](#filter-seq-q) - filter sequences by quality
 * [Mask primers](#mask-primers) - Masking primers
-* [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+* [Pair mates](#pair-mates) - Pairing sequence mates.
+* [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
+* [Build consensus](#build-consensus) - Build UMI consensus
+* [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
+* [Assemble mates](#assemble-mates) - Assemble sequence mates.
+* [Remove duplicates](#remove-duplicates) - Remove read duplicates.
+* [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 reads assigned.
+* [Assign genes with IgBlast](#assign-genes-with-igblast)
+* [Determining genotype and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
+* [Defining clones](#defining-clones) - Defining clonal B-cell populations
+* [Reconstructing germlines](#reconstructing-germlines) - Reconstruct gene calls of germline sequences
+* [Alakazam](#alakazam) - Repertoire analysis.
 
 ## Fetching databases
 Fetching igblast and imgt databases.
@@ -63,7 +74,7 @@ Masks primers that are provided in the C-primers and V-primers input files. It u
 * `fastq/*.log`
   * Log containing sequence identifiers and the error in masking primers.
 
-## Pair sequences
+## Pair mates
 Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the Presto Immcantation toolset.
 
 **Output directory: `results/pair_sequences`**
