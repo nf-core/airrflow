@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-bcellmagic-1.0
+name: nf-core-bcellmagic-1.0dev
 channels:
   - defaults
   - bioconda
@@ -20,5 +20,5 @@ dependencies:
   - conda-forge::r-alakazam=0.2.11
   - r-shazam=0.1.10
   - r-tigger=0.3.1
-  - bioconda::biopython
+  - bioconda::biopython=1.70
   - unzip=6.0
