@@ -164,26 +164,7 @@ process fetchDBs{
 
     unzip databases.zip
 
-    #wget -q -r -nH --cut-dirs=5 --no-parent \
-    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/internal_data \
-    #-P igblast_base/internal_data
-
-    #wget -q -r -nH --cut-dirs=5 --no-parent \
-    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database \
-    #-P igblast_base/database
-
-    #wget -q -r -nH --cut-dirs=5 --no-parent \
-    #ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/optional_file  \
-    #-P igblast_base/optional_file
-    
-    #echo "Igblast database is fetched."
-
-    #fetch_imgtdb.sh -o imgtdb_base
-
-    #echo "Imgtdb database is fetched."
-
-    #imgt2igblast.sh -i imgtdb_base -o igblast_base
-    #echo "FetchDBs process finished."
+    echo "FetchDBs process finished."
     """
 }
 
@@ -362,7 +343,7 @@ process pair_seq{
     """
 }
 
-//Deal with too low UMI diversity
+//Cluster sets to deal with too low UMI diversity
 process cluster_sets {
     tag "${id}"
     publishDir "${params.outdir}/cluster_sets/$id", mode: 'copy',
@@ -392,7 +373,7 @@ process cluster_sets {
     """
 }
 
-//ParseHeaders to annotate barcode into cluster names
+//ParseHeaders to annotate barcode into cluster field
 process reheader {
     tag "${id}"
 
@@ -448,7 +429,7 @@ process build_consensus{
     """
 }
 
-//Repair again UMI_R1+R2
+//Re-pair UMI_R1+R2
 process repair{
     tag "${id}"
     publishDir "${params.outdir}/repair_mates/$id", mode: 'copy',
@@ -478,7 +459,7 @@ process repair{
 }
    
 
-//Assemble the UMI consensus mate pairs
+//Assemble the mate pairs
 process assemble{
     tag "${id}"
     publishDir "${params.outdir}/assemble_pairs/$id", mode: 'copy',
