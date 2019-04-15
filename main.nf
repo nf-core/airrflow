@@ -429,7 +429,7 @@ process build_consensus{
     """
 }
 
-//Repair again UMI_R1+R2
+//Re-pair UMI_R1+R2
 process repair{
     tag "${id}"
     publishDir "${params.outdir}/repair_mates/$id", mode: 'copy',
