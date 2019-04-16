@@ -560,7 +560,7 @@ process metadata_anno{
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
     output:
-    set file("*_reheader_reheader_reheader.fastq"), val("$id") into ch_for_dedup
+    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$source") into ch_for_dedup
 
     script:
     """
@@ -584,10 +584,10 @@ process dedup {
     !params.define_clones_only
 
     input:
-    set file(dedup), val(id) from ch_for_dedup
+    set file(dedup), val(id), val(source) from ch_for_dedup
 
     output:
-    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id") into ch_for_filtering
+    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source") into ch_for_filtering
     file "${dedup.baseName}_UMI_R1_R2.log"
     file "${dedup.baseName}_UMI_R1_R2_table.tab"
     file "command_log.txt"
@@ -616,10 +616,10 @@ process filter_seqs{
     !params.define_clones_only
 
     input:
-    set file(dedupped), val(id) from ch_for_filtering
+    set file(dedupped), val(id), val(source) from ch_for_filtering
 
     output:
-    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id") into ch_fasta_for_igblast
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source") into ch_fasta_for_igblast
     file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"
     file "command_log.txt"
 
@@ -639,11 +639,11 @@ process igblast{
     !params.define_clones_only
 
     input:
-    set file('input_igblast.fasta'), val(id) from ch_fasta_for_igblast
+    set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id") into ch_igblast_filter
+    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id"), val("$source") into ch_igblast_filter
 
     script:
     """
@@ -669,11 +669,11 @@ process igblast_filter {
     !params.define_clones_only
 
     input: 
-    set file('blast.fmt7'), file('fasta.fasta'), val(id) from ch_igblast_filter
+    set file('blast.fmt7'), file('fasta.fasta'), val(id), val(source) from ch_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${base}_parse-select.tab"), val("$id") into ch_for_shazam
+    set file("${base}_parse-select.tab"), val("$id"), val("$source") into ch_for_merge
     file "${base}_parse-select_sequences.fasta"
     file "${base}_parse-select.tab"
     file "command_log.txt"
@@ -688,6 +688,24 @@ process igblast_filter {
     cp ".command.out" "command_log.txt"
     """
 }
+
+//Merge tables belonging to the same patient
+process merge_tables{
+    tag "merge tables"
+    publishDir "${params.outdir}/shazam/$source", mode: 'copy'
+
+    input:
+    set file(tab), val(id), val(source) from ch_for_merge.groupTuple(by: 3).subscribe {println it}
+
+    output:
+    set file("tab"), val(source) into ch_for_shazam
+
+    script:
+    """
+    """
+
+}
+
 
 //Shazam! 
 process shazam{
