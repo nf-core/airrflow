@@ -1,6 +1,6 @@
 FROM nfcore/base
-LABEL authors="simon.heumos@qbic.uni-tuebingen.de; gisela.gabernet@qbic.uni-tuebingen.de; alexander.peltzer@qbic.uni-tuebingen.de" \
-      description="Docker image containing all requirements for the nfcore/bcellmagic pipeline"
+LABEL authors="Gisela Gabernet, Simon Heumos, Alexander Peltzer" \
+      description="Docker image containing all requirements for nf-core/bcellmagic pipeline"
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a

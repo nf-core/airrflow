@@ -211,6 +211,3 @@ Repertoire analysis with the Alakazam R package from the Immcantation toolset.
 
 * `igh_genotyped_clone-pass_germ-pass.tab`
   * Final table in ChangeO format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
-
-
-

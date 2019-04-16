@@ -2,9 +2,9 @@
 #   conda env create -f environment.yml
 name: nf-core-bcellmagic-1.0dev
 channels:
-  - defaults
-  - bioconda
   - conda-forge
+  - bioconda
+  - defaults
 dependencies:
   - muscle=3.8.1551
   - vsearch=2.11.1
