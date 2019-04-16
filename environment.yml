@@ -1,9 +1,25 @@
-name: nf-core-bcellmagic-1.0dev
+# You can use this file to create a conda environment for this pipeline:
+#   conda env create -f environment.yml
+name: nf-core-bcellmagic-1.0.0
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  # TODO nf-core: Add required software dependencies here
-  - fastqc=0.11.8
-  - multiqc=1.6
+  - muscle=3.8.1551
+  - vsearch=2.11.1
+  - cd-hit=4.8.1
+  - blast=2.7.1
+  - igblast=1.10.0
+  - phylip=3.697
+  - tbl2asn=25.6
+  - airr=1.2.1
+  - r-airr=1.2.0
+  - presto=0.5.10
+  - changeo=0.4.5
+  - conda-forge::r-alakazam=0.2.11
+  - r-shazam=0.1.10
+  - r-tigger=0.3.1
+  - bioconda::biopython=1.70
+  - unzip=6.0
+  - conda-forge::r-markdown=0.9

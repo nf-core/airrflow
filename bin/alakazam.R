@@ -15,17 +15,17 @@ inputtable = args[1]
 
 output_folder = dirname(inputtable)
 
-db <- readChangeoDb(inputtable)
+#db <- readChangeoDb(inputtable)
 
-dbsubset <- subset(db, C_PRIMER %in% c("IgG", "IgA", "IgM"))
+#dbsubset <- subset(db, C_PRIMER %in% c("IgG", "IgA", "IgM"))
 
 # Calculate and plot rank abundance curve
-a <- estimateAbundance(dbsubset, group="C_PRIMER")
-ggsave(paste(output_folder,"abundance.pdf",sep="/"), plotAbundanceCurve(a,silent=T))
+#a <- estimateAbundance(dbsubset, group="C_PRIMER")
+#ggsave(paste(output_folder,"abundance.pdf",sep="/"), plotAbundanceCurve(a,silent=T))
 
 # Generate Hill diversity curve
-d <- rarefyDiversity(dbsubset, group="C_PRIMER")
-ggsave(paste(output_folder,"diversity.pdf",sep="/"), plotDiversityCurve(d,silent=T))
+#d <- rarefyDiversity(dbsubset, group="C_PRIMER")
+#ggsave(paste(output_folder,"diversity.pdf",sep="/"), plotDiversityCurve(d,silent=T))
 
 # # Calculate CD3 amino acid properties
 # p <- aminoAcidProperties(dbsubset, seq="JUNCTION", nt = T, trim=T, label="CDR3")
