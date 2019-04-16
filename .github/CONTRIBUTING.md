@@ -6,7 +6,7 @@ We try to manage the required tasks for nf-core/bcellmagic using GitHub issues, 
 
 However, don't be put off by this template - other more general issues and suggestions are welcome! Contributions to the code are even more welcome ;)
 
-> If you need help using or modifying nf-core/bcellmagic then the best place to go is the Gitter chatroom where you can ask us questions directly: https://gitter.im/nf-core/Lobby
+> If you need help using or modifying nf-core/bcellmagic then the best place to ask is on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).
 
 ## Contribution workflow
 If you'd like to write some code for nf-core/bcellmagic, the standard workflow
@@ -21,7 +21,6 @@ is as follows:
 4. Submit a Pull Request against the `dev` branch and wait for the code to be reviewed and merged.
 
 If you're not used to this workflow with git, you can start with some [basic docs from GitHub](https://help.github.com/articles/fork-a-repo/) or even their [excellent interactive tutorial](https://try.github.io/).
-
 
 ## Tests
 When you create a pull request with changes, [Travis CI](https://travis-ci.org/) will run automatic tests.
@@ -42,4 +41,4 @@ If there are any failures then the automated tests fail.
 These tests are run both with the latest available version of Nextflow and also the minimum required version that is stated in the pipeline code.
 
 ## Getting help
-For further information/help, please consult the [nf-core/bcellmagic documentation](https://github.com/nf-core/bcellmagic#documentation) and don't hesitate to get in touch on [Gitter](https://gitter.im/nf-core/Lobby)
+For further information/help, please consult the [nf-core/bcellmagic documentation](https://github.com/nf-core/bcellmagic#documentation) and don't hesitate to get in touch on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).

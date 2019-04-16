@@ -12,29 +12,21 @@ https://img.shields.io/badge/singularity-available-7E4C74.svg)
 
 ### Introduction
 
-The nf-core/bcellmagic pipeline is built to analyze B-cell repertoire sequencing data from targeted amplification experiments. It makes use of the [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/) toolset for the analysis of B-cell repertoires. 
+The nf-core/bcellmagic pipeline is built to analyze B-cell repertoire sequencing data from targeted amplification experiments. It makes use of the [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/) toolset for the analysis of B-cell repertoires.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
 
-### Quick run
-
-The typical command for running the pipeline is as follows:
-```bash
-nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
-```
-
-For more information, read the docs!
-
-### Documentation
+## Documentation
 The nf-core/bcellmagic pipeline comes with documentation about the pipeline, found in the `docs/` directory:
 
-1. [Installation](docs/installation.md)
+1. [Installation](https://nf-co.re/usage/installation)
 2. Pipeline configuration
-    * [Local installation](docs/configuration/local.md)
-    * [Adding your own system](docs/configuration/adding_your_own.md)
+    * [Local installation](https://nf-co.re/usage/local_installation)
+    * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
+    * [Reference genomes](https://nf-co.re/usage/reference_genomes)
 3. [Running the pipeline](docs/usage.md)
 4. [Output and how to interpret the results](docs/output.md)
-5. [Troubleshooting](docs/troubleshooting.md)
+5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
-### Credits
-nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos and Alexander Peltzer.
+## Credits
+nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
