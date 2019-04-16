@@ -552,29 +552,6 @@ process get_software_versions {
     """
 }
 
-
-
-/*
- * STEP 1 - FastQC
- */
-process fastqc {
-    tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    set val(name), file(reads) from read_files_fastqc
-
-    output:
-    file "*_fastqc.{zip,html}" into fastqc_results
-
-    script:
-    """
-    fastqc -q $reads
-    """
-}
-
-
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
     tag "${id}" 
@@ -875,7 +852,6 @@ process multiqc {
 
     input:
     file multiqc_config from ch_multiqc_config
-    file ('fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)
 
