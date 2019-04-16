@@ -695,7 +695,7 @@ process merge_tables{
     publishDir "${params.outdir}/shazam/$source", mode: 'copy'
 
     input:
-    set file(tab), val(id), val(source) from ch_for_merge.groupTuple(by: 3).subscribe {println it}
+    set file(tab), val(id), val(source) from ch_for_merge.groupTuple(by: 3)
 
     output:
     set file("tab"), val(source) into ch_for_shazam
