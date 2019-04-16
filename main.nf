@@ -528,26 +528,7 @@ process combine_umi_read_groups{
     ParseHeaders.py collapse -s $assembled -f CONSCOUNT --act min
     """
 }
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-    saveAs: {filename ->
-        if (filename.indexOf(".csv") > 0) filename
-        else null
-    }
 
-    output:
-    file "software_versions.csv"
-
-    script:
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
 
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
@@ -823,7 +804,28 @@ static def returnFile(it) {
 }
 
 /*
- * STEP 3 - Output Description HTML
+ * Parse software version numbers
+ */
+process get_software_versions {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".csv") > 0) filename
+        else null
+    }
+
+    output:
+    file "software_versions.csv"
+
+    script:
+    """
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
+
+/*
+ * Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
