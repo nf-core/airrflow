@@ -673,18 +673,17 @@ process igblast_filter {
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${base}_parse-select.tab"), val("$id"), val("$source") into ch_for_merge
-    file "${base}_parse-select_sequences.fasta"
-    file "${base}_parse-select.tab"
+    set file("${id}_parse-select.tab"), val("$id"), val("$source") into ch_for_merge
+    file "${id}_parse-select_sequences.fasta"
+    file "${id}_parse-select.tab"
     file "command_log.txt"
 
     script:
-    base = "blast"
     """
     MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d ${base}_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${base}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${base}
-    ConvertDb.py fasta -d ${base}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    ParseDb.py split -d ${id}_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d ${id}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
+    ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     cp ".command.out" "command_log.txt"
     """
 }
