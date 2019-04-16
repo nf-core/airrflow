@@ -7,3 +7,5 @@ tests/test_data
 runBcellmagic.sh
 .idea/
 *.pyc
+node_modules/
+package-lock.json
