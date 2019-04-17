@@ -673,7 +673,7 @@ process igblast_filter {
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${id}_parse-select.tab"), val("$id"), val("$source") into ch_for_merge
+    set source, id, file("${id}_parse-select.tab") into ch_for_merge
     file "${id}_parse-select_sequences.fasta"
     file "${id}_parse-select.tab"
     file "command_log.txt"
@@ -694,7 +694,7 @@ process merge_tables{
     publishDir "${params.outdir}/shazam/$source", mode: 'copy'
 
     input:
-    set file(tab), val(id), val(source) from ch_for_merge.groupTuple(by: 3)
+    set source, id, file(tab) from ch_for_merge.groupTuple(by: 3)
 
     output:
     set file("tab"), val(source) into ch_for_shazam
