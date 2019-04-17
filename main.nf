@@ -117,7 +117,7 @@ if (params.define_clones_only){
     Channel
         .fromPath( params.changeo_tsv )
         .ifEmpty { exit 1, "Cannot find any changeo_tsv matching: ${params.changeo_tsv}\nNB: Path needs to be enclosed in quotes!" }
-        .map { tsv_file -> [file(tsv_file), "${tsv_file.baseName}"] }
+        .map { tsv_file -> ["${tsv_file.baseName}", file(tsv_file)] }
         .into { ch_input_tsvs }
 } else {
     ch_input_tsvs = Channel.empty()
@@ -708,6 +708,7 @@ process merge_tables{
     
     head -n 1 ${tab[0]} > ${source}.tab
     tail -n +2 ${tab} >> ${source}.tab
+    sed -i '/==>/d' ${source}.tab
     """
 
 }
@@ -719,7 +720,7 @@ process shazam{
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    set file(tab), val(id) from ch_for_shazam.mix(ch_input_tsvs)
+    set val(id), file(tab) from ch_for_shazam.mix(ch_input_tsvs)
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
