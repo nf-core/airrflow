@@ -682,7 +682,7 @@ process igblast_filter {
     """
     MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
     ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${id}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
+    ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
     ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     cp ".command.out" "command_log.txt"
     """
