@@ -700,7 +700,6 @@ process merge_tables{
     set source, file("${source}.tab") into ch_for_shazam
 
     script:
-    print ${tab}
     """
     echo "${source}"
     echo "${tab}"
