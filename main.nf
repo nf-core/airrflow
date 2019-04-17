@@ -697,13 +697,20 @@ process merge_tables{
     set source, id, file(tab) from ch_for_merge.groupTuple()
 
     output:
-    set file("tab"), val(source) into ch_for_shazam
+    set source, file("${source}.tab") into ch_for_shazam
 
     script:
     """
     echo "${source}"
     echo "${tab}"
     echo "${tab.join('\n')}" > tab.list
+    
+    cat ${tab}[0] > ${source.tab}
+
+    for every tabFile in ${tab}[1..-1]
+    do
+        tail -n +1 \$tabFile >> ${source}.tab
+    done
 
     """
 
