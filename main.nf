@@ -705,11 +705,11 @@ process merge_tables{
     echo "${tab}"
     echo "${tab.join('\n')}" > tab.list
     
-    cat ${tab}[0] > ${source.tab}
+    cat ${tab}[0] > ${source}.tab
 
     for every tabFile in ${tab}[1..-1]
     do
-        tail -n +1 \$tabFile >> "${source}".tab
+        tail -n +1 \$tabFile >> ${source}.tab
     done
 
     """
