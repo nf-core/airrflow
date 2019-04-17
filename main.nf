@@ -707,7 +707,7 @@ process merge_tables{
     echo "${tab.join('\n')}" > tab.list
     
     head -n 1 ${tab[0]} > ${source}.tab
-    cat ${tab} >> ${source}.tab
+    tail -n +2 ${tab} >> ${source}.tab
     """
 
 }
