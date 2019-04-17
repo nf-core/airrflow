@@ -117,7 +117,7 @@ if (params.define_clones_only){
     Channel
         .fromPath( params.changeo_tsv )
         .ifEmpty { exit 1, "Cannot find any changeo_tsv matching: ${params.changeo_tsv}\nNB: Path needs to be enclosed in quotes!" }
-        .map { tsv_file -> [file(tsv_file), "${tsv_file.baseName}"] }
+        .map { tsv_file -> ["${tsv_file.baseName}", file(tsv_file)] }
         .into { ch_input_tsvs }
 } else {
     ch_input_tsvs = Channel.empty()
@@ -528,26 +528,7 @@ process combine_umi_read_groups{
     ParseHeaders.py collapse -s $assembled -f CONSCOUNT --act min
     """
 }
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-    saveAs: {filename ->
-        if (filename.indexOf(".csv") > 0) filename
-        else null
-    }
 
-    output:
-    file "software_versions.csv"
-
-    script:
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
 
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
@@ -579,7 +560,7 @@ process metadata_anno{
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
     output:
-    set file("*_reheader_reheader_reheader.fastq"), val("$id") into ch_for_dedup
+    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$source") into ch_for_dedup
 
     script:
     """
@@ -603,10 +584,10 @@ process dedup {
     !params.define_clones_only
 
     input:
-    set file(dedup), val(id) from ch_for_dedup
+    set file(dedup), val(id), val(source) from ch_for_dedup
 
     output:
-    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id") into ch_for_filtering
+    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source") into ch_for_filtering
     file "${dedup.baseName}_UMI_R1_R2.log"
     file "${dedup.baseName}_UMI_R1_R2_table.tab"
     file "command_log.txt"
@@ -635,10 +616,10 @@ process filter_seqs{
     !params.define_clones_only
 
     input:
-    set file(dedupped), val(id) from ch_for_filtering
+    set file(dedupped), val(id), val(source) from ch_for_filtering
 
     output:
-    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id") into ch_fasta_for_igblast
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source") into ch_fasta_for_igblast
     file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"
     file "command_log.txt"
 
@@ -658,11 +639,11 @@ process igblast{
     !params.define_clones_only
 
     input:
-    set file('input_igblast.fasta'), val(id) from ch_fasta_for_igblast
+    set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id") into ch_igblast_filter
+    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id"), val("$source") into ch_igblast_filter
 
     script:
     """
@@ -688,25 +669,50 @@ process igblast_filter {
     !params.define_clones_only
 
     input: 
-    set file('blast.fmt7'), file('fasta.fasta'), val(id) from ch_igblast_filter
+    set file('blast.fmt7'), file('fasta.fasta'), val(id), val(source) from ch_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${base}_parse-select.tab"), val("$id") into ch_for_shazam
-    file "${base}_parse-select_sequences.fasta"
-    file "${base}_parse-select.tab"
+    set source, id, file("${id}_parse-select.tab") into ch_for_merge
+    file "${id}_parse-select_sequences.fasta"
+    file "${id}_parse-select.tab"
     file "command_log.txt"
 
     script:
-    base = "blast"
     """
     MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d ${base}_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${base}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${base}
-    ConvertDb.py fasta -d ${base}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
+    ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     cp ".command.out" "command_log.txt"
     """
 }
+
+//Merge tables belonging to the same patient
+process merge_tables{
+    tag "merge tables"
+    publishDir "${params.outdir}/shazam/$source", mode: 'copy'
+
+    input:
+    set source, id, file(tab) from ch_for_merge.groupTuple()
+
+    output:
+    set source, file("${source}.tab") into ch_for_shazam
+
+    script:
+    """
+    echo "${source}"
+    echo "${tab}"
+    echo "${tab[0]}"
+    echo "${tab.join('\n')}" > tab.list
+    
+    head -n 1 ${tab[0]} > ${source}.tab
+    tail -n +2 ${tab} >> ${source}.tab
+    sed -i '/==>/d' ${source}.tab
+    """
+
+}
+
 
 //Shazam! 
 process shazam{
@@ -714,7 +720,7 @@ process shazam{
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    set file(tab), val(id) from ch_for_shazam.mix(ch_input_tsvs)
+    set val(id), file(tab) from ch_for_shazam.mix(ch_input_tsvs)
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
@@ -823,7 +829,28 @@ static def returnFile(it) {
 }
 
 /*
- * STEP 3 - Output Description HTML
+ * Parse software version numbers
+ */
+process get_software_versions {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".csv") > 0) filename
+        else null
+    }
+
+    output:
+    file "software_versions.csv"
+
+    script:
+    """
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
+
+/*
+ * Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
