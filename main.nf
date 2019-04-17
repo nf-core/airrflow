@@ -709,7 +709,7 @@ process merge_tables{
     cat ${tab[0]} > ${source}.tab
     for every tabFile in ${tab[1..-1]}
     do
-        tail -n +2 \$tabFile >> ${source}.tab
+        tail -n +2 \${tabFile} >> ${source}.tab
     done
     """
 
