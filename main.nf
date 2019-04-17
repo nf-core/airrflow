@@ -701,6 +701,8 @@ process merge_tables{
 
     script:
     """
+    echo "${source}"
+    echo "${tab}"
     echo "${tab.join('\n')}" > tab.list
 
     """
