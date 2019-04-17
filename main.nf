@@ -700,19 +700,20 @@ process merge_tables{
     set source, file("${source}.tab") into ch_for_shazam
 
     script:
+    print ${tab}
     """
     echo "${source}"
     echo "${tab}"
     echo "${tab.join('\n')}" > tab.list
     
-    cat ${tab}[0] > ${source}.tab
-
+    cat "${tab}[0]" > ${source}.tab
+    """
     for every tabFile in ${tab}[1..-1]
     do
-        tail -n +1 \$tabFile >> ${source}.tab
-    done
-
     """
+        tail -n +1 \$tabFile >> ${source}.tab
+    """
+    done
 
 }
 
