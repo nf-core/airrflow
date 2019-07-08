@@ -36,8 +36,6 @@ def helpMessage() {
     Define clones:
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
-      --define_clones_only          If set, expects tables as produced by change-O as input, tab delimited. Only performs clonal and germline assignment.
-      --changeo_tsv                 Once define_clones_only is specified, set the path to the change-O tsv file.
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -110,46 +108,27 @@ if (params.set_cluster_threshold){
     params.cluster_threshold = 0.0
 }
 
-//Define clones only
-
-if (params.define_clones_only){
-    params.changeo_tsv = params.changeo_tsv ?: { log.error "No changeo data provided. Make sure you have used the '--changeo_tsv' option."; exit 1 }()
-    Channel
-        .fromPath( params.changeo_tsv )
-        .ifEmpty { exit 1, "Cannot find any changeo_tsv matching: ${params.changeo_tsv}\nNB: Path needs to be enclosed in quotes!" }
-        .map { tsv_file -> [file(tsv_file), "${tsv_file.baseName}"] }
-        .into { ch_input_tsvs }
-} else {
-    ch_input_tsvs = Channel.empty()
-}
-
 //Set up channels for input primers
 
-if  (!params.define_clones_only){
-    Channel.fromPath("${params.cprimers}")
-           .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
-           .set {ch_cprimers_fasta}
-    Channel.fromPath("${params.vprimers}")
-           .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
-           .set { ch_vprimers_fasta }
-} else {
-    ch_cprimers_fasta = Channel.empty()
-    ch_vprimers_fasta = Channel.empty()
-}
+Channel.fromPath("${params.cprimers}")
+        .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
+        .set {ch_cprimers_fasta}
+Channel.fromPath("${params.vprimers}")
+        .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
+        .set { ch_vprimers_fasta }
+
 
 /*
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
- if  (!params.define_clones_only){
-     file_meta = file(params.metadata)
-     ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
-                    .splitCsv(header: true, sep:'\t')
-                    .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
-                    .dump()
- } else {
-     ch_read_files_for_merge_r1_umi = Channel.empty()
- }
+
+file_meta = file(params.metadata)
+ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+            .splitCsv(header: true, sep:'\t')
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
+            .dump()
+
 
 // Header log info
 log.info nfcoreHeader()
@@ -166,7 +145,6 @@ summary['Max Time']     = params.max_time
 summary['IGDB Path']    = params.igblast_base
 summary['IMGT Path']    = params.imgtdb_base
 summary['Output dir']   = params.outdir
-summary['Define clones only']  = params.define_clones_only
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 summary['Working dir']  = workflow.workDir
 summary['Container Engine'] = workflow.containerEngine
@@ -245,9 +223,6 @@ process fetchDBs{
 process merge_r1_umi {
     tag "${id}"
 
-    when:
-    !params.define_clones_only
-
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
 
@@ -274,9 +249,6 @@ process filter_by_sequence_quality {
             else if (filename == "command_log.txt") "$filename"
             else null
         }
-
-    when:
-    !params.define_clones_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
@@ -310,9 +282,6 @@ process mask_primers {
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input:
     set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
     file(cprimers) from ch_cprimers_fasta.collect() 
@@ -345,9 +314,6 @@ process pair_seq{
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
 
@@ -377,9 +343,6 @@ process cluster_sets {
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
 
-    when:
-    !params.define_clones_only
-
     output:
     set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
     file "command_log.txt"
@@ -395,9 +358,6 @@ process cluster_sets {
 //ParseHeaders to annotate barcode into cluster field
 process reheader {
     tag "${id}"
-
-    when:
-    !params.define_clones_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
@@ -424,9 +384,6 @@ process build_consensus{
             else if (filename == "command_log.txt") "$filename"
             else null
         }
-
-    when:
-    !params.define_clones_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
@@ -460,9 +417,6 @@ process repair{
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
 
@@ -490,9 +444,6 @@ process assemble{
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
 
@@ -514,9 +465,6 @@ process assemble{
 process combine_umi_read_groups{
     tag "${id}" 
 
-    when:
-    !params.define_clones_only
-
     input:
     set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
 
@@ -528,33 +476,11 @@ process combine_umi_read_groups{
     ParseHeaders.py collapse -s $assembled -f CONSCOUNT --act min
     """
 }
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-    saveAs: {filename ->
-        if (filename.indexOf(".csv") > 0) filename
-        else null
-    }
 
-    output:
-    file "software_versions.csv"
-
-    script:
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
 
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
     tag "${id}" 
-
-    when:
-    !params.define_clones_only
 
     input:
     set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
@@ -572,14 +498,11 @@ process copy_prcons{
 process metadata_anno{
     tag "${id}"
 
-    when:
-    !params.define_clones_only
-
     input:
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
     output:
-    set file("*_reheader_reheader_reheader.fastq"), val("$id") into ch_for_dedup
+    set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$source") into ch_for_dedup
 
     script:
     """
@@ -599,14 +522,11 @@ process dedup {
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input:
-    set file(dedup), val(id) from ch_for_dedup
+    set file(dedup), val(id), val(source) from ch_for_dedup
 
     output:
-    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id") into ch_for_filtering
+    set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source") into ch_for_filtering
     file "${dedup.baseName}_UMI_R1_R2.log"
     file "${dedup.baseName}_UMI_R1_R2_table.tab"
     file "command_log.txt"
@@ -631,14 +551,11 @@ process filter_seqs{
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input:
-    set file(dedupped), val(id) from ch_for_filtering
+    set file(dedupped), val(id), val(source) from ch_for_filtering
 
     output:
-    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id") into ch_fasta_for_igblast
+    set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source") into ch_fasta_for_igblast
     file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"
     file "command_log.txt"
 
@@ -654,15 +571,12 @@ process filter_seqs{
 process igblast{
     tag "${id}"
 
-    when:
-    !params.define_clones_only
-
     input:
-    set file('input_igblast.fasta'), val(id) from ch_fasta_for_igblast
+    set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
 
     output:
-    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id") into ch_igblast_filter
+    set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id"), val("$source") into ch_igblast_filter
 
     script:
     """
@@ -684,29 +598,51 @@ process igblast_filter {
             else null
         }
 
-    when:
-    !params.define_clones_only
-
     input: 
-    set file('blast.fmt7'), file('fasta.fasta'), val(id) from ch_igblast_filter
+    set file('blast.fmt7'), file('fasta.fasta'), val(id), val(source) from ch_igblast_filter
     file imgtbase from ch_imgt_db_for_igblast_filter.mix(ch_imgt_db_for_igblast_filter_mix).collect()
 
     output:
-    set file("${base}_parse-select.tab"), val("$id") into ch_for_shazam
-    file "${base}_parse-select_sequences.fasta"
-    file "${base}_parse-select.tab"
+    set source, id, file("${id}_parse-select.tab") into ch_for_merge
+    file "${id}_parse-select_sequences.fasta"
+    file "${id}_parse-select.tab"
     file "command_log.txt"
 
     script:
-    base = "blast"
     """
     MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d ${base}_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d ${base}_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${base}
-    ConvertDb.py fasta -d ${base}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL
+    ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
+    ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
     cp ".command.out" "command_log.txt"
     """
 }
+
+//Merge tables belonging to the same patient
+process merge_tables{
+    tag "merge tables"
+    publishDir "${params.outdir}/shazam/$source", mode: 'copy'
+
+    input:
+    set source, id, file(tab) from ch_for_merge.groupTuple()
+
+    output:
+    set source, file("${source}.tab") into ch_for_shazam
+
+    script:
+    """
+    echo "${source}"
+    echo "${tab}"
+    echo "${tab[0]}"
+    echo "${tab.join('\n')}" > tab.list
+    
+    head -n 1 ${tab[0]} > ${source}.tab
+    tail -n +2 ${tab} >> ${source}.tab
+    sed -i '/==>/d' ${source}.tab
+    """
+
+}
+
 
 //Shazam! 
 process shazam{
@@ -714,7 +650,7 @@ process shazam{
     publishDir "${params.outdir}/shazam/$id", mode: 'copy'
 
     input:
-    set file(tab), val(id) from ch_for_shazam.mix(ch_input_tsvs)
+    set val(id), file(tab) from ch_for_shazam
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
@@ -823,7 +759,28 @@ static def returnFile(it) {
 }
 
 /*
- * STEP 3 - Output Description HTML
+ * Parse software version numbers
+ */
+process get_software_versions {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".csv") > 0) filename
+        else null
+    }
+
+    output:
+    file "software_versions.csv"
+
+    script:
+    """
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
+
+/*
+ * Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
