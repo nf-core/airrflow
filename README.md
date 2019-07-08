@@ -1,6 +1,4 @@
-# nf-core/bcellmagic
-
-A pipeline to analyze B-cell repertoires.
+# ![nf-core/rnaseq](docs/images/Bcellmagic_logo.png)
 
 [![Build Status](https://travis-ci.org/nf-core/bcellmagic.svg?branch=master)](https://travis-ci.org/nf-core/bcellmagic)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.32.0-brightgreen.svg)](https://www.nextflow.io/)
@@ -14,7 +12,7 @@ https://img.shields.io/badge/singularity-available-7E4C74.svg)
 
 ### Introduction
 
-The nf-core/bcellmagic pipeline is built to analyze B-cell repertoire sequencing data from targeted amplification experiments. It makes use of the [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/) toolset for the analysis of B-cell repertoires.
+The nf-core/bcellmagic pipeline is built to analyze B-cell repertoire sequencing data. It makes use of the [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/) toolset and requires targeted sequencing data of the V, D, J and C regions of the B-cell receptor (primers for the V and C genes).
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
 
