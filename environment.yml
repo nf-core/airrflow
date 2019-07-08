@@ -26,7 +26,7 @@ dependencies:
   - conda-forge::r-dplyr=0.8.3
   - conda-forge::r-data.table=1.12.2
   - conda-forge::r-igraph=1.2.4.1
-  - conda-forge::r-gplots=3.0.11
+  - conda-forge::r-gplots=3.0.1.1
   - conda-forge::r-circlize=0.4.6
   - conda-forge::r-upsetr=1.4.0
   - conda-forge::r-gtools=3.8.1
