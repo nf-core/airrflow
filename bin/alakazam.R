@@ -10,8 +10,6 @@ library("igraph")
 library("svglite")
 library("extrafont")
 
-gdtools::sys_fonts()
-
 #extrafont::font_import(prompt = FALSE)
 #extrafont::loadfonts()
 
