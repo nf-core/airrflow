@@ -739,14 +739,14 @@ process alakazam{
 
 
     input:
-    set file(tab), val(id) from ch_for_alakazam
+    set file(tab), val(id) from ch_for_alakazam.collect()
 
     output:
     file "$tab"
 
     script:
     """
-    alakazam.R $tab
+    alakazam.R
     """
 }
 

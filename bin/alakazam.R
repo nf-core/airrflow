@@ -10,7 +10,7 @@ library(igraph)
 theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
 datadir <- "."
-outdir <- "."
+outdir <- "repertoire_analysis"
 
 # setwd to results folder (containing alakazam, shazam, etc. folders)
 
@@ -18,6 +18,7 @@ outdir <- "."
 
 all_files <- system(paste0("find '",datadir,"' -name '*igh_genotyped_clone-pass_germ-pass.tab'"), intern=T)
 
+dir.create(outdir)
 diversity_dir <- paste(outdir, "Diversity", sep="/")
 abundance_dir <- paste(outdir, "Abundance", sep="/")
 isotype_dir <- paste(outdir, "Isotype", sep="/")
