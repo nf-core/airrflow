@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 
-library(alakazam)
-library(data.table)
-library(dplyr)
-library(tigger)
-library(shazam)
-library(igraph)
-library(extrafont)
-library(svglite)
+library("alakazam")
+library("data.table")
+library("dplyr")
+library("tigger")
+library("shazam")
+library("igraph")
+library("extrafont")
+library("svglite")
 
 extrafont::font_import()
 extrafont::loadfonts()
