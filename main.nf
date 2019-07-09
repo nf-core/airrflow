@@ -748,7 +748,7 @@ process alakazam{
     script:
     """
     alakazam.R
-    zip -r repertoire_analysis
+    zip -r repertoire_analysis.zip repertoire_analysis
     """
 }
 
