@@ -14,7 +14,7 @@ str(pdfFonts(), max.level=1)
 
 
 
-theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
+theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text=element_text()))
 
 
 
@@ -79,8 +79,8 @@ p2 <- ggplot(sample_div@data, aes(x = Q, y = D,
   xlab("q") + ylab(expression(""^q * D)) +
   ggtitle(sample_main) + 
   facet_grid(cols=vars(TREATMENT))
-ggsave(paste0(diversity_dir,"/Diversity_patient_grid.svg"), device="svg", width = 25, height = 7, units="cm", family="sans")
-ggsave(paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 7, units="cm", family="sans")
+ggsave(paste0(diversity_dir,"/Diversity_patient_grid.svg"), device="svg", width = 25, height = 7, units="cm")
+#ggsave(paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 7, units="cm")
 
 
 # Tests sample diversity for significance per patient
