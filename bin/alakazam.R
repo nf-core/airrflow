@@ -15,8 +15,8 @@ str(pdfFonts(), max.level=1)
 #extrafont::font_import(prompt = FALSE)
 #extrafont::loadfonts()
 
-theme_set(theme_bw(base_family = "Arial") + 
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="Arial")))
+theme_set(theme_bw(base_family = "ArialMT") + 
+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 
 
 
