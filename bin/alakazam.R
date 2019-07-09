@@ -10,8 +10,9 @@ library("igraph")
 library("svglite")
 library("extrafont")
 
-extrafont::font_import(prompt=FALSE)
 str(pdfFonts(), max.level=1)
+extrafont::font_import(prompt=FALSE)
+
 extrafont::loadfonts()
 theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
