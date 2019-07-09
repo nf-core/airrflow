@@ -6,11 +6,7 @@ library("dplyr")
 library("tigger")
 library("shazam")
 library("igraph")
-library("extrafont")
 library("svglite")
-
-extrafont::font_import(prompt=FALSE)
-extrafont::loadfonts()
 
 theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
