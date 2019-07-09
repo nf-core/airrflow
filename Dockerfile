@@ -5,4 +5,4 @@ LABEL authors="Gisela Gabernet, Simon Heumos, Alexander Peltzer" \
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
 ENV PATH /opt/conda/envs/ggabernet-bcellmagic-dev/bin:$PATH
-RUN ln -s /opt/conda/envs/ggabernet-bcellmagic-dev/bin/vsearch /opt/conda/envs/ggabernet-bcellmagic-dev/bin/usearch /opt/conda/envs/ggabernet-bcellmagic-dev/bin/ghostscript
+RUN ln -s /opt/conda/envs/ggabernet-bcellmagic-dev/bin/vsearch /opt/conda/envs/ggabernet-bcellmagic-dev/bin/usearch
