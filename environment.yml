@@ -37,5 +37,6 @@ dependencies:
   - conda-forge::r-optparse=1.6.2
   - conda-forge::ghostscript=9.22
   - conda-forge::pandas=0.24.2
+  - conda-forge::cairo=1.16.0
   
 
