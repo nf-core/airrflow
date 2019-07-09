@@ -27,7 +27,7 @@ outdir <- "repertoire_analysis"
 
 ### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
 
-all_files <- system(paste0("find '",datadir,"' -name '*igh_genotyped_clone-pass_germ-pass.tab'"), intern=T)
+all_files <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
 
 dir.create(outdir)
 diversity_dir <- paste(outdir, "Diversity", sep="/")
@@ -62,7 +62,6 @@ df_all$SAMPLE_POP <- as.factor(paste(df_all$TREATMENT, df_all$EXTRACT_TIME, df_a
 ###############
 
 print("Diversity calculation")
-print(colnames(df_all))
 # Plotting sample diversity per patient
 sample_div <- rarefyDiversity(df_all, "SAMPLE", min_q=0, max_q=4, step_q=0.05,
                               ci=0.95, nboot=nboot)
