@@ -735,7 +735,7 @@ process germline_sequences{
 //Alakazam!
 process alakazam{
     tag "${id}" 
-    publishDir "${params.outdir}/alakazam/$id", mode: 'copy'
+    publishDir "${params.outdir}/alakazam", mode: 'copy'
 
 
     input:
