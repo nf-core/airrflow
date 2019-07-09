@@ -62,7 +62,7 @@ df_all$SAMPLE_POP <- as.factor(paste(df_all$TREATMENT, df_all$EXTRACT_TIME, df_a
 ###############
 
 print("Diversity calculation")
-
+print(colnames(df_all))
 # Plotting sample diversity per patient
 sample_div <- rarefyDiversity(df_all, "SAMPLE", min_q=0, max_q=4, step_q=0.05,
                               ci=0.95, nboot=nboot)
@@ -82,7 +82,7 @@ p2 <- ggplot(sample_div@data, aes(x = Q, y = D,
   ggtitle(sample_main) + 
   facet_grid(cols=vars(TREATMENT))
 ggsave(paste0(diversity_dir,"/Diversity_patient_grid.svg"), device="svg", width = 25, height = 7, units="cm")
-#ggsave(paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 7, units="cm")
+ggsave(paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 7, units="cm")
 
 
 # Tests sample diversity for significance per patient
