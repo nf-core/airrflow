@@ -7,6 +7,7 @@ library(tigger)
 library(shazam)
 library(igraph)
 library(extrafont)
+library(svglite)
 
 extrafont::font_import()
 extrafont::loadfonts()
