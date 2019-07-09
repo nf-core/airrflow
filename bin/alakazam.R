@@ -12,7 +12,7 @@ library("svglite")
 extrafont::font_import(prompt=FALSE)
 extrafont::loadfonts()
 
-theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text=element_text(family="Arial")))
+theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
 datadir <- "."
 outdir <- "repertoire_analysis"
