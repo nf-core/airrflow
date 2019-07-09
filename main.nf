@@ -739,7 +739,7 @@ process alakazam{
 
 
     input:
-    set file, val(id) from ch_for_alakazam.collect()
+    set file(tab), val(id) from ch_for_alakazam.collect()
 
     output:
     file "$tab"
