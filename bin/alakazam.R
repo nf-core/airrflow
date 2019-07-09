@@ -7,7 +7,10 @@ library("tigger")
 library("shazam")
 library("igraph")
 library("svglite")
+library("extrafont")
 
+extrafont::font_import()
+extrafont::loadfonts()
 theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
 datadir <- "."
@@ -72,7 +75,7 @@ p2 <- ggplot(sample_div@data, aes(x = Q, y = D,
   ggtitle(sample_main) + 
   facet_grid(cols=vars(TREATMENT))
 ggsave(paste0(diversity_dir,"/Diversity_patient_grid.svg"), device="svg", width = 25, height = 7, units="cm")
-ggsave(paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 7, units="cm")
+ggsave(paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 7, units="cm")
 
 
 # Tests sample diversity for significance per patient
@@ -94,7 +97,7 @@ g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 
 ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.svg"), device="svg", width = 25, height = 10, units="cm")
-ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.png"), device="png", width = 25, height = 10, units="cm")
+ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.pdf"), device="pdf", width = 25, height = 10, units="cm")
 
 write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient.tsv"), sep="\t", quote = F, row.names = F)
 
@@ -120,7 +123,7 @@ p2 <- ggplot(sample_div@data, aes(x = Q, y = D,
   ggtitle(sample_main) + 
   facet_grid(cols=vars(TREATMENT), rows=vars(POPULATION))
 ggsave(plot = p2, filename = paste0(diversity_dir,"/Diversity_patient_population.svg"), device="svg", width = 25, height = 20, units="cm")
-ggsave(plot = p2, filename = paste0(diversity_dir,"/Diversity_patient_population.png"), device="png", width = 25, height = 20, units="cm")
+ggsave(plot = p2, filename = paste0(diversity_dir,"/Diversity_patient_population.pdf"), device="pdf", width = 25, height = 20, units="cm")
 
 # Tests sample diversity for significance
 print("Diversity calculation tests population")
@@ -220,7 +223,7 @@ g4 <- ggplot(freqs, aes(fill=EXTRACT_TIME, y=Freq, x=ISOTYPE)) +
   facet_grid(cols=vars(TREATMENT, SOURCE), scales = "free", drop = T) +
   theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave(plot=g4, filename = paste0(isotype_dir,"/Isotype_frequencies_patient.svg"), device = "svg", width = 25, height = 7, units = "cm")
-ggsave(plot=g4, filename = paste0(isotype_dir,"/Isotype_frequencies_patient.png"), device = "png", width = 25, height = 7, units = "cm")
+ggsave(plot=g4, filename = paste0(isotype_dir,"/Isotype_frequencies_patient.pdf"), device = "pdf", width = 25, height = 7, units = "cm")
 
 write.table(freqs, file = paste0(isotype_dir,"/Isotype_frequencies_data.tsv"), sep="\t", quote=F, row.names = F)
 
@@ -241,7 +244,7 @@ g4 <- ggplot(freqs, aes(fill=EXTRACT_TIME, y=Freq, x=ISOTYPE)) +
  facet_grid(cols=vars(TREATMENT, SOURCE), rows=vars(POPULATION)) +
  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave(g4, filename = paste0(isotype_dir,"/Isotype_percentages_population.svg"), device = "svg", width = 25, height = 20, units = "cm")
-ggsave(g4, filename = paste0(isotype_dir,"/Isotype_percentages_population.png"), device = "png", width = 25, height = 20, units = "cm")
+ggsave(g4, filename = paste0(isotype_dir,"/Isotype_percentages_population.pdf"), device = "pdf", width = 25, height = 20, units = "cm")
 
 write.table(freqs, file = paste0(isotype_dir, "/Isotype_frequencies_population_data.tsv"), sep="\t", quote = F, row.names = F)
 
@@ -266,7 +269,7 @@ g2 <- ggplot(family, aes(x=GENE, y=SEQ_FREQ)) +
   xlab("") +
   facet_grid(cols=vars(TREATMENT, PATIENT))
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.svg"), plot = g2, width = 25, height = 10, units = "cm")
-ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 25, height = 10, units = "cm")
+ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 25, height = 10, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"), sep = "\t", quote = F, row.names = F)
 
@@ -288,7 +291,7 @@ g2 <- ggplot(family, aes(x=GENE, y=SEQ_FREQ)) +
   xlab("") +
   facet_grid(cols=vars(PATIENT, TREATMENT), rows=vars(POPULATION))
 ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.svg"), plot = g2, width = 25, height = 25, units = "cm")
-ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.png"), plot = g2, width = 25, height = 25, units = "cm")
+ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.pdf"), plot = g2, width = 25, height = 25, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data_population.tsv"), sep = "\t", quote = F, row.names = F)
 
