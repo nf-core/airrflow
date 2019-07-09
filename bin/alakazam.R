@@ -10,10 +10,11 @@ library("svglite")
 library("extrafont")
 
 extrafont::font_import(prompt=FALSE)
+str(pdfFonts(), max.level=1)
 extrafont::loadfonts()
 theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
-str(pdfFonts(), max.level=1)
+
 
 datadir <- "."
 outdir <- "repertoire_analysis"
