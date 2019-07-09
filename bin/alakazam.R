@@ -295,7 +295,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data_popu
 # MUTATIONAL FREQUENCY
 #######################
 
-# Quantify V family usage by patient
+# Quantify mutational load by patient
 print("Mutational load calculation")
 # Calculate mutation counts
 df_all_mut_counts <- observedMutations(df_all, sequenceColumn="SEQUENCE_IMGT",
@@ -310,8 +310,4 @@ df_all_mut_freq <- observedMutations(df_all, sequenceColumn = "SEQUENCE_IMGT",
                                      frequency = TRUE,
                                      nproc = 4)
 
-mut_counts_freqs <- select(SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))
-                    
-family$TREATMENT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$TIME_POINT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$PATIENT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[3])
+mut_counts_freqs <- select(df_all_mut_counts, SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))

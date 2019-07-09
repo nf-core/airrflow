@@ -743,10 +743,12 @@ process alakazam{
 
     output:
     file "$tab"
+    file "repertoire_analysis.zip"
 
     script:
     """
     alakazam.R
+    zip -r repertoire_analysis
     """
 }
 
