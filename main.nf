@@ -720,14 +720,14 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    set file("${clones.baseName}_germ-pass.tab"), val("$id") into ch_for_alakazam
-    file "${clones.baseName}_germ-pass.tab"
-    file "command_log.txt"
+    set file("${id}.tab"), val("$id") into ch_for_alakazam
+    file "${id}.tab"
+    file "${id}_command_log.txt"
 
     script:
     """
-    CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --log ${clones.baseName}.log
-    cp ".command.out" "command_log.txt"
+    CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --log ${clones.baseName}.log -o "${id}.tab"
+    cp ".command.out" "${id}_command_log.txt"
     ParseLog.py -l "${clones.baseName}.log" -f ID V_CALL D_CALL J_CALL
     """
 }
@@ -739,7 +739,7 @@ process alakazam{
 
 
     input:
-    set file(tab), val(id) from ch_for_alakazam.collect()
+    set file, val(id) from ch_for_alakazam.collect()
 
     output:
     file "$tab"
