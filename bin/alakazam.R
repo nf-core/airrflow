@@ -14,7 +14,7 @@ str(pdfFonts(), max.level=1)
 
 
 
-theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text=element_text()))
+theme_set(theme_bw(base_family = "sans") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
 
 
