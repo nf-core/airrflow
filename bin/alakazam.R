@@ -10,7 +10,7 @@ library("igraph")
 library("svglite")
 library("extrafont")
 
-str(pdfFonts(), max.level=1)
+gdtools::sys_fonts()
 
 #extrafont::font_import(prompt = FALSE)
 #extrafont::loadfonts()
