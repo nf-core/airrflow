@@ -1,81 +1,316 @@
 #!/usr/bin/env Rscript
 
-library(igraph)
-#library(dplyr)
 library(alakazam)
+library(data.table)
+library(dplyr)
+library(tigger)
+library(shazam)
+library(igraph)
 
-args = commandArgs(trailingOnly=TRUE)
+theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
-if (length(args)<1) {
-  stop("Two arguments must be supplied (input file tab and input file fasta).\n", call.=FALSE)
-} 
+datadir <- "."
+outdir <- "."
 
-inputtable = args[1]
-# "docker/QMKMK072AD/output_changeo_clonal/3463pbl_S8_L001_clone-pass_germ-pass.tab"
+# setwd to results folder (containing alakazam, shazam, etc. folders)
 
-output_folder = dirname(inputtable)
+### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
 
-#db <- readChangeoDb(inputtable)
+all_files <- system(paste0("find '",datadir,"' -name '*igh_genotyped_clone-pass_germ-pass.tab'"), intern=T)
 
-#dbsubset <- subset(db, C_PRIMER %in% c("IgG", "IgA", "IgM"))
+diversity_dir <- paste(outdir, "Diversity", sep="/")
+abundance_dir <- paste(outdir, "Abundance", sep="/")
+isotype_dir <- paste(outdir, "Isotype", sep="/")
+vfamily_dir <- paste(outdir, "V_family", sep="/")
+dir.create(diversity_dir)
+dir.create(abundance_dir)
+dir.create(isotype_dir)
+dir.create(vfamily_dir)
 
-# Calculate and plot rank abundance curve
-#a <- estimateAbundance(dbsubset, group="C_PRIMER")
-#ggsave(paste(output_folder,"abundance.pdf",sep="/"), plotAbundanceCurve(a,silent=T))
+nboot = 1000
 
-# Generate Hill diversity curve
-#d <- rarefyDiversity(dbsubset, group="C_PRIMER")
-#ggsave(paste(output_folder,"diversity.pdf",sep="/"), plotDiversityCurve(d,silent=T))
+df_all = data.frame()
+for (file in all_files){
+   fname = file
+   print(fname)
 
-# # Calculate CD3 amino acid properties
-# p <- aminoAcidProperties(dbsubset, seq="JUNCTION", nt = T, trim=T, label="CDR3")
-# 
-# # V family usage by isotype and clone
-# v <- countGenes(dbsubset, gene="V_CALL_GENOTYPED", groups="PRCONS", clone="CLONE", mode="family")
-# 
-# 
-# # Example build tree for a single clone
-# x <- makeChangeoClone(subset(db, CLONE == 37), text_fields="C_PRIMER")
-# g <- buildPhylipLineage(x, dnapars="/Users/gisela/bin/phylip-3.697/exe/dnapars")
-# 
-# 
-# #sample_clones <- readChangeoDb(inputfile)
-# sample_clones <- db
-# clones <- sample_clones %>%
-#   group_by(CLONE) %>%
-#   do(CHANGEO=makeChangeoClone(., text_fields="C_PRIMER",
-#                               num_fields="DUPCOUNT"))
-# 
-# # Build lineages
-# dnapars_exec <- "/Users/gisela/bin/phylip-3.697/exe/dnapars"
-# graphs <- lapply(clones$CHANGEO, buildPhylipLineage, 
-#                  dnapars_exec=dnapars_exec, rm_temp=TRUE)
-# # Note, clones with only a single sequence will not be processed.
-# # A warning will be generated and NULL will be returned by buildPhylipLineage
-# # These entries may be removed for clarity
-# graphs[sapply(graphs, is.null)] <- NULL
-# graph <- graphs[[7]]
-# plot(graph)
-# # The graph has shared annotations for the clone
-# data.frame(CLONE=graph$clone,
-#            JUNCTION_LENGTH=graph$junc_len,
-#            V_GENE=graph$v_gene,
-#            J_GENE=graph$j_gene)
-# 
-# # The vertices have sequence specific annotations
-# data.frame(SEQUENCE_ID=V(graph)$name, 
-#            ISOTYPE=V(graph)$C_PRIMER,
-#            DUPCOUNT=V(graph)$DUPCOUNT)
-# 
-# # Modifying layout
-# V(graph)$color <- "steelblue"
-# V(graph)$color[V(graph)$name == "Germline"] <- "black" 
-# V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white" 
-# V(graph)$label <- V(graph)$C_PRIMER
-# E(graph)$label <- ""
-# # Remove large default margins
-# par(mar=c(0, 0, 0, 0) + 0.1)
-# # Plot graph
-# plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
-#      vertex.label.color="black", vertex.size=20) # Add legend
-# legend("topleft", c("Germline", "Inferred", "Sample"), fill=c("black", "white", "steelblue"), cex=0.75)
+   df_pat <- read.csv(fname, sep="\t")
+   
+   df_all <- rbind(df_all, df_pat)
+
+}
+
+
+# Annotate sample and samplepop (sample + population) by adding all the conditions
+df_all$SAMPLE <- as.factor(paste(df_all$TREATMENT, df_all$EXTRACT_TIME, df_all$SOURCE, sep="_"))
+df_all$SAMPLE_POP <- as.factor(paste(df_all$TREATMENT, df_all$EXTRACT_TIME, df_all$SOURCE, df_all$POPULATION, sep="_"))
+
+###############
+## DIVERSITY
+###############
+
+print("Diversity calculation")
+
+# Plotting sample diversity per patient
+sample_div <- rarefyDiversity(df_all, "SAMPLE", min_q=0, max_q=4, step_q=0.05,
+                              ci=0.95, nboot=nboot)
+sample_main <- paste0("Sample diversity (n=", sample_div@n, ")")
+
+sample_div@data$TREATMENT <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_div@data$TIME_POINT <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_div@data$PATIENT <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
+p2 <- ggplot(sample_div@data, aes(x = Q, y = D, 
+                                  group = GROUP)) + 
+  geom_ribbon(aes(ymin = D_LOWER, 
+                  ymax = D_UPPER, 
+                  fill = TIME_POINT), alpha = 0.4) +
+  geom_line(aes(color = TIME_POINT, linetype=PATIENT)) +
+  xlab("q") + ylab(expression(""^q * D)) +
+  ggtitle(sample_main) + 
+  facet_grid(cols=vars(TREATMENT))
+ggsave(paste0(diversity_dir,"/Diversity_patient_grid.svg"), device="svg", width = 25, height = 7, units="cm")
+ggsave(paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 7, units="cm")
+
+
+# Tests sample diversity for significance per patient
+print("Diversity calculation tests")
+
+sample_test <- testDiversity(df_all, 1, "SAMPLE", nboot=nboot)
+
+sample_test@summary$TREATMENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_test@summary$TIME_POINT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_test@summary$PATIENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
+dodge <- position_dodge(width = 0.9)
+g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) + 
+  geom_bar(position=dodge, stat="identity") +
+  geom_errorbar(aes(ymin=MEAN-SD, ymax=MEAN+SD), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=1)") +
+  ggtitle(sample_main) +
+  facet_grid(cols=vars(TREATMENT), drop=T, space="free", scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.svg"), device="svg", width = 25, height = 10, units="cm")
+ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.png"), device="png", width = 25, height = 10, units="cm")
+
+write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient.tsv"), sep="\t", quote = F, row.names = F)
+
+
+# Plotting sample diversity for all populations
+print("Diversity calculation population")
+
+sample_div <- rarefyDiversity(df_all, "SAMPLE_POP", min_q=0, max_q=4, step_q=0.05,
+                              ci=0.95, nboot=nboot)
+sample_main <- paste0("Sample diversity (n=", sample_div@n, ")")
+
+sample_div@data$TREATMENT <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_div@data$TIME_POINT <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_div@data$PATIENT <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+sample_div@data$POPULATION <- sapply(sample_div@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[4])
+
+p2 <- ggplot(sample_div@data, aes(x = Q, y = D, 
+                                   group = GROUP)) + 
+  geom_ribbon(aes(ymin = D_LOWER, 
+            ymax = D_UPPER, fill = TIME_POINT), alpha = 0.4) +
+  geom_line(aes(color = TIME_POINT, linetype = PATIENT)) +
+  xlab("q") + ylab(expression(""^q * D)) +
+  ggtitle(sample_main) + 
+  facet_grid(cols=vars(TREATMENT), rows=vars(POPULATION))
+ggsave(plot = p2, filename = paste0(diversity_dir,"/Diversity_patient_population.svg"), device="svg", width = 25, height = 20, units="cm")
+ggsave(plot = p2, filename = paste0(diversity_dir,"/Diversity_patient_population.png"), device="png", width = 25, height = 20, units="cm")
+
+# Tests sample diversity for significance
+print("Diversity calculation tests population")
+sample_test <- testDiversity(df_all, 1, "SAMPLE_POP", nboot=nboot)
+
+sample_test@summary$TREATMENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_test@summary$TIME_POINT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_test@summary$PATIENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+sample_test@summary$POPULATION <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[4])
+
+dodge <- position_dodge(width = 0.9)
+g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) + 
+  geom_bar(position=dodge, stat="identity") +
+  geom_errorbar(aes(ymin=MEAN-SD, ymax=MEAN+SD), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=1)") +
+  ggtitle(sample_main) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  facet_grid(cols=vars(TREATMENT), rows=vars(POPULATION), drop = T, scales = "free")
+ggsave(plot=g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient_population.svg"), device="svg", width = 25, height = 10, units="cm")
+ggsave(plot=g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient_population.svg"), device="svg", width = 25, height = 10, units="cm")
+
+write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient_population.tsv"), sep="\t", quote = F, row.names = F)
+
+####################
+## ABUNDANCE
+####################
+
+# Per patient
+abund <- estimateAbundance(df_all, group = "SAMPLE", ci=0.95, nboot=nboot)
+abund@data$TREATMENT <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+abund@data$TIME_POINT <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund@data$PATIENT <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
+abund_main <- paste0("Rank abundance")
+
+p1 <- ggplot(abund@data, aes(x = RANK, y = P, 
+                                   group = GROUP)) + 
+  geom_ribbon(aes(ymin = LOWER, 
+                         ymax = UPPER, fill = TIME_POINT), alpha = 0.4) + 
+  geom_line(aes(color = TIME_POINT, linetype = PATIENT)) +
+  ggtitle(abund_main) + 
+  xlab("Rank") + ylab("Abundance") + 
+  scale_x_log10(limits = NULL, 
+                breaks = scales::trans_breaks("log10", function(x) 10^x), 
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) + 
+  scale_y_continuous(labels = scales::percent) +
+  facet_grid(cols = vars(TREATMENT), scales="free", drop = T)
+ggsave(plot=p1, filename = paste0(abundance_dir,"/Rank_abundance_patient.svg"), device="svg", width = 25, height = 10, units="cm")
+
+write.table(abund@data, file = paste0(abundance_dir, "/Abundance_data_patient.tsv"), sep="\t", quote = F, row.names = F)
+
+# Per population
+abund <- estimateAbundance(df_all, group = "SAMPLE_POP", ci=0.95, nboot=nboot)
+abund@data$TREATMENT <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+abund@data$TIME_POINT <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund@data$PATIENT <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+abund@data$POPULATION <- sapply(abund@data$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[4])
+
+abund_main <- paste0("Rank abundance")
+
+p1 <- ggplot(abund@data, aes(x = RANK, y = P, 
+                             group = GROUP)) + 
+  geom_ribbon(aes(ymin = LOWER, 
+                  ymax = UPPER, fill = TIME_POINT), alpha = 0.4) + 
+  geom_line(aes(color = TIME_POINT, linetype = PATIENT)) +
+  ggtitle(abund_main) + 
+  xlab("Rank") + ylab("Abundance") + 
+  scale_x_log10(limits = NULL, 
+                breaks = scales::trans_breaks("log10", function(x) 10^x), 
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) + 
+  scale_y_continuous(labels = scales::percent) +
+  facet_grid(cols = vars(TREATMENT), rows = vars(POPULATION), scales="free", drop = T)
+ggsave(plot=p1, filename = paste0(abundance_dir,"/Rank_abundance_patient_population.svg"), device="svg", width = 25, height = 25, units="cm")
+
+write.table(abund@data, file = paste0(abundance_dir, "/Abundance_data_patient_population.tsv"), sep="\t", quote = F, row.names = F)
+
+############
+## ISOTYPES
+############
+
+print("Isotypes calculation")
+# Plotting Isotype percentages per patient
+df_all$ISOTYPE <- df_all$C_PRIMER
+
+res <- df_all %>% group_by(ISOTYPE,SAMPLE,SOURCE,TREATMENT,EXTRACT_TIME) %>% dplyr::summarise(Seqs_isotype=n())
+res <- with(res, res[order(SOURCE),])
+res_sample <- df_all %>% group_by(SAMPLE) %>% dplyr::summarise(Seqs_total=n())
+
+freqs <- merge(x=res, y=res_sample, all.x = T, by.x = "SAMPLE", by.y = "SAMPLE")
+freqs$Freq <- (freqs$Seqs_isotype/freqs$Seqs_total)
+
+g4 <- ggplot(freqs, aes(fill=EXTRACT_TIME, y=Freq, x=ISOTYPE)) +
+  geom_bar(position = "dodge", stat="identity") +
+  xlab("") + 
+  ylab("Frequency") +
+  ggtitle("Isotype frequency") +
+  facet_grid(cols=vars(TREATMENT, SOURCE), scales = "free", drop = T) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
+ggsave(plot=g4, filename = paste0(isotype_dir,"/Isotype_frequencies_patient.svg"), device = "svg", width = 25, height = 7, units = "cm")
+ggsave(plot=g4, filename = paste0(isotype_dir,"/Isotype_frequencies_patient.png"), device = "png", width = 25, height = 7, units = "cm")
+
+write.table(freqs, file = paste0(isotype_dir,"/Isotype_frequencies_data.tsv"), sep="\t", quote=F, row.names = F)
+
+# Plotting Isotype percentages per population
+print("Isotypes calculation per population")
+res <- df_all %>% group_by(ISOTYPE,SAMPLE_POP,SOURCE,TREATMENT,EXTRACT_TIME, POPULATION) %>% dplyr::summarise(Seqs_isotype=n())
+res <- with(res, res[order(SOURCE),])
+res_sample <- df_all %>% group_by(SAMPLE_POP) %>% dplyr::summarise(Seqs_total=n())
+
+freqs <- merge(x=res, y=res_sample, all.x = T, by.x = "SAMPLE_POP", by.y = "SAMPLE_POP")
+freqs$Freq <- (freqs$Seqs_isotype/freqs$Seqs_total)
+
+g4 <- ggplot(freqs, aes(fill=EXTRACT_TIME, y=Freq, x=ISOTYPE)) +
+ geom_bar(position = "dodge", stat="identity") +
+ xlab("") + 
+ ylab("Frequency") +
+ ggtitle("Isotype frequency") +
+ facet_grid(cols=vars(TREATMENT, SOURCE), rows=vars(POPULATION)) +
+ theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
+ggsave(g4, filename = paste0(isotype_dir,"/Isotype_percentages_population.svg"), device = "svg", width = 25, height = 20, units = "cm")
+ggsave(g4, filename = paste0(isotype_dir,"/Isotype_percentages_population.png"), device = "png", width = 25, height = 20, units = "cm")
+
+write.table(freqs, file = paste0(isotype_dir, "/Isotype_frequencies_population_data.tsv"), sep="\t", quote = F, row.names = F)
+
+##################
+# V FAMILY USAGE              
+##################
+
+# Quantify V family usage by patient
+print("V family usage calculation")
+family <- countGenes(df_all, gene="V_CALL", groups="SAMPLE", 
+                     mode="family")
+family$TREATMENT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[1])
+family$TIME_POINT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[2])
+family$PATIENT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
+g2 <- ggplot(family, aes(x=GENE, y=SEQ_FREQ)) +
+  scale_color_brewer(palette="Set1") +
+  geom_point(aes(color=TIME_POINT), size=5, alpha=0.8) +
+  ggtitle("V Gene Family Usage") +
+  theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
+  ylab("Frequency") +
+  xlab("") +
+  facet_grid(cols=vars(TREATMENT, PATIENT))
+ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.svg"), plot = g2, width = 25, height = 10, units = "cm")
+ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 25, height = 10, units = "cm")
+
+write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"), sep = "\t", quote = F, row.names = F)
+
+# Quantify V family usage by population
+print("V family usage calculation population")
+family <- countGenes(df_all, gene="V_CALL", groups="SAMPLE_POP", 
+                     mode="family")
+family$TREATMENT <- sapply(family$SAMPLE_POP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+family$TIME_POINT <- sapply(family$SAMPLE_POP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+family$PATIENT <- sapply(family$SAMPLE_POP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+family$POPULATION <- sapply(family$SAMPLE_POP, function(x) unlist(strsplit(as.character(x), "_"))[4])
+
+g2 <- ggplot(family, aes(x=GENE, y=SEQ_FREQ)) +
+  scale_color_brewer(palette="Set1") +
+  geom_point(aes(color=TIME_POINT), size=5, alpha=0.8) +
+  ggtitle("V gene Family Usage") +
+  theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
+  ylab("Frequency") +
+  xlab("") +
+  facet_grid(cols=vars(PATIENT, TREATMENT), rows=vars(POPULATION))
+ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.svg"), plot = g2, width = 25, height = 25, units = "cm")
+ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.png"), plot = g2, width = 25, height = 25, units = "cm")
+
+write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data_population.tsv"), sep = "\t", quote = F, row.names = F)
+
+#######################
+# MUTATIONAL FREQUENCY
+#######################
+
+# Quantify V family usage by patient
+print("Mutational load calculation")
+# Calculate mutation counts
+df_all_mut_counts <- observedMutations(df_all, sequenceColumn="SEQUENCE_IMGT",
+                                     germlineColumn="GERMLINE_IMGT_D_MASK",
+                                     regionDefinition=NULL,
+                                     frequency=FALSE,
+                                     nproc=4) 
+# Calculate mutation frequencies
+df_all_mut_freq <- observedMutations(df_all, sequenceColumn = "SEQUENCE_IMGT",
+                                     germlineColumn = "GERMLINE_IMGT_D_MASK",
+                                     regionDefinition = NULL,
+                                     frequency = TRUE,
+                                     nproc = 4)
+
+mut_counts_freqs <- select(SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))
+                    
+family$TREATMENT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[1])
+family$TIME_POINT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[2])
+family$PATIENT <- sapply(family$SAMPLE, function(x) unlist(strsplit(as.character(x), "_"))[3])
