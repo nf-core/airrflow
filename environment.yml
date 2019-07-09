@@ -38,5 +38,6 @@ dependencies:
   - conda-forge::ghostscript=9.22
   - conda-forge::pandas=0.24.2
   - conda-forge::cairo=1.16.0
+  - conda-forge::r-sysfonts=0.8
   
 
