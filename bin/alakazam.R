@@ -6,6 +6,10 @@ library(dplyr)
 library(tigger)
 library(shazam)
 library(igraph)
+library(extrafont)
+
+extrafont::font_import()
+extrafont::loadfonts()
 
 theme_set(theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
 
