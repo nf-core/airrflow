@@ -336,3 +336,57 @@ df_all_mut_freq <- observedMutations(df_all, sequenceColumn = "SEQUENCE_IMGT",
                                      nproc = 4)
 
 mut_counts_freqs <- select(df_all_mut_counts, SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))
+
+res_mut <- mut_counts_freqs %>% group_by(SAMPLE,SOURCE,TREATMENT,EXTRACT_TIME) %>% 
+  dplyr::summarise(MUTATION_MEAN_COUNT=mean(MU_COUNT), 
+  MUTATION_MEDIAN_COUNT=median(MU_COUNT), MUTATION_SD_COUNT=sd(MU_COUNT), MUTATION_MEAN_FREQ=mean(MU_FREQ), MUTATION_MEDIAN_FREQ=median(MU_FREQ), MUTATION_SD_FREQ=mean(MU_FREQ), N_SEQS = n())
+write.table(res_mut, file = paste0(mutation_dir,"/Mutation_stats_patient.tsv"), sep="\t", col.names = T, row.names = F, quote = F)
+
+res_mut_pop <- mut_counts_freqs %>% group_by(SAMPLE_POP,SOURCE,TREATMENT,EXTRACT_TIME, POPULATION) %>% 
+  dplyr::summarise(MUTATION_MEAN_COUNT=mean(MU_COUNT), MUTATION_MEDIAN_COUNT=median(MU_COUNT), MUTATION_SD_COUNT=sd(MU_COUNT), 
+  MUTATION_MEAN_FREQ=mean(MU_FREQ), MUTATION_MEDIAN_FREQ=median(MU_FREQ), MUTATION_SD_FREQ=mean(MU_FREQ), N_SEQS = n())
+write.table(res_mut_pop, file = paste0(mutation_dir,"/Mutation_stats_patient_population.tsv"), sep="\t", col.names = T, row.names = F, quote = F)
+
+
+plot_mut_num <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_COUNT, x=SAMPLE)) +
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Mutation Counts") +
+  ggtitle("Mutation Counts") +
+  facet_grid(cols=vars(TREATMENT, SOURCE), scales = "free", drop = T) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
+ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient.svg"), device = "svg", width = 25, height = 7, units = "cm")
+ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient.png"), device = "png", width = 25, height = 7, units = "cm")
+
+
+plot_mut_freq <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_FREQ, x=SAMPLE)) +
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Mutation Frequency") +
+  ggtitle("Mutation Frequency") +
+  facet_grid(cols=vars(TREATMENT, SOURCE), scales = "free", drop = T) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
+ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient.svg"), device = "svg", width = 25, height = 7, units = "cm")
+ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient.png"), device = "png", width = 25, height = 7, units = "cm")
+
+
+plot_mut_num <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_COUNT, x=SAMPLE)) +
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Mutation Counts") +
+  ggtitle("Mutation Counts per Population") +
+  facet_grid(cols=vars(TREATMENT, SOURCE), rows=vars(POPULATION), scales = "free", drop = T) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
+ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient_population.svg"), device = "svg", width = 25, height = 20, units = "cm")
+ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient_population.png"), device = "png", width = 25, height = 20, units = "cm")
+
+
+plot_mut_freq <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_FREQ, x=SAMPLE)) +
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Mutation Frequency") +
+  ggtitle("Mutation Frequency per Population") +
+  facet_grid(cols=vars(TREATMENT, SOURCE), rows=vars(POPULATION), scales = "free", drop = T) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
+ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient_population.svg"), device = "svg", width = 25, height = 20, units = "cm")
+ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient_population.png"), device = "png", width = 25, height = 20, units = "cm")
