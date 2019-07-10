@@ -720,7 +720,7 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    set file("${id}.tab"), val("$id") into ch_for_alakazam
+    set file("${id}.tab") into ch_for_alakazam
     file "${id}.tab"
     file "${id}_command_log.txt"
 
@@ -734,12 +734,12 @@ process germline_sequences{
 
 //Alakazam!
 process alakazam{
-    tag "alakazam" 
+    tag "all" 
     publishDir "${params.outdir}/alakazam", mode: 'copy'
 
 
     input:
-    set file, val from ch_for_alakazam.collect()
+    file '*.tab' from ch_for_alakazam.collect()
 
     output:
     file "$tab"
