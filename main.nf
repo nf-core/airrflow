@@ -744,7 +744,7 @@ process alakazam{
 
 
     input:
-    file '*.tab' from ch_for_alakazam.collect()
+    file "*.tab" from ch_for_alakazam.collect()
 
     output:
     file "*.tab"
