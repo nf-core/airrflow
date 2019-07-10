@@ -720,7 +720,7 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    set file("${id}.tab") into ch_for_alakazam
+    file("${id}.tab") into ch_for_alakazam
     file "${id}.tab"
     file "${id}_command_log.txt"
 
