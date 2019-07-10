@@ -734,12 +734,12 @@ process germline_sequences{
 
 //Alakazam!
 process alakazam{
-    tag "${id}" 
+    tag "alakazam" 
     publishDir "${params.outdir}/alakazam", mode: 'copy'
 
 
     input:
-    set file(tab), val(id) from ch_for_alakazam.collect()
+    set file, val from ch_for_alakazam.collect()
 
     output:
     file "$tab"
