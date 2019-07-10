@@ -744,10 +744,10 @@ process alakazam{
 
 
     input:
-    file "*.tab" from ch_for_alakazam.collect()
+    file '*.tab' from ch_for_alakazam.collect()
 
     output:
-    file "*.tab"
+    file '*.tab'
     file "repertoire_analysis.zip"
 
     script:
