@@ -323,12 +323,14 @@ df_all_mut_counts <- observedMutations(df_all, sequenceColumn="SEQUENCE_IMGT",
                                      germlineColumn="GERMLINE_IMGT_D_MASK",
                                      regionDefinition=NULL,
                                      frequency=FALSE,
+                                     combine=TRUE,
                                      nproc=4) 
 # Calculate mutation frequencies
 df_all_mut_freq <- observedMutations(df_all_mut_counts, sequenceColumn = "SEQUENCE_IMGT",
                                      germlineColumn = "GERMLINE_IMGT_D_MASK",
                                      regionDefinition = NULL,
                                      frequency = TRUE,
+                                     combine=TRUE,
                                      nproc = 4)
 
 mut_counts_freqs <- select(df_all_mut_freq, SEQUENCE_ID, SOURCE, EXTRACT_TIME, TREATMENT, POPULATION, SAMPLE, SAMPLE_POP, MU_COUNT, MU_FREQ)
