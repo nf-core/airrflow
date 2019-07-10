@@ -32,10 +32,12 @@ diversity_dir <- paste(outdir, "Diversity", sep="/")
 abundance_dir <- paste(outdir, "Abundance", sep="/")
 isotype_dir <- paste(outdir, "Isotype", sep="/")
 vfamily_dir <- paste(outdir, "V_family", sep="/")
+mutation_dir <- paste(outdir, "Mutational_load", sep="/")
 dir.create(diversity_dir)
 dir.create(abundance_dir)
 dir.create(isotype_dir)
 dir.create(vfamily_dir)
+dir.create(mutation_dir)
 
 nboot = 1000
 
