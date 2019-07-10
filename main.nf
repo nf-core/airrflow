@@ -735,14 +735,19 @@ process germline_sequences{
 //Alakazam!
 process alakazam{
     tag "all" 
-    publishDir "${params.outdir}/alakazam", mode: 'copy'
+    publishDir "${params.outdir}/alakazam", mode: 'copy',
+    saveAs: {filename ->
+            if (filename.indexOf(".tab") > 0) "patient_tables/$filename"
+            else if (filename.indexOf(".zip") > 0) "$filename"
+            else null
+        }
 
 
     input:
     file '*.tab' from ch_for_alakazam.collect()
 
     output:
-    file "$tab"
+    file "*.tab"
     file "repertoire_analysis.zip"
 
     script:
