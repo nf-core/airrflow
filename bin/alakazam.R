@@ -81,28 +81,28 @@ ggsave(paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width 
 # Tests sample diversity for significance per patient
 # print("Diversity calculation tests")
 
-# sample_test <- testDiversity(df_all, 1, "SAMPLE", nboot=nboot)
+sample_test <- testDiversity(df_all, 1, "SAMPLE", nboot=nboot)
 
-# sample_test@summary$TREATMENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
-# sample_test@summary$TIME_POINT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
-# sample_test@summary$PATIENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+sample_test@summary$TREATMENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_test@summary$TIME_POINT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_test@summary$PATIENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-# dodge <- position_dodge(width = 0.9)
-# g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) + 
-#   geom_bar(position=dodge, stat="identity") +
-#   geom_errorbar(aes(ymin=MEAN-SD, ymax=MEAN+SD), width = .2, position=dodge) +
-#   xlab("") + ylab("Diversity (q=1)") +
-#   ggtitle(sample_main) +
-#   facet_grid(cols=vars(TREATMENT), drop=T, space="free", scales = "free") +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+dodge <- position_dodge(width = 0.9)
+g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) + 
+  geom_bar(position=dodge, stat="identity") +
+  geom_errorbar(aes(ymin=MEAN-SD, ymax=MEAN+SD), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=1)") +
+  ggtitle(sample_main) +
+  facet_grid(cols=vars(TREATMENT), drop=T, space="free", scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 
-# ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.svg"), device="svg", 
-# width = 25, height = 10, units="cm")
-# ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.pdf"), device="pdf", 
-# width = 25, height = 10, units="cm")
+ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.svg"), device="svg", 
+width = 25, height = 10, units="cm")
+ggsave(plot = g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient.pdf"), device="pdf", 
+width = 25, height = 10, units="cm")
 
-# write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient.tsv"), 
-# sep="\t", quote = F, row.names = F)
+write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient.tsv"), 
+sep="\t", quote = F, row.names = F)
 
 
 # Plotting sample diversity for all populations
@@ -132,28 +132,28 @@ width = 25, height = 20, units="cm")
 
 # Tests sample diversity for significance
 # print("Diversity calculation tests population")
-# sample_test <- testDiversity(df_all, 1, "SAMPLE_POP", nboot=nboot)
+sample_test <- testDiversity(df_all, 1, "SAMPLE_POP", nboot=nboot)
 
-# sample_test@summary$TREATMENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
-# sample_test@summary$TIME_POINT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
-# sample_test@summary$PATIENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
-# sample_test@summary$POPULATION <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[4])
+sample_test@summary$TREATMENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_test@summary$TIME_POINT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_test@summary$PATIENT <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[3])
+sample_test@summary$POPULATION <- sapply(sample_test@summary$GROUP, function(x) unlist(strsplit(as.character(x), "_"))[4])
 
-# dodge <- position_dodge(width = 0.9)
-# g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) + 
-#   geom_bar(position=dodge, stat="identity") +
-#   geom_errorbar(aes(ymin=MEAN-SD, ymax=MEAN+SD), width = .2, position=dodge) +
-#   xlab("") + ylab("Diversity (q=1)") +
-#   ggtitle(sample_main) +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-#   facet_grid(cols=vars(TREATMENT), rows=vars(POPULATION), drop = T, scales = "free")
-# ggsave(plot=g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient_population.svg"), device="svg", 
-# width = 25, height = 10, units="cm")
-# ggsave(plot=g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient_population.pdf"), device="pdf", 
-# width = 25, height = 10, units="cm")
+dodge <- position_dodge(width = 0.9)
+g1 <- ggplot(sample_test@summary, aes(y=MEAN, x=PATIENT, fill=TIME_POINT)) + 
+  geom_bar(position=dodge, stat="identity") +
+  geom_errorbar(aes(ymin=MEAN-SD, ymax=MEAN+SD), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=1)") +
+  ggtitle(sample_main) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  facet_grid(cols=vars(TREATMENT), rows=vars(POPULATION), drop = T, scales = "free")
+ggsave(plot=g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient_population.svg"), device="svg", 
+width = 25, height = 10, units="cm")
+ggsave(plot=g1, filename = paste0(diversity_dir,"/Diversity_Q1_test_patient_population.pdf"), device="pdf", 
+width = 25, height = 10, units="cm")
 
-# write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient_population.tsv"), 
-#   sep="\t", quote = F, row.names = F)
+write.table(sample_test@summary, file = paste0(diversity_dir, "/Diversity_Q1_data_patient_population.tsv"), 
+  sep="\t", quote = F, row.names = F)
 
 ####################
 ## ABUNDANCE
@@ -353,8 +353,8 @@ plot_mut_num <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_COUNT, x=SA
   ggtitle("Mutation Counts") +
   facet_grid(cols=vars(TREATMENT, SOURCE), scales = "free", drop = T) +
   theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
-ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient.svg"), device = "svg", width = 25, height = 7, units = "cm")
-ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient.png"), device = "png", width = 25, height = 7, units = "cm")
+ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient.svg"), device = "svg", width = 25, height = 10, units = "cm")
+ggsave(plot=plot_mut_num, filename = paste0(mutation_dir,"/Mutation_count_patient.png"), device = "png", width = 25, height = 10, units = "cm")
 
 
 plot_mut_freq <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_FREQ, x=SAMPLE)) +
@@ -364,8 +364,8 @@ plot_mut_freq <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_FREQ, x=SA
   ggtitle("Mutation Frequency") +
   facet_grid(cols=vars(TREATMENT, SOURCE), scales = "free", drop = T) +
   theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
-ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient.svg"), device = "svg", width = 25, height = 7, units = "cm")
-ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient.png"), device = "png", width = 25, height = 7, units = "cm")
+ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient.svg"), device = "svg", width = 25, height = 10, units = "cm")
+ggsave(plot=plot_mut_freq, filename = paste0(mutation_dir,"/Mutation_frequency_patient.png"), device = "png", width = 25, height = 10, units = "cm")
 
 
 plot_mut_num <- ggplot(mut_counts_freqs, aes(fill=EXTRACT_TIME, y=MU_COUNT, x=SAMPLE)) +
