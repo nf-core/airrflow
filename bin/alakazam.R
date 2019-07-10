@@ -7,11 +7,6 @@ library("dplyr")
 library("tigger")
 library("shazam")
 library("igraph")
-library("svglite")
-library("extrafont")
-
-#extrafont::font_import(prompt = FALSE)
-#extrafont::loadfonts()
 
 theme_set(theme_bw(base_family = "ArialMT") + 
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
@@ -51,7 +46,6 @@ for (file in all_files){
    df_all <- rbind(df_all, df_pat)
 
 }
-
 
 # Annotate sample and samplepop (sample + population) by adding all the conditions
 df_all$SAMPLE <- as.factor(paste(df_all$TREATMENT, df_all$EXTRACT_TIME, df_all$SOURCE, sep="_"))
@@ -337,7 +331,7 @@ df_all_mut_freq <- observedMutations(df_all_mut_counts, sequenceColumn = "SEQUEN
                                      frequency = TRUE,
                                      nproc = 4)
 
-mut_counts_freqs <- select(df_all_mut_freq, SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))
+mut_counts_freqs <- select(df_all_mut_freq, SEQUENCE_ID, SOURCE, EXTRACT_TIME, TREATMENT, POPULATION, SAMPLE, SAMPLE_POP, MU_COUNT, MU_FREQ)
 
 res_mut <- mut_counts_freqs %>% group_by(SAMPLE,SOURCE,TREATMENT,EXTRACT_TIME) %>% 
   dplyr::summarise(MUTATION_MEAN_COUNT=mean(MU_COUNT), 
