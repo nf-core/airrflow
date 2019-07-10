@@ -46,6 +46,7 @@ for (file in all_files){
    df_all <- rbind(df_all, df_pat)
 
 }
+write.table(df_all, "all_data.tab", sep = "\t", quote=F, row.names = F, header = T)
 
 # Annotate sample and samplepop (sample + population) by adding all the conditions
 df_all$SAMPLE <- as.factor(paste(df_all$TREATMENT, df_all$EXTRACT_TIME, df_all$SOURCE, sep="_"))
