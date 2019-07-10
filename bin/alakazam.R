@@ -331,13 +331,13 @@ df_all_mut_counts <- observedMutations(df_all, sequenceColumn="SEQUENCE_IMGT",
                                      frequency=FALSE,
                                      nproc=4) 
 # Calculate mutation frequencies
-df_all_mut_freq <- observedMutations(df_all, sequenceColumn = "SEQUENCE_IMGT",
+df_all_mut_freq <- observedMutations(df_all_mut_counts, sequenceColumn = "SEQUENCE_IMGT",
                                      germlineColumn = "GERMLINE_IMGT_D_MASK",
                                      regionDefinition = NULL,
                                      frequency = TRUE,
                                      nproc = 4)
 
-mut_counts_freqs <- select(df_all_mut_counts, SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))
+mut_counts_freqs <- select(df_all_mut_freq, SEQUENCE_ID, starts_with("MU_FREQ_"), starts_with("MU_COUNT_"))
 
 res_mut <- mut_counts_freqs %>% group_by(SAMPLE,SOURCE,TREATMENT,EXTRACT_TIME) %>% 
   dplyr::summarise(MUTATION_MEAN_COUNT=mean(MU_COUNT), 
