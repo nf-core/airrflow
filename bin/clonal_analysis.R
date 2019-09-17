@@ -16,7 +16,8 @@ datadir <- "."
 outdir <- "repertoire_comparison"
 
 # Read patient table
-df_pat <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
+fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
+df_pat <- read.csv(fname, sep="\t")
 
 # Create output folders
 patdir_overlap <- paste(outdir,"Clone_overlap",df_pat$SOURCE[1], sep="/")
