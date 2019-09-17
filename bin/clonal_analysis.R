@@ -21,7 +21,9 @@ dir.create(paste(outdir,"Clone_lineage",sep="/"))
 
 # Read patient table
 fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
+print(fname)
 df_pat <- read.csv(fname, sep="\t")
+print(df_pat)
 
 # Create output folders
 patdir_overlap <- paste(outdir,"Clone_overlap",df_pat$SOURCE[1], sep="/")

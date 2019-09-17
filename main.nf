@@ -746,7 +746,7 @@ process clonal_analysis{
     set file(clones), val(id) from ch_for_clonal_analysis
 
     output:
-    set file("${id}.tab") into ch_for_repertoire_comparison
+    file("${id}.tab") into ch_for_repertoire_comparison
 
     script:
     """
