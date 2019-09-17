@@ -735,7 +735,7 @@ process germline_sequences{
 //Clonal analysis
 process clonal_analysis{
     tag "${id}"
-    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy'.
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) null
             else if (filename.indexOf(".zip") > 0) "$filename"
