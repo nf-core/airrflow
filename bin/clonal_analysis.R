@@ -14,6 +14,10 @@ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), te
 
 datadir <- "."
 outdir <- "repertoire_comparison"
+dir.create(outdir)
+dir.create(paste(outdir,"Clone_overlap",sep="/"))
+dir.create(paste(outdir,"Clone_numbers",sep="/"))
+dir.create(paste(outdir,"Clone_lineage",sep="/"))
 
 # Read patient table
 fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
