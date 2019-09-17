@@ -8,6 +8,8 @@ library(tigger)
 library(shazam)
 library(igraph)
 library(gplots)
+library(circlize)
+library(UpSetR)
 
 theme_set(theme_bw(base_family = "ArialMT") + 
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
@@ -52,6 +54,7 @@ seqsintersects = numeric(0)
 for (j in c(1:nrow(clonedf))){
     print(clonedf)
     print(names(df_pop_time))
+    if 
     inter <- intersect(df_pop_time[[which(grepl(clonedf[j,1], names(df_pop_time)))]]$CLONE, 
                         df_pop_time[[which(grepl(clonedf[j,2], names(df_pop_time)))]]$CLONE)
 
