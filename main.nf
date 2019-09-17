@@ -720,7 +720,7 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    file("${id}.tab") into ch_for_alakazam
+    set file("${id}.tab"), val("$id") into ch_for_clonal_analysis
     file "${id}.tab"
     file "${id}_command_log.txt"
 
@@ -732,10 +732,34 @@ process germline_sequences{
     """
 }
 
-//Alakazam!
-process alakazam{
+//Clonal analysis
+process clonal_analysis{
+    tag "${id}"
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy'.
+        saveAs: {filename ->
+            if (filename.indexOf(".tab") > 0) null
+            else if (filename.indexOf(".zip") > 0) "$filename"
+            else null
+        }
+    
+    input:
+    set file(clones), val(id) from ch_for_clonal_analysis
+
+    output:
+    set file("${id}.tab") into ch_for_repertoire_comparison
+
+    script:
+    """
+    clonal_analysis.R
+    zip -r clonal_analysis.zip clonal_analysis
+    """
+
+}
+
+//Repertoire comparison
+process repertoire_comparison{
     tag "all" 
-    publishDir "${params.outdir}/alakazam", mode: 'copy',
+    publishDir "${params.outdir}/repertoire_comparison", mode: 'copy',
     saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "patient_tables/$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
@@ -744,16 +768,16 @@ process alakazam{
 
 
     input:
-    file '*.tab' from ch_for_alakazam.collect()
+    file '*.tab' from ch_for_repertoire_comparison.collect()
 
     output:
     file '*.tab'
-    file "repertoire_analysis.zip"
+    file "repertoire_comparison.zip"
 
     script:
     """
-    alakazam.R
-    zip -r repertoire_analysis.zip repertoire_analysis
+    repertoire_comparison.R
+    zip -r repertoire_comparison.zip repertoire_comparison
     """
 }
 

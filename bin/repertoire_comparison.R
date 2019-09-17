@@ -1,12 +1,13 @@
 #!/usr/bin/env Rscript
 
-library("alakazam")
-library("ggplot2")
-library("data.table")
-library("dplyr")
-library("tigger")
-library("shazam")
-library("igraph")
+library(alakazam)
+library(ggplot2)
+library(data.table)
+library(dplyr)
+library(tigger)
+library(shazam)
+library(igraph)
+library(gplots)
 
 theme_set(theme_bw(base_family = "ArialMT") + 
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
@@ -14,7 +15,7 @@ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), te
 
 
 datadir <- "."
-outdir <- "repertoire_analysis"
+outdir <- "repertoire_comparison"
 
 # setwd to results folder (containing alakazam, shazam, etc. folders)
 
