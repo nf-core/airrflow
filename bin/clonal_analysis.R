@@ -51,6 +51,7 @@ lenintersects = numeric(0)
 seqsintersects = numeric(0)
 for (j in c(1:nrow(clonedf))){
     print(clonedf)
+    print(names(df_pop_time))
     inter <- intersect(df_pop_time[[which(grepl(clonedf[j,1], names(df_pop_time)))]]$CLONE, 
                         df_pop_time[[which(grepl(clonedf[j,2], names(df_pop_time)))]]$CLONE)
 
