@@ -21,9 +21,7 @@ dir.create(paste(outdir,"Clone_lineage",sep="/"))
 
 # Read patient table
 fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
-print(fname)
 df_pat <- read.csv(fname, sep="\t")
-print(df_pat)
 
 # Create output folders
 patdir_overlap <- paste(outdir,"Clone_overlap",df_pat$SOURCE[1], sep="/")
@@ -52,13 +50,14 @@ seqdf <- clonedf
 lenintersects = numeric(0)
 seqsintersects = numeric(0)
 for (j in c(1:nrow(clonedf))){
-inter <- intersect(df_pop_time[[which(grepl(clonedf[j,1], names(df_pop_time)))]]$CLONE, 
-                    df_pop_time[[which(grepl(clonedf[j,2], names(df_pop_time)))]]$CLONE)
+    print(clonedf)
+    inter <- intersect(df_pop_time[[which(grepl(clonedf[j,1], names(df_pop_time)))]]$CLONE, 
+                        df_pop_time[[which(grepl(clonedf[j,2], names(df_pop_time)))]]$CLONE)
 
-clones_subset <- count_clones[which(count_clones$CLONE %in% as.character(inter)),]
+    clones_subset <- count_clones[which(count_clones$CLONE %in% as.character(inter)),]
 
-lenintersects <- c(lenintersects, length(inter))
-seqsintersects <- c(seqsintersects, sum(clones_subset$SEQ_COUNT))
+    lenintersects <- c(lenintersects, length(inter))
+    seqsintersects <- c(seqsintersects, sum(clones_subset$SEQ_COUNT))
 }
 
 clonedf$value <- lenintersects
