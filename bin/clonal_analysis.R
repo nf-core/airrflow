@@ -16,7 +16,7 @@ theme_set(theme_bw(base_family = "ArialMT") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 
 datadir <- "."
-outdir <- "repertoire_comparison"
+outdir <- "clonal_analysis"
 dir.create(outdir)
 dir.create(paste(outdir,"Clone_overlap",sep="/"))
 dir.create(paste(outdir,"Clone_numbers",sep="/"))
