@@ -1,3 +1,4 @@
+#!/bin/bash
 PREFIX="noheader"   # define where to store all the outputs
 mkdir -p "clonal_analysis/Clone_lineage/Graphml_trees/${PREFIX}"    # make sure the outputs dir exists
 
