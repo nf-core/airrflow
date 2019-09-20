@@ -40,11 +40,11 @@ df_pop_time <- split(df_pat, df_pat$TIME_POP)
 count_clones <- countClones(df_pat)
 
 ## Calculating overlaps between time points
-combinations <- expand.grid(unique(df_pat$EXTRACT_TIME), unique(df_pat$POPULATION))
-combinations$names <- apply(combinations[,c("Var1", "Var2")], 1, paste, collapse = "_")
+combin <- expand.grid(unique(df_pat$EXTRACT_TIME), unique(df_pat$POPULATION))
+combin$names <- apply(combin[,c("Var1", "Var2")], 1, paste, collapse = "_")
 
-baselines <- subset(combinations, combinations$Var1 == "baseline")
-other <- subset(combinations, combinations$Var1 != "baseline")
+baselines <- subset(combin, combin$Var1 == "baseline")
+other <- subset(combin, combin$Var1 != "baseline")
 clonedf <- expand.grid(baselines$names, other$names)
 colnames(clonedf) <- c("from","to")
 seqdf <- clonedf
@@ -136,7 +136,7 @@ vennplot <- venn(list(unique(df_pop[[1]]$CLONE), unique(df_pop[[2]]$CLONE), uniq
 
 listInput <- list(df_pop[[1]]$CLONE, df_pop[[2]]$CLONE, df_pop[[3]]$CLONE, df_pop[[4]]$CLONE)
 names(listInput) <- names(df_pop)
-combinations <- data.frame(from=combinations(4,2,names(df_pop),repeats.allowed=F)[,1], to=combinations(4,2,names(df_pop),repeats.allowed=F)[,2])
+combin <- data.frame(from=combinations(4,2,names(df_pop),repeats.allowed=F)[,1], to=combinations(4,2,names(df_pop),repeats.allowed=F)[,2])
 
 listInput <- list(df_pop[[1]]$CLONE, df_pop[[2]]$CLONE, df_pop[[3]]$CLONE, df_pop[[4]]$CLONE)
 names(listInput) <- names(df_pop)
@@ -149,8 +149,8 @@ png(filename = paste(patdir_overlap,"/Set_plot_", df_pop[[1]]$TREATMENT[1], "_",
 upset(fromList(listInput), order.by="freq", group.by = "sets", point.size = 3.5, line.size=2, mainbar.y.label = "Clone intersections", sets.x.label = "Clones per population")
 dev.off()
 
-clonedf <- combinations
-seqdf <- combinations
+clonedf <- combin
+seqdf <- combin
 
 lenintersects = numeric(0)
 seqsintersects = numeric(0)
