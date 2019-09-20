@@ -747,6 +747,7 @@ process clonal_analysis{
 
     output:
     file("${id}.tab") into ch_for_repertoire_comparison
+    file "clonal_analysis.zip"
 
     script:
     """
