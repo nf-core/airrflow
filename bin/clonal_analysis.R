@@ -342,6 +342,8 @@ for (clone_id in clones$CLONE){
     
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
     sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
+    sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
+    sub_db_clone$SAMPLE_POP <- sapply(sub_db_clone$SAMPLE_POP, as.character)
     clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
     
     dnapars_exec <- "/opt/conda/envs/ggabernet-bcellmagic-dev/bin/dnapars"
