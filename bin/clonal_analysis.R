@@ -20,8 +20,8 @@ outdir <- "clonal_analysis"
 dir.create(outdir)
 dir.create(paste(outdir,"Clone_overlap",sep="/"))
 dir.create(paste(outdir,"Clone_numbers",sep="/"))
-dir.create(paste(outdir,"Clone_lineage",sep="/"))
-
+plotdir <- paste(outdir,"Clone_lineage",sep="/")
+dir.create(plotdir)
 # Read patient table
 fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
 df_pat <- read.csv(fname, sep="\t")
@@ -36,6 +36,10 @@ patdir_number <- paste(outdir,"Clone_numbers",df_pat$SOURCE[1], sep="/")
 dir.create(patdir_number)
 patdir_lineage <- paste(outdir, "Clone_lineage", df_pat$SOURCE[1], sep="/")
 dir.create(patdir_lineage)
+
+############################
+# Clone chordplots
+############################
 
 # Chordplot comparison time points per patient
 df_pat$TIME_POP <- as.factor(paste(df_pat$EXTRACT_TIME, df_pat$POPULATION, sep="_"))
@@ -134,6 +138,8 @@ dev.off()
 df_TP <- split(df_pat, df_pat$EXTRACT_TIME)
 
 # Plots per patient and time point - overlap populations
+#-------------------------------------------------------
+
 for (n in c(1:length(df_TP))) {
 df_pop <- split(df_TP[[n]], df_TP[[n]]$POPULATION)
 vennplot <- venn(list(unique(df_pop[[1]]$CLONE), unique(df_pop[[2]]$CLONE), unique(df_pop[[3]]$CLONE), unique(df_pop[[4]]$CLONE)), names = names(df_pop))
@@ -226,8 +232,9 @@ circos.clear()
 dev.off()
 }
 
-
-## Plotting clone numbers
+#########################
+## Clone numbers
+#########################
 
 ## Clone numbers per sample
 clones <- countClones(df_pat, groups=c("SAMPLE"))
@@ -319,5 +326,49 @@ colnames(clone_number_stats) <- c("Sample", "Number of clones", "Mean number of 
 write.table(clone_number_stats, file =paste(patdir_number,"/Clones_number_stats_population_", clones$PATIENT[1],"_",clones$TREATMENT[1], ".tsv", sep=""), sep = "\t", row.names = F, quote = F)
 
 
+##################
+# Clonal lineages
+#################
 
+# save clonal table
+countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
+write.table(countclones, paste(plotdir, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
+
+# Restrict clonal tree size
+clones <- subset(countclones, SEQ_COUNT >= 50 & SEQ_COUNT < 100)
+
+for (clone_id in clones$CLONE){
+    print(clone_id)
+    
+    sub_db_clone <- subset(df_pat, CLONE == clone_id)
+    sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
+    clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
+    
+    dnapars_exec <- "/opt/conda/envs/ggabernet-bcellmagic-dev/bin/dnapars"
+    graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
+    
+    #Modify graph and plot attributes
+    V(graph)$color <- "steelblue"
+    V(graph)$color[V(graph)$name == "Germline"] <- "black"
+    V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
+    V(graph)$label <- V(graph)$POPULATION
+    #E(graph)$label <- ""
+
+    # Remove large default margins
+    par(mar=c(0, 0, 0, 0) + 0.1)
+    vsize = V(graph)$DUPCOUNT
+    vsize[is.na(vsize)] <- 1
+
+    # Plot
+    svg(filename = paste(plotdir,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+    plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
+        vertex.label.color="black", vertex.size=(vsize/20 + 6))
+    legend("topleft", c("Germline", "Inferred", "Sample"), 
+        fill=c("black", "white", "steelblue"), cex=0.75)
+    dev.off()
+    
+    # Save graph in graphML format
+    write_graph(graph, file=paste(plotdir, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
+    
+}
 
