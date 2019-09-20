@@ -7,3 +7,4 @@ do
   # file that's associated with the input
   awk '/<graph /,/<\/graph>/' "${FILE}" > "${PREFIX}/${FILE}"
 done
+
