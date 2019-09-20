@@ -711,7 +711,7 @@ process germline_sequences{
             else if (filename.indexOf(".log") > 0) null
             else if (filename.indexOf("table.tab") > 0) "info/$filename"
             else if (filename.indexOf(".tab") > 0) "table/$filename"
-            else if (filename == "command_log.txt") "$filename"
+            else if (filename.indexOf("command_log.txt") "$filename"
             else null
         }
 
