@@ -18,24 +18,23 @@ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), te
 datadir <- "."
 outdir <- "clonal_analysis"
 dir.create(outdir)
-dir.create(paste(outdir,"Clone_overlap",sep="/"))
-dir.create(paste(outdir,"Clone_numbers",sep="/"))
-plotdir <- paste(outdir,"Clone_lineage",sep="/")
-dir.create(plotdir)
+patdir_overlap <- paste(outdir,"Clone_overlap",sep="/")
+dir.create(patdir_overlap)
+patdir_number <- paste(outdir,"Clone_numbers",sep="/")
+dir.create(patdir_number)
+patdir_lineage <- paste(outdir,"Clone_lineage",sep="/")
+dir.create(patdir_lineage)
+patdir_lineage_trees <- paste(patdir_lineage, "Clone_tree_plots", sep = "/")
+dir.create(patdir_lineage_trees)
+patdir_lineage_graphml <- paste(patdir_lineage, "Graphml_trees", sep = "/")
+dir.create(patdir_lineage_graphml)
+
 # Read patient table
 fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
 df_pat <- read.csv(fname, sep="\t")
 df_pat$SAMPLE <- as.factor(paste(df_pat$TREATMENT, df_pat$EXTRACT_TIME, df_pat$SOURCE, sep="_"))
 df_pat$SAMPLE_POP <- as.factor(paste(df_pat$TREATMENT, df_pat$EXTRACT_TIME, df_pat$SOURCE, df_pat$POPULATION, sep="_"))
 
-
-# Create output folders
-patdir_overlap <- paste(outdir,"Clone_overlap",df_pat$SOURCE[1], sep="/")
-dir.create(patdir_overlap)
-patdir_number <- paste(outdir,"Clone_numbers",df_pat$SOURCE[1], sep="/")
-dir.create(patdir_number)
-patdir_lineage <- paste(outdir, "Clone_lineage", df_pat$SOURCE[1], sep="/")
-dir.create(patdir_lineage)
 
 ############################
 # Clone chordplots
@@ -332,7 +331,7 @@ write.table(clone_number_stats, file =paste(patdir_number,"/Clones_number_stats_
 
 # save clonal table
 countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
-write.table(countclones, paste(plotdir, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
+write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
 # Restrict clonal tree size
 clones <- subset(countclones, SEQ_COUNT >= 50 & SEQ_COUNT < 100)
@@ -368,7 +367,7 @@ for (clone_id in clones$CLONE){
     vsize[is.na(vsize)] <- 1
 
     # Plot
-    svg(filename = paste(plotdir,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+    svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
     plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
         vertex.label.color="black", vertex.size=(vsize/20 + 6))
     legend("topleft", c("Germline", "Inferred", "Sample"), 
@@ -376,7 +375,7 @@ for (clone_id in clones$CLONE){
     dev.off()
     
     # Save graph in graphML format
-    write_graph(graph, file=paste(plotdir, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
+    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
     
 }
 
