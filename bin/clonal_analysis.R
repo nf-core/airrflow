@@ -344,6 +344,12 @@ for (clone_id in clones$CLONE){
     sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
     sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
     sub_db_clone$SAMPLE_POP <- sapply(sub_db_clone$SAMPLE_POP, as.character)
+    sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
+    sub_db_clone$TREATMENT <- sapply(sub_db_clone$TREATMENT, as.character)
+    sub_db_clone$POPULATION <- sapply(sub_db_clone$POPULATION, as.character)
+    sub_db_clone$SOURCE <- sapply(sub_db_clone$SOURCE, as.character)
+    sub_db_clone$EXTRACT_TIME <- sapply(sub_db_clone$EXTRACT_TIME, as.character)
+    sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
     clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
     
     dnapars_exec <- "/opt/conda/envs/ggabernet-bcellmagic-dev/bin/dnapars"
