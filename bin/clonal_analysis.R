@@ -334,7 +334,7 @@ countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
 write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
 # Restrict clonal tree size
-clones <- subset(countclones, SEQ_COUNT >= 50 & SEQ_COUNT < 100)
+clones <- subset(countclones, SEQ_COUNT >= 2)
 
 for (clone_id in clones$CLONE){
     print(clone_id)
@@ -359,7 +359,6 @@ for (clone_id in clones$CLONE){
     V(graph)$color[V(graph)$name == "Germline"] <- "black"
     V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
     V(graph)$label <- V(graph)$POPULATION
-    #E(graph)$label <- ""
 
     # Remove large default margins
     par(mar=c(0, 0, 0, 0) + 0.1)
