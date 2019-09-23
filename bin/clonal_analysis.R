@@ -334,16 +334,12 @@ countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
 write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
 # Restrict clonal tree size
-clones <- subset(countclones, SEQ_COUNT >= 2)
+clones <- subset(countclones, SEQ_COUNT >= 5)
 
 for (clone_id in clones$CLONE){
 
-    print(paste0("clone ID: ", as.character(clone_id)))
-
+    print(clone_id)
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
-
-    print(paste0("clone size: ", as.character(length(sub_db_clone$SEQUENCE_ID)))
-
     sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
     sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
     sub_db_clone$SAMPLE_POP <- sapply(sub_db_clone$SAMPLE_POP, as.character)
