@@ -338,7 +338,7 @@ clones <- subset(countclones, SEQ_COUNT >= 2)
 
 for (clone_id in clones$CLONE){
 
-    print(paste0("clone ID: ",clone_id)
+    print(paste0("clone ID: ",clone_id))
 
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
 
