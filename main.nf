@@ -752,7 +752,7 @@ process clonal_analysis{
     script:
     """
     clonal_analysis.R
-    awk_all.sh
+    merge_graphs.sh
     zip -r clonal_analysis.zip clonal_analysis
     """
 
