@@ -338,11 +338,11 @@ clones <- subset(countclones, SEQ_COUNT >= 2)
 
 for (clone_id in clones$CLONE){
 
-    print(paste0("clone ID: ",clone_id))
+    print(paste0("clone ID: ", as.character(clone_id)))
 
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
 
-    print(paste0("clone size: ",length(sub_db_clone$SEQUENCE_ID))
+    print(paste0("clone size: ", as.character(length(sub_db_clone$SEQUENCE_ID)))
 
     sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
     sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
