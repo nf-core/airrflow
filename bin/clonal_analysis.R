@@ -356,24 +356,24 @@ for (clone_id in clones$CLONE){
         dnapars_exec <- "/opt/conda/envs/ggabernet-bcellmagic-dev/bin/dnapars"
         graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
         
-        #Modify graph and plot attributes
-        V(graph)$color <- "steelblue"
-        V(graph)$color[V(graph)$name == "Germline"] <- "black"
-        V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
-        V(graph)$label <- V(graph)$POPULATION
+        # #Modify graph and plot attributes
+        # V(graph)$color <- "steelblue"
+        # V(graph)$color[V(graph)$name == "Germline"] <- "black"
+        # V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
+        # V(graph)$label <- V(graph)$POPULATION
 
-        # Remove large default margins
-        par(mar=c(0, 0, 0, 0) + 0.1)
-        vsize = V(graph)$DUPCOUNT
-        vsize[is.na(vsize)] <- 1
+        # # Remove large default margins
+        # par(mar=c(0, 0, 0, 0) + 0.1)
+        # vsize = V(graph)$DUPCOUNT
+        # vsize[is.na(vsize)] <- 1
 
-        # Plot
-        svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
-        plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
-            vertex.label.color="black", vertex.size=(vsize/20 + 6))
-        legend("topleft", c("Germline", "Inferred", "Sample"), 
-            fill=c("black", "white", "steelblue"), cex=0.75)
-        dev.off()
+        # # Plot
+        # svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+        # plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
+        #     vertex.label.color="black", vertex.size=(vsize/20 + 6))
+        # legend("topleft", c("Germline", "Inferred", "Sample"), 
+        #     fill=c("black", "white", "steelblue"), cex=0.75)
+        # dev.off()
         
         # Save graph in graphML format
         write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
