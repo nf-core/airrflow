@@ -336,8 +336,7 @@ write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_
 # Restrict clonal tree size
 clones <- subset(countclones, SEQ_COUNT >= 5 & SEQ_COUNT <= 100)
 
-for (clone_id in clones$CLONE){
-
+save_graph <- function(df_pat, clone_id){
     print(clone_id)
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
     sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
@@ -350,36 +349,41 @@ for (clone_id in clones$CLONE){
     sub_db_clone$EXTRACT_TIME <- sapply(sub_db_clone$EXTRACT_TIME, as.character)
     sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
     
-    if (length(sub_db_clone$SEQUENCE_ID) == length(unique(sub_db_clone$SEQUENCE_ID))) {
-        clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
+    clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
+
+    dnapars_exec <- "/opt/conda/envs/ggabernet-bcellmagic-dev/bin/dnapars"
+    graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
     
-        dnapars_exec <- "/opt/conda/envs/ggabernet-bcellmagic-dev/bin/dnapars"
-        graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
-        
-        # #Modify graph and plot attributes
-        # V(graph)$color <- "steelblue"
-        # V(graph)$color[V(graph)$name == "Germline"] <- "black"
-        # V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
-        # V(graph)$label <- V(graph)$POPULATION
+    #Modify graph and plot attributes
+    V(graph)$color <- "steelblue"
+    V(graph)$color[V(graph)$name == "Germline"] <- "black"
+    V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
+    V(graph)$label <- V(graph)$POPULATION
 
-        # # Remove large default margins
-        # par(mar=c(0, 0, 0, 0) + 0.1)
-        # vsize = V(graph)$DUPCOUNT
-        # vsize[is.na(vsize)] <- 1
+    # Remove large default margins
+    par(mar=c(0, 0, 0, 0) + 0.1)
+    vsize = V(graph)$DUPCOUNT
+    vsize[is.na(vsize)] <- 1
 
-        # # Plot
-        # svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
-        # plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
-        #     vertex.label.color="black", vertex.size=(vsize/20 + 6))
-        # legend("topleft", c("Germline", "Inferred", "Sample"), 
-        #     fill=c("black", "white", "steelblue"), cex=0.75)
-        # dev.off()
-        
-        # Save graph in graphML format
-        write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
-    } else {
-        print(paste0("Clone ", clone_id, " skipped because of duplicate Sequence IDs."))
-    }
-        
+    # Plot
+    # svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+    # plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
+    #     vertex.label.color="black", vertex.size=(vsize/20 + 6))
+    # legend("topleft", c("Germline", "Inferred", "Sample"), 
+    #     fill=c("black", "white", "steelblue"), cex=0.75)
+    # dev.off()
+    
+    #Save graph in graphML format
+    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
+
+}
+
+for (clone_id in clones$CLONE){
+    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
+                    error=function(e) {write.to.log(sys.calls())},
+                    warning=function(w) {write.to.log(sys.calls())
+                                invokeRestart("muffleWarning")})
+            , error = function(e) { print(paste0("Skipping clone due to problem:", clone_id) })
+
 }
 
