@@ -337,7 +337,7 @@ write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_
 clones <- subset(countclones, SEQ_COUNT >= 5 & SEQ_COUNT <= 100)
 
 save_graph <- function(df_pat, clone_id){
-    print(clone_id)
+    print(paste0("Started processing clone:",clone_id))
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
     sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
     sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
@@ -380,10 +380,10 @@ save_graph <- function(df_pat, clone_id){
 
 for (clone_id in clones$CLONE){
     tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
-                    error=function(e) {write.to.log(sys.calls())},
-                    warning=function(w) {write.to.log(sys.calls())
+                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
+                    warning=function(w) {print(paste0("Warning for clone:", clone_id)))
                                 invokeRestart("muffleWarning")})
-            , error = function(e) { print(paste0("Skipping clone due to problem:", clone_id)) })
+            , error = function(e) { print(paste0("Processed clone:", clone_id)) })
 
 }
 
