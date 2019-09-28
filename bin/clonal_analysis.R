@@ -383,7 +383,7 @@ for (clone_id in clones$CLONE){
                     error=function(e) {write.to.log(sys.calls())},
                     warning=function(w) {write.to.log(sys.calls())
                                 invokeRestart("muffleWarning")})
-            , error = function(e) { print(paste0("Skipping clone due to problem:", clone_id) })
+            , error = function(e) { print(paste0("Skipping clone due to problem:", clone_id)) })
 
 }
 
