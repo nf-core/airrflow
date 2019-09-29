@@ -334,7 +334,7 @@ countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
 write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
 # Restrict clonal tree size
-clones <- subset(countclones, SEQ_COUNT >= 5)
+clones <- subset(countclones, SEQ_COUNT >= 5 & SEQ_COUNT < 1000)
 
 save_graph <- function(df_pat, clone_id){
     print(paste0("Started processing clone:",clone_id))
