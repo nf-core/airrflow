@@ -259,7 +259,7 @@ process filter_by_sequence_quality {
     file "${r2.baseName}_R2.log"
     file "${umi.baseName}_UMI_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
-    file "${id}/command_log.txt" into filter_by_sequence_quality_log
+    file "${id}/${id}_command_log.txt" into filter_by_sequence_quality_log
 
     script:
     """
