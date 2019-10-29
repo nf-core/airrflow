@@ -259,13 +259,14 @@ process filter_by_sequence_quality {
     file "${r2.baseName}_R2.log"
     file "${umi.baseName}_UMI_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
-    file "command_log.txt"
+    file "${id}/command_log.txt" into filter_by_sequence_quality_log
 
     script:
     """
     FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}" --log "${umi.baseName}_UMI_R1.log"
     FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log"
-    cp ".command.out" "command_log.txt"
+    mkdir "${id}"
+    cp ".command.out" "${id}/command_log.txt"
     ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
@@ -781,6 +782,23 @@ process repertoire_comparison{
     repertoire_comparison.R
     zip -r repertoire_comparison.zip repertoire_comparison
     """
+}
+
+
+//Processing logs
+process processing_logs{
+    publishDir "${params.outdir}/Processing_logs", mode: 'copy'
+
+    input:
+    file ('filter_by_sequence_quality_log/*') from filter_by_sequence_quality_log.collect()
+
+    output:
+    file '*.log'
+
+    script:
+    '''
+    echo "worked" > worked.log
+    '''
 }
 
 //Useful functions
