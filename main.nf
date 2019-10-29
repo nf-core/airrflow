@@ -372,7 +372,7 @@ process build_consensus{
     publishDir "${params.outdir}/build_consensus/$id", mode: 'copy',
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
-            else if (filename.indexOf("command_log.txt") "$filename"
+            else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
 
