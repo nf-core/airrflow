@@ -294,6 +294,7 @@ process mask_primers{
     """
     MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log
     MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
@@ -319,6 +320,7 @@ process pair_seq{
     script:
     """
     PairSeq.py -1 $umi -2 $r2 --1f BARCODE --coord illumina
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     """
 }
@@ -344,6 +346,7 @@ process cluster_sets {
     """
     ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 
     ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     """
 }
@@ -391,6 +394,7 @@ process build_consensus{
     """
     BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1 --log ${umi.baseName}_UMI_R1.log
     BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
     """
@@ -416,6 +420,7 @@ process repair{
     script:
     """
     PairSeq.py -1 $umi -2 $r2 --coord presto
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     """
 }
@@ -443,6 +448,7 @@ process assemble{
     script:
     """
     AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2 --log ${umi.baseName}_UMI_R1_R2.log
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     ParseLog.py -l "${umi.baseName}_UMI_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
@@ -519,6 +525,7 @@ process dedup {
     script:
     """
     CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2 --log ${dedup.baseName}_UMI_R1_R2.log
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     ParseLog.py -l "${dedup.baseName}_UMI_R1_R2.log" -f HEADER DUPCOUNT
     """
@@ -545,6 +552,7 @@ process filter_seqs{
     script:
     """
     SplitSeq.py group -s $dedupped -f CONSCOUNT --num 2 --outname ${dedupped.baseName}_UMI_R1_R2
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
     """
@@ -596,6 +604,7 @@ process igblast_filter {
     ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL
     ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
     ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     """
 }
@@ -676,6 +685,7 @@ process assign_clones{
     }
     """
     DefineClones.py -d $geno --act set --model ham --norm len --dist $thr --outname ${geno.baseName} --log ${geno.baseName}.log
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     ParseLog.py -l "${geno.baseName}.log" -f ID VCALL JCALL JUNCLEN CLONED FILTERED CLONES
     """
@@ -707,6 +717,7 @@ process germline_sequences{
     script:
     """
     CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --log ${clones.baseName}.log -o "${id}.tab"
+    mkdir "${id}"
     cp ".command.out" "${id}/${id}_command_log.txt"
     ParseLog.py -l "${clones.baseName}.log" -f ID V_CALL D_CALL J_CALL
     """
