@@ -784,7 +784,7 @@ process repertoire_comparison{
 
 //Processing logs
 process processing_logs{
-    publishDir "${params.outdir}/processing_logs", mode: 'copy'
+    publishDir "${params.outdir}/parsing_logs", mode: 'copy'
 
     input:
     file('filter_by_sequence_quality/*') from filter_by_sequence_quality_log.collect()
