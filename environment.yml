@@ -8,6 +8,8 @@ channels:
 dependencies:
   - muscle=3.8.1551
   - vsearch=2.11.1
+  - fastqc=0.11.8
+  - multiqc=1.7
   - cd-hit=4.8.1
   - blast=2.7.1
   - igblast=1.10.0
@@ -37,6 +39,7 @@ dependencies:
   - conda-forge::r-optparse=1.6.2
   - conda-forge::ghostscript=9.22
   - conda-forge::pandas=0.24.2
+  - conda-forge::seaborn=0.9.0
   - conda-forge::cairo=1.16.0
   - conda-forge::mscorefonts=0.0.1
   - bioconda::phylip=3.697
