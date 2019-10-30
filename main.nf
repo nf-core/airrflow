@@ -225,6 +225,7 @@ process fetchDBs{
 //FastQC
 process fastqc {
     tag "${id}"
+    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
 
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc
