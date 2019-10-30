@@ -124,6 +124,9 @@ Channel.fromPath("${params.vprimers}")
  */
 
 file_meta = file(params.metadata)
+Channel.fromPath("${params.metadata}")
+           .ifEmpty{exit 1, "Please provide metadata file!"}
+           .into { ch_metadata_file_for_process_logs }
 ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
@@ -780,6 +783,7 @@ process processing_logs{
     file('igblast/*') from igblast_log.collect()
     file('define_clones/*') from assign_clones_log.collect()
     file('create_germlines/*') from create_germlines_log.collect()
+    file('metadata.tsv') from ch_metadata_file_for_process_logs
 
     output:
     file "Table_sequences_process.tsv"

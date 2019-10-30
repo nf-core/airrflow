@@ -31,7 +31,6 @@ for process in processes:
     find = subprocess.check_output(["find", process, "-name", "*command_log.txt"])
     log_files = find.decode().split('\n')
     log_files = list(filter(None, log_files))
-    print(log_files)
 
     if process in ["assemble_pairs"]:
         s_code = []
@@ -350,8 +349,14 @@ values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[8].loc[:,"repres_2"].tolist(),
           df_process_list[8].loc[:,"pass_igblast"].tolist()]
 
-final_table = (zip(colnames, values))
-print(final_table)
-df_final_table = pd.DataFrame.from_items(final_table)
+final_table = dict(zip(colnames, values))
+df_final_table = pd.DataFrame.from_dict(final_table)
 df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
-df_final_table.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
+
+#incorporating metadata
+metadata = pd.read_csv("metadata.tsv", sep="\t")
+metadata = metadata.drop(['R1', 'R2', 'I1'], axis=1)
+logs_metadata = metadata.merge(df_final_table, left_on='ID', right_on='Sample')
+logs_metadata.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
+
+
