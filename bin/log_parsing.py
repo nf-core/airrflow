@@ -15,9 +15,7 @@ processes = ["filter_by_sequence_quality",
              "repair_mates",
              "assemble_pairs",
              "deduplicates",
-             "igblast",
-             "define_clones",
-             "create_germlines"]
+             "igblast"]
 
 # Path of logs will be:
 # process_name/sample_name_command_log.txt
