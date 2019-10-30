@@ -782,11 +782,11 @@ process processing_logs{
     file('create_germlines/*') from create_germlines_log.collect()
 
     output:
-    file '*.log'
+    file "Table_sequences_process.tsv"
 
     script:
     '''
-    echo "worked" > worked.log
+    log_parsing.py
     '''
 }
 
