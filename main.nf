@@ -671,7 +671,7 @@ process assign_clones{
     publishDir "${params.outdir}/define_clones/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
-            else if (filename.indexOf(".tab") > 0) "table/$filename"
+            else if (filename.indexOf(".tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else if (filename == "threshold.txt" && !params.set_cluster_threshold) "$filename"
             else null
