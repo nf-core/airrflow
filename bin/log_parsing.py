@@ -334,9 +334,7 @@ colnames = ["Sample",
             "Assemble_pairs",
             "Unique",
             "Representative_2",
-            "Igblast",
-            "Define_clones",
-            "Germline_found"]
+            "Igblast"]
 
 values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[0].loc[:,"start_R1"].tolist(),
@@ -350,9 +348,7 @@ values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[6].loc[:,"pass_pairs"].tolist(),
           df_process_list[7].loc[:,"unique"].tolist(),
           df_process_list[8].loc[:,"repres_2"].tolist(),
-          df_process_list[8].loc[:,"pass_igblast"].tolist(),
-          df_process_list[9].loc[:,"pass_clones"].tolist(),
-          df_process_list[10].loc[:,"pass_clones"].tolist()]
+          df_process_list[8].loc[:,"pass_igblast"].tolist()]
 
 final_table = (zip(colnames, values))
 print(final_table)
