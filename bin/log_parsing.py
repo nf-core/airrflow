@@ -4,6 +4,7 @@
 
 import pandas as pd
 import subprocess
+import re
 
 # Processes
 processes = ["filter_by_sequence_quality",
