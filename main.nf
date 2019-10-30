@@ -127,7 +127,7 @@ file_meta = file(params.metadata)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
            .into { ch_metadata_file_for_process_logs }
-ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+ch_read_files_for_fastqc = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
             .dump()
@@ -219,6 +219,23 @@ process fetchDBs{
     unzip databases.zip
 
     echo "FetchDBs process finished."
+    """
+}
+
+//FastQC
+process fastqc {
+    tag "${id}"
+
+    input:
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc
+
+    output:
+    set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi
+    file "*_fastqc.{zip,html}" into fastqc_results
+
+    script:
+    """
+    fastqc --quiet --threads $task.cpus $R1 $R2 $I1
     """
 }
 
@@ -765,7 +782,6 @@ process repertoire_comparison{
     """
 }
 
-
 //Processing logs
 process processing_logs{
     publishDir "${params.outdir}/processing_logs", mode: 'copy'
@@ -794,17 +810,7 @@ process processing_logs{
     '''
 }
 
-//Useful functions
-
-// Return file if it exists
-static def returnFile(it) {
-    if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-    return file(it)
-}
-
-/*
- * Parse software version numbers
- */
+// Software versions
 process get_software_versions {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy',
     saveAs: {filename ->
@@ -814,6 +820,7 @@ process get_software_versions {
 
     output:
     file "software_versions.csv"
+    file 'software_versions_mqc.yaml' into software_versions_yaml
 
     script:
     """
@@ -822,6 +829,40 @@ process get_software_versions {
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
+
+//MultiQC
+process multiqc {
+    publishDir "${params.outdir}/MultiQC", mode: 'copy'
+
+    input:
+    file multiqc_config from ch_multiqc_config
+    file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
+    file ('software_versions/*') from software_versions_yaml.collect()
+    file workflow_summary from create_workflow_summary(summary)
+
+    output:
+    file "*multiqc_report.html" into multiqc_report
+    file "*_data"
+    file "multiqc_plots"
+
+    script:
+    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
+    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    """
+    multiqc . -f $rtitle $rfilename --config $multiqc_config \\
+        -m fastqc
+    """
+}
+
+//Useful functions
+
+// Return file if it exists
+static def returnFile(it) {
+    if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+    return file(it)
+}
+
+
 
 /*
  * Output Description HTML
