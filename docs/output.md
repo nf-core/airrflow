@@ -22,7 +22,7 @@ and processes data using the following steps:
 * [Defining clones](#defining-clones) - Defining clonal B-cell populations
 * [Reconstructing germlines](#reconstructing-germlines) - Reconstruct gene calls of germline sequences
 * [Clonal analysis](#clonal-analysis) - Clonal analysis.
-* [Repertoire comparison](#repertoire-comparison) - Repertoire analysis.
+* [Repertoire comparison](#repertoire-comparison) - Repertoire comparison.
 * [Log parsing](#log-parsing) - Log parsing.
 * [MultiQC](#MultiQC) - MultiQC
 
