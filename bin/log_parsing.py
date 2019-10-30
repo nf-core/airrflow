@@ -357,6 +357,7 @@ df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
 metadata = pd.read_csv("metadata.tsv", sep="\t")
 metadata = metadata.drop(['R1', 'R2', 'I1'], axis=1)
 logs_metadata = metadata.merge(df_final_table, left_on='ID', right_on='Sample')
+logs_metadata = logs_metadata.drop(['Sample'], axis=1)
 logs_metadata.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
 
 
