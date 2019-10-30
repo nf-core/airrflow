@@ -32,6 +32,7 @@ for process in processes:
     find = subprocess.check_output(["find", process, "-name", "*command_log.txt"])
     log_files = find.decode().split('\n')
     log_files = list(filter(None, log_files))
+    print(log_files)
 
     if process in ["assemble_pairs"]:
         s_code = []
@@ -355,6 +356,7 @@ values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[10].loc[:,"pass_clones"].tolist()]
 
 final_table = (zip(colnames, values))
+print(final_table)
 df_final_table = pd.DataFrame.from_items(final_table)
 df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
 df_final_table.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
