@@ -247,7 +247,7 @@ process fastqc_index {
 
     output:
     set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi_index
-    file "*_fastqc.{zip,html}" into fastqc_results
+    file "*_fastqc.{zip,html}" into fastqc_results_index
 
     script:
     """
@@ -876,7 +876,7 @@ process multiqc {
 
     input:
     file multiqc_config from ch_multiqc_config
-    file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
+    file (fastqc:'fastqc/*') from fastqc_results.mix(fastqc_results_index).collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)
 
