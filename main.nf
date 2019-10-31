@@ -132,17 +132,17 @@ Channel.fromPath("${params.metadata}")
            .into { ch_metadata_file_for_process_logs }
 
 if (params.index_file) {
-    ch_read_files_for_fastqc_index = Channel.from(file_meta)
+    ch_read_files_for_merge_r1_umi_index = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
             .dump()
-    ch_read_files_for_fastqc = Channel.from(false)
+    ch_read_files_for_merge_r1_umi = Channel.from(false)
 } else {
-    ch_read_files_for_fastqc = Channel.from(file_meta)
+    ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"))}
             .dump()
-    ch_read_files_for_fastqc_index = Channel.from(false)
+    ch_read_files_for_merge_r1_umi_index = Channel.from(false)
 }
 
 // Header log info
@@ -234,25 +234,31 @@ process fetchDBs{
     """
 }
 
-//FastQC with index files
-process fastqc_index {
+//Merge I1 UMIs into R1 file
+process merge_r1_umi {
     tag "${id}"
-    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
-
-    when:
-    params.index_file
 
     input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc_index
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index.mix(ch_read_files_for_merge_r1_umi)
 
     output:
-    set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi_index
-    file "*_fastqc.{zip,html}" into fastqc_results_index
+    set file("R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_fastqc
 
     script:
+    if params.index {
     """
-    fastqc --quiet --threads $task.cpus $R1 $R2 $I1
+    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
+    gunzip UMI_R1.fastq.gz
+    cp UMI_R1.fastq R1.fastq
+    gunzip -f "${R2}"
     """
+    } else {
+    """
+    gunzip -f "${R1}"
+    cp "${R1.baseName}.fastq" R1.fastq
+    gunzip -f "${R2}"
+    """
+    }
 }
 
 //FastQC 
@@ -260,11 +266,8 @@ process fastqc {
     tag "${id}"
     publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
 
-    when:
-    !params.index_file
-
     input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2) from ch_read_files_for_fastqc
+    set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
     output:
     set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
@@ -273,27 +276,6 @@ process fastqc {
     script:
     """
     fastqc --quiet --threads $task.cpus $R1 $R2
-    """
-}
-
-//Merge I1 UMIs into R1 file
-process merge_r1_umi {
-    tag "${id}"
-
-    when:
-    params.index_file
-
-    input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index
-
-    output:
-    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi_index
-
-    script:
-    """
-    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o "${R1.baseName}_UMI_R1.fastq.gz"
-    gunzip "${R1.baseName}_UMI_R1.fastq.gz"
-    gunzip -f "${R2}"
     """
 }
 
@@ -309,7 +291,7 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi.mix(ch_fastqs_for_processing_umi_index)
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
 
     output:
     set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
