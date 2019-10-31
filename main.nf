@@ -136,11 +136,9 @@ if (params.index_file) {
 } else {
     ch_read_files_for_fastqc = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}")}
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"))}
             .dump()
 }
-
-
 
 // Header log info
 log.info nfcoreHeader()
@@ -256,6 +254,9 @@ process fastqc_index {
 process fastqc {
     tag "${id}"
     publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
+
+    when:
+    !params.index_file
 
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2) from ch_read_files_for_fastqc
