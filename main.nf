@@ -858,7 +858,7 @@ process multiqc {
 
     input:
     file multiqc_config from ch_multiqc_config
-    file (fastqc:'fastqc/*') from fastqc_results.mix(fastqc_results_index).collect().ifEmpty([])
+    file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)
 
