@@ -127,10 +127,19 @@ file_meta = file(params.metadata)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
            .into { ch_metadata_file_for_process_logs }
-ch_read_files_for_fastqc = Channel.from(file_meta)
+
+if (params.index_file) {
+    ch_read_files_for_fastqc_index = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
             .dump()
+} else {
+    ch_read_files_for_fastqc = Channel.from(file_meta)
+            .splitCsv(header: true, sep:'\t')
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}")}
+            .dump()
+}
+
 
 
 // Header log info
@@ -222,13 +231,16 @@ process fetchDBs{
     """
 }
 
-//FastQC
-process fastqc {
+//FastQC with index files
+process fastqc_index {
     tag "${id}"
     publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
 
+    when:
+    params.index_file
+
     input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc_index
 
     output:
     set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi
@@ -240,9 +252,30 @@ process fastqc {
     """
 }
 
+//FastQC 
+process fastqc {
+    tag "${id}"
+    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
+
+    input:
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2) from ch_read_files_for_fastqc
+
+    output:
+    set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
+    file "*_fastqc.{zip,html}" into fastqc_results
+
+    script:
+    """
+    fastqc --quiet --threads $task.cpus $R1 $R2
+    """
+}
+
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
     tag "${id}"
+
+    when:
+    params.index_file
 
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
@@ -270,22 +303,22 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
 
     output:
-    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${umi.baseName}_UMI_R1.log"
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${r1.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
-    file "${umi.baseName}_UMI_R1_table.tab"
+    file "${r1.baseName}_UMI_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
     file "${id}_command_log.txt" into filter_by_sequence_quality_log
 
     script:
     """
-    FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}" --log "${umi.baseName}_UMI_R1.log"
+    FilterSeq.py quality -s $r1 -q $filterseq_q --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log"
     FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log"
     cp ".command.out" "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
+    ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
 
