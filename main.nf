@@ -246,7 +246,7 @@ process fastqc_index {
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc_index
 
     output:
-    set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi
+    set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi_index
     file "*_fastqc.{zip,html}" into fastqc_results
 
     script:
@@ -267,7 +267,7 @@ process fastqc {
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2) from ch_read_files_for_fastqc
 
     output:
-    set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
+    set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
     file "*_fastqc.{zip,html}" into fastqc_results
 
     script:
@@ -284,10 +284,10 @@ process merge_r1_umi {
     params.index_file
 
     input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index
 
     output:
-    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
+    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi_index
 
     script:
     """
@@ -309,7 +309,7 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi.mix(ch_fastqs_for_processing_umi_index)
 
     output:
     set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
