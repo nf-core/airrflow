@@ -253,7 +253,7 @@ process merge_r1_umi {
     """
     } else {
     """
-    gunzip -f "${R1}"
+    gunzip -f "${R1}" > "${id}_R1.fastq"
     gunzip -f "${R2}" > "${id}_R2.fastq"
     """
     }
