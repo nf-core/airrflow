@@ -255,7 +255,7 @@ process merge_r1_umi {
     } else {
     """
     gunzip -f "${R1}"
-    cp "${R1.baseName}.fastq" R1.fastq
+    cp "${R1.baseName}" R1.fastq
     gunzip -f "${R2}"
     """
     }
