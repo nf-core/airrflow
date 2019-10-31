@@ -248,7 +248,7 @@ process merge_r1_umi {
     if (params.index_file) {
     """
     merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
-    gunzip UMI_R1.fastq.gz
+    gunzip -f UMI_R1.fastq.gz
     cp UMI_R1.fastq R1.fastq
     gunzip -f "${R2}"
     """
