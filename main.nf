@@ -251,14 +251,14 @@ process merge_r1_umi {
     gunzip -f "UMI_R1.fastq.gz" 
     mv "UMI_R1.fastq" "${id}_R1.fastq"
     gunzip -f "${R2}"
-    mv "${R2.baseName}.fastq" "${id}_R2.fastq"
+    mv "${R2.baseName}" "${id}_R2.fastq"
     """
     } else {
     """
     gunzip -f "${R1}"
-    mv "${R1.baseName}.fastq" "${id}_R1.fastq"
+    mv "${R1.baseName}" "${id}_R1.fastq"
     gunzip -f "${R2}"
-    mv "${R2.baseName}.fastq" "${id}_R2.fastq"
+    mv "${R2.baseName}" "${id}_R2.fastq"
     """
     }
 }
