@@ -245,7 +245,7 @@ process merge_r1_umi {
     set file("R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_fastqc
 
     script:
-    if params.index {
+    if (params.index_file) {
     """
     merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
     gunzip UMI_R1.fastq.gz
