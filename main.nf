@@ -36,6 +36,9 @@ def helpMessage() {
     Define clones:
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
+    
+    Index file:
+      --index_file                  If Unique molecular Identifier is written in a separate index file, merge it to R1 reads.
 
     Other options:
       --outdir                      The output directory where the results will be saved
