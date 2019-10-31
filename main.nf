@@ -291,7 +291,7 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_processing_umi
 
     output:
     set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
