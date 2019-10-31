@@ -248,13 +248,17 @@ process merge_r1_umi {
     if (params.index_file) {
     """
     merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
-    gunzip -f "UMI_R1.fastq.gz" > "${id}_R1.fastq"
-    gunzip -f "${R2}" > "${id}_R2.fastq"
+    gunzip -f "UMI_R1.fastq.gz" 
+    mv "UMI_R1.fastq" "${id}_R1.fastq"
+    gunzip -f "${R2}"
+    mv "${R2.baseName}.fastq" "${id}_R2.fastq"
     """
     } else {
     """
-    gunzip -f "${R1}" > "${id}_R1.fastq"
-    gunzip -f "${R2}" > "${id}_R2.fastq"
+    gunzip -f "${R1}"
+    mv "${R1.baseName}.fastq" "${id}_R1.fastq"
+    gunzip -f "${R2}"
+    mv "${R2.baseName}.fastq" "${id}_R2.fastq"
     """
     }
 }
