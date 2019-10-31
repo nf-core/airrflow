@@ -249,13 +249,13 @@ process merge_r1_umi {
     """
     merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
     gunzip -f "UMI_R1.fastq.gz"
-    cp UMI_R1.fastq R1.fastq
+    cp UMI_R1.fastq "${id}_R1.fastq"
     gunzip -f "${R2}"
     """
     } else {
     """
     gunzip -f "${R1}"
-    cp "${R1.baseName}" R1.fastq
+    cp "${R1.baseName}" "${id}_R1.fastq"
     gunzip -f "${R2}"
     """
     }
