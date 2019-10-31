@@ -136,11 +136,13 @@ if (params.index_file) {
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
             .dump()
+    ch_read_files_for_fastqc = Channel.from(false)
 } else {
     ch_read_files_for_fastqc = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"))}
             .dump()
+    ch_read_files_for_fastqc_index = Channel.from(false)
 }
 
 // Header log info
