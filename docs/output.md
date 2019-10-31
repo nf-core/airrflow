@@ -6,7 +6,6 @@ This document describes the output produced by the pipeline. Most of the plots a
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-* [Fetching databases](#fetching-databases) - Fetching igblast and imgt databases
 * [FastQC](#fastqc) - read quality control
 * [Filter sequence quality](#filter-sequence-quality) - filter sequences by quality
 * [Mask primers](#mask-primers) - Masking primers
@@ -21,25 +20,17 @@ and processes data using the following steps:
 * [Determining genotype and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
 * [Defining clones](#defining-clones) - Defining clonal B-cell populations
 * [Reconstructing germlines](#reconstructing-germlines) - Reconstruct gene calls of germline sequences
-* [Alakazam](#alakazam) - Repertoire analysis.
-
-## Fetching databases
-Fetching igblast and imgt databases.
-
-**Output directory: `results/dbs`**
-If saveDBs parameter is set, then database cache will be saved in the results directory.
-
-* `igblast_base`
-  * Contains igblast database cache.
-* `imgtdb_base`
-  * Contains imgt database cache.
+* [Clonal analysis](#clonal-analysis) - Clonal analysis.
+* [Repertoire comparison](#repertoire-comparison) - Repertoire comparison.
+* [Log parsing](#log-parsing) - Log parsing.
+* [MultiQC](#MultiQC) - MultiQC
 
 ## FastQC
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
 
 For further reading and documentation see the [FastQC help](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality. To see how your reads look after trimming, look at the FastQC reports in the `trim_galore` directory.
+**NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality. To see how your reads look after trimming, look at the FastQC reports in the `trim_galore` directory.
 
 **Output directory: `results/fastqc`**
 
@@ -55,12 +46,8 @@ Filters reads that are below a quality threshold by using the tool [FilterSeq](h
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with only reads that passed the quality filter.
-* `fastq/*.tab`
+* `*.tab`
   * table containing read ID and quality.
-* `fastq/*.log`
-  * Log of the process.
 
 ## Mask primers
 Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/version-0.5.11/tools/MaskPrimers.html) of the Presto Immcantation toolset.
@@ -69,9 +56,7 @@ Masks primers that are provided in the C-primers and V-primers input files. It u
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with reads with masked primers.
-* `fastq/*.log`
+* `*.log`
   * Log containing sequence identifiers and the error in masking primers.
 
 ## Pair mates
@@ -81,8 +66,6 @@ Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with reads that passed mate pairing.
 
 ## Cluster sets
 Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/version-0.5.11/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
@@ -91,8 +74,6 @@ Cluster sequences according to similarity, using [ClusterSets set](https://prest
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with reads and annotation in their headers of cluster group.
 
 ## Build UMI consensus
 Build consensus of UMI from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/version-0.5.11/tools/BuildConsensus.html).
@@ -101,9 +82,7 @@ Build consensus of UMI from all sequences that were annotated to have the same U
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with reads that passed the build consensus ste.
-* `info/*.tab`
+* `*.tab`
   * Parsed log containing the sequence barcodes and primers info
 
 ## Re-pair mates
@@ -113,9 +92,7 @@ Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with reads that passed mate pairing.
-* `info/*.tab`
+* `*.tab`
   * Parsed log contaning the sequence barcodes and re-pair info.
 
 ## Assemble mates
@@ -125,9 +102,7 @@ Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/versi
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with assembled reads.
-* `info/*.tab`
+* `*.tab`
   * Parsed log contaning the sequence barcodes and assemble pairs.
 
 ## Remove duplicates
@@ -137,21 +112,17 @@ Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with de-duplicated reads.
-* `info/*.tab`
+* `*.tab`
   * Parsed log contaning the sequence barcodes and deduplicated pairs.
 
 ## Filter sequences for at least 2 representative
-Remove duplicates using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the Presto Immcantation toolset.
+Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the Presto Immcantation toolset.
 
 **Output directory: `results/filter_representative_2`**
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `fastq/*.fastq`
-  * Fastq with reads that have at least 2 representatives.
-* `info/*.tab`
+* `*.tab`
   * Parsed log contaning the sequence barcodes and split seq information.
 
 ## Assign genes with IgBlast
@@ -189,9 +160,9 @@ Assigning clones to the sequences obtained from IgBlast with the [DefineClones](
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `table/igh_genotyped_clone-pass.tab`
+* `igh_genotyped_clone-pass.tab`
   * Table in ChangeO format contaning the assigned gene information and an additional field with the clone number.
-* `info/igh_genotyped_table.tab`
+* `igh_genotyped_table.tab`
   * Parsed log with sequence ID, assigned gene calls, junction length and clones.
 
 ## Reconstructing germlines
@@ -204,10 +175,49 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 * `table/igh_genotyped_clone-pass_germ-pass.tab`
   * Table in ChangeO format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
 
-## Alakazam
-Repertoire analysis with the Alakazam R package from the Immcantation toolset.
+## Clonal analysis
+Reconstructing clonal linage with the Alakazam R package from the Immcantation toolset. Calculating and plotting several clone statistics.
 
-**Output directory: `results/alakazam`**
+**Output directory: `results/clonal_analysis`**
 
-* `igh_genotyped_clone-pass_germ-pass.tab`
-  * Final table in ChangeO format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
+* `Clone_lineage/`
+  * `Clones_table_patient.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone.
+  * `Clone_tree_plots`: contain a rooted graphical representation of each of the clones.
+  * `Clone_lineage`: contain a GraphmL exported format of the plots. `All_graphs_patient.graphml` contains all graphs for that patient.
+* `Clone_numbers/`
+  * Number of clones and number of sequences per clone, patient-wise and cell population wise.
+* `Clone_overlap/`
+  * Plots for representing the clone overlap in number of clones and number of sequences between different time-points and cell populations of one patient.
+
+## Repertoire comparison
+Calculation of several repertoire characteristics (diversity, abundance) for comparison between patients, time points and cell popultions.
+
+**Output directory: `results/repertoire_comparison`**
+
+* `diversity/`
+  * Diversity calculation
+* `abundance/`
+  * Abundance calculation
+* `mutational_load/`
+  * Mutational load
+
+## Log parsing
+Parsing the logs from the previous processes. 
+
+**Output directory: `results/parsing_logs`**
+
+* A table summarizing of the number of sequences after the most important steps is shown.
+
+## MultiQC
+[MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
+
+The pipeline has special steps which allow the software versions used to be reported in the MultiQC output for future traceability.
+
+**Output directory: `results/multiqc`**
+
+* `Project_multiqc_report.html`
+  * MultiQC report - a standalone HTML file that can be viewed in your web browser
+* `Project_multiqc_data/`
+  * Directory containing parsed statistics from the different tools used in the pipeline
+
+For more information about how to use MultiQC reports, see [http://multiqc.info](http://multiqc.info)

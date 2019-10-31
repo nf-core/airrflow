@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-bcellmagic-1.0.0
+name: ggabernet-bcellmagic-dev
 channels:
   - conda-forge
   - bioconda
@@ -8,6 +8,9 @@ channels:
 dependencies:
   - muscle=3.8.1551
   - vsearch=2.11.1
+  - fastqc=0.11.8
+  - multiqc=1.7
+  - matplotlib=3.0.3
   - cd-hit=4.8.1
   - blast=2.7.1
   - igblast=1.10.0
@@ -21,7 +24,8 @@ dependencies:
   - r-shazam=0.1.10
   - r-tigger=0.3.1
   - bioconda::biopython=1.70
-  - unzip=6.0
+  - conda-forge::unzip=6.0
+  - conda-forge::zip=3.0
   - conda-forge::r-markdown=0.9
   - conda-forge::r-dplyr=0.8.3
   - conda-forge::r-data.table=1.12.2
@@ -31,4 +35,14 @@ dependencies:
   - conda-forge::r-upsetr=1.4.0
   - conda-forge::r-gtools=3.8.1
   - conda-forge::r-ggplot2=3.2.0
+  - conda-forge::r-svglite=1.2.2
+  - conda-forge::r-extrafont=0.17
+  - conda-forge::r-optparse=1.6.2
+  - conda-forge::ghostscript=9.22
+  - conda-forge::pandas=0.24.2
+  - conda-forge::seaborn=0.9.0
+  - conda-forge::cairo=1.16.0
+  - conda-forge::mscorefonts=0.0.1
+  - bioconda::phylip=3.697
+  
 

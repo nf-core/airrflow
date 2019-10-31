@@ -4,6 +4,7 @@
 
 import pandas as pd
 import subprocess
+import re
 
 # Processes
 processes = ["filter_by_sequence_quality",
@@ -14,12 +15,10 @@ processes = ["filter_by_sequence_quality",
              "repair_mates",
              "assemble_pairs",
              "deduplicates",
-             "igblast",
-             "define_clones",
-             "create_germlines"]
+             "igblast"]
 
 # Path of logs will be:
-# process_name/sample_name/command_log.txt
+# process_name/sample_name_command_log.txt
 
 # How to modify for log parsing in nextflow pipeline:
 # take all log files as input
@@ -29,7 +28,7 @@ df_process_list = []
 
 for process in processes:
 
-    find = subprocess.check_output(["find", process, "-name", "command_log.txt"])
+    find = subprocess.check_output(["find", process, "-name", "*command_log.txt"])
     log_files = find.decode().split('\n')
     log_files = list(filter(None, log_files))
 
@@ -44,7 +43,7 @@ for process in processes:
             with open(logfile, "r") as f:
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1])
+                        s_code.append(logfile.split("/")[1].split("_")[0])
                         process_name.append(process)
                     elif "PAIRS>" in line:
                         pairs.append(line.strip().lstrip("PAIRS> "))
@@ -81,7 +80,7 @@ for process in processes:
                 for line in f:
                     if " START>" in line:
                         if c < 1:
-                            s_code.append(logfile.split("/")[1])
+                            s_code.append(logfile.split("/")[1].split("_")[0])
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
@@ -126,7 +125,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1])
+                        s_code.append(logfile.split("/")[1].split("_")[0])
                         process_name.append(process)
                     elif "SEQUENCES1>" in line:
                         seqs1.append(line.strip().lstrip("SEQUENCES1").lstrip("> "))
@@ -159,7 +158,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1])
+                        s_code.append(logfile.split("/")[1].split("_")[0])
                         process_name.append(process)
                     elif "OUTPUT>" in line:
                         output_file.append(line.strip().lstrip("OUTPUT> "))
@@ -197,7 +196,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1])
+                        s_code.append(logfile.split("/")[1].split("_")[0])
                         process_name.append(process)
                     elif "SEQUENCES>" in line:
                         seqs.append(line.strip().lstrip("SEQUENCES> "))
@@ -232,7 +231,7 @@ for process in processes:
                 for line in f:
                     if "PASS>" in line:
                         if c < 1:
-                            s_code.append(logfile.split("/")[1])
+                            s_code.append(logfile.split("/")[1].split("_")[0])
                             pass_blast1.append(line.strip().lstrip("PASS> "))
                         else:
                             pass_blast2.append(line.strip().lstrip("PASS> "))
@@ -268,7 +267,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1])
+                        s_code.append(logfile.split("/")[1].split("_")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
@@ -302,7 +301,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1])
+                        s_code.append(logfile.split("/")[1].split("_")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
@@ -334,9 +333,7 @@ colnames = ["Sample",
             "Assemble_pairs",
             "Unique",
             "Representative_2",
-            "Igblast",
-            "Define_clones",
-            "Germline_found"]
+            "Igblast"]
 
 values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[0].loc[:,"start_R1"].tolist(),
@@ -350,11 +347,17 @@ values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[6].loc[:,"pass_pairs"].tolist(),
           df_process_list[7].loc[:,"unique"].tolist(),
           df_process_list[8].loc[:,"repres_2"].tolist(),
-          df_process_list[8].loc[:,"pass_igblast"].tolist(),
-          df_process_list[9].loc[:,"pass_clones"].tolist(),
-          df_process_list[10].loc[:,"pass_clones"].tolist()]
+          df_process_list[8].loc[:,"pass_igblast"].tolist()]
 
-final_table = (zip(colnames, values))
-df_final_table = pd.DataFrame.from_items(final_table)
+final_table = dict(zip(colnames, values))
+df_final_table = pd.DataFrame.from_dict(final_table)
 df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
-df_final_table.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
+
+#incorporating metadata
+metadata = pd.read_csv("metadata.tsv", sep="\t")
+metadata = metadata.drop(['R1', 'R2', 'I1'], axis=1)
+logs_metadata = metadata.merge(df_final_table, left_on='ID', right_on='Sample')
+logs_metadata = logs_metadata.drop(['Sample'], axis=1)
+logs_metadata.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)
+
+
