@@ -6,6 +6,21 @@ import re
 regexes = {
     'nf-core/bcellmagic': ['v_pipeline.txt', r"(\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
+    'FastQC': ['v_fastqc.txt', r"(\S+)"],
+    'MultiQC': ['v_multiqc.txt', r"(\S+)"],
+    'vsearch': ['v_vsearch.txt', r"(\S+)"],
+    'cd-hit': ['v_cdhit.txt', r"(\S+)"],
+    'blast': ['v_blast.txt', r"(\S+)"],
+    'muscle': ['v_muscle.txt', r"(\S+)"],
+    'igblast': ['v_igblast.txt', r"(\S+)"],
+    'phylip': ['v_phylip.txt', r"(\S+)"],
+    'airr': ['v_airr.txt', r"(\S+)"],
+    'presto': ['v_presto.txt', r"(\S+)"],
+    'changeo': ['v_changeo.txt', r"(\S+)"],
+    'R': ['v_R.txt', r"(\S+)"],
+    'r-shazam': ['v_shazam.txt', r"(\S+)"],
+    'r-alakazam': ['v_alakazam.txt', r"(\S+)"],
+    'r-tigger': ['v_tigger.txt', r"(\S+)"]
 }
 results = OrderedDict()
 results['nf-core/bcellmagic'] = '<span style="color:#999999;\">N/A</span>'

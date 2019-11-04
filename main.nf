@@ -859,6 +859,21 @@ process get_software_versions {
     """
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
+    fastqc --version &> v_fastqc.txt
+    multiqc --version &> v_multiqc.txt
+    vsearch --version &> v_vsearch.txt
+    cd-hit --version &> v_cdhit.txt
+    blast --version &> v_blast.txt
+    muscle --version &> v_muscle.txt
+    igblast --version &> v_igblast.txt
+    phylip --version &> v_phylip.txt
+    airr --version &> v_airr.txt
+    presto --version &> v_presto.txt
+    changeo --version &> v_changeo.txt
+    echo \$(R --version 2>&1) > v_R.txt
+    Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='v_shazam.txt')"
+    Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='v_alakazam.txt')"
+    Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger)), file='v_tigger.txt')"
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
