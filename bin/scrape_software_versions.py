@@ -12,7 +12,6 @@ regexes = {
     'cd-hit': ['v_cdhit.txt', r"cd-hit (\S+)"],
     'muscle': ['v_muscle.txt', r"MUSCLE (\S+)"],
     'igblast': ['v_igblast.txt', r"igblast  (\S+)"],
-    'phylip': ['v_phylip.txt', r"phylip (\S+)"],
     'airr': ['v_airr.txt', r"airr (\S+)"],
     'presto': ['v_presto.txt', r"(\S+)"],
     'changeo': ['v_changeo.txt', r"(\S+)"],

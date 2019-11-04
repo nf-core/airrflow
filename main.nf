@@ -863,12 +863,10 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     vsearch --version &> v_vsearch.txt
     muscle -version &> v_muscle.txt
-    conda list cd-hit &> v_cdhit.txt
-    conda list igblast &> v_igblast.txt
-    conda list phylip &> v_phylip.txt
-    conda list airr &> v_airr.txt
-    presto --version &> v_presto.txt
-    changeo --version &> v_changeo.txt
+    python -c "import igblast; print(igblast.__version__)" > v_igblast.txt
+    python -c "import airr; print(airr.__version__)" > v_airr.txt
+    python -c "import presto; print(presto.__version__)" > v_presto.txt
+    python -c "import changeo; print(changeo.__version__)" > v_changeo.txt
     echo \$(R --version 2>&1) > v_R.txt
     Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='v_shazam.txt')"
     Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='v_alakazam.txt')"
