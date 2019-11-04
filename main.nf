@@ -863,8 +863,6 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     vsearch --version &> v_vsearch.txt
     muscle -version &> v_muscle.txt
-    python -c "import igblast; print(igblast.__version__)" > v_igblast.txt
-    python -c "import airr; print(airr.__version__)" > v_airr.txt
     python -c "import presto; print(presto.__version__)" > v_presto.txt
     python -c "import changeo; print(changeo.__version__)" > v_changeo.txt
     echo \$(R --version 2>&1) > v_R.txt
