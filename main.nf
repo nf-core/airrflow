@@ -862,8 +862,8 @@ process get_software_versions {
     fastqc --version &> v_fastqc.txt
     multiqc --version &> v_multiqc.txt
     vsearch --version &> v_vsearch.txt
-    cd-hit -h &> v_cdhit.txt
     muscle -version &> v_muscle.txt
+    conda list cd-hit &> v_cdhit.txt
     conda list igblast &> v_igblast.txt
     conda list phylip &> v_phylip.txt
     conda list airr &> v_airr.txt
