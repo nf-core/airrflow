@@ -4,10 +4,11 @@
 
 Initial release of nf-core/bcellmagic, created with the [nf-core](http://nf-co.re/) template.
 
-## v2.0.0 - in progress
+## v1.1.0 - in progress
 
 - Merging all the repertoires from the same patient
 - Added clone calculation per patient
 - Added downstream analysis: diversity, abundance, mutational load, Ig type and gene distribution
-- parsing logs for all processes
+- Parsing logs for all processes
 - FastQC and multiQC processes
+- Option for providing Illumina index and UMI as part of R1

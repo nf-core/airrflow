@@ -202,7 +202,7 @@ Calculation of several repertoire characteristics (diversity, abundance) for com
   * Mutational load
 
 ## Log parsing
-Parsing the logs from the previous processes. 
+Parsing the logs from the previous processes.
 
 **Output directory: `results/parsing_logs`**
 

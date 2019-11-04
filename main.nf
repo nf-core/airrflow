@@ -36,6 +36,9 @@ def helpMessage() {
     Define clones:
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
+    
+    Index file:
+      --index_file                  If Unique molecular Identifier is written in a separate index file, merge it to R1 reads.
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -111,7 +114,7 @@ if (params.set_cluster_threshold){
 //Set up channels for input primers
 
 Channel.fromPath("${params.cprimers}")
-        .ifEmpty{exit 1, "Please specify CPRimers FastA File!"}
+        .ifEmpty{exit 1, "Please specify CPrimers FastA File!"}
         .set {ch_cprimers_fasta}
 Channel.fromPath("${params.vprimers}")
         .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
@@ -127,11 +130,20 @@ file_meta = file(params.metadata)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
            .into { ch_metadata_file_for_process_logs }
-ch_read_files_for_fastqc = Channel.from(file_meta)
+
+if (params.index_file) {
+    ch_read_files_for_merge_r1_umi_index = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"),returnFile("${col.I1}"))}
             .dump()
-
+    ch_read_files_for_merge_r1_umi = Channel.empty()
+} else {
+    ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+            .splitCsv(header: true, sep:'\t')
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}",returnFile("${col.R1}"),returnFile("${col.R2}"))}
+            .dump()
+    ch_read_files_for_merge_r1_umi_index = Channel.empty()
+}
 
 // Header log info
 log.info nfcoreHeader()
@@ -222,39 +234,50 @@ process fetchDBs{
     """
 }
 
-//FastQC
-process fastqc {
-    tag "${id}"
-    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
-
-    input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_fastqc
-
-    output:
-    set val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population"), file("$R1"), file("$R2"), file("$I1") into ch_read_files_for_merge_r1_umi
-    file "*_fastqc.{zip,html}" into fastqc_results
-
-    script:
-    """
-    fastqc --quiet --threads $task.cpus $R1 $R2 $I1
-    """
-}
-
 //Merge I1 UMIs into R1 file
 process merge_r1_umi {
     tag "${id}"
 
     input:
-    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi
+    set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index.mix(ch_read_files_for_merge_r1_umi)
 
     output:
-    set file("*UMI_R1.fastq"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_fastqs_for_processing_umi
+    set file("${id}_R1.fastq"), file("${id}_R2.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_fastqc
+
+    script:
+    if (params.index_file) {
+    """
+    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
+    gunzip -f "UMI_R1.fastq.gz" 
+    mv "UMI_R1.fastq" "${id}_R1.fastq"
+    gunzip -f "${R2}"
+    mv "${R2.baseName}" "${id}_R2.fastq"
+    """
+    } else {
+    """
+    gunzip -f "${R1}"
+    mv "${R1.baseName}" "${id}_R1.fastq"
+    gunzip -f "${R2}"
+    mv "${R2.baseName}" "${id}_R2.fastq"
+    """
+    }
+}
+
+//FastQC 
+process fastqc {
+    tag "${id}"
+    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
+
+    input:
+    set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
+
+    output:
+    set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
+    file "*_fastqc.{zip,html}" into fastqc_results
 
     script:
     """
-    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o "${R1.baseName}_UMI_R1.fastq.gz"
-    gunzip "${R1.baseName}_UMI_R1.fastq.gz"
-    gunzip -f "${R2}"
+    fastqc --quiet --threads $task.cpus $R1 $R2
     """
 }
 
@@ -270,22 +293,22 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_fastqs_for_processing_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_processing_umi
 
     output:
-    set file("${umi.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
-    file "${umi.baseName}_UMI_R1.log"
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    file "${r1.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
-    file "${umi.baseName}_UMI_R1_table.tab"
+    file "${r1.baseName}_UMI_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
     file "${id}_command_log.txt" into filter_by_sequence_quality_log
 
     script:
     """
-    FilterSeq.py quality -s $umi -q $filterseq_q --outname "${umi.baseName}" --log "${umi.baseName}_UMI_R1.log"
+    FilterSeq.py quality -s $r1 -q $filterseq_q --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log"
     FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log"
     cp ".command.out" "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
+    ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
 
