@@ -862,7 +862,7 @@ process get_software_versions {
     fastqc --version &> v_fastqc.txt
     multiqc --version &> v_multiqc.txt
     vsearch --version &> v_vsearch.txt
-    cd-hit --version &> v_cdhit.txt
+    cd-hit -h &> v_cdhit.txt
     blast --version &> v_blast.txt
     muscle --version &> v_muscle.txt
     igblast --version &> v_igblast.txt

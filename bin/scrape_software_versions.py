@@ -9,7 +9,7 @@ regexes = {
     'FastQC': ['v_fastqc.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"(\S+)"],
     'vsearch': ['v_vsearch.txt', r"(\S+)"],
-    'cd-hit': ['v_cdhit.txt', r"(\S+)"],
+    'cd-hit': ['v_cdhit.txt', r"version (\S+)"],
     'blast': ['v_blast.txt', r"(\S+)"],
     'muscle': ['v_muscle.txt', r"(\S+)"],
     'igblast': ['v_igblast.txt', r"(\S+)"],
