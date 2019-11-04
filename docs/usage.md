@@ -18,6 +18,7 @@
     * [`--metadata`](#--metadata)
     * [`--cprimers`](#--cprimers)
     * [`--vprimers`](#--vprimers)
+    * [`--index_file`](#--index_file)
 * [Reference Databases](#reference-databases)
   * [`--igblast_base`](#--igblast_base)
   * [`--imgtdb_base`](#--imgtdb_base)
@@ -124,6 +125,8 @@ Use this to specify the location of your input files. Three input files are requ
 * R2: V-Primer + V(D)J
 * I1: Illumina Index (6bp) + UMI (8bp)
 
+The pipeline has been expanded to be able to process data where the UMI and index files are incorporated into the R1 read fastq files (see section `--index_file`)
+
 #### `--metadata`
 
 The metadata file is a TSV file with the following columns, including the exact same headers:
@@ -164,6 +167,14 @@ Path to fasta file containing your C-primer sequences. Specify like this:
 
 ```bash
 --cprimers 'path/to/cprimers.fasta'
+```
+
+#### `--index_file``
+
+Indicate if Illumina indices and UMI barcodes are provided in a separate fastq file (index_file true). If Illumina indices and UMI barcodes are integrated into R1 reads, leave the default `--index_file false`.
+
+```bash
+--index_file true
 ```
 
 ## Reference databases
