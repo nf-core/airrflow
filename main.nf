@@ -129,7 +129,7 @@ Channel.fromPath("${params.vprimers}")
 file_meta = file(params.metadata)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
-           .into { ch_metadata_file_for_process_logs }
+           .set { ch_metadata_file_for_process_logs }
 
 if (params.index_file) {
     ch_read_files_for_merge_r1_umi_index = Channel.from(file_meta)
@@ -444,7 +444,7 @@ process repair{
     tag "${id}"
     publishDir "${params.outdir}/repair_mates/$id", mode: 'copy',
     saveAs: {filename ->
-            if (filename.indexOf("table.tab") > 0) "$filename"
+            if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
@@ -469,7 +469,7 @@ process assemble{
     tag "${id}"
     publishDir "${params.outdir}/assemble_pairs/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf("table.tab") > 0) "$filename"
+            if (filename.indexOf("table.tab") > 0) "${id}_assemble_pairs_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
@@ -543,9 +543,9 @@ process metadata_anno{
 //Removal of duplicate sequences
 process dedup {
     tag "${id}"
-    publishDir "${params.outdir}/deduplicates/$id", mode: 'copy',
+    publishDir "${params.outdir}/deduplicate/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf("table.tab") > 0) "$filename"
+            if (filename.indexOf("table.tab") > 0) "${id}_deduplicate_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
@@ -672,7 +672,16 @@ process merge_tables{
 //Shazam! 
 process shazam{
     tag "${id}"    
-    publishDir "${params.outdir}/shazam/$id", mode: 'copy'
+    publishDir "${params.outdir}/shazam/$id", mode: 'copy',
+        saveAs: {filename ->
+            if (filename == "igh_genotyped.tab") "$filename"
+            else if (filename.indexOf("command_log.txt") > 0) "$filename"
+            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "$filename"
+            else if (filename == "genotype.pdf") "$filename"
+            else if (filename == "Hamming_distance_threshold.pdf") "$filename"
+            else if (filename == "v_genotype.fasta") "$filename"
+            else null
+        }
 
     input:
     set val(id), file(tab) from ch_for_shazam
@@ -695,7 +704,7 @@ process assign_clones{
     publishDir "${params.outdir}/define_clones/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
-            else if (filename.indexOf(".tab") > 0) "$filename"
+            else if (filename.indexOf("clone-pass.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else if (filename == "threshold.txt" && !params.set_cluster_threshold) "$filename"
             else null
@@ -760,7 +769,7 @@ process clonal_analysis{
     tag "${id}"
     publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf(".tab") > 0) null
+            if (filename.indexOf(".tab") > 0) "$filaname"
             else if (filename.indexOf(".zip") > 0) "$filename"
             else null
         }
@@ -786,7 +795,7 @@ process repertoire_comparison{
     tag "all" 
     publishDir "${params.outdir}/repertoire_comparison", mode: 'copy',
     saveAs: {filename ->
-            if (filename.indexOf(".tab") > 0) "patient_tables/$filename"
+            if (filename.indexOf(".tab") > 0) "table/$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
             else null
         }
