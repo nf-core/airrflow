@@ -868,7 +868,7 @@ process get_software_versions {
     echo \$(R --version 2>&1) > v_R.txt
     Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='v_shazam.txt')"
     Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='v_alakazam.txt')"
-    Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger)), file='v_tigger.txt')"
+    Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='v_tigger.txt')"
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }

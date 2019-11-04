@@ -8,11 +8,11 @@ regexes = {
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'FastQC': ['v_fastqc.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"(\S+)"],
-    'vsearch': ['v_vsearch.txt', r"(\S+)"],
+    'vsearch': ['v_vsearch.txt', r"vsearch (\S+)"],
     'muscle': ['v_muscle.txt', r"MUSCLE (\S+)"],
     'presto': ['v_presto.txt', r"(\S+)"],
     'changeo': ['v_changeo.txt', r"(\S+)"],
-    'R': ['v_R.txt', r"(\S+)"],
+    'R': ['v_R.txt', r"version (\S+)"],
     'r-shazam': ['v_shazam.txt', r"(\S+)"],
     'r-alakazam': ['v_alakazam.txt', r"(\S+)"],
     'r-tigger': ['v_tigger.txt', r"(\S+)"]
