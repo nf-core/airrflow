@@ -863,11 +863,10 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     vsearch --version &> v_vsearch.txt
     cd-hit -h &> v_cdhit.txt
-    blast --version &> v_blast.txt
-    muscle --version &> v_muscle.txt
-    igblast --version &> v_igblast.txt
-    phylip --version &> v_phylip.txt
-    airr --version &> v_airr.txt
+    muscle -version &> v_muscle.txt
+    conda list igblast &> v_igblast.txt
+    conda list phylip &> v_phylip.txt
+    conda list airr &> v_airr.txt
     presto --version &> v_presto.txt
     changeo --version &> v_changeo.txt
     echo \$(R --version 2>&1) > v_R.txt
