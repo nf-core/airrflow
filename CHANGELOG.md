@@ -30,4 +30,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.0] - 2019-04-16 - "Alohomora"
 
-Initial release of nf-core/bcellmagic, created with the [nf-core](http://nf-co.re/) template.
+* Initial release of nf-core/bcellmagic, created with the [nf-core](http://nf-co.re/) template.
+
