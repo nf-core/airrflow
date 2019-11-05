@@ -3,6 +3,7 @@
 This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
 ## Pipeline overview
+
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
@@ -26,6 +27,7 @@ and processes data using the following steps:
 * [MultiQC](#MultiQC) - MultiQC
 
 ## FastQC
+
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
 
 For further reading and documentation see the [FastQC help](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
@@ -40,97 +42,121 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
 ## Filter sequence quality
+
 Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/FilterSeq.html) from the Presto Immcantation toolset. The default quality threshold is 20.
 
 **Output directory: `results/filter_by_sequence_quality`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 * `*.tab`
   * table containing read ID and quality.
 
 ## Mask primers
+
 Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/version-0.5.11/tools/MaskPrimers.html) of the Presto Immcantation toolset.
 
 **Output directory: `results/mask_primers`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `*.log`
-  * Log containing sequence identifiers and the error in masking primers.
 
 ## Pair mates
+
 Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the Presto Immcantation toolset.
 
 **Output directory: `results/pair_sequences`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
 ## Cluster sets
+
 Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/version-0.5.11/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
 
 **Output directory: `results/cluster_sets`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
 ## Build UMI consensus
+
 Build consensus of UMI from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/version-0.5.11/tools/BuildConsensus.html).
 
 **Output directory: `results/build_consensus`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 * `*.tab`
   * Parsed log containing the sequence barcodes and primers info
 
 ## Re-pair mates
+
 Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the Presto Immcantation toolset.
 
 **Output directory: `results/repair_mates`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `*.tab`
-  * Parsed log contaning the sequence barcodes and re-pair info.
 
 ## Assemble mates
+
 Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/version-0.5.11/tools/AssemblePairs.html) from the Presto Immcantation toolset.
 
 **Output directory: `results/assemble_pairs`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `*.tab`
+* `sample_assemble_pairs_logs.tab`
   * Parsed log contaning the sequence barcodes and assemble pairs.
 
 ## Remove duplicates
+
 Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/CollapseSeq.html) from the Presto Immcantation toolset.
 
-**Output directory: `results/deduplicates`**
+**Output directory: `results/deduplicate`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `*.tab`
+* `sample_deduplicate_logs.tab`
   * Parsed log contaning the sequence barcodes and deduplicated pairs.
 
 ## Filter sequences for at least 2 representative
+
 Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the Presto Immcantation toolset.
 
 **Output directory: `results/filter_representative_2`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
-* `*.tab`
-  * Parsed log contaning the sequence barcodes and split seq information.
 
 ## Assign genes with IgBlast
+
 Assign genes from the IGblast database using [AssignGenes](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#running-igblast) and generating a table with [MakeDB](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#processing-the-output-of-igblast). Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html). Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ConvertDb.html?highlight=convertdb) tool.
 
 **Output directory: `results/igblast`**
 
-* `command_log.txt`
+For each analyzed sample there is a subfolder containing:
+
+* `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 * `fasta/*.fasta`
   * Blast results converted to fasta fall with genotype V-call annotated in the header.
@@ -138,9 +164,12 @@ Assign genes from the IGblast database using [AssignGenes](https://changeo.readt
   * Table in ChangeO format contaning the assigned gene information and metadata provided in the starting metadata sheet.
 
 ## Determining genotype and hamming distance threshold
+
 Determining genotype and the hamming distance threshold of the junction regions for clonal determination using the [tigGER](https://tigger.readthedocs.io/en/0.3.1/) and [Shazam](https://shazam.readthedocs.io/en/version-0.1.11_a/).
 
 **Output directory: `results/shazam`**
+
+For each subject (patient) there is a subfolder containing:
 
 * `threshold.txt`
   * Hamming distance threshold of the Junction regions as determined by Shazam.
@@ -154,21 +183,25 @@ Determining genotype and the hamming distance threshold of the junction regions 
   * Fasta file containing the full sequences for all V genes assigned to the patient.
 
 ## Defining clones
+
 Assigning clones to the sequences obtained from IgBlast with the [DefineClones](https://changeo.readthedocs.io/en/version-0.4.5/tools/DefineClones.html?highlight=DefineClones) Immcantation tool.
 
 **Output directory: `results/define_clones`**
+
+For each subject (patient) there is a subfolder containing:
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
 * `igh_genotyped_clone-pass.tab`
   * Table in ChangeO format contaning the assigned gene information and an additional field with the clone number.
-* `igh_genotyped_table.tab`
-  * Parsed log with sequence ID, assigned gene calls, junction length and clones.
 
 ## Reconstructing germlines
+
 Reconstructing the germline sequences with the [CreateGermlines](https://changeo.readthedocs.io/en/version-0.4.5/tools/CreateGermlines.html#creategermlines) Immcantation tool.
 
-**Output directory: `results/define_clones`**
+**Output directory: `results/create_germlines`**
+
+For each subject (patient) there is a subfolder containing:
 
 * `command_log.txt`
   * Log of the process that will be parsed to generate a report.
@@ -176,9 +209,12 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
   * Table in ChangeO format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
 
 ## Clonal analysis
+
 Reconstructing clonal linage with the Alakazam R package from the Immcantation toolset. Calculating and plotting several clone statistics.
 
 **Output directory: `results/clonal_analysis`**
+
+For each subject (patient) there is a subfolder containing the processed sequence information (ChangeO format) for all sequences of that subject; and `clonal_analysis.zip` file, which uncompressed contains:
 
 * `Clone_lineage/`
   * `Clones_table_patient.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone.
@@ -190,18 +226,18 @@ Reconstructing clonal linage with the Alakazam R package from the Immcantation t
   * Plots for representing the clone overlap in number of clones and number of sequences between different time-points and cell populations of one patient.
 
 ## Repertoire comparison
+
 Calculation of several repertoire characteristics (diversity, abundance) for comparison between patients, time points and cell popultions.
 
 **Output directory: `results/repertoire_comparison`**
 
-* `diversity/`
-  * Diversity calculation
-* `abundance/`
-  * Abundance calculation
-* `mutational_load/`
-  * Mutational load
+* `patient_tables/`
+  * Changeo format table containing the processed sequence information for all subjects.
+* `repertoire_comparison.zip`
+  * Contains the repertoire comparison results: Abundance, Diversity, Isotype, Mutational_load and V-family tables and plots. Comparison between treatments and subjects.
 
 ## Log parsing
+
 Parsing the logs from the previous processes.
 
 **Output directory: `results/parsing_logs`**
@@ -209,6 +245,7 @@ Parsing the logs from the previous processes.
 * A table summarizing of the number of sequences after the most important steps is shown.
 
 ## MultiQC
+
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
 
 The pipeline has special steps which allow the software versions used to be reported in the MultiQC output for future traceability.
@@ -216,8 +253,10 @@ The pipeline has special steps which allow the software versions used to be repo
 **Output directory: `results/multiqc`**
 
 * `Project_multiqc_report.html`
-  * MultiQC report - a standalone HTML file that can be viewed in your web browser
-* `Project_multiqc_data/`
-  * Directory containing parsed statistics from the different tools used in the pipeline
+  * MultiQC report - a standalone HTML file that can be viewed in your web browser.
+* `multiqc_data/`
+  * Directory containing parsed statistics from the different tools used in the pipeline.
+* `multiqc_plots/`
+  * Directory containing plots shown in the MultiQC report.
 
 For more information about how to use MultiQC reports, see [http://multiqc.info](http://multiqc.info)
