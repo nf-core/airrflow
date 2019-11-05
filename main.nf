@@ -134,13 +134,13 @@ Channel.fromPath("${params.metadata}")
 if (params.index_file) {
     ch_read_files_for_merge_r1_umi_index = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}"),file("${col.R2}"), file("${col.I1}"))}
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
             .dump()
     ch_read_files_for_merge_r1_umi = Channel.empty()
 } else {
     ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
             .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}"), file("${col.R2}"))}
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
             .dump()
     ch_read_files_for_merge_r1_umi_index = Channel.empty()
 }
