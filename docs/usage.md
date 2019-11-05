@@ -18,11 +18,12 @@
     * [`--metadata`](#--metadata)
     * [`--cprimers`](#--cprimers)
     * [`--vprimers`](#--vprimers)
+    * [`--index_file`](#--index_file)
 * [Reference Databases](#reference-databases)
   * [`--igblast_base`](#--igblast_base)
   * [`--imgtdb_base`](#--imgtdb_base)
 * [Define clones](#Define-clones)
-  * [Manually set cluster  threshold](#manually-set-cluster-threshold)
+  * [Manually set cluster threshold](#manually-set-cluster-threshold)
   * [Only define clones](#only-define-clones)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
@@ -124,6 +125,8 @@ Use this to specify the location of your input files. Three input files are requ
 * R2: V-Primer + V(D)J
 * I1: Illumina Index (6bp) + UMI (8bp)
 
+The pipeline has been expanded to be able to process data where the UMI and index files are incorporated into the R1 read fastq files (see section `--index_file`)
+
 #### `--metadata`
 
 The metadata file is a TSV file with the following columns, including the exact same headers:
@@ -134,6 +137,7 @@ QMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sa
 ```
 
 This metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:
+
 * *ID*: sample ID.
 * *Source*: patient or organism code.
 * *Treatment*: treatment condition applied to the sample.
@@ -142,7 +146,6 @@ This metadata will then be automatically annotated in a column with the same hea
 * *R1*: path to fastq file with first mates of paired-end sequencing.
 * *R2*: path to fastq file with second mates of paired-end sequencing.
 * *I1*: path to fastq with illumina index and UMI (unique molecular identifier) barcode.
-
 
 Specify the location of your metadata file like this:
 
@@ -164,6 +167,14 @@ Path to fasta file containing your C-primer sequences. Specify like this:
 
 ```bash
 --cprimers 'path/to/cprimers.fasta'
+```
+
+#### `--index_file``
+
+Indicate if Illumina indices and UMI barcodes are provided in a separate fastq file (index_file true). If Illumina indices and UMI barcodes are integrated into R1 reads, leave the default `--index_file false`.
+
+```bash
+--index_file true
 ```
 
 ## Reference databases
@@ -221,10 +232,15 @@ If you are likely to be running `nf-core` pipelines regularly it may be a good i
 If you have any questions or issues please send us a message on [Slack](https://nf-core-invite.herokuapp.com/).
 
 ## AWS Batch specific parameters
+
 Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use the `-awsbatch` profile and then specify all of the following parameters.
+
 ### `--awsqueue`
+
 The JobQueue that you intend to use on AWS Batch.
+
 ### `--awsregion`
+
 The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
@@ -232,12 +248,15 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 ## Other command line parameters
 
 ### `--outdir`
+
 The output directory where the results will be saved.
 
 ### `--email`
+
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.
 
 ### `-name`
+
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
 This is used in the MultiQC report (if not default) and in the summary HTML / e-mail (always).
@@ -245,6 +264,7 @@ This is used in the MultiQC report (if not default) and in the summary HTML / e-
 **NB:** Single hyphen (core Nextflow option)
 
 ### `-resume`
+
 Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
@@ -252,6 +272,7 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 **NB:** Single hyphen (core Nextflow option)
 
 ### `-c`
+
 Specify the path to a specific config file (this is a core NextFlow command).
 
 **NB:** Single hyphen (core Nextflow option)
@@ -259,6 +280,7 @@ Specify the path to a specific config file (this is a core NextFlow command).
 Note - you can use this to override pipeline defaults.
 
 ### `--custom_config_version`
+
 Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default is set to `master`.
 
 ```bash
@@ -267,6 +289,7 @@ Provide git commit id for custom Institutional configs hosted at `nf-core/config
 ```
 
 ### `--custom_config_base`
+
 If you're running offline, nextflow will not be able to fetch the institutional config files
 from the internet. If you don't need them, then this is not a problem. If you do need them,
 you should download the files from the repo and tell nextflow where to find them with the
@@ -287,22 +310,28 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 > files + singularity containers + institutional configs in one go for you, to make this process easier.
 
 ### `--max_memory`
+
 Use to set a top-limit for the default memory requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_memory '8.GB'`
 
 ### `--max_time`
+
 Use to set a top-limit for the default time requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_time '2.h'`
 
 ### `--max_cpus`
+
 Use to set a top-limit for the default CPU requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_cpus 1`
 
 ### `--plaintext_email`
+
 Set to receive plain-text e-mails instead of HTML formatted.
 
 ### `--monochrome_logs`
+
 Set to disable colourful command line output and live life in monochrome.
 
 ### `--multiqc_config`
+
 Specify a path to a custom MultiQC configuration file.
