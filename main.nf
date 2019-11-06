@@ -38,7 +38,7 @@ def helpMessage() {
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
     
     Index file:
-      --index_file                  If Unique molecular Identifier is written in a separate index file, merge it to R1 reads.
+      --index_file                  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
 
     Other options:
       --outdir                      The output directory where the results will be saved
