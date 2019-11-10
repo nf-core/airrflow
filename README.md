@@ -1,6 +1,6 @@
 # ![nf-core/bcellmagic](docs/images/Bcellmagic_logo.png)
 
-[![Build Status](https://travis-ci.org/nf-core/bcellmagic.svg?branch=master)](https://travis-ci.org/nf-core/bcellmagic)
+[![Build Status](https://travis-ci.com/nf-core/bcellmagic.svg?branch=master)](https://travis-ci.com/nf-core/bcellmagic)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![DOI](https://zenodo.org/badge/160348245.svg)](https://zenodo.org/badge/latestdoi/160348245)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
