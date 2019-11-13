@@ -769,7 +769,7 @@ process clonal_analysis{
     tag "${id}"
     publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf(".tab") > 0) "$filaname"
+            if (filename.indexOf(".tab") > 0) "$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
             else null
         }
