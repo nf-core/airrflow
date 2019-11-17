@@ -114,11 +114,13 @@ if (params.set_cluster_threshold){
 //Set up channels for input primers
 
 Channel.fromPath("${params.cprimers}")
-        .ifEmpty{exit 1, "Please specify CPrimers FastA File!"}
+        .ifEmpty{exit 1, "Please provide cprimers fasta file!"}
         .set {ch_cprimers_fasta}
+        .println{ it }
 Channel.fromPath("${params.vprimers}")
-        .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
+        .ifEmpty{exit 1, "Please specify vprimers fasta file!"}
         .set { ch_vprimers_fasta }
+        .println{ it }
 
 
 /*
@@ -293,7 +295,7 @@ process filter_by_sequence_quality {
     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
 
     output:
-    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_Masking, print_channel)
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_Masking)
     file "${r1.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
     file "${r1.baseName}_UMI_R1_table.tab"
@@ -308,8 +310,6 @@ process filter_by_sequence_quality {
     ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
-
-print_channel.println{it}
 
 //Mask them primers
 process mask_primers{
