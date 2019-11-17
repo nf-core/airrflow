@@ -37,7 +37,7 @@ def helpMessage() {
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
     
-    Index file:
+    Index file
       --index_file                  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
 
     Other options:
@@ -113,12 +113,12 @@ if (params.set_cluster_threshold){
 
 //Set up channels for input primers
 
-Channel.fromPath( params.cprimers )
-        .ifEmpty{ exit 1, "Please provide cprimers fasta file!", checkIfExists: true }
+Channel.fromPath( params.cprimers, checkIfExists: true )
+        .ifEmpty{ exit 1, "Please provide cprimers fasta file!" }
         .set { ch_cprimers_fasta }
 
-Channel.fromPath( params.vprimers )
-        .ifEmpty{ exit 1, "Please specify vprimers fasta file!", checkiIfExists: true }
+Channel.fromPath( params.vprimers, checkIfExists: true)
+        .ifEmpty{ exit 1, "Please specify vprimers fasta file!" }
         .set { ch_vprimers_fasta }
 
 
