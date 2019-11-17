@@ -113,14 +113,14 @@ if (params.set_cluster_threshold){
 
 //Set up channels for input primers
 
-Channel.fromPath(params.cprimers)
+Channel.fromPath( params.cprimers )
         .ifEmpty{ exit 1, "Please provide cprimers fasta file!", checkIfExists: true }
         .set { ch_cprimers_fasta }
-        .println{ it }
-Channel.fromPath(params.vprimers)
+
+Channel.fromPath( params.vprimers )
         .ifEmpty{ exit 1, "Please specify vprimers fasta file!", checkiIfExists: true }
         .set { ch_vprimers_fasta }
-        .println{ it }
+
 
 
 /*
@@ -161,6 +161,8 @@ summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
 summary['IGDB Path']    = params.igblast_base
 summary['IMGT Path']    = params.imgtdb_base
+summary['C-primers fasta'] = params.cprimers
+summary['V-primers fasta'] = params.vprimers
 summary['Output dir']   = params.outdir
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 summary['Working dir']  = workflow.workDir
