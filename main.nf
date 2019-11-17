@@ -113,11 +113,11 @@ if (params.set_cluster_threshold){
 
 //Set up channels for input primers
 
-Channel.fromPath( params.cprimers, checkIfExists: true )
+Channel.fromPath( "${params.cprimers}", checkIfExists: true )
         .ifEmpty{ exit 1, "Please provide cprimers fasta file!" }
         .set { ch_cprimers_fasta }
 
-Channel.fromPath( params.vprimers, checkIfExists: true)
+Channel.fromPath( "${params.vprimers}", checkIfExists: true)
         .ifEmpty{ exit 1, "Please specify vprimers fasta file!" }
         .set { ch_vprimers_fasta }
 
