@@ -269,12 +269,12 @@ process fastqc {
     set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
     output:
-    set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
+    set file("${R1}"), file("${R2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
     file "*_fastqc.{zip,html}" into fastqc_results
 
     script:
     """
-    fastqc --quiet --threads $task.cpus $R1 $R2
+    fastqc --quiet --threads $task.cpus ${R1} ${R2}
     """
 }
 
