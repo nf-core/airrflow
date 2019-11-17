@@ -112,8 +112,8 @@ if (params.set_cluster_threshold){
 }
 
 //Validate inputs
-if (params.cprimers)  { ch_cprimers_fasta = file(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file!" }
-if (params.vprimers)  { ch_vprimers_fasta = file(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file!" }
+if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file with the '--cprimers' option." }
+if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
 if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
 
 /*Channel.fromPath( "${params.vprimers}", checkIfExists: true)
