@@ -111,31 +111,34 @@ if (params.set_cluster_threshold){
     params.cluster_threshold = 0.0
 }
 
-//Validate inputs cprimer
-if (params.cprimers)  { ch_cprimers_fasta = file(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide cprimers fasta file!"}
+//Validate inputs
+if (params.cprimers)  { ch_cprimers_fasta = file(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file!" }
+if (params.vprimers)  { ch_vprimers_fasta = file(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file!" }
+if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
 
-Channel.fromPath( "${params.vprimers}", checkIfExists: true)
+/*Channel.fromPath( "${params.vprimers}", checkIfExists: true)
         .ifEmpty{ exit 1, "Please specify vprimers fasta file!" }
         .set { ch_vprimers_fasta }
+*/
 
 /*
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
 
-file_meta = file(params.metadata, checkIfExists: true)
+//file_meta = file(params.metadata, checkIfExists: true)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
            .set { ch_metadata_file_for_process_logs }
 
 if (params.index_file) {
-    ch_read_files_for_merge_r1_umi_index = Channel.from(file_meta)
+    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
             .dump()
     ch_read_files_for_merge_r1_umi = Channel.empty()
 } else {
-    ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+    ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
             .dump()
