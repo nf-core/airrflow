@@ -269,12 +269,12 @@ process fastqc {
     set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
     output:
-    set file("${R1}"), file("${R2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
+    set file("${R1}"), file("${R2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
     file "*_fastqc.{zip,html}" into fastqc_results
 
     script:
     """
-    fastqc --quiet --threads $task.cpus ${R1} ${R2}
+    fastqc --quiet --threads $task.cpus "${R1}" "${R2}"
     """
 }
 
@@ -290,10 +290,10 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_processing_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
 
     output:
-    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking
     file "${r1.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
     file "${r1.baseName}_UMI_R1_table.tab"
@@ -320,7 +320,7 @@ process mask_primers{
         }
 
     input:
-    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
 
