@@ -113,9 +113,9 @@ if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, ch
 if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
 
 //Cluster threshold settings
-if (params.set_cluster_threshold){
-    if (params.cluster_threshold == -1) {exit 1, "Please provide Hamming distance threshold for defining clones with the '--cluster_threshold' option."}
-}
+//if (params.set_cluster_threshold){
+//    if (params.cluster_threshold == -1) {exit 1, "Please provide Hamming distance threshold for defining clones with the '--cluster_threshold' option."}
+//}
 
 
 /*
