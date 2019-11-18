@@ -367,12 +367,12 @@ save_graph <- function(df_pat, clone_id){
     vsize[is.na(vsize)] <- 1
 
     # Plot
-    # svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
-    # plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
-    #     vertex.label.color="black", vertex.size=(vsize/20 + 6))
-    # legend("topleft", c("Germline", "Inferred", "Sample"), 
-    #     fill=c("black", "white", "steelblue"), cex=0.75)
-    # dev.off()
+    svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+    plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
+        vertex.label.color="black", vertex.size=(vsize/20 + 6))
+    legend("topleft", c("Germline", "Inferred", "Sample"), 
+        fill=c("black", "white", "steelblue"), cex=0.75)
+    dev.off()
     
     #Save graph in graphML format
     write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
@@ -380,11 +380,12 @@ save_graph <- function(df_pat, clone_id){
 }
 
 for (clone_id in clones$CLONE){
-    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
-                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
-                    warning=function(w) {print(paste0("Warning for clone:", clone_id))
-                                invokeRestart("muffleWarning")}), 
-            error = function(e) { print(paste0("Processed clone:", clone_id)) })
+    save_graph(df_pat, clone_id)
+#    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
+#                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
+#                    warning=function(w) {print(paste0("Warning for clone:", clone_id))
+#                                invokeRestart("muffleWarning")}), 
+#            error = function(e) { print(paste0("Processed clone:", clone_id)) })
 
 }
 
