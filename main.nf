@@ -116,17 +116,11 @@ if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, ch
 if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
 if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
 
-/*Channel.fromPath( "${params.vprimers}", checkIfExists: true)
-        .ifEmpty{ exit 1, "Please specify vprimers fasta file!" }
-        .set { ch_vprimers_fasta }
-*/
-
 /*
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
 
-//file_meta = file(params.metadata, checkIfExists: true)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
            .set { ch_metadata_file_for_process_logs }
