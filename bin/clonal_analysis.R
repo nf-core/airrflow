@@ -351,7 +351,8 @@ save_graph <- function(df_pat, clone_id){
     
     clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
 
-    dnapars_exec <- "/opt/conda/envs/nf-core-bcellmagic-1.1.1dev/bin/dnapars"
+    #dnapars_exec <- "/opt/conda/envs/nf-core-bcellmagic-1.1.1dev/bin/dnapars"
+    dnapars_exec <- "dnapars"
     graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
     
     #Modify graph and plot attributes
