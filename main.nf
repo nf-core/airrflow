@@ -106,15 +106,17 @@ if( params.imgtdb_base ){
 //Other parameters
 filterseq_q = 20
 
-//Cluster threshold settings
-if (params.set_cluster_threshold){
-    params.cluster_threshold = 0.0
-}
 
 //Validate inputs
 if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file with the '--cprimers' option." }
 if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
 if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
+
+//Cluster threshold settings
+if (params.set_cluster_threshold){
+    if !(params.cluster_threshold) {exit 1, "Please provide Hamming distance threshold for defining clones with the '--cluster_threshold' option."}
+}
+
 
 /*
  * Create a channel for metadata and raw files

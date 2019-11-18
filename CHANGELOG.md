@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Deprecated`
 
 * [#51](https://github.com/nf-core/bcellmagic/issues/51) - Fixed MaskPrimers bug
-* Validate inputs
+* Validate inputs and cluster threshold
 
 ## [1.1.0] - 2019-11-06 - "Wingardium Leviosa"
 
