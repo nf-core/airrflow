@@ -114,7 +114,7 @@ if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true)
 
 //Cluster threshold settings
 if (params.set_cluster_threshold){
-    if (!params.cluster_threshold) {exit 1, "Please provide Hamming distance threshold for defining clones with the '--cluster_threshold' option."}
+    if (params.cluster_threshold == false) {exit 1, "Please provide Hamming distance threshold for defining clones with the '--cluster_threshold' option."}
 }
 
 
