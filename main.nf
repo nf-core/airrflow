@@ -37,7 +37,7 @@ def helpMessage() {
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
     
-    Index file:
+    Index file
       --index_file                  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
 
     Other options:
@@ -111,34 +111,34 @@ if (params.set_cluster_threshold){
     params.cluster_threshold = 0.0
 }
 
-//Set up channels for input primers
+//Validate inputs
+if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file with the '--cprimers' option." }
+if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
+if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
 
-Channel.fromPath("${params.cprimers}")
-        .ifEmpty{exit 1, "Please specify CPrimers FastA File!"}
-        .set {ch_cprimers_fasta}
-Channel.fromPath("${params.vprimers}")
-        .ifEmpty{exit 1, "Please specify VPrimers FastA File!"}
+/*Channel.fromPath( "${params.vprimers}", checkIfExists: true)
+        .ifEmpty{ exit 1, "Please specify vprimers fasta file!" }
         .set { ch_vprimers_fasta }
-
+*/
 
 /*
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
 
-file_meta = file(params.metadata)
+//file_meta = file(params.metadata, checkIfExists: true)
 Channel.fromPath("${params.metadata}")
            .ifEmpty{exit 1, "Please provide metadata file!"}
            .set { ch_metadata_file_for_process_logs }
 
 if (params.index_file) {
-    ch_read_files_for_merge_r1_umi_index = Channel.from(file_meta)
+    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
             .dump()
     ch_read_files_for_merge_r1_umi = Channel.empty()
 } else {
-    ch_read_files_for_merge_r1_umi = Channel.from(file_meta)
+    ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
             .dump()
@@ -159,6 +159,8 @@ summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
 summary['IGDB Path']    = params.igblast_base
 summary['IMGT Path']    = params.imgtdb_base
+summary['C-primers fasta'] = params.cprimers
+summary['V-primers fasta'] = params.vprimers
 summary['Output dir']   = params.outdir
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 summary['Working dir']  = workflow.workDir
@@ -242,23 +244,20 @@ process merge_r1_umi {
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index.mix(ch_read_files_for_merge_r1_umi)
 
     output:
-    set file("${id}_R1.fastq"), file("${id}_R2.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_fastqc
+    set file("${R1.baseName}"), file("${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_fastqc
 
     script:
     if (params.index_file) {
     """
     merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
     gunzip -f "UMI_R1.fastq.gz" 
-    mv "UMI_R1.fastq" "${id}_R1.fastq"
+    mv "UMI_R1.fastq" "${R1.baseName}"
     gunzip -f "${R2}"
-    mv "${R2.baseName}" "${id}_R2.fastq"
     """
     } else {
     """
     gunzip -f "${R1}"
-    mv "${R1.baseName}" "${id}_R1.fastq"
     gunzip -f "${R2}"
-    mv "${R2.baseName}" "${id}_R2.fastq"
     """
     }
 }
@@ -272,12 +271,12 @@ process fastqc {
     set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
     output:
-    set file("$R1"), file("$R2"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_processing_umi
+    set file("${R1}"), file("${R2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
     file "*_fastqc.{zip,html}" into fastqc_results
 
     script:
     """
-    fastqc --quiet --threads $task.cpus $R1 $R2
+    fastqc --quiet --threads $task.cpus "${R1}" "${R2}"
     """
 }
 
@@ -293,10 +292,10 @@ process filter_by_sequence_quality {
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_processing_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
 
     output:
-    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_Masking)
     file "${r1.baseName}_UMI_R1.log"
     file "${r2.baseName}_R2.log"
     file "${r1.baseName}_UMI_R1_table.tab"
@@ -305,8 +304,8 @@ process filter_by_sequence_quality {
 
     script:
     """
-    FilterSeq.py quality -s $r1 -q $filterseq_q --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log"
-    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log"
+    FilterSeq.py quality -s $r1 -q $filterseq_q --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log" --nproc ${task.cpus}
+    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log" --nproc ${task.cpus}
     cp ".command.out" "${id}_command_log.txt"
     ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
@@ -323,7 +322,7 @@ process mask_primers{
         }
 
     input:
-    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking_UMI
+    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
 
@@ -769,7 +768,7 @@ process clonal_analysis{
     tag "${id}"
     publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf(".tab") > 0) "$filaname"
+            if (filename.indexOf(".tab") > 0) "$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
             else null
         }
