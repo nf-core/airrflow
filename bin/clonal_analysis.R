@@ -380,12 +380,11 @@ save_graph <- function(df_pat, clone_id){
 }
 
 for (clone_id in clones$CLONE){
-    save_graph(df_pat, clone_id)
-#    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
-#                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
-#                    warning=function(w) {print(paste0("Warning for clone:", clone_id))
-#                                invokeRestart("muffleWarning")}), 
-#            error = function(e) { print(paste0("Processed clone:", clone_id)) })
+    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
+                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
+                    warning=function(w) {print(paste0("Warning for clone:", clone_id))
+                                invokeRestart("muffleWarning")}), 
+            error = function(e) { print(paste0("Processed clone:", clone_id)) })
 
 }
 
