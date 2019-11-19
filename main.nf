@@ -305,9 +305,8 @@ process filter_by_sequence_quality {
 
     script:
     """
-    FilterSeq.py quality -s $r1 -q $filterseq_q --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log" --nproc ${task.cpus}
-    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log" --nproc ${task.cpus}
-    cp ".command.out" "${id}_command_log.txt"
+    FilterSeq.py quality -s $r1 -q $filterseq_q --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log" --nproc ${task.cpus} > "${id}_command_log.txt"
+    FilterSeq.py quality -s $r2 -q $filterseq_q --outname "${r2.baseName}" --log "${r2.baseName}_R2.log" --nproc ${task.cpus} >> "${id}_command_log.txt"
     ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
