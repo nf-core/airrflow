@@ -334,9 +334,8 @@ process mask_primers{
 
     script:
     """
-    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log
-    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log
-    cp ".command.out" "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} --start 8 --mode cut --barcode --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} --start 0 --mode mask --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
     ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
@@ -360,8 +359,7 @@ process pair_seq{
 
     script:
     """
-    PairSeq.py -1 $umi -2 $r2 --1f BARCODE --coord illumina
-    cp ".command.out" "${id}_command_log.txt"
+    PairSeq.py -1 $umi -2 $r2 --1f BARCODE --coord illumina > "${id}_command_log.txt"
     """
 }
 
@@ -384,9 +382,8 @@ process cluster_sets {
 
     script:
     """
-    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 
-    ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2
-    cp ".command.out" "${id}_command_log.txt"
+    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 > "${id}_command_log.txt"
+    ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2 >> "${id}_command_log.txt"
     """
 }
 
@@ -402,8 +399,8 @@ process reheader {
 
     script:
     """
-    ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat
-    ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat 
+    ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat > "${id}_command_log.txt"
+    ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat >> "${id}_command_log.txt"
     """
 }
 
@@ -431,9 +428,8 @@ process build_consensus{
 
     script:
     """
-    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1 --log ${umi.baseName}_UMI_R1.log
-    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log
-    cp ".command.out" "${id}_command_log.txt"
+    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1 --log ${umi.baseName}_UMI_R1.log > "${id}_command_log.txt"
+    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log >> "${id}_command_log.txt"
     ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
     """
 }
@@ -457,8 +453,7 @@ process repair{
 
     script:
     """
-    PairSeq.py -1 $umi -2 $r2 --coord presto
-    cp ".command.out" "${id}_command_log.txt"
+    PairSeq.py -1 $umi -2 $r2 --coord presto > "${id}_command_log.txt"
     """
 }
    
@@ -484,8 +479,7 @@ process assemble{
 
     script:
     """
-    AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2 --log ${umi.baseName}_UMI_R1_R2.log
-    cp ".command.out" "${id}_command_log.txt"
+    AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2 --log ${umi.baseName}_UMI_R1_R2.log > "${id}_command_log.txt"
     ParseLog.py -l "${umi.baseName}_UMI_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
 }
@@ -560,8 +554,7 @@ process dedup {
 
     script:
     """
-    CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2 --log ${dedup.baseName}_UMI_R1_R2.log
-    cp ".command.out" "${id}_command_log.txt"
+    CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2 --log ${dedup.baseName}_UMI_R1_R2.log > "${id}_command_log.txt"
     ParseLog.py -l "${dedup.baseName}_UMI_R1_R2.log" -f HEADER DUPCOUNT
     """
 }
@@ -586,8 +579,7 @@ process filter_seqs{
 
     script:
     """
-    SplitSeq.py group -s $dedupped -f CONSCOUNT --num 2 --outname ${dedupped.baseName}_UMI_R1_R2
-    cp ".command.out" "${id}_command_log.txt"
+    SplitSeq.py group -s $dedupped -f CONSCOUNT --num 2 --outname ${dedupped.baseName}_UMI_R1_R2 > "${id}_command_log.txt"
     sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
     """
 }
@@ -634,11 +626,10 @@ process igblast_filter {
 
     script:
     """
-    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores
-    ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL
-    ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id}
-    ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT
-    cp ".command.out" "${id}_command_log.txt"
+    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores > "${id}_command_log.txt"
+    ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
+    ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id} >> "${id}_command_log.txt"
+    ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
     """
 }
 
@@ -664,7 +655,6 @@ process merge_tables{
     tail -n +2 ${tab} >> ${source}.tab
     sed -i '/==>/d' ${source}.tab
     """
-
 }
 
 
