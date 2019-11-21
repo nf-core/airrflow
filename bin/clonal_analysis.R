@@ -164,8 +164,8 @@ seqdf <- combin
 lenintersects = numeric(0)
 seqsintersects = numeric(0)
 for (j in c(1:nrow(clonedf))){
-    inter <- intersect(df_pop_time[[which(grepl(paste0("^",clonedf[j,1]), names(df_pop)))]]$CLONE, 
-                        df_pop_time[[which(grepl(paste0("^",clonedf[j,2]), names(df_pop)))]]$CLONE)
+    inter <- intersect(df_pop[[which(grepl(paste0("^",clonedf[j,1]), names(df_pop)))]]$CLONE, 
+                        df_pop[[which(grepl(paste0("^",clonedf[j,2]), names(df_pop)))]]$CLONE)
     
     clones_subset <- count_clones[which(count_clones$CLONE %in% as.character(inter)),]
     
