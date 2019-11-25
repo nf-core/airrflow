@@ -129,7 +129,7 @@ if (params.downstream_only){
         .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
         .into {ch_tabs_for_clonal_analysis}
         .println()
-    ch_for_clonal_analysis_mix = Channel.empty()
+    ch_for_clonal_analysis = Channel.empty()
 } else {
     ch_tabs_for_clonal_analysis = Channel.empty()
 }
