@@ -129,7 +129,7 @@ if (params.downstream_only){
         .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
         .into {ch_tabs_for_clonal_analysis}
         .println()
-    ch_for_clonal_analysis = Channel.empty()
+    ch_for_clonal_analysis_mix = Channel.empty()
 } else {
     ch_tabs_for_clonal_analysis = Channel.empty()
 }
@@ -843,7 +843,7 @@ process clonal_analysis{
         }
     
     input:
-    set file(clones), val(id) from ch_for_clonal_analysis.mix(ch_tabs_for_clonal_analysis)
+    set file(clones), val(id) from ch_for_clonal_analysis.mix(ch_tabs_for_clonal_analysis_mix)
 
     output:
     file("${id}.tab") into ch_for_repertoire_comparison
