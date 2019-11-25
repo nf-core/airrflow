@@ -821,7 +821,7 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    set file("${id}.tab"), val("$id") into ch_for_clonal_analysis.mix(ch_for_clonal_analysis_mix)
+    set file("${id}.tab"), val("$id") into ch_for_clonal_analysis
     file "${id}.tab"
     file "${id}_command_log.txt" into create_germlines_log
 
