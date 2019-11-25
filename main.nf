@@ -256,6 +256,9 @@ process fetchDBs{
 process merge_r1_umi {
     tag "${id}"
 
+    when:
+    !params.downstream_only
+
     input:
     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index.mix(ch_read_files_for_merge_r1_umi)
 
@@ -286,6 +289,9 @@ process fastqc {
     tag "${id}"
     publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
 
+    when:
+    !params.downstream_only
+
     input:
     set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
@@ -309,6 +315,9 @@ process filter_by_sequence_quality {
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+
+    when:
+    !params.downstream_only
 
     input:
     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
@@ -338,6 +347,9 @@ process mask_primers{
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking
@@ -367,6 +379,9 @@ process pair_seq{
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
@@ -390,6 +405,9 @@ process cluster_sets {
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
@@ -408,6 +426,9 @@ process cluster_sets {
 //ParseHeaders to annotate barcode into cluster field
 process reheader {
     tag "${id}"
+
+    when:
+    !params.downstream_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
@@ -432,6 +453,9 @@ process build_consensus{
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
@@ -461,6 +485,9 @@ process repair{
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
@@ -485,6 +512,9 @@ process assemble{
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
@@ -504,7 +534,10 @@ process assemble{
 
 //combine UMI read group size annotations
 process combine_umi_read_groups{
-    tag "${id}" 
+    tag "${id}"
+
+    when:
+    !params.downstream_only
 
     input:
     set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
@@ -521,7 +554,10 @@ process combine_umi_read_groups{
 
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
-    tag "${id}" 
+    tag "${id}"
+
+    when:
+    !params.downstream_only
 
     input:
     set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
@@ -538,6 +574,9 @@ process copy_prcons{
 //Add Metadata annotation to headers
 process metadata_anno{
     tag "${id}"
+
+    when:
+    !params.downstream_only
 
     input:
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
@@ -560,6 +599,9 @@ process dedup {
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(dedup), val(id), val(source) from ch_for_dedup
@@ -586,6 +628,9 @@ process filter_seqs{
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set file(dedupped), val(id), val(source) from ch_for_filtering
@@ -605,6 +650,9 @@ process filter_seqs{
 //Run IGBlast
 process igblast{
     tag "${id}"
+
+    when:
+    !params.downstream_only
 
     input:
     set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
@@ -631,6 +679,9 @@ process igblast_filter {
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input: 
     set file('blast.fmt7'), file('fasta.fasta'), val(id), val(source) from ch_igblast_filter
@@ -655,6 +706,9 @@ process igblast_filter {
 process merge_tables{
     tag "merge tables"
     publishDir "${params.outdir}/shazam/$source", mode: 'copy'
+
+    when:
+    !params.downstream_only
 
     input:
     set source, id, file(tab) from ch_for_merge.groupTuple()
@@ -689,6 +743,9 @@ process shazam{
             else if (filename == "v_genotype.fasta") "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set val(id), file(tab) from ch_for_shazam
@@ -716,6 +773,9 @@ process assign_clones{
             else if (filename == "threshold.txt" && !params.set_cluster_threshold) "$filename"
             else null
         }
+    
+    when:
+    !params.downstream_only
 
     input:
     set val(threshold), file(geno), file(geno_fasta), val(id) from ch_threshold_for_clone_definition
