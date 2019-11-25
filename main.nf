@@ -108,37 +108,55 @@ filterseq_q = 20
 
 
 //Validate inputs
-if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file with the '--cprimers' option." }
-if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
-if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
-
+if (!params.downstream_only){
+    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file with the '--cprimers' option." }
+    if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
+    if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
+} else {
+    ch_cprimers_fasta = Channel.empty()
+    ch_vprimers_fasta = Channel.empty()
+    ch_metadata = Channel.empty()
+}
 //Cluster threshold settings
 //if (params.set_cluster_threshold){
 //    if (params.cluster_threshold == -1) {exit 1, "Please provide Hamming distance threshold for defining clones with the '--cluster_threshold' option."}
 //}
 
+//Read processed tabs if downstream_only 
+if (params.downstream_only){
+    Channel
+        .fromFilePairs(params.changeo_tables, size: 1)
+        .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
+        .into {ch_tabs_for_clonal_analysis}
+        .println()
+    ch_for_clonal_analysis = Channel.empty()
+} else {
+    ch_tabs_for_clonal_analysis = Channel.empty()
+}
 
 /*
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
 
-Channel.fromPath("${params.metadata}")
-           .ifEmpty{exit 1, "Please provide metadata file!"}
-           .set { ch_metadata_file_for_process_logs }
+if (!params.downstream_only){
+    Channel.fromPath("${params.metadata}")
+            .ifEmpty{exit 1, "Please provide metadata file!"}
+            .set { ch_metadata_file_for_process_logs }
 
-if (params.index_file) {
-    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
-            .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
-            .dump()
-    ch_read_files_for_merge_r1_umi = Channel.empty()
-} else {
-    ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
-            .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
-            .dump()
-    ch_read_files_for_merge_r1_umi_index = Channel.empty()
+    if (params.index_file) {
+        ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
+                .splitCsv(header: true, sep:'\t')
+                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
+                .dump()
+        ch_read_files_for_merge_r1_umi = Channel.empty()
+    } else {
+        ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
+                .splitCsv(header: true, sep:'\t')
+                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
+                .dump()
+        ch_read_files_for_merge_r1_umi_index = Channel.empty()
+    }
 }
 
 // Header log info
@@ -716,8 +734,7 @@ process assign_clones{
         thr = thr.trim()
     }
     """
-    DefineClones.py -d $geno --act set --model ham --norm len --dist $thr --outname ${geno.baseName} --log ${geno.baseName}.log
-    cp ".command.out" "${id}_command_log.txt"
+    DefineClones.py -d $geno --act set --model ham --norm len --dist $thr --outname ${geno.baseName} --log ${geno.baseName}.log > "${id}_command_log.txt"
     ParseLog.py -l "${geno.baseName}.log" -f ID VCALL JCALL JUNCLEN CLONED FILTERED CLONES
     """
 }
@@ -731,7 +748,7 @@ process germline_sequences{
             if (filename.indexOf(".fasta") > 0) "fasta/$filename"
             else if (filename.indexOf(".log") > 0) null
             else if (filename.indexOf("table.tab") > 0) "$filename"
-            else if (filename.indexOf(".tab") > 0) "table/$filename"
+            else if (filename.indexOf(".tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") >0) "$filename"
             else null
         }
@@ -747,8 +764,7 @@ process germline_sequences{
 
     script:
     """
-    CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --log ${clones.baseName}.log -o "${id}.tab"
-    cp ".command.out" "${id}_command_log.txt"
+    CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --log ${clones.baseName}.log -o "${id}.tab" > "${id}_command_log.txt"
     ParseLog.py -l "${clones.baseName}.log" -f ID V_CALL D_CALL J_CALL
     """
 }
@@ -764,7 +780,7 @@ process clonal_analysis{
         }
     
     input:
-    set file(clones), val(id) from ch_for_clonal_analysis
+    set file(clones), val(id) from ch_for_clonal_analysis.mix(ch_tabs_for_clonal_analysis)
 
     output:
     file("${id}.tab") into ch_for_repertoire_comparison
