@@ -157,6 +157,9 @@ if (!params.downstream_only){
                 .dump()
         ch_read_files_for_merge_r1_umi_index = Channel.empty()
     }
+} else {
+    ch_read_files_for_merge_r1_umi = Channel.empty()
+    ch_read_files_for_merge_r1_umi_index = Channel.empty()
 }
 
 // Header log info
