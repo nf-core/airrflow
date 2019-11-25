@@ -132,8 +132,6 @@ title(paste("CLONE SEQ NUM OVERLAP", df_pop_time[[1]]$TREATMENT[1], df_pop_time[
 circos.clear()
 dev.off()
 
-
-
 df_TP <- split(df_pat, df_pat$EXTRACT_TIME)
 
 # Plots per patient and time point - overlap populations
@@ -146,9 +144,6 @@ vennplot <- venn(list(unique(df_pop[[1]]$CLONE), unique(df_pop[[2]]$CLONE), uniq
 listInput <- list(df_pop[[1]]$CLONE, df_pop[[2]]$CLONE, df_pop[[3]]$CLONE, df_pop[[4]]$CLONE)
 names(listInput) <- names(df_pop)
 combin <- data.frame(from=combinations(4,2,names(df_pop),repeats.allowed=F)[,1], to=combinations(4,2,names(df_pop),repeats.allowed=F)[,2])
-
-listInput <- list(df_pop[[1]]$CLONE, df_pop[[2]]$CLONE, df_pop[[3]]$CLONE, df_pop[[4]]$CLONE)
-names(listInput) <- names(df_pop)
 
 svg(filename = paste(patdir_overlap,"/Set_plot_", df_pop[[1]]$TREATMENT[1], "_",df_pop[[1]]$EXTRACT_TIME[1], "_",df_pop[[1]]$SOURCE[1], ".svg", sep=""))
 upset(fromList(listInput), group.by = "sets", order.by="freq", point.size = 3.5, line.size=2, mainbar.y.label = "Clone intersections", sets.x.label = "Clones per population")
@@ -336,6 +331,9 @@ write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_
 # Restrict clonal tree size
 clones <- subset(countclones, SEQ_COUNT >= 2 & SEQ_COUNT < 1000)
 
+dnapars_exec_tab <- read.csv("dnapars_exec.txt", header=F)
+dnapars_exec <- as.character(dnapars_exec_tab[1,1])
+
 save_graph <- function(df_pat, clone_id){
     print(paste0("Started processing clone:",clone_id))
     sub_db_clone <- subset(df_pat, CLONE == clone_id)
@@ -351,8 +349,7 @@ save_graph <- function(df_pat, clone_id){
     
     clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
 
-    dnapars_exec <- "/opt/conda/envs/nf-core-bcellmagic-1.1.1dev/bin/dnapars"
-    #dnapars_exec <- "dnapars"
+
     graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
     
     #Modify graph and plot attributes
@@ -366,26 +363,24 @@ save_graph <- function(df_pat, clone_id){
     vsize = V(graph)$DUPCOUNT
     vsize[is.na(vsize)] <- 1
 
-    # Plot
-    #svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
-    #plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
-    #    vertex.label.color="black", vertex.size=(vsize/20 + 6))
-    #legend("topleft", c("Germline", "Inferred", "Sample"), 
-    #    fill=c("black", "white", "steelblue"), cex=0.75)
-    #dev.off()
-    
-    #Save graph in graphML format
+    # Save graph in graphML format
     write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
 
+    # Plot
+    svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+    plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
+        vertex.label.color="black", vertex.size=(vsize/20 + 6))
+    legend("topleft", c("Germline", "Inferred", "Sample"), 
+        fill=c("black", "white", "steelblue"), cex=0.75)
+    dev.off()
+    
 }
 
 for (clone_id in clones$CLONE){
-    #tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
-    #                error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
-    #                warning=function(w) {print(paste0("Warning for clone:", clone_id))
-    #                            invokeRestart("muffleWarning")}), 
-    #        error = function(e) { print(paste0("Processed clone:", clone_id)) })
-    save_graph(df_pat, clone_id)
-
+    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
+                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
+                    warning=function(w) {print(paste0("Warning for clone:", clone_id))
+                                invokeRestart("muffleWarning")}), 
+            error = function(e) { print(paste0("Processed clone:", clone_id)) })
 }
 

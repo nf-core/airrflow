@@ -125,7 +125,7 @@ if (!params.downstream_only){
 //Read processed tabs if downstream_only 
 if (params.downstream_only){
     Channel
-        .fromFilePairs(params.changeo_tables, size: 1)
+        .fromFilePairs(params.changeo_tables, size: 1) {file -> file.baseName}
         .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
         .set {ch_tabs_for_clonal_analysis}
         .println()
@@ -855,6 +855,7 @@ process clonal_analysis{
 
     script:
     """
+    which dnapars > dnapars_exec.txt
     clonal_analysis.R
     merge_graphs.sh
     zip -r clonal_analysis.zip clonal_analysis
