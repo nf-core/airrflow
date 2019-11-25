@@ -127,7 +127,7 @@ if (params.downstream_only){
     Channel
         .fromFilePairs(params.changeo_tables, size: 1)
         .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
-        .into {ch_tabs_for_clonal_analysis}
+        .set {ch_tabs_for_clonal_analysis}
         .println()
     //ch_for_clonal_analysis = Channel.empty()
 } else {
@@ -825,7 +825,7 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    set file("${id}.tab"), val("$id") into ch_for_clonal_analysis
+    set val("$id"), file("${id}.tab") into ch_for_clonal_analysis
     file "${id}.tab"
     file "${id}_command_log.txt" into create_germlines_log
 
@@ -847,7 +847,7 @@ process clonal_analysis{
         }
     
     input:
-    set file(clones), val(id) from ch_for_clonal_analysis.mix(ch_tabs_for_clonal_analysis)
+    set val(id), file(clones) from ch_for_clonal_analysis.mix(ch_tabs_for_clonal_analysis)
 
     output:
     file("${id}.tab") into ch_for_repertoire_comparison
