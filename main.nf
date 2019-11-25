@@ -816,6 +816,9 @@ process germline_sequences{
             else null
         }
 
+    when:
+    !params.downstream_only
+
     input: 
     set file(clones), file(geno_fasta), val(id) from ch_for_germlines
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
