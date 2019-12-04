@@ -211,8 +211,35 @@ title(paste("CLONE OVERLAP", df_pop[[1]]$TREATMENT[1], df_pop[[1]]$SOURCE[1], df
 circos.clear()
 dev.off()
 
+png(filename = paste(patdir_overlap,"/Clone_overlap_comparison_population_", df_pop[[1]]$TREATMENT[1], "_", df_pop[[1]]$EXTRACT_TIME[1], "_", df_pop[[1]]$SOURCE[1], ".png", sep=""), width=15, height=15, units = "cm", res = 300)
+chordDiagram(clonedf, grid.col = grid.col, self.link = 1,
+                transparency = 0.3,
+                annotationTrack="grid",
+                preAllocateTracks = list(track.height = max(strwidth(unlist(dimnames(clonedf))))))
+circos.track(track.index = 1, panel.fun = function(x, y) {
+circos.text(CELL_META$xcenter, CELL_META$ylim[2], CELL_META$sector.index,
+                adj = c(0, 0.5))
+}, bg.border = NA)
+title(paste("CLONE OVERLAP", df_pop[[1]]$TREATMENT[1], df_pop[[1]]$SOURCE[1], df_pop[[1]]$EXTRACT_TIME[1]), cex = 0.8)
+circos.clear()
+dev.off()
+
 # Plots clone sequence numbers overlap
 svg(filename = paste(patdir_overlap,"/Clone_seqN_overlap_comparison_population_", df_pop[[1]]$TREATMENT[1], "_", df_pop[[1]]$EXTRACT_TIME[1], "_", df_pop[[1]]$SOURCE[1], ".svg", sep=""))
+chordDiagram(seqdf, grid.col = grid.col, self.link = 1,
+            transparency = 0.3,
+            annotationTrack="grid",
+            preAllocateTracks = list(track.height = max(strwidth(unlist(dimnames(seqdf))))))
+circos.track(track.index = 1, panel.fun = function(x, y) {
+    circos.text(CELL_META$xcenter, CELL_META$ylim[2], CELL_META$sector.index,
+                adj = c(0, 0.5))
+}, bg.border = NA)
+title(paste("CLONE SEQ NUM OVERLAP", df_pop[[1]]$TREATMENT[1], df_pop[[1]]$SOURCE[1], df_pop[[1]]$EXTRACT_TIME[1]), cex = 0.8)
+circos.clear()
+dev.off()
+}
+
+png(filename = paste(patdir_overlap,"/Clone_seqN_overlap_comparison_population_", df_pop[[1]]$TREATMENT[1], "_", df_pop[[1]]$EXTRACT_TIME[1], "_", df_pop[[1]]$SOURCE[1], ".png", sep=""), width=15, height=15, units = "cm", res = 300)
 chordDiagram(seqdf, grid.col = grid.col, self.link = 1,
             transparency = 0.3,
             annotationTrack="grid",
