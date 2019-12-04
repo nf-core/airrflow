@@ -237,7 +237,6 @@ circos.track(track.index = 1, panel.fun = function(x, y) {
 title(paste("CLONE SEQ NUM OVERLAP", df_pop[[1]]$TREATMENT[1], df_pop[[1]]$SOURCE[1], df_pop[[1]]$EXTRACT_TIME[1]), cex = 0.8)
 circos.clear()
 dev.off()
-}
 
 png(filename = paste(patdir_overlap,"/Clone_seqN_overlap_comparison_population_", df_pop[[1]]$TREATMENT[1], "_", df_pop[[1]]$EXTRACT_TIME[1], "_", df_pop[[1]]$SOURCE[1], ".png", sep=""), width=15, height=15, units = "cm", res = 300)
 chordDiagram(seqdf, grid.col = grid.col, self.link = 1,
