@@ -312,7 +312,7 @@ process fastqc {
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
     tag "${id}"
-    publishDir "${params.outdir}/filter_by_sequence_quality/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -344,7 +344,7 @@ process filter_by_sequence_quality {
 //Mask them primers
 process mask_primers{
     tag "${id}"
-    publishDir "${params.outdir}/mask_primers/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -378,7 +378,7 @@ process mask_primers{
 //Pair the UMI_R1 and R2
 process pair_seq{
     tag "${id}"
-    publishDir "${params.outdir}/pair_sequences/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/pair_sequences/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -405,7 +405,7 @@ process pair_seq{
 //Cluster sets to deal with too low UMI diversity
 process cluster_sets {
     tag "${id}"
-    publishDir "${params.outdir}/cluster_sets/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -453,7 +453,7 @@ process reheader {
 //Build UMI consensus
 process build_consensus{
     tag "${id}"
-    publishDir "${params.outdir}/build_consensus/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: 'copy',
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -485,7 +485,7 @@ process build_consensus{
 //Re-pair UMI_R1+R2
 process repair{
     tag "${id}"
-    publishDir "${params.outdir}/repair_mates/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/repair_mates/$id", mode: 'copy',
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -512,7 +512,7 @@ process repair{
 //Assemble the mate pairs
 process assemble{
     tag "${id}"
-    publishDir "${params.outdir}/assemble_pairs/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_assemble_pairs_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -599,7 +599,7 @@ process metadata_anno{
 //Removal of duplicate sequences
 process dedup {
     tag "${id}"
-    publishDir "${params.outdir}/deduplicate/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_deduplicate_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -628,7 +628,7 @@ process dedup {
 //Filtering to sequences with at least two representative reads and convert to FastA
 process filter_seqs{
     tag "${id}"
-    publishDir "${params.outdir}/filter_representative_2/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -677,7 +677,7 @@ process igblast{
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
     tag "${id}"
-    publishDir "${params.outdir}/igblast/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/igblast/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf(".fasta") > 0) "fasta/$filename"
@@ -739,14 +739,14 @@ process merge_tables{
 //Shazam! 
 process shazam{
     tag "${id}"    
-    publishDir "${params.outdir}/shazam/$id", mode: 'copy',
+    publishDir "${params.outdir}/genotyping/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename == "igh_genotyped.tab") "$filename"
+            if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "$filename"
-            else if (filename == "genotype.pdf") "$filename"
-            else if (filename == "Hamming_distance_threshold.pdf") "$filename"
-            else if (filename == "v_genotype.fasta") "$filename"
+            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
+            else if (filename == "genotype.pdf") "${id}_genotype.pdf"
+            else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
+            else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
             else null
         }
 
@@ -771,12 +771,12 @@ process shazam{
 //Assign clones
 process assign_clones{
     tag "${id}" 
-    publishDir "${params.outdir}/define_clones/$id", mode: 'copy',
+    publishDir "${params.outdir}/clone_assignment/$id", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf("table.tab") > 0) "$filename"
-            else if (filename.indexOf("clone-pass.tab") > 0) "$filename"
+            if (filename.indexOf("table.tab") > 0) "${id}_log_table.tab"
+            else if (filename.indexOf("clone-pass.tab") > 0) "${id}_clone_pass.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "$filename"
+            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
             else null
         }
 
@@ -809,7 +809,7 @@ process assign_clones{
 //Reconstruct germline sequences
 process germline_sequences{
     tag "${id}"
-    publishDir "${params.outdir}/create_germlines/$id", mode: 'copy',
+    publishDir "${params.outdir}/Sequences_with_germlines/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf(".fasta") > 0) "fasta/$filename"
             else if (filename.indexOf(".log") > 0) null
@@ -855,6 +855,9 @@ process clonal_analysis{
     file("${id}.tab") into ch_for_repertoire_comparison
     file "clonal_analysis.zip"
 
+    when:
+    !proces.skipDownstream
+
     script:
     """
     which dnapars > dnapars_exec.txt
@@ -882,6 +885,9 @@ process repertoire_comparison{
     output:
     file '*.tab'
     file "repertoire_comparison.zip"
+
+    when:
+    !process.skipDownstream
 
     script:
     """

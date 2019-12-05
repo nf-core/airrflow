@@ -20,10 +20,6 @@ processes = ["filter_by_sequence_quality",
 # Path of logs will be:
 # process_name/sample_name_command_log.txt
 
-# How to modify for log parsing in nextflow pipeline:
-# take all log files as input
-# output parsed table that will be published as PublishDir.
-
 df_process_list = []
 
 for process in processes:
