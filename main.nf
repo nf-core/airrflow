@@ -856,7 +856,7 @@ process clonal_analysis{
     file "clonal_analysis.zip"
 
     when:
-    !proces.skipDownstream
+    !params.skipDownstream
 
     script:
     """
@@ -887,7 +887,7 @@ process repertoire_comparison{
     file "repertoire_comparison.zip"
 
     when:
-    !process.skipDownstream
+    !params.skipDownstream
 
     script:
     """
