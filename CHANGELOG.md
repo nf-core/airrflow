@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `--downstream_only` feature
 * Handling of UMIs of different lenghts
 * `--skipDownstream` feature
+* Added github actions ci testing
 
 ### `Fixed`
 
