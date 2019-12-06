@@ -3,6 +3,26 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2019-11-XX -
+
+### `Added`
+
+* Handling of barcodes that are already merged to R1 or R2 reads
+* Validate inputs and cluster threshold
+* `--downstream_only` feature
+* Handling of UMIs of different lenghts
+* `--skipDownstream` feature
+
+### `Fixed`
+
+* [#51](https://github.com/nf-core/bcellmagic/issues/51) - Fixed MaskPrimers bug
+* [#45](https://github.com/nf-core/bcellmagic/issues/45) - Fixed UMI reading from R1 or R2 & UMI length
+* [#57](https://github.com/nf-core/bcellmagic/issues/57) - Improved results directory organization
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## [1.1.0] - 2019-11-06 - "Wingardium Leviosa"
 
 ### `Added`
