@@ -23,8 +23,11 @@
   * [`--igblast_base`](#--igblast_base)
   * [`--imgtdb_base`](#--imgtdb_base)
 * [Define clones](#Define-clones)
-  * [Manually set cluster threshold](#manually-set-cluster-threshold)
-  * [Only define clones](#only-define-clones)
+  * [`--set_cluster_threshold`](#--set_cluster_threshold)
+  * [`--cluster_threshold`](#--cluster_threshold)
+* [Downstream analysis](#Downstream-analysis)
+  * [`--downstream_only`](#--downstream_only)
+  * [`--skipDownstream`](#--skipDownstream)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
 * [Custom resource requests](#custom-resource-requests)
@@ -199,9 +202,9 @@ Path to imgt downloaded database. Set as follows:
 
 ## Define clones
 
-By default the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment and junction lenght. Additionally, the similarity of the junction region sequences  will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters as follows:
+By default the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment and junction length. Additionally, the similarity of the junction region sequences  will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters as follows:
 
-### Manually set cluster threshold
+### `--set_cluster_threshold`
 
 Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter as follows:
 
@@ -209,12 +212,30 @@ Set the `--set_cluster_threshold` parameter to allow manual cluster hamming dist
 --set_cluster_threshold --cluster_threshold 0.14
 ```
 
-### Only define clones
+### `--cluster_threshold`
 
-In some occasions you might just  want to run the pipeline to define clones for  some  samples for which you have already run the rest of the steps. For example, after pulling the results for the same patient together. In this case, run the pipeline setting the `--define_clones_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tsv` as follows:
+Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter as follows:
 
 ```bash
---define_clones_only --changeo_tsv 'path/to/changeo/tables/*.tab'
+--set_cluster_threshold --cluster_threshold 0.14
+```
+
+## Downstream analysis
+
+### `--downstream_only`
+
+In some occasions you might just  want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:
+
+```bash
+--downstream_only --changeo_tables "path/to/changeo/tables/*.tab"
+```
+
+### `--changeo_tables`
+
+In some occasions you might just  want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:
+
+```bash
+--downstream_only --changeo_tables "path/to/changeo/tables/*.tab"
 ```
 
 ## Job Resources

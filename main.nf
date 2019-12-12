@@ -38,9 +38,14 @@ def helpMessage() {
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
     
-    Index file
+    Index file:
       --index_file                  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
       --umi_position                If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, speciffy position (R1/R2).
+    
+    Repertoire downstream analysis:
+      --downstream_only             If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
+      --changeo_tables              Provide Changeo table in '.tsv' if only downstream analysis is desired.
+      --skipDownstream              Skip downstream clonal and repertoire analysis steps.
 
     Other options:
       --outdir                      The output directory where the results will be saved
