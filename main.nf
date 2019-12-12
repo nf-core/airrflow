@@ -716,7 +716,7 @@ process igblast_filter {
 //Merge tables belonging to the same patient
 process merge_tables{
     tag "merge tables"
-    publishDir "${params.outdir}/shazam/$source", mode: 'copy'
+    publishDir "${params.outdir}/genotyping/$source", mode: 'copy'
 
     input:
     set source, id, file(tab) from ch_for_merge.groupTuple()
@@ -814,7 +814,7 @@ process assign_clones{
 //Reconstruct germline sequences
 process germline_sequences{
     tag "${id}"
-    publishDir "${params.outdir}/Sequences_with_germlines/$id", mode: 'copy',
+    publishDir "${params.outdir}/germlines/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf(".fasta") > 0) "fasta/$filename"
             else if (filename.indexOf(".log") > 0) null
