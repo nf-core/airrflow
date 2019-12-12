@@ -18,7 +18,10 @@
     * [`--metadata`](#--metadata)
     * [`--cprimers`](#--cprimers)
     * [`--vprimers`](#--vprimers)
+  * [UMI handling](#umi-handling)
     * [`--index_file`](#--index_file)
+    * [`--umi_position`](#--umi_position)
+    * [`--umi_length`](#--umi_length)
 * [Reference Databases](#reference-databases)
   * [`--igblast_base`](#--igblast_base)
   * [`--imgtdb_base`](#--imgtdb_base)
@@ -122,13 +125,13 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 ### Input files
 
-Use this to specify the location of your input files. Three input files are required for running the pipeline: a metadata sheet, the a fasta file containing the primer sequences for the C-region genes (cprimers) and a fasta file containing the primer sequences for the V-region genes (vprimers). This pipeline was originally designed for a special MiSEQ sequencing read setup requiring 3 fastq files: R1 (250bp), R2 (250bp), and I1 (14bp).
+Use this to specify the location of your input files. Three input files are required for running the pipeline: a metadata sheet, the a fasta file containing the primer sequences for the C-region genes (cprimers) and a fasta file containing the primer sequences for the V-region genes (vprimers). This pipeline was originally designed for a special MiSEQ sequencing read setup requiring 3 fastq files: R1, R2, and I1.
 
 * R1: C-Primer + V(D)J
 * R2: V-Primer + V(D)J
-* I1: Illumina Index (6bp) + UMI (8bp)
+* I1: Illumina Index + UMI
 
-The pipeline has been expanded to be able to process data where the UMI and index files are incorporated into the R1 read fastq files (see section `--index_file`)
+The pipeline has been expanded to be able to process data where the UMI and index files are incorporated into the R1 read fastq files (see section `UMI handling`)
 
 #### `--metadata`
 
@@ -172,12 +175,34 @@ Path to fasta file containing your C-primer sequences. Specify like this:
 --cprimers 'path/to/cprimers.fasta'
 ```
 
-#### `--index_file``
+### UMI handling
+
+The pipeline requires UMI barcodes for identifying unique
+transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, 
+set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.
+
+#### `--index_file`
 
 Indicate if Illumina indices and UMI barcodes are provided in a separate fastq file (index_file true). If Illumina indices and UMI barcodes are integrated into R1 reads, leave the default `--index_file false`.
 
 ```bash
 --index_file true
+```
+
+#### `--umi_position`
+
+If provided at the start of the R1 or R2 reads, set the `--umi_position` to R1 (default) or R2:
+
+```bash
+--umi_position R1
+````
+
+#### `--umi_length`
+
+Specify the length of the UMI barcodes:
+
+```bash
+--umi_length 8
 ```
 
 ## Reference databases
