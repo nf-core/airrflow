@@ -19,10 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#51](https://github.com/nf-core/bcellmagic/issues/51) - Fixed MaskPrimers bug
 * [#45](https://github.com/nf-core/bcellmagic/issues/45) - Fixed UMI reading from R1 or R2 & UMI length
 * [#57](https://github.com/nf-core/bcellmagic/issues/57) - Improved results directory organization
+* [#55](https://github.com/nf-core/bcellmagic/issues/55) - Dropped Singularity file
 
 ### `Dependencies`
 
 ### `Deprecated`
+
 
 ## [1.1.0] - 2019-11-06 - "Wingardium Leviosa"
 
