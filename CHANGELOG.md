@@ -3,16 +3,16 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] - 2019-11-XX -
+## [1.2.0] - 2019-12-13 - "Riddikulus"
 
 ### `Added`
 
-* Handling of barcodes that are already merged to R1 or R2 reads
+* Handle of barcodes that are already merged to R1 or R2 reads
 * Validate inputs and cluster threshold
 * `--downstream_only` feature
-* Handling of UMIs of different lenghts
+* Handle of UMIs of different lenghts
 * `--skipDownstream` feature
-* Added github actions ci testing
+* Add github actions ci testing
 
 ### `Fixed`
 
@@ -24,7 +24,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Dependencies`
 
 ### `Deprecated`
-
 
 ## [1.1.0] - 2019-11-06 - "Wingardium Leviosa"
 
