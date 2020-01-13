@@ -30,6 +30,7 @@
   * [`--cluster_threshold`](#--cluster_threshold)
 * [Downstream analysis](#Downstream-analysis)
   * [`--downstream_only`](#--downstream_only)
+  * [`--changeo_tables`](#--changeo_tables)
   * [`--skipDownstream`](#--skipDownstream)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
@@ -261,6 +262,10 @@ In some occasions you might just  want to run the pipeline for the clonal analys
 ```bash
 --downstream_only --changeo_tables "path/to/changeo/tables/*.tab"
 ```
+
+### `--skipDownstream`
+
+Skip downstream analysis (clonal analysis and repertoire analysis) by setting this flag.
 
 ## Job Resources
 
