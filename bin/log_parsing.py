@@ -20,10 +20,6 @@ processes = ["filter_by_sequence_quality",
 # Path of logs will be:
 # process_name/sample_name_command_log.txt
 
-# How to modify for log parsing in nextflow pipeline:
-# take all log files as input
-# output parsed table that will be published as PublishDir.
-
 df_process_list = []
 
 for process in processes:
@@ -355,7 +351,7 @@ df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
 
 #incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")
-metadata = metadata.drop(['R1', 'R2', 'I1'], axis=1)
+metadata = metadata[['ID', 'Source', 'Treatment', 'Extraction_time', 'Population']]
 logs_metadata = metadata.merge(df_final_table, left_on='ID', right_on='Sample')
 logs_metadata = logs_metadata.drop(['Sample'], axis=1)
 logs_metadata.to_csv(path_or_buf="Table_sequences_process.tsv", sep='\t', header=True, index=False)

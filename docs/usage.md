@@ -18,13 +18,20 @@
     * [`--metadata`](#--metadata)
     * [`--cprimers`](#--cprimers)
     * [`--vprimers`](#--vprimers)
+  * [UMI handling](#umi-handling)
     * [`--index_file`](#--index_file)
+    * [`--umi_position`](#--umi_position)
+    * [`--umi_length`](#--umi_length)
 * [Reference Databases](#reference-databases)
   * [`--igblast_base`](#--igblast_base)
   * [`--imgtdb_base`](#--imgtdb_base)
 * [Define clones](#Define-clones)
-  * [Manually set cluster threshold](#manually-set-cluster-threshold)
-  * [Only define clones](#only-define-clones)
+  * [`--set_cluster_threshold`](#--set_cluster_threshold)
+  * [`--cluster_threshold`](#--cluster_threshold)
+* [Downstream analysis](#Downstream-analysis)
+  * [`--downstream_only`](#--downstream_only)
+  * [`--changeo_tables`](#--changeo_tables)
+  * [`--skipDownstream`](#--skipDownstream)
 * [Job Resources](#job-resources)
 * [Automatic resubmission](#automatic-resubmission)
 * [Custom resource requests](#custom-resource-requests)
@@ -119,13 +126,13 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 ### Input files
 
-Use this to specify the location of your input files. Three input files are required for running the pipeline: a metadata sheet, the a fasta file containing the primer sequences for the C-region genes (cprimers) and a fasta file containing the primer sequences for the V-region genes (vprimers). This pipeline was originally designed for a special MiSEQ sequencing read setup requiring 3 fastq files: R1 (250bp), R2 (250bp), and I1 (14bp).
+Use this to specify the location of your input files. Three input files are required for running the pipeline: a metadata sheet, the a fasta file containing the primer sequences for the C-region genes (cprimers) and a fasta file containing the primer sequences for the V-region genes (vprimers). This pipeline was originally designed for a special MiSEQ sequencing read setup requiring 3 fastq files: R1, R2, and I1.
 
 * R1: C-Primer + V(D)J
 * R2: V-Primer + V(D)J
-* I1: Illumina Index (6bp) + UMI (8bp)
+* I1: Illumina Index + UMI
 
-The pipeline has been expanded to be able to process data where the UMI and index files are incorporated into the R1 read fastq files (see section `--index_file`)
+The pipeline has been expanded to be able to process data where the UMI and index files are incorporated into the R1 read fastq files (see section `UMI handling`)
 
 #### `--metadata`
 
@@ -169,12 +176,33 @@ Path to fasta file containing your C-primer sequences. Specify like this:
 --cprimers 'path/to/cprimers.fasta'
 ```
 
-#### `--index_file``
+### UMI handling
+
+The pipeline requires UMI barcodes for identifying unique
+transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.
+
+#### `--index_file`
 
 Indicate if Illumina indices and UMI barcodes are provided in a separate fastq file (index_file true). If Illumina indices and UMI barcodes are integrated into R1 reads, leave the default `--index_file false`.
 
 ```bash
 --index_file true
+```
+
+#### `--umi_position`
+
+If provided at the start of the R1 or R2 reads, set the `--umi_position` to R1 (default) or R2:
+
+```bash
+--umi_position R1
+````
+
+#### `--umi_length`
+
+Specify the length of the UMI barcodes:
+
+```bash
+--umi_length 8
 ```
 
 ## Reference databases
@@ -199,9 +227,9 @@ Path to imgt downloaded database. Set as follows:
 
 ## Define clones
 
-By default the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment and junction lenght. Additionally, the similarity of the junction region sequences  will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters as follows:
+By default the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment and junction length. Additionally, the similarity of the junction region sequences  will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters as follows:
 
-### Manually set cluster threshold
+### `--set_cluster_threshold`
 
 Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter as follows:
 
@@ -209,13 +237,35 @@ Set the `--set_cluster_threshold` parameter to allow manual cluster hamming dist
 --set_cluster_threshold --cluster_threshold 0.14
 ```
 
-### Only define clones
+### `--cluster_threshold`
 
-In some occasions you might just  want to run the pipeline to define clones for  some  samples for which you have already run the rest of the steps. For example, after pulling the results for the same patient together. In this case, run the pipeline setting the `--define_clones_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tsv` as follows:
+Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter as follows:
 
 ```bash
---define_clones_only --changeo_tsv 'path/to/changeo/tables/*.tab'
+--set_cluster_threshold --cluster_threshold 0.14
 ```
+
+## Downstream analysis
+
+### `--downstream_only`
+
+In some occasions you might just  want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:
+
+```bash
+--downstream_only --changeo_tables "path/to/changeo/tables/*.tab"
+```
+
+### `--changeo_tables`
+
+In some occasions you might just  want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:
+
+```bash
+--downstream_only --changeo_tables "path/to/changeo/tables/*.tab"
+```
+
+### `--skipDownstream`
+
+Skip downstream analysis (clonal analysis and repertoire analysis) by setting this flag.
 
 ## Job Resources
 

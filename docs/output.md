@@ -8,17 +8,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
 * [FastQC](#fastqc) - read quality control
-* [Filter sequence quality](#filter-sequence-quality) - filter sequences by quality
-* [Mask primers](#mask-primers) - Masking primers
-* [Pair mates](#pair-mates) - Pairing sequence mates.
-* [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
-* [Build consensus](#build-UMI-consensus) - Build UMI consensus
-* [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
-* [Assemble mates](#assemble-mates) - Assemble sequence mates.
-* [Remove duplicates](#remove-duplicates) - Remove read duplicates.
-* [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 reads assigned.
-* [Assign genes with IgBlast](#assign-genes-with-igblast)
-* [Determining genotype and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
+* [Preprocessing](#preprocessing)
+  * [Filter sequence quality](#filter-sequence-quality) - filter sequences by quality
+  * [Mask primers](#mask-primers) - Masking primers
+  * [Pair mates](#pair-mates) - Pairing sequence mates.
+  * [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
+  * [Build consensus](#build-UMI-consensus) - Build UMI consensus
+  * [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
+  * [Assemble mates](#assemble-mates) - Assemble sequence mates.
+  * [Remove duplicates](#remove-duplicates) - Remove read duplicates.
+  * [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 reads assigned.
+  * [IgBlast](#igblast)
+* [Genotyping](#determining-genotype-and-hamming-distance-threshold)
 * [Defining clones](#defining-clones) - Defining clonal B-cell populations
 * [Reconstructing germlines](#reconstructing-germlines) - Reconstruct gene calls of germline sequences
 * [Clonal analysis](#clonal-analysis) - Clonal analysis.
@@ -41,11 +42,13 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 * `zips/sample_fastqc.zip`
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
-## Filter sequence quality
+## Preprocessing
+
+### Filter sequence quality
 
 Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/FilterSeq.html) from the Presto Immcantation toolset. The default quality threshold is 20.
 
-**Output directory: `results/filter_by_sequence_quality`**
+**Output directory: `results/preprocessing/filter_by_sequence_quality`**
 
 For each analyzed sample there is a subfolder containing:
 
@@ -54,44 +57,44 @@ For each analyzed sample there is a subfolder containing:
 * `*.tab`
   * table containing read ID and quality.
 
-## Mask primers
+### Mask primers
 
 Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/version-0.5.11/tools/MaskPrimers.html) of the Presto Immcantation toolset.
 
-**Output directory: `results/mask_primers`**
+**Output directory: `results/preprocessing/mask_primers`**
 
 For each analyzed sample there is a subfolder containing:
 
 * `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
-## Pair mates
+### Pair mates
 
 Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the Presto Immcantation toolset.
 
-**Output directory: `results/pair_sequences`**
+**Output directory: `results/preprocessing/pair_sequences`**
 
 For each analyzed sample there is a subfolder containing:
 
 * `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
-## Cluster sets
+### Cluster sets
 
 Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/version-0.5.11/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
 
-**Output directory: `results/cluster_sets`**
+**Output directory: `results/preprocessing/cluster_sets`**
 
 For each analyzed sample there is a subfolder containing:
 
 * `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
-## Build UMI consensus
+### Build UMI consensus
 
 Build consensus of UMI from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/version-0.5.11/tools/BuildConsensus.html).
 
-**Output directory: `results/build_consensus`**
+**Output directory: `results/preprocessing/build_consensus`**
 
 For each analyzed sample there is a subfolder containing:
 
@@ -100,22 +103,22 @@ For each analyzed sample there is a subfolder containing:
 * `*.tab`
   * Parsed log containing the sequence barcodes and primers info
 
-## Re-pair mates
+### Re-pair mates
 
 Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the Presto Immcantation toolset.
 
-**Output directory: `results/repair_mates`**
+**Output directory: `results/preprocessing/repair_mates`**
 
 For each analyzed sample there is a subfolder containing:
 
 * `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
-## Assemble mates
+### Assemble mates
 
 Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/version-0.5.11/tools/AssemblePairs.html) from the Presto Immcantation toolset.
 
-**Output directory: `results/assemble_pairs`**
+**Output directory: `results/preprocessing/assemble_pairs`**
 
 For each analyzed sample there is a subfolder containing:
 
@@ -124,11 +127,11 @@ For each analyzed sample there is a subfolder containing:
 * `sample_assemble_pairs_logs.tab`
   * Parsed log contaning the sequence barcodes and assemble pairs.
 
-## Remove duplicates
+### Remove duplicates
 
 Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/CollapseSeq.html) from the Presto Immcantation toolset.
 
-**Output directory: `results/deduplicate`**
+**Output directory: `results/preprocessing/deduplicate`**
 
 For each analyzed sample there is a subfolder containing:
 
@@ -137,22 +140,22 @@ For each analyzed sample there is a subfolder containing:
 * `sample_deduplicate_logs.tab`
   * Parsed log contaning the sequence barcodes and deduplicated pairs.
 
-## Filter sequences for at least 2 representative
+### Filter sequences for at least 2 representative
 
 Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the Presto Immcantation toolset.
 
-**Output directory: `results/filter_representative_2`**
+**Output directory: `results/preprocessing/filter_representative_2`**
 
 For each analyzed sample there is a subfolder containing:
 
 * `sample_command_log.txt`
   * Log of the process that will be parsed to generate a report.
 
-## Assign genes with IgBlast
+### IgBlast
 
 Assign genes from the IGblast database using [AssignGenes](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#running-igblast) and generating a table with [MakeDB](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#processing-the-output-of-igblast). Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html). Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ConvertDb.html?highlight=convertdb) tool.
 
-**Output directory: `results/igblast`**
+**Output directory: `results/preprocessing/igblast`**
 
 For each analyzed sample there is a subfolder containing:
 
@@ -167,7 +170,7 @@ For each analyzed sample there is a subfolder containing:
 
 Determining genotype and the hamming distance threshold of the junction regions for clonal determination using the [tigGER](https://tigger.readthedocs.io/en/0.3.1/) and [Shazam](https://shazam.readthedocs.io/en/version-0.1.11_a/).
 
-**Output directory: `results/shazam`**
+**Output directory: `results/genotyping`**
 
 For each subject (patient) there is a subfolder containing:
 
@@ -182,11 +185,11 @@ For each subject (patient) there is a subfolder containing:
 * `v_genotype.fasta`
   * Fasta file containing the full sequences for all V genes assigned to the patient.
 
-## Defining clones
+## Clone assignment
 
 Assigning clones to the sequences obtained from IgBlast with the [DefineClones](https://changeo.readthedocs.io/en/version-0.4.5/tools/DefineClones.html?highlight=DefineClones) Immcantation tool.
 
-**Output directory: `results/define_clones`**
+**Output directory: `results/clone_assignment`**
 
 For each subject (patient) there is a subfolder containing:
 
@@ -199,7 +202,7 @@ For each subject (patient) there is a subfolder containing:
 
 Reconstructing the germline sequences with the [CreateGermlines](https://changeo.readthedocs.io/en/version-0.4.5/tools/CreateGermlines.html#creategermlines) Immcantation tool.
 
-**Output directory: `results/create_germlines`**
+**Output directory: `results/germlines`**
 
 For each subject (patient) there is a subfolder containing:
 
