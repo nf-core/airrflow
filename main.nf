@@ -828,7 +828,7 @@ process germline_sequences{
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
-    set val("$id"), file("${id}.tab") into ch_for_clonal_analysis
+    set val("$id"), file("${id}.tab") into ch_for_lineage_reconstruction
     file "${id}.tab"
     file "${id}_command_log.txt" into create_germlines_log
 
@@ -839,6 +839,34 @@ process germline_sequences{
     """
     CreateGermlines.py -d ${clones} -g dmask --cloned -r $geno_fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --log ${clones.baseName}.log -o "${id}.tab" > "${id}_command_log.txt"
     ParseLog.py -l "${clones.baseName}.log" -f ID V_CALL D_CALL J_CALL
+    """
+}
+
+//Lineage reconstruction
+process lineage_reconstruction{
+    tag "${id}"
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf(".graphml") > 0) "$filename"
+            else if (filename.indexOf(".tsv") > 0) "$filename"
+            else if (filename.indexOf(".svg") > 0) "clone_tree_plots/$filename"
+            else null
+        }
+    
+    input:
+    set val(id), file(clones) from ch_for_lineage_reconstruction
+
+    output:
+    set val("$id"), file("${id}.tab") into ch_for_clonal_analysis
+
+    when:
+    !params.downstream_only
+
+    script:
+    """
+    which dnapars > dnapars_exec.txt
+    lineage_reconstruction.R
+    merge_graphs.sh
     """
 }
 
@@ -864,9 +892,7 @@ process clonal_analysis{
 
     script:
     """
-    which dnapars > dnapars_exec.txt
     clonal_analysis.R
-    merge_graphs.sh
     zip -r clonal_analysis.zip clonal_analysis
     """
 
