@@ -1,3 +1,4 @@
+
 name: bcellmagic branch protection
 # This workflow is triggered on PRs to master branch on the repository
 on:
@@ -10,7 +11,6 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       # PRs are only ok if coming from an nf-core dev branch
-      - uses: actions/checkout@v1
       - name: Check PRs
         run: |
-        { [[ $(git remote get-url origin) == *nf-core/bcellmagic ]] && [[ ${GITHUB_HEAD_REF} = "dev" ]]; } || [[ ${GITHUB_HEAD_REF} == "patch" ]]
+          { [[ $(git remote get-url origin) == *nf-core/bcellmagic ]] && [[ ${GITHUB_HEAD_REF} = "dev" ]]; } || [[ ${GITHUB_HEAD_REF} == "patch" ]
