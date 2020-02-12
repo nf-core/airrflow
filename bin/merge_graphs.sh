@@ -1,5 +1,5 @@
 #!/bin/bash
-DIR="clonal_analysis/Clone_lineage/Graphml_trees"   # input files
+DIR="lineage_reconstruction/Graphml_trees"   # input files
 
 IDX=0
 for FILE in ${DIR}/*.txt       # get the file names you want to work on
