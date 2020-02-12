@@ -45,7 +45,7 @@ def helpMessage() {
     Repertoire downstream analysis:
       --downstream_only             If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
       --changeo_tables              Provide Changeo table in '.tsv' if only downstream analysis is desired.
-      --skipDownstream              Skip downstream clonal and repertoire analysis steps.
+      --skip_downstream              Skip downstream clonal and repertoire analysis steps.
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -888,7 +888,7 @@ process clonal_analysis{
     file "clonal_analysis.zip"
 
     when:
-    !params.skipDownstream
+    !params.skip_downstream
 
     script:
     """
@@ -917,7 +917,7 @@ process repertoire_comparison{
     file "repertoire_comparison.zip"
 
     when:
-    !params.skipDownstream
+    !params.skip_downstream
 
     script:
     """
