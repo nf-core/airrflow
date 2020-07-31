@@ -6,23 +6,22 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - conda-forge::python=3.7.3
+  - conda-forge::python
   - conda-forge::markdown=3.1.1
   - conda-forge::pymdown-extensions=6.0
   - conda-forge::pygments=2.5.2
-  - bioconda::fastqc=0.11.8
-  - bioconda::multiqc=1.7
   - muscle=3.8.1551
   - vsearch=2.11.1
-  - fastqc=0.11.8
-  - multiqc=1.7
-  - matplotlib=3.0.3
+  - bioconda::fastqc=0.11.8
+  - bioconda::multiqc=1.9
+  #- matplotlib=3.0.3
   - cd-hit=4.8.1
   - blast=2.7.1
   - igblast=1.10.0
   - phylip=3.697
   - tbl2asn=25.6
   - airr=1.2.1
+  - conda-forge::r-base=3.5.1
   - r-airr=1.2.0
   - presto=0.5.10
   - changeo=0.4.5
@@ -32,7 +31,8 @@ dependencies:
   - bioconda::biopython=1.70
   - conda-forge::unzip=6.0
   - conda-forge::zip=3.0
-  - conda-forge::r-markdown=0.9
+  - conda-forge::r-base
+  #- conda-forge::r-markdown=0.9
   - conda-forge::r-dplyr=0.8.3
   - conda-forge::r-data.table=1.12.2
   - conda-forge::r-igraph=1.2.4.1
