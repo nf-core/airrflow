@@ -26,12 +26,12 @@ dependencies:
   - presto=0.5.10
   - changeo=0.4.5
   - conda-forge::r-alakazam=0.2.11
-  - r-shazam=0.1.10
-  - r-tigger=0.3.1
+  - bioconda::r-shazam=0.1.11
+  - bioconda::r-tigger=0.3.1
   - bioconda::biopython=1.70
   - conda-forge::unzip=6.0
   - conda-forge::zip=3.0
-  - conda-forge::r-base
+  - conda-forge::r-base=3.5.1
   - conda-forge::r-dplyr=0.8.3
   - conda-forge::r-data.table=1.12.2
   - conda-forge::r-igraph=1.2.4.1
