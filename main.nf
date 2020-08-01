@@ -20,10 +20,9 @@ def helpMessage() {
     nextflow run nf-core/bcellmagic --reads '*_R{1,2}.fastq.gz' -profile standard,docker
 
     Mandatory arguments:
-      --cprimers                    Path to CPrimers FASTA File
-      --vprimers                    Path to VPrimers FASTA File
-      --metadata                    Path to Metadata TSV
-      --umi_length                  Length of UMI barcodes
+      --cprimers                    Path to C-region primers FASTA file
+      --vprimers                    Path to V-region primers FASTA file
+      --input                       Path to input TSV file
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
@@ -37,9 +36,10 @@ def helpMessage() {
       --set_cluster_threshold       Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           Once set_cluster_threshold is true, set cluster_threshold value (float).
     
-    Index file:
+    UMI barcode handling:
       --index_file                  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
       --umi_position                If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, speciffy position (R1/R2).
+      --umi_length                  Length of UMI barcodes.
     
     Repertoire downstream analysis:
       --downstream_only             If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
@@ -113,9 +113,9 @@ if( params.imgtdb_base ){
 
 //Validate inputs
 if (!params.downstream_only){
-    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide c-region primers fasta file with the '--cprimers' option." }
-    if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide v-region primers fasta file with the '--vprimers' option." }
-    if (params.metadata)  { ch_metadata = file(params.metadata, checkIfExists: true) } else { exit 1, "Please provide metadata file!" }
+    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide C-region primers fasta file with the '--cprimers' option." }
+    if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide V-region primers fasta file with the '--vprimers' option." }
+    if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata!" }
 } else {
     ch_cprimers_fasta = Channel.empty()
     ch_vprimers_fasta = Channel.empty()
@@ -143,7 +143,7 @@ if (params.downstream_only){
  */
 
 if (!params.downstream_only){
-    Channel.fromPath("${params.metadata}")
+    Channel.fromPath("${params.input}")
             .ifEmpty{exit 1, "Please provide metadata file!"}
             .set { ch_metadata_file_for_process_logs }
 
@@ -174,7 +174,7 @@ if(workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Pipeline Name']  = 'nf-core/bcellmagic'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
-summary['MetaData']        = params.metadata
+summary['Input']        = params.input
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time

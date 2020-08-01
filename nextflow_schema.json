@@ -11,20 +11,26 @@
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
             "required": [
-                "input"
+                "input",
+                "cprimers",
+                "vprimers"
             ],
             "properties": {
                 "input": {
                     "type": "string",
                     "fa_icon": "fas fa-dna",
-                    "description": "Input FastQ files.",
-                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nPlease note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`"
+                    "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
+                    "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. The file should include the following columns, separated with tabs, with exactly these header names:\n\n```bash\nID Source Treatment Extraction_time Population R1 R2 I1\nQMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sample_S8_L001_R2_001.fastq.gz sample_S8_L001_I1_001.fastq.gz\n```\n\nThis metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:\n\n* ID: sample ID.\n* Source: patient or organism code.\n* Treatment: treatment condition applied to the sample.\n* Extraction_time: time of cell extraction for the sample.\n* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).\n* R1: path to fastq file with first mates of paired-end sequencing.\n* R2: path to fastq file with second mates of paired-end sequencing.\n* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column)\n\nSpecify the path for your input file like this:\n\n```bash\n--input 'path/to/metadata/metadata_sheet.tsv'\n```"
                 },
-                "single_end": {
-                    "type": "boolean",
-                    "description": "Specifies that the input is single-end reads.",
-                    "fa_icon": "fas fa-align-center",
-                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                "cprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containing the C-region primer sequences."
+                },
+                "vprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containinc the V-region primer sequences."
                 },
                 "outdir": {
                     "type": "string",
@@ -41,24 +47,109 @@
                 }
             }
         },
+        "databases_cache": {
+            "title": "Databases cache",
+            "type": "object",
+            "description": "Define the paths to the igblast and IMGT databases if you have them cached.",
+            "default": "",
+            "properties": {
+                "igblast_base": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "If it is not provided, the database will be newly downloaded."
+                },
+                "imgtdb_base": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "If it is not provided, the database will be newly downloaded."
+                },
+                "saveDBs": {
+                    "type": "boolean",
+                    "description": "Set to true if it is desired to save the databases locally.."
+                }
+            },
+            "help_text": ""
+        },
+        "umi_barcode_handling": {
+            "title": "UMI barcode handling",
+            "type": "object",
+            "description": "Define how UMI barcodes should be treated.",
+            "default": "",
+            "properties": {
+                "index_file": {
+                    "type": "boolean",
+                    "description": "Indicate if UMI indices are recorded in a separate index file.",
+                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter."
+                },
+                "umi_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
+                    "help_text": "The pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter to R1 or R2, respectively.",
+                    "enum": [
+                        "R1",
+                        "R2"
+                    ]
+                },
+                "umi_length": {
+                    "type": "integer",
+                    "description": "UMI barcode length in nucleotides."
+                }
+            },
+            "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
+            "required": [
+                "umi_length"
+            ]
+        },
+        "clustering_threshold_definition": {
+            "title": "Clustering threshold definition",
+            "type": "object",
+            "description": "Define how the B-cell clonal trees should be calculated.",
+            "default": "",
+            "properties": {
+                "set_cluster_threshold": {
+                    "type": "boolean",
+                    "description": "Set to true if to manually adjust the clustering threshold for cell clones.",
+                    "help_text": "Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+                },
+                "cluster_threshold": {
+                    "type": "number",
+                    "default": 0.14,
+                    "description": "Set the clustering threshold Hamming distance value.",
+                    "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+                }
+            },
+            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+        },
+        "downstream_options": {
+            "title": "Downstream options",
+            "type": "object",
+            "description": "Define downstream analysis options.",
+            "default": "",
+            "properties": {
+                "downstream_only": {
+                    "type": "boolean",
+                    "description": "Set to true if only downstream analysis is desired, starting from ChangeO tables.",
+                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```"
+                },
+                "skip_downstream": {
+                    "type": "boolean",
+                    "description": "Set to true if no downstream analysis is desired"
+                },
+                "changeo_tables": {
+                    "type": "string",
+                    "description": "Provide ChangeO tables if only downstream analysis is desired.",
+                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```"
+                }
+            },
+            "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution"
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Options for the reference genome indices used to align reads.",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "fa_icon": "fas fa-font",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "If you have no genome reference available, the pipeline can build one using a FASTA file. This requires additional time and resources, so it's better to use a pre-build index if possible."
-                },
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
@@ -71,7 +162,8 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
+                    "default": true
                 }
             }
         },
@@ -242,6 +334,18 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/databases_cache"
+        },
+        {
+            "$ref": "#/definitions/umi_barcode_handling"
+        },
+        {
+            "$ref": "#/definitions/clustering_threshold_definition"
+        },
+        {
+            "$ref": "#/definitions/downstream_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
