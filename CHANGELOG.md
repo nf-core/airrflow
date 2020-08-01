@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-* Template update to nf-core tools v1.10.2
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): Template update to nf-core tools v1.10.2
 
 ### `Fixed`
 
 ### `Dependencies`
 
 ### `Deprecated`
+
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): `--SkipDownstream` param changed to `--skip_downstream`
 
 ## [1.2.0] - 2020-01-14 - "Riddikulus"
 
