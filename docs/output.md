@@ -251,8 +251,6 @@ Parsing the logs from the previous processes.
 
 ## MultiQC
 
-[MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
-
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
 The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability.
