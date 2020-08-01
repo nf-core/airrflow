@@ -32,7 +32,6 @@ dependencies:
   - conda-forge::unzip=6.0
   - conda-forge::zip=3.0
   - conda-forge::r-base
-  #- conda-forge::r-markdown=0.9
   - conda-forge::r-dplyr=0.8.3
   - conda-forge::r-data.table=1.12.2
   - conda-forge::r-igraph=1.2.4.1
