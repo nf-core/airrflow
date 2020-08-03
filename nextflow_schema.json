@@ -1,0 +1,363 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/bcellmagic/master/nextflow_schema.json",
+    "title": "nf-core/bcellmagic pipeline parameters",
+    "description": "B cell repertoire analysis pipeline with immcantation framework.",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": [
+                "input",
+                "cprimers",
+                "vprimers"
+            ],
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
+                    "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. The file should include the following columns, separated with tabs, with exactly these header names:\n\n```bash\nID Source Treatment Extraction_time Population R1 R2 I1\nQMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sample_S8_L001_R2_001.fastq.gz sample_S8_L001_I1_001.fastq.gz\n```\n\nThis metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:\n\n* ID: sample ID.\n* Source: patient or organism code.\n* Treatment: treatment condition applied to the sample.\n* Extraction_time: time of cell extraction for the sample.\n* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).\n* R1: path to fastq file with first mates of paired-end sequencing.\n* R2: path to fastq file with second mates of paired-end sequencing.\n* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column)\n\nSpecify the path for your input file like this:\n\n```bash\n--input 'path/to/metadata/metadata_sheet.tsv'\n```"
+                },
+                "cprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containing the C-region primer sequences."
+                },
+                "vprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containinc the V-region primer sequences."
+                },
+                "outdir": {
+                    "type": "string",
+                    "description": "The output directory where the results will be saved.",
+                    "default": "./results",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            }
+        },
+        "databases_cache": {
+            "title": "Databases cache",
+            "type": "object",
+            "description": "Define the paths to the igblast and IMGT databases if you have them cached.",
+            "default": "",
+            "properties": {
+                "igblast_base": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "If it is not provided, the database will be newly downloaded."
+                },
+                "imgtdb_base": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "If it is not provided, the database will be newly downloaded."
+                },
+                "saveDBs": {
+                    "type": "boolean",
+                    "description": "Set to true if it is desired to save the databases locally.."
+                }
+            },
+            "help_text": ""
+        },
+        "umi_barcode_handling": {
+            "title": "UMI barcode handling",
+            "type": "object",
+            "description": "Define how UMI barcodes should be treated.",
+            "default": "",
+            "properties": {
+                "index_file": {
+                    "type": "boolean",
+                    "description": "Indicate if UMI indices are recorded in a separate index file.",
+                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter."
+                },
+                "umi_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
+                    "help_text": "The pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter to R1 or R2, respectively.",
+                    "enum": [
+                        "R1",
+                        "R2"
+                    ]
+                },
+                "umi_length": {
+                    "type": "integer",
+                    "description": "UMI barcode length in nucleotides."
+                }
+            },
+            "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
+            "required": [
+                "umi_length"
+            ]
+        },
+        "clustering_threshold_definition": {
+            "title": "Clustering threshold definition",
+            "type": "object",
+            "description": "Define how the B-cell clonal trees should be calculated.",
+            "default": "",
+            "properties": {
+                "set_cluster_threshold": {
+                    "type": "boolean",
+                    "description": "Set to true if to manually adjust the clustering threshold for cell clones.",
+                    "help_text": "Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+                },
+                "cluster_threshold": {
+                    "type": "number",
+                    "default": 0.14,
+                    "description": "Set the clustering threshold Hamming distance value.",
+                    "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+                }
+            },
+            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+        },
+        "downstream_options": {
+            "title": "Downstream options",
+            "type": "object",
+            "description": "Define downstream analysis options.",
+            "default": "",
+            "properties": {
+                "downstream_only": {
+                    "type": "boolean",
+                    "description": "Set to true if only downstream analysis is desired, starting from ChangeO tables.",
+                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```"
+                },
+                "skip_downstream": {
+                    "type": "boolean",
+                    "description": "Set to true if no downstream analysis is desired"
+                },
+                "changeo_tables": {
+                    "type": "string",
+                    "description": "Provide ChangeO tables if only downstream analysis is desired.",
+                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```"
+                }
+            },
+            "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution"
+        },
+        "reference_genome_options": {
+            "title": "Reference genome options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Options for the reference genome indices used to align reads.",
+            "properties": {
+                "igenomes_base": {
+                    "type": "string",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "s3://ngi-igenomes/igenomes/",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
+                    "default": true
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-question-circle"
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "hidden": true,
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "mov"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Workflow name.",
+                    "fa_icon": "fas fa-fingerprint",
+                    "hidden": true,
+                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                },
+                "email_on_fail": {
+                    "type": "string",
+                    "description": "Email address for completion summary, only when pipeline fails.",
+                    "fa_icon": "fas fa-exclamation-triangle",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "hidden": true,
+                    "help_text": "This works exactly as with `--email`, except emails are only sent if the workflow is not successful."
+                },
+                "plaintext_email": {
+                    "type": "boolean",
+                    "description": "Send plain-text email instead of HTML.",
+                    "fa_icon": "fas fa-remove-format",
+                    "hidden": true,
+                    "help_text": "Set to receive plain-text e-mails instead of HTML formatted."
+                },
+                "max_multiqc_email_size": {
+                    "type": "string",
+                    "description": "File size limit when attaching MultiQC reports to summary emails.",
+                    "default": "25.MB",
+                    "fa_icon": "fas fa-file-upload",
+                    "hidden": true,
+                    "help_text": "If file generated by pipeline exceeds the threshold, it will not be attached."
+                },
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true,
+                    "help_text": "Set to disable colourful command line output and live life in monochrome."
+                },
+                "multiqc_config": {
+                    "type": "string",
+                    "description": "Custom config file to supply to MultiQC.",
+                    "fa_icon": "fas fa-cog",
+                    "hidden": true
+                },
+                "tracedir": {
+                    "type": "string",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true
+                }
+            }
+        },
+        "max_job_request_options": {
+            "title": "Max job request options",
+            "type": "object",
+            "fa_icon": "fab fa-acquisitions-incorporated",
+            "description": "Set the top limit for requested resources for any single job.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
+            "properties": {
+                "max_cpus": {
+                    "type": "integer",
+                    "description": "Maximum number of CPUs that can be requested    for any single job.",
+                    "default": 16,
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
+                },
+                "max_memory": {
+                    "type": "string",
+                    "description": "Maximum amount of memory that can be requested for any single job.",
+                    "default": "128.GB",
+                    "fa_icon": "fas fa-memory",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
+                },
+                "max_time": {
+                    "type": "string",
+                    "description": "Maximum amount of time that can be requested for any single job.",
+                    "default": "240.h",
+                    "fa_icon": "far fa-clock",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
+                }
+            }
+        },
+        "institutional_config_options": {
+            "title": "Institutional config options",
+            "type": "object",
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "properties": {
+                "custom_config_version": {
+                    "type": "string",
+                    "description": "Git commit id for Institutional configs.",
+                    "default": "master",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": "Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.\n\n```bash\n## Download and use config file with following git commit id\n--custom_config_version d52db660777c4bf36546ddb188ec530c3ada1b96\n```"
+                },
+                "custom_config_base": {
+                    "type": "string",
+                    "description": "Base directory for Institutional configs.",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "hidden": true,
+                    "help_text": "If you're running offline, nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option. For example:\n\n```bash\n## Download and unzip the config files\ncd /path/to/my/configs\nwget https://github.com/nf-core/configs/archive/master.zip\nunzip master.zip\n\n## Run the pipeline\ncd /path/to/my/data\nnextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/\n```\n\n> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "hostnames": {
+                    "type": "string",
+                    "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_url": {
+                    "type": "string",
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/databases_cache"
+        },
+        {
+            "$ref": "#/definitions/umi_barcode_handling"
+        },
+        {
+            "$ref": "#/definitions/clustering_threshold_definition"
+        },
+        {
+            "$ref": "#/definitions/downstream_options"
+        },
+        {
+            "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/institutional_config_options"
+        }
+    ]
+}

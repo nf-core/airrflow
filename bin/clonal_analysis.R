@@ -36,9 +36,9 @@ df_pat$SAMPLE <- as.factor(paste(df_pat$TREATMENT, df_pat$EXTRACT_TIME, df_pat$S
 df_pat$SAMPLE_POP <- as.factor(paste(df_pat$TREATMENT, df_pat$EXTRACT_TIME, df_pat$SOURCE, df_pat$POPULATION, sep="_"))
 
 
-############################
-# Clone chordplots
-############################
+#############################
+#  Clone chordplots
+#############################
 
 # Chordplot comparison time points per patient
 df_pat$TIME_POP <- as.factor(paste(df_pat$EXTRACT_TIME, df_pat$POPULATION, sep="_"))
@@ -344,69 +344,4 @@ clone_stats <- merge(x=clone_mean, y=clone_median, by.x = "sample", by.y = "row.
 clone_number_stats <- merge(x = clone_N, y=clone_stats, by.x = "SAMPLE_POP", by.y = "sample")
 colnames(clone_number_stats) <- c("Sample", "Number of clones", "Mean number of sequences per clone", "Median number of sequences per clone")
 write.table(clone_number_stats, file =paste(patdir_number,"/Clones_number_stats_population_", clones$PATIENT[1],"_",clones$TREATMENT[1], ".tsv", sep=""), sep = "\t", row.names = F, quote = F)
-
-
-##################
-# Clonal lineages
-#################
-
-# save clonal table
-countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
-write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
-
-# Restrict clonal tree size
-clones <- subset(countclones, SEQ_COUNT >= 2 & SEQ_COUNT < 1000)
-
-dnapars_exec_tab <- read.csv("dnapars_exec.txt", header=F)
-dnapars_exec <- as.character(dnapars_exec_tab[1,1])
-
-save_graph <- function(df_pat, clone_id){
-    print(paste0("Started processing clone:",clone_id))
-    sub_db_clone <- subset(df_pat, CLONE == clone_id)
-    sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
-    sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
-    sub_db_clone$SAMPLE_POP <- sapply(sub_db_clone$SAMPLE_POP, as.character)
-    sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
-    sub_db_clone$TREATMENT <- sapply(sub_db_clone$TREATMENT, as.character)
-    sub_db_clone$POPULATION <- sapply(sub_db_clone$POPULATION, as.character)
-    sub_db_clone$SOURCE <- sapply(sub_db_clone$SOURCE, as.character)
-    sub_db_clone$EXTRACT_TIME <- sapply(sub_db_clone$EXTRACT_TIME, as.character)
-    sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
-    
-    clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
-
-
-    graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
-    
-    #Modify graph and plot attributes
-    V(graph)$color <- "steelblue"
-    V(graph)$color[V(graph)$name == "Germline"] <- "black"
-    V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
-    V(graph)$label <- V(graph)$POPULATION
-
-    # Remove large default margins
-    par(mar=c(0, 0, 0, 0) + 0.1)
-    vsize = V(graph)$DUPCOUNT
-    vsize[is.na(vsize)] <- 1
-
-    # Save graph in graphML format
-    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
-
-    # Plot
-    svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
-    plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
-        vertex.label.color="black", vertex.size=(vsize/20 + 6))
-    legend("topleft", c("Germline", "Inferred", "Sample"), 
-        fill=c("black", "white", "steelblue"), cex=0.75)
-    dev.off()
-    
-}
-
-for (clone_id in clones$CLONE){
-    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
-                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
-                    warning=function(w) {print(paste0("Warning for clone:", clone_id))
-                                invokeRestart("muffleWarning")}), 
-            error = function(e) { print(paste0("Processed clone:", clone_id)) })
-}
 
