@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.3.0dev] - date
+
+### `Added`
+
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): Template update to nf-core tools v1.10.2
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): Added parameter json schema
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): `--SkipDownstream` param changed to `--skip_downstream`
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): `--metadata` param changed to `--input`
+
 ## [1.2.0] - 2020-01-14 - "Riddikulus"
 
 ### `Added`

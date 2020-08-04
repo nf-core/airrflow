@@ -3,9 +3,10 @@ work/
 data/
 results/
 .DS_Store
-tests/test_data
-runBcellmagic.sh
-.idea/
+tests/
+testing/
+testing*
 *.pyc
 node_modules/
 package-lock.json
+.idea/
