@@ -24,6 +24,26 @@ results         # Finished results (configurable, see below)
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
+### Input file
+
+The required input file is a TSV file with the following columns, including the exact same headers:
+
+```
+ID  Source  Treatment Extraction_time Population  R1  R2  I1
+QMKMK072AD  Patient_2 Drug_treatment  baseline  p sample_S8_L001_R1_001.fastq.gz  sample_S8_L001_R2_001.fastq.gz  sample_S8_L001_I1_001.fastq.gz
+```
+
+The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:
+
+* ID: sample ID, should be unique for each sample.
+* Source: patient or organism code.
+* Treatment: treatment condition applied to the sample.
+* Extraction_time: time of cell extraction for the sample.
+* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).
+* R1: path to fastq file with first mates of paired-end sequencing.
+* R2: path to fastq file with second mates of paired-end sequencing.
+* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column).
+
 ### Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
