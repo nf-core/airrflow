@@ -9,7 +9,7 @@
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
+nextflow run nf-core/bcellmagic -profile standard,docker --input metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
 ```
 
 For more information about the parameters, please refer the corresponding sections.
