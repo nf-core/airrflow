@@ -33,7 +33,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
     ```bash
-    nextflow run nf-core/bcellmagic -profile standard,docker --input metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta
+    nextflow run nf-core/bcellmagic -profile docker --input metasheet.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta
     ```
 
 See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
