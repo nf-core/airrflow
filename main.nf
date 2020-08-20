@@ -438,9 +438,9 @@ process mask_primers{
 }
 
 //Pair the R1 and R2
-process pair_seq{
+process pre_consensus_pair{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/pair_sequences/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/pair_post_consensus/$id", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -527,10 +527,10 @@ process build_consensus{
     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_consensus
 
     output:
-    set file("${umi.baseName}_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_post_consensus_pair
-    file "${umi.baseName}_R1.log"
+    set file("${r1.baseName}_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_post_consensus_pair
+    file "${r1.baseName}_R1.log"
     file "${r2.baseName}_R2.log"
-    file "${umi.baseName}_UMI_R1_table.tab"
+    file "${r1.baseName}_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
     file "${id}_command_log.txt" into build_consensus_log
 
@@ -539,16 +539,16 @@ process build_consensus{
 
     script:
     """
-    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1 --log ${umi.baseName}_UMI_R1.log > "${id}_command_log.txt"
-    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log >> "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
+    BuildConsensus.py -s $r1 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${r1.baseName}_R1 --log ${r1.baseName}_R1.log > "${id}_command_log.txt"
+    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log >> "${id}_command_log.txt"
+    ParseLog.py -l "${r1.baseName}_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
     """
 }
 
-//Re-pair UMI_R1+R2
-process repair{
+//Re-pair R1 and R2
+process post_consensus_pair{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/repair_mates/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/pair_mates_post_consensus/$id", mode: 'copy',
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -556,10 +556,10 @@ process repair{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_post_consensus_pair
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_post_consensus_pair
 
     output:
-    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_assembly
+    set file("*R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_assembly
     file "${id}_command_log.txt" into repair_log
 
     when:
@@ -567,13 +567,13 @@ process repair{
 
     script:
     """
-    PairSeq.py -1 $umi -2 $r2 --coord presto > "${id}_command_log.txt"
+    PairSeq.py -1 $r1 -2 $r2 --coord presto > "${id}_command_log.txt"
     """
 }
    
 
 //Assemble the mate pairs
-process assemble{
+process assemble_pairs{
     tag "${id}"
     publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: 'copy',
         saveAs: {filename ->
@@ -583,12 +583,12 @@ process assemble{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_assembly
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_assembly
 
     output:
-    set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
-    file "${umi.baseName}_UMI_R1_R2.log"
-    file "${umi.baseName}_UMI_R1_R2_table.tab"
+    set file("${r1.baseName}_R1_R2_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
+    file "${r1.baseName}_R1_R2.log"
+    file "${r1.baseName}_R1_R2_table.tab"
     file "${id}_command_log.txt" into assemble_log
 
     when:
@@ -596,8 +596,8 @@ process assemble{
 
     script:
     """
-    AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2 --log ${umi.baseName}_UMI_R1_R2.log > "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_UMI_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
+    AssemblePairs.py align -1 $r1 -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_R1_R2 --log ${umi.baseName}_R1_R2.log > "${id}_command_log.txt"
+    ParseLog.py -l "${umi.baseName}_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
 }
 
