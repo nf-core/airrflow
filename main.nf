@@ -297,7 +297,7 @@ process fetchDBs{
     tag "fetchBlastDBs"
 
     publishDir path: { params.save_databases ? "${params.outdir}/dbs" : params.outdir },
-    saveAs: { params.save_databases ? it : null }, mode: 'copy'
+    saveAs: { params.save_databases ? it : null }, mode: params.publish_dir_mode
 
     when:
     !params.igblast_base | !params.imgtdb_base
@@ -443,7 +443,7 @@ process mask_primers{
 //Pair the R1 and R2
 process pre_consensus_pair{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/pair_post_consensus/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/pair_post_consensus/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -472,7 +472,7 @@ process pre_consensus_pair{
 //Cluster sets to deal with too low UMI diversity
 process cluster_sets {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -520,7 +520,7 @@ process reheader {
 //Build UMI consensus
 process build_consensus{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -552,7 +552,7 @@ process build_consensus{
 //Re-pair R1 and R2
 process post_consensus_pair{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/pair_mates_post_consensus/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/pair_mates_post_consensus/$id", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -579,7 +579,7 @@ process post_consensus_pair{
 //Assemble the mate pairs
 process assemble_pairs{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_assemble_pairs_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -666,7 +666,7 @@ process metadata_anno{
 //Removal of duplicate sequences
 process deduplicate {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_deduplicate_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -695,7 +695,7 @@ process deduplicate {
 //Filtering to sequences with at least two representative reads and convert to FastA
 process filter_representative_2{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -744,7 +744,7 @@ process igblast{
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/igblast/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/igblast/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf(".fasta") > 0) "fasta/$filename"
@@ -802,7 +802,7 @@ process igblast_filter {
 //Merge tables belonging to the same patient
 process merge_tables{
     tag "merge tables"
-    publishDir "${params.outdir}/genotyping/$source", mode: 'copy'
+    publishDir "${params.outdir}/genotyping/$source", mode: params.publish_dir_mode
 
     input:
     set source, id, file(tab) from ch_for_merge.groupTuple()
@@ -830,7 +830,7 @@ process merge_tables{
 //Shazam! 
 process shazam{
     tag "${id}"    
-    publishDir "${params.outdir}/genotyping/$id", mode: 'copy',
+    publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -862,7 +862,7 @@ process shazam{
 //Assign clones
 process assign_clones{
     tag "${id}" 
-    publishDir "${params.outdir}/clone_assignment/$id", mode: 'copy',
+    publishDir "${params.outdir}/clone_assignment/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_log_table.tab"
             else if (filename.indexOf("clone-pass.tab") > 0) "${id}_clone_pass.tab"
@@ -900,7 +900,7 @@ process assign_clones{
 //Reconstruct germline sequences
 process germline_sequences{
     tag "${id}"
-    publishDir "${params.outdir}/germlines/$id", mode: 'copy',
+    publishDir "${params.outdir}/germlines/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".fasta") > 0) "fasta/$filename"
             else if (filename.indexOf(".log") > 0) null
@@ -932,7 +932,7 @@ process germline_sequences{
 //Lineage reconstruction
 process lineage_reconstruction{
     tag "${id}"
-    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".graphml") > 0) "$filename"
             else if (filename.indexOf(".tsv") > 0) "$filename"
@@ -960,7 +960,7 @@ process lineage_reconstruction{
 //Clonal analysis
 process clonal_analysis{
     tag "${id}"
-    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
@@ -988,7 +988,7 @@ process clonal_analysis{
 //Repertoire comparison
 process repertoire_comparison{
     tag "all" 
-    publishDir "${params.outdir}/repertoire_comparison", mode: 'copy',
+    publishDir "${params.outdir}/repertoire_comparison", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "table/$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
@@ -1015,7 +1015,7 @@ process repertoire_comparison{
 
 //Processing logs
 process processing_logs{
-    publishDir "${params.outdir}/parsing_logs", mode: 'copy'
+    publishDir "${params.outdir}/parsing_logs", mode: params.publish_dir_mode
 
     input:
     file('filter_by_sequence_quality/*') from filter_by_sequence_quality_log.collect()
