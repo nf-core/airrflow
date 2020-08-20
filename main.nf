@@ -406,8 +406,8 @@ process mask_primers{
     def primer_start_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
     def primer_start_R2 = (params.umi_position == 'R2') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
     """
-    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $barcodeR1 --mode cut --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
-    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $barcodeR2 --mode cut --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --mode cut --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --mode cut --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
     ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
