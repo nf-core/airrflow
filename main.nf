@@ -356,15 +356,15 @@ process fastqc {
     !params.downstream_only
 
     input:
-    set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
     output:
-    set file("${R1}"), file("${R2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
+    set file("${r1}"), file("${r2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
     file "*_fastqc.{zip,html}" into ch_fastqc_results
 
     script:
     """
-    fastqc --quiet --threads $task.cpus "${R1}" "${R2}"
+    fastqc --quiet --threads $task.cpus "${r1}" "${r2}"
     """
 }
 
@@ -386,18 +386,18 @@ process filter_by_sequence_quality {
     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
 
     output:
-    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_Masking)
-    file "${r1.baseName}_UMI_R1.log"
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_masking)
+    file "${r1.baseName}_R1.log"
     file "${r2.baseName}_R2.log"
-    file "${r1.baseName}_UMI_R1_table.tab"
+    file "${r1.baseName}_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
     file "${id}_command_log.txt" into filter_by_sequence_quality_log
 
     script:
     """
-    FilterSeq.py quality -s $r1 -q 20 --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log" --nproc ${task.cpus} > "${id}_command_log.txt"
+    FilterSeq.py quality -s $r1 -q 20 --outname "${r1.baseName}" --log "${r1.baseName}_R1.log" --nproc ${task.cpus} > "${id}_command_log.txt"
     FilterSeq.py quality -s $r2 -q 20 --outname "${r2.baseName}" --log "${r2.baseName}_R2.log" --nproc ${task.cpus} >> "${id}_command_log.txt"
-    ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
+    ParseLog.py -l "${r1.baseName}_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
 
@@ -416,13 +416,13 @@ process mask_primers{
     !params.downstream_only
 
     input:
-    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking
+    set file(r1_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_masking
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
-    set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
-    file "${umi_file.baseName}_UMI_R1.log"
+    set file("${r1_file.baseName}_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_prebuild
+    file "${r1_file.baseName}_R1.log"
     file "${r2_file.baseName}_R2.log"
     file "*.tab"
     file "${id}_command_log.txt" into mask_primers_log
@@ -431,13 +431,13 @@ process mask_primers{
     def primer_start_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
     def primer_start_R2 = (params.umi_position == 'R2') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
     """
-    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $r1_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r1_file.baseName}_R1 --log ${r1_file.baseName}_R1.log > "${id}_command_log.txt"
     MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
-    ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
+    ParseLog.py -l "${umi_file.baseName}_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
 
-//Pair the UMI_R1 and R2
+//Pair the R1 and R2
 process pair_seq{
     tag "${id}"
     publishDir "${params.outdir}/preprocessing/pair_sequences/$id", mode: 'copy',
@@ -448,10 +448,10 @@ process pair_seq{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_prebuild
 
     output:
-    set file("${umi.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_umi_cluster_sets
+    set file("${r1.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_cluster_sets
     file "${id}_command_log.txt" into pair_seq_log
 
     when:
@@ -460,9 +460,10 @@ process pair_seq{
     script:
     def copyfield = (params.index_file & params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
     """
-    PairSeq.py -1 $umi -2 $r2 $copyfield --coord illumina > "${id}_command_log.txt"
+    PairSeq.py -1 $r1 -2 $r2 $copyfield --coord illumina > "${id}_command_log.txt"
     """
 }
+
 
 //Cluster sets to deal with too low UMI diversity
 process cluster_sets {
@@ -475,10 +476,10 @@ process cluster_sets {
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_cluster_sets
 
     output:
-    set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
+    set file ("${r1.baseName}_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_reheader
     file "${id}_command_log.txt" into cluster_sets_log
 
     when:
@@ -486,7 +487,7 @@ process cluster_sets {
 
     script:
     """
-    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 > "${id}_command_log.txt"
+    ClusterSets.py set --nproc ${task.cpus} -s $r1 --outname ${r1.baseName}_R1 > "${id}_command_log.txt"
     ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2 >> "${id}_command_log.txt"
     """
 }
@@ -496,17 +497,17 @@ process reheader {
     tag "${id}"
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_reheader
 
     output:
-    set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
+    set file("${r1.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_consensus
 
     when:
     !params.downstream_only
 
     script:
     """
-    ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat > "${id}_command_log.txt"
+    ParseHeaders.py copy -s $r1 -f BARCODE -k CLUSTER --act cat > "${id}_command_log.txt"
     ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat >> "${id}_command_log.txt"
     """
 }
@@ -523,11 +524,11 @@ process build_consensus{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_consensus
 
     output:
-    set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
-    file "${umi.baseName}_UMI_R1.log"
+    set file("${umi.baseName}_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_post_consensus_pair
+    file "${umi.baseName}_R1.log"
     file "${r2.baseName}_R2.log"
     file "${umi.baseName}_UMI_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
@@ -555,10 +556,10 @@ process repair{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_post_consensus_pair
 
     output:
-    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_repaired_UMI_for_assembly
+    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_assembly
     file "${id}_command_log.txt" into repair_log
 
     when:
@@ -582,7 +583,7 @@ process assemble{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
+    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_assembly
 
     output:
     set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
@@ -659,7 +660,7 @@ process metadata_anno{
 }
 
 //Removal of duplicate sequences
-process dedup {
+process deduplicate {
     tag "${id}"
     publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: 'copy',
         saveAs: {filename ->
@@ -688,7 +689,7 @@ process dedup {
 }
 
 //Filtering to sequences with at least two representative reads and convert to FastA
-process filter_seqs{
+process filter_representative_2{
     tag "${id}"
     publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: 'copy',
         saveAs: {filename ->
@@ -731,7 +732,7 @@ process igblast{
 
     script:
     """
-    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism human --loci ig --format blast
+    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism $params.organism --loci $params.loci --format blast
     """
 }
 
