@@ -28,7 +28,7 @@ results         # Finished results (configurable, see below)
 
 The required input file is a TSV file with the following columns, including the exact same headers:
 
-```
+```bash
 ID  Source  Treatment Extraction_time Population  R1  R2  I1
 QMKMK072AD  Patient_2 Drug_treatment  baseline  p sample_S8_L001_R1_001.fastq.gz  sample_S8_L001_R2_001.fastq.gz  sample_S8_L001_I1_001.fastq.gz
 ```

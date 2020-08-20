@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): Added parameter json schema
 * Added primer handling params: `--vprimer_start`, `--cprimer_start`, `--primer_mask_mode`, `--primer_maxeror`
 
-
 ### `Fixed`
 
 ### `Dependencies`
