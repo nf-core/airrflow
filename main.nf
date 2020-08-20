@@ -29,17 +29,21 @@ def helpMessage() {
     Options:
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
-      --imgtdb_base                 [file]   Path to predownloaded imgtDB 
-      --igblast_base                [file]   Path to predownloaded igblastDB
+      --imgtdb_base                 [file]   Path to predownloaded IMGT database
+      --igblast_base                [file]   Path to predownloaded igblast database
 
     Define clones:
       --set_cluster_threshold       [bool]   Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           [float]  Once set_cluster_threshold is true, set cluster_threshold value (float).
     
-    UMI barcode handling:
+    UMI barcode and primer handling:
       --index_file                  [file]  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
       --umi_position                [str]   If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, speciffy position (R1/R2).
       --umi_length                  [int]   Length of UMI barcodes.
+      --vprimer_start               [int]   Start position of V region primers (without counting the UMI barcode)
+      --cprimer_start               [int]   Start position of C region primers (without counting the UMI barcode)
+      --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification
+      --primer_mask_mode            [str]   Masking mode for Mask Primer processes. Available: cut, mask, trim, tag.
     
     Repertoire downstream analysis:
       --downstream_only             [bool]  If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
@@ -270,8 +274,8 @@ process get_software_versions {
 process fetchDBs{
     tag "fetchBlastDBs"
 
-    publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
-    saveAs: { params.saveDBs ? it : null }, mode: 'copy'
+    publishDir path: { params.save_databases ? "${params.outdir}/dbs" : params.outdir },
+    saveAs: { params.save_databases ? it : null }, mode: 'copy'
 
     when:
     !params.igblast_base | !params.imgtdb_base
@@ -406,8 +410,8 @@ process mask_primers{
     def primer_start_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
     def primer_start_R2 = (params.umi_position == 'R2') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
     """
-    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --mode cut --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
-    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --mode cut --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
     ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
