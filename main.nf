@@ -43,7 +43,7 @@ def helpMessage() {
       --vprimer_start               [int]   Start position of V region primers (without counting the UMI barcode)
       --cprimer_start               [int]   Start position of C region primers (without counting the UMI barcode)
       --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification
-      --primer_mask_mode            [str]   Masking mode for Mask Primer processes. Available: cut, mask, trim, tag.
+      --primer_mask_mode            [str]   Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.
     
     Repertoire downstream analysis:
       --downstream_only             [bool]  If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
