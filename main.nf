@@ -597,8 +597,8 @@ process assemble_pairs{
 
     script:
     """
-    AssemblePairs.py align -1 $r1 -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_R1_R2 --log ${umi.baseName}_R1_R2.log > "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
+    AssemblePairs.py align -1 $r1 -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${r1.baseName}_R1_R2 --log ${r1.baseName}_R1_R2.log > "${id}_command_log.txt"
+    ParseLog.py -l "${r1.baseName}_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
 }
 
