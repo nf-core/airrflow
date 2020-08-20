@@ -433,7 +433,7 @@ process mask_primers{
     """
     MaskPrimers.py score --nproc ${task.cpus} -s $r1_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r1_file.baseName}_R1 --log ${r1_file.baseName}_R1.log > "${id}_command_log.txt"
     MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
-    ParseLog.py -l "${umi_file.baseName}_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
+    ParseLog.py -l "${r1_file.baseName}_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
 
