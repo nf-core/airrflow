@@ -32,7 +32,7 @@ def helpMessage() {
       --imgtdb_base                 [path]   Path to pre-downloaded IMGT database
       --igblast_base                [path]   Path to pre-downloaded igblast database
       --save_databases              [bool]   Save databases so you can use the cache in future runs
-      --organism                    [str]    Organism to perform Igblast. Choose from: human, mouse.
+      --species                     [str]    Species to perform Igblast. Choose from: human, mouse.
       --loci                        [str]    Loci to perform Igblast. Choose from: ig (BCR / Immunoglobulins), tr (TCR).
 
 
@@ -736,7 +736,7 @@ process igblast{
 
     script:
     """
-    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism $params.organism --loci $params.loci --format blast
+    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism $params.species --loci $params.loci --format blast
     """
 }
 
@@ -768,7 +768,7 @@ process igblast_filter {
 
     script:
     """
-    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores > "${id}_command_log.txt"
+    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHD.fasta ${imgtbase}/human/vdj/imgt_${params.species}_IGHJ.fasta --regions --scores > "${id}_command_log.txt"
     ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
     ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id} >> "${id}_command_log.txt"
     ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
