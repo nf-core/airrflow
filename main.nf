@@ -52,6 +52,7 @@ def helpMessage() {
       --race_linker                 [path]  Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).
       --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification.
       --primer_mask_mode            [str]   Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.
+      --primer_consensus            [float] Maximum error for building primer consensus.
     
     Repertoire downstream analysis:
       --downstream_only             [bool]  If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
