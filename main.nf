@@ -32,6 +32,9 @@ def helpMessage() {
       --imgtdb_base                 [path]   Path to pre-downloaded IMGT database
       --igblast_base                [path]   Path to pre-downloaded igblast database
       --save_databases              [bool]   Save databases so you can use the cache in future runs
+      --organism                    [str]    Organism to perform Igblast. Choose from: human, mouse.
+      --loci                        [str]    Loci to perform Igblast. Choose from: ig (BCR / Immunoglobulins), tr (TCR).
+
 
     Define clones:
       --set_cluster_threshold       [bool]   Set this parameter to allow manual hamming distance threshold for cell cluster definition.
