@@ -409,7 +409,6 @@ process mask_primers{
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-            else if (filename.indexOf(".log") > 0) "$filename"
             else if (filename.indexOf(".tab") > 0) "$filename"
             else null
         }
