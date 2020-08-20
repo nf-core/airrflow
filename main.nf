@@ -127,7 +127,7 @@ if (!params.downstream_only){
         if (params.vprimers)  { 
             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
         } else { 
-            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option." 
+            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
         }
     } else {
         if (params.vprimers) { 
@@ -350,7 +350,7 @@ process merge_r1_umi {
 //FastQC 
 process fastqc {
     tag "${id}"
-    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
+    publishDir "${params.outdir}/fastqc/$id", mode: params.publish_dir_mode
 
     when:
     !params.downstream_only
@@ -372,10 +372,11 @@ process fastqc {
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
+            else if (filename.indexOf("*.log") > 0) "$filename"
             else null
         }
 
@@ -404,10 +405,11 @@ process filter_by_sequence_quality {
 //Mask them primers
 process mask_primers{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: 'copy',
+    publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
+            else if (filename.indexOf(".log") > 0) "$filename"
             else null
         }
     
