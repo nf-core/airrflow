@@ -31,6 +31,7 @@ def helpMessage() {
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --imgtdb_base                 [file]   Path to predownloaded IMGT database
       --igblast_base                [file]   Path to predownloaded igblast database
+      --save_databases              [bool]   Save databases so you can use the cache in future runs
 
     Define clones:
       --set_cluster_threshold       [bool]   Set this parameter to allow manual hamming distance threshold for cell cluster definition.
@@ -40,9 +41,9 @@ def helpMessage() {
       --index_file                  [file]  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
       --umi_position                [str]   If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, speciffy position (R1/R2).
       --umi_length                  [int]   Length of UMI barcodes.
-      --vprimer_start               [int]   Start position of V region primers (without counting the UMI barcode)
-      --cprimer_start               [int]   Start position of C region primers (without counting the UMI barcode)
-      --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification
+      --vprimer_start               [int]   Start position of V region primers (without counting the UMI barcode).
+      --cprimer_start               [int]   Start position of C region primers (without counting the UMI barcode).
+      --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification.
       --primer_mask_mode            [str]   Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.
     
     Repertoire downstream analysis:
