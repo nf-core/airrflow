@@ -20,35 +20,39 @@ def helpMessage() {
     nextflow run nf-core/bcellmagic --reads '*_R{1,2}.fastq.gz' -profile standard,docker
 
     Mandatory arguments:
-      --cprimers                    [file]   Path to C-region primers FASTA file
-      --vprimers                    [file]   Path to V-region primers FASTA file
-      --input                       [file]   Path to input TSV file
+      --cprimers                    [path]   Path to C-region primers FASTA file
+      --vprimers                    [path]   Path to V-region primers FASTA file
+      --input                       [path]   Path to input TSV file
       -profile                      [str]    Configuration profile to use. Can use multiple (comma separated)
                                             Available: standard, conda, docker, singularity, awsbatch, test
 
     Options:
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
-      --imgtdb_base                 [file]   Path to predownloaded IMGT database
-      --igblast_base                [file]   Path to predownloaded igblast database
+      --imgtdb_base                 [path]   Path to pre-downloaded IMGT database
+      --igblast_base                [path]   Path to pre-downloaded igblast database
       --save_databases              [bool]   Save databases so you can use the cache in future runs
 
     Define clones:
       --set_cluster_threshold       [bool]   Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           [float]  Once set_cluster_threshold is true, set cluster_threshold value (float).
     
-    UMI barcode and primer handling:
-      --index_file                  [file]  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
+    UMI barcode handling:
+      --index_file                  [path]  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
       --umi_position                [str]   If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, speciffy position (R1/R2).
       --umi_length                  [int]   Length of UMI barcodes.
+
+    Primer handling:
       --vprimer_start               [int]   Start position of V region primers (without counting the UMI barcode).
       --cprimer_start               [int]   Start position of C region primers (without counting the UMI barcode).
+      --race_5prime                 [int]   The amplification protocol is 5' RACE based (e.g. SMARTer TAKARA), so no V-region primers were used.
+      --race_linker                 [path]  Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).
       --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification.
       --primer_mask_mode            [str]   Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.
     
     Repertoire downstream analysis:
       --downstream_only             [bool]  If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
-      --changeo_tables              [file]  Provide Changeo table in '.tsv' if only downstream analysis is desired.
+      --changeo_tables              [path]  Provide Changeo table in '.tsv' if only downstream analysis is desired.
       --skip_downstream             [bool]  Skip downstream clonal and repertoire analysis steps.
 
     Other options:
@@ -118,12 +122,29 @@ if( params.imgtdb_base ){
 
 //Validate inputs
 if (!params.downstream_only){
-    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide C-region primers fasta file with the '--cprimers' option." }
-    if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide V-region primers fasta file with the '--vprimers' option." }
-    if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata!" }
+    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
+    if (!params.race_5prime){
+        if (params.vprimers)  { 
+            ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
+            ch_race_linker = Channel.empty()
+        } else { 
+            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option." 
+        }
+    } else {
+        if (params.vprimers) { 
+            exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
+        } else if (params.race_linker) {
+            ch_race_linker = Channel.fromPath(params.race_linker, checkIfExists: true)
+            ch_vprimers_fasta = Channel.empty()
+        } else {
+            ch_race_linker = Channel.empty()
+        }
+    }
+    if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata with the '--input' option." }
 } else {
     ch_cprimers_fasta = Channel.empty()
     ch_vprimers_fasta = Channel.empty()
+    ch_race_linker = Channel.empty()
     ch_metadata = Channel.empty()
 }
 
@@ -400,6 +421,7 @@ process mask_primers{
     set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
+    file(race_linker) from ch_race_linker.collect()
 
     output:
     set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
@@ -410,11 +432,19 @@ process mask_primers{
     script:
     def primer_start_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
     def primer_start_R2 = (params.umi_position == 'R2') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
-    """
-    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
-    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
-    ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
-    """
+    if (!params.race_5prime){
+        """
+        MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
+        MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
+        ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
+        """
+    } else {
+        """
+        MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
+        MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${race_linker} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
+        ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
+        """
+    }
 }
 
 //Pair the UMI_R1 and R2
