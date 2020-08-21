@@ -16,16 +16,16 @@ if (length(args)<2) {
 
 inputtable = args[1]
 
-IGHV_fasta = args[2]
+fasta = args[2]
 
 output_folder = dirname(args[1])
   
 db <- readChangeoDb(inputtable)
-ighv <- readIgFasta(IGHV_fasta, strip_down_name = TRUE, force_caps = TRUE)
+db_fasta <- readIgFasta(fasta, strip_down_name = TRUE, force_caps = TRUE)
 
-gt <- inferGenotype(db, germline_db = ighv, find_unmutated = FALSE)
+gt <- inferGenotype(db, find_unmutated = FALSE)
 
-gtseq <- genotypeFasta(gt, ighv)
+gtseq <- genotypeFasta(gt, db_fasta)
 writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
 # Plot genotype
