@@ -18,21 +18,29 @@ inputtable = args[1]
 
 fasta = args[2]
 
+loci = args[3]
+
 output_folder = dirname(args[1])
   
 db <- readChangeoDb(inputtable)
 db_fasta <- readIgFasta(fasta, strip_down_name = TRUE, force_caps = TRUE)
 
-gt <- inferGenotype(db, find_unmutated = FALSE)
+if (loci == "ig"){
 
-gtseq <- genotypeFasta(gt, db_fasta)
-writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+  gt <- inferGenotype(db, find_unmutated = FALSE)
 
-# Plot genotype
-ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+  gtseq <- genotypeFasta(gt, db_fasta)
+  writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
-# Modify allele calls and output TSV file
-db_reassigned <- reassignAlleles(db, gtseq)
+  # Plot genotype
+  ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+
+  # Modify allele calls and output TSV file
+  db_reassigned <- reassignAlleles(db, gtseq)
+} else {
+  db_reassigned <- db
+}
+
 writeChangeoDb(db_reassigned, paste(output_folder,"igh_genotyped.tab",sep="/"))
 
 ################

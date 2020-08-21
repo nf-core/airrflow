@@ -855,8 +855,9 @@ process shazam{
     !params.downstream_only
 
     script:
+    def loci = params.loci
     """
-    TIgGER-shazam.R $tab ${imgtbase}/human/vdj/imgt_human_IGHV.fasta
+    TIgGER-shazam.R $tab ${imgtbase}/human/vdj/imgt_human_IGHV.fasta $loci
     """
 }
 
