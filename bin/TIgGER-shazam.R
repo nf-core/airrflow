@@ -37,18 +37,19 @@ if (loci == "ig"){
 
   # Modify allele calls and output TSV file
   db_reassigned <- reassignAlleles(db, gtseq)
+
+  # Find the Hamming distance
+  dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
+                          normalize="len", nproc=1, first = FALSE)
 } else {
   db_reassigned <- db
+
+  # Find the Hamming distance
+  dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL", model="ham", 
+                          normalize="len", nproc=1, first = FALSE)
 }
 
 writeChangeoDb(db_reassigned, paste(output_folder,"igh_genotyped.tab",sep="/"))
-
-################
-#### shazam ####
-################
-
-dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
-                          normalize="len", nproc=1, first = FALSE)
 
 # Find threshold using density method
 output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
