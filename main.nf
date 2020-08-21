@@ -776,7 +776,7 @@ process igblast_filter {
         ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
         --regions --scores > "${id}_command_log.txt"
         ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
-        ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL C_CALL -u "IGH" --regex --outname ${id} >> "${id}_command_log.txt"
+        ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL C_CALL -u "IGH" --outname ${id} >> "${id}_command_log.txt"
         ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
         """
     } else if (params.loci == 'tr') {
@@ -794,7 +794,7 @@ process igblast_filter {
         ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta \\
         --regions --scores > "${id}_command_log.txt"
         ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
-        ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL C_CALL -u "TR" --regex --outname ${id} >> "${id}_command_log.txt"
+        ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL C_CALL -u "TR" --outname ${id} >> "${id}_command_log.txt"
         ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
         """
     }
