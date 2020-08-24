@@ -53,7 +53,7 @@ if (loci == "ig"){
 
   print(colnames(db_fasta_TRAV))
 
-  gtseq <- genotypeFasta(gt, db_fasta_TRAV))
+  gtseq <- genotypeFasta(gt, db_fasta_TRAV)
   writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
   # Plot genotype
