@@ -782,16 +782,16 @@ process igblast_filter {
     } else if (params.loci == 'tr') {
         """
         MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAJ.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBD.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBJ.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDD.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDJ.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAJ.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBD.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBJ.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDD.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDJ.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta" \\
         --regions --scores > "${id}_command_log.txt"
         ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
         ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL -u "TR" --regex --logic all --outname ${id} >> "${id}_command_log.txt"
@@ -862,10 +862,10 @@ process shazam{
     } else if (params.loci == "tr") {
         """
         TIgGER-shazam.R $tab $params.loci \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta"
         """
     }
 
