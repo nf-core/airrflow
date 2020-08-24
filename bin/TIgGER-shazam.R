@@ -18,7 +18,7 @@ inputtable = args[1]
 
 loci = args[2]
 
-fastas = args[3:]
+fastas = args[3:length(fastas)]
 
 output_folder = dirname(inputtable)
   
