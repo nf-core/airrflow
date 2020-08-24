@@ -847,7 +847,7 @@ process shazam{
     file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
     output:
-    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition
+    set file("threshold.txt"), file("v_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition
     file "Hamming_distance_threshold.pdf" 
     file "genotype.pdf"
 
@@ -855,10 +855,20 @@ process shazam{
     !params.downstream_only
 
     script:
-    def loci = params.loci
-    """
-    TIgGER-shazam.R $tab ${imgtbase}/human/vdj/imgt_human_IGHV.fasta $loci
-    """
+    if (params.loci == "ig") {
+        """
+        TIgGER-shazam.R $tab $params.loci ${imgtbase}/${params.species}/vdj/imgt_human_IGHV.fasta 
+        """
+    } else if (params.loci == "tr") {
+        """
+        TIgGER-shazam.R $tab $params.loci \\
+        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta \\
+        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta \\
+        {imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta \\
+        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta]
+        """
+    }
+
 }
 
 //Assign clones
