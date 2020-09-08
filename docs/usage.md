@@ -18,7 +18,7 @@ This sequencig type requires providing only sequences for the C-region primers.
 
 ## UMI barcode handling
 
-Unique Molecular Identifiers (UMIs) enable the quantification of BCR abundancy in the original sample by allowing to distinguish PCR duplicates from original sample duplicates. 
+Unique Molecular Identifiers (UMIs) enable the quantification of BCR abundancy in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
 The UMI indices are random nucleotide sequences of a pre-determined length that are added to the sequencing libraries before any PCR amplification steps, for example as part of the primer sequences.
 
 The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
@@ -26,7 +26,6 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 * UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
 
 * UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
-
 
 ## Running the pipeline
 
