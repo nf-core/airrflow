@@ -4,6 +4,30 @@
 
 <!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
 
+The Bcellmagic pipeline allows processing bulk targeted BCR sequencing data. Support for processing TCR sequencing is currently under implementation.
+
+## Supported sequencing technologies
+
+### UMI barcoded paired-end sequencing
+
+This sequencing type requires providing sequences for the V-region primers as well as the C-region primers.
+
+### UMI barcoded 5'RACE paired-end sequencing
+
+This sequencig type requires providing only sequences for the C-region primers.
+
+## UMI barcode handling
+
+Unique Molecular Identifiers (UMIs) enable the quantification of BCR abundancy in the original sample by allowing to distinguish PCR duplicates from original sample duplicates. 
+The UMI indices are random nucleotide sequences of a pre-determined length that are added to the sequencing libraries before any PCR amplification steps, for example as part of the primer sequences.
+
+The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
+
+- UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+
+- UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
+
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
