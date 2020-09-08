@@ -38,8 +38,9 @@ def helpMessage() {
     
     UMI barcode handling:
       --index_file                  [file]  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
-      --umi_position                [str]   If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, speciffy position (R1/R2).
+      --umi_position                [str]   If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, specify position (R1/R2).
       --umi_length                  [int]   Length of UMI barcodes.
+      --umi_start                   [int]   Start position of UMI barcode if it is located in a separate index file also containing other indices.
     
     Repertoire downstream analysis:
       --downstream_only             [bool]  If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
@@ -125,7 +126,7 @@ if (!params.downstream_only){
 //Validate UMI position
 if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
 if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
-
+if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 //Read processed tabs if downstream_only 
 if (params.downstream_only){
     Channel
@@ -307,20 +308,20 @@ process merge_r1_umi {
 
     script:
     if (params.index_file) {
-    """
-    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz
-    gunzip -f "UMI_R1.fastq.gz" 
-    mv "UMI_R1.fastq" "${id}_${R1.baseName}"
-    gunzip -f "${R2}"
-    mv "${R2.baseName}" "${id}_${R2.baseName}"
-    """
+        """
+        merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz --umi_start $params.umi_start --umi_length $params.umi_length
+        gunzip -f "UMI_R1.fastq.gz" 
+        mv "UMI_R1.fastq" "${id}_${R1.baseName}"
+        gunzip -f "${R2}"
+        mv "${R2.baseName}" "${id}_${R2.baseName}"
+        """
     } else {
-    """
-    gunzip -f "${R1}"
-    mv "${R1.baseName}" "${id}_${R1.baseName}"
-    gunzip -f "${R2}"
-    mv "${R2.baseName}" "${id}_${R2.baseName}"
-    """
+        """
+        gunzip -f "${R1}"
+        mv "${R1.baseName}" "${id}_${R1.baseName}"
+        gunzip -f "${R2}"
+        mv "${R2.baseName}" "${id}_${R2.baseName}"
+        """
     }
 }
 
