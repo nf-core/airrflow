@@ -23,7 +23,7 @@ with gzopen(args.outname, "wt") as out_handle:
     for record_I1 in records_I1:
         i += 1
         record_R1 = next(records_R1)
-        record_I1 = record_I1[umi_start:umi_length]
+        record_I1 = record_I1[umi_start:umi_end]
         if (record_R1.id == record_I1.id):
             record_UMI_R1 = record_I1 + record_R1
             SeqIO.write(record_UMI_R1, out_handle, "fastq")
