@@ -94,6 +94,10 @@
                 "umi_length": {
                     "type": "integer",
                     "description": "UMI barcode length in nucleotides."
+                },
+                "umi_start": {
+                    "type": "integer",
+                    "description": "UMI barcode start position."
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
