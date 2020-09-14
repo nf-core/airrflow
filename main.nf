@@ -892,6 +892,9 @@ process lineage_reconstruction{
 
     output:
     set val("$id"), file("${id}.tab") into ch_for_clonal_analysis
+    file "lineage_reconstruction/*.tsv"
+    file "lineage_reconstruction/Clone_tree_plots/*.svg"
+    file "lineage_reconstruction/Graphml_trees/All_graphs_patient.graphml"
 
     when:
     !params.downstream_only
