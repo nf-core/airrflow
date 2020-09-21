@@ -558,12 +558,12 @@ process assemble{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
 
     output:
-    set file("${umi.baseName}_UMI_R1_R2_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
-    file "${umi.baseName}_UMI_R1_R2.log"
-    file "${umi.baseName}_UMI_R1_R2_table.tab"
+    set file("${id}_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
+    file "${id}.log"
+    file "${id}_table.tab"
     file "${id}_command_log.txt" into assemble_log
 
     when:
@@ -571,8 +571,8 @@ process assemble{
 
     script:
     """
-    AssemblePairs.py align -1 $umi -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${umi.baseName}_UMI_R1_R2 --log ${umi.baseName}_UMI_R1_R2.log > "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_UMI_R1_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
+    AssemblePairs.py align -1 $r1 -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${id} --log ${id}.log > "${id}_command_log.txt"
+    ParseLog.py -l "${id}.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
 }
 
@@ -892,6 +892,9 @@ process lineage_reconstruction{
 
     output:
     set val("$id"), file("${id}.tab") into ch_for_clonal_analysis
+    file "lineage_reconstruction/*.tsv"
+    file "lineage_reconstruction/Clone_tree_plots/*.svg"
+    file "lineage_reconstruction/Graphml_trees/All_graphs_patient.graphml"
 
     when:
     !params.downstream_only
