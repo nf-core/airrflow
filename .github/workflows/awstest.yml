@@ -7,6 +7,12 @@ on:
   push:
     branches:
       - aws-tests
+  workflow_run:
+    workflows: ["nf-core Docker push"]
+    branches: [aws-tests] # TODO remove aws-tests
+    types: 
+      - completed
+      - requested
 
 jobs:
   run-awstest:
