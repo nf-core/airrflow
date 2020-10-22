@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - dev
+      - aws-tests # Just for checking the workflow trigger, TODO remove.
   release:
     types: [published]
 
