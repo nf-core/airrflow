@@ -5,7 +5,8 @@ name: nf-core AWS test
 on:
   workflow_dispatch:
   push:
-    - aws-tests
+    branches:
+      - aws-tests
 
 jobs:
   run-awstest:
