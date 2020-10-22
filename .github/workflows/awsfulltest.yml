@@ -4,7 +4,7 @@ name: nf-core AWS full size tests
 
 on:
   workflow_run:
-    workflows: ["nf-core Docker push"]
+    workflows: ["Push new Docker image to Docker Hub"]
     branches: [master, dev, aws-tests] # TODO remove aws-tests
     types: 
       - completed
