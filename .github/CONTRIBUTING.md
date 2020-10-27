@@ -54,4 +54,4 @@ These tests are run both with the latest available version of `Nextflow` and als
 
 ## Getting help
 
-For further information/help, please consult the [nf-core/bcellmagic documentation](https://nf-co.re/bcellmagic/docs) and don't hesitate to get in touch on the nf-core Slack [#bcellmagic](https://nfcore.slack.com/channels/bcellmagic) channel ([join our Slack here](https://nf-co.re/join/slack)).
+For further information/help, please consult the [nf-core/bcellmagic documentation](https://nf-co.re/bcellmagic/usage) and don't hesitate to get in touch on the nf-core Slack [#bcellmagic](https://nfcore.slack.com/channels/bcellmagic) channel ([join our Slack here](https://nf-co.re/join/slack)).
