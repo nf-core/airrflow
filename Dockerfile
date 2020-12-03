@@ -1,4 +1,4 @@
-FROM nfcore/base:1.12
+FROM nfcore/base:1.12.1
 LABEL authors="Gisela Gabernet, Simon Heumos, Alexander Peltzer" \
       description="Docker image containing all software requirements for the nf-core/bcellmagic pipeline"
 
