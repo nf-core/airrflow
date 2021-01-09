@@ -56,19 +56,41 @@
                 "igblast_base": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded."
+                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "fa_icon": "fas fa-database"
                 },
                 "imgtdb_base": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded."
+                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "fa_icon": "fas fa-database"
                 },
-                "saveDBs": {
+                "save_databases": {
                     "type": "boolean",
-                    "description": "Set to true if it is desired to save the databases locally.."
+                    "description": "Save databases so you can use the cache in future runs.",
+                    "fa_icon": "fas fa-file-download"
+                },
+                "species": {
+                    "type": "string",
+                    "default": "human",
+                    "description": "Species to perform Igblast. Choose from: human, mouse.",
+                    "enum": [
+                        "human",
+                        "mouse"
+                    ]
+                },
+                "loci": {
+                    "type": "string",
+                    "default": "ig",
+                    "enum": [
+                        "ig",
+                        "tr"
+                    ],
+                    "description": "Loci to perform Igblast. Choose from: ig (BCR / Immunoglobulins), tr (TCR)."
                 }
             },
-            "help_text": ""
+            "help_text": "",
+            "fa_icon": "fas fa-database"
         },
         "umi_barcode_handling": {
             "title": "UMI barcode handling",
@@ -79,7 +101,8 @@
                 "index_file": {
                     "type": "boolean",
                     "description": "Indicate if UMI indices are recorded in a separate index file.",
-                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter."
+                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
+                    "fa_icon": "fas fa-barcode"
                 },
                 "umi_position": {
                     "type": "string",
@@ -89,7 +112,8 @@
                     "enum": [
                         "R1",
                         "R2"
-                    ]
+                    ],
+                    "fa_icon": "fas fa-barcode"
                 },
                 "umi_length": {
                     "type": "integer",
@@ -103,7 +127,62 @@
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
             "required": [
                 "umi_length"
-            ]
+            ],
+            "fa_icon": "fas fa-barcode"
+        },
+        "primer_handling": {
+            "title": "Primer handling",
+            "type": "object",
+            "description": "Define the primer region start and how to deal with the primer alignment.",
+            "default": "",
+            "properties": {
+                "vprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of V region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna"
+                },
+                "cprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of C region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna"
+                },
+                "primer_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Maximum scoring error for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-exclamation-triangle"
+                },
+                "primer_mask_mode": {
+                    "type": "string",
+                    "default": "cut",
+                    "description": "Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.",
+                    "enum": [
+                        "cut",
+                        "mask",
+                        "trim",
+                        "tag"
+                    ],
+                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "race_linker": {
+                    "type": "string",
+                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
+                    "fa_icon": "fas fa-dna"
+                },
+                "race_5prime": {
+                    "type": "boolean",
+                    "description": "The amplification protocol is 5' RACE based (e.g. SMARTer TAKARA), so no V-region primers were used.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "primer_consensus": {
+                    "type": "number",
+                    "default": 0.6,
+                    "description": "Maximum error for building the primer consensus.",
+                    "fa_icon": "fas fa-align-center"
+                }
+            },
+            "fa_icon": "fas fa-dna"
         },
         "clustering_threshold_definition": {
             "title": "Clustering threshold definition",
@@ -114,16 +193,19 @@
                 "set_cluster_threshold": {
                     "type": "boolean",
                     "description": "Set to true if to manually adjust the clustering threshold for cell clones.",
-                    "help_text": "Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+                    "help_text": "Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
+                    "fa_icon": "fab fa-pagelines"
                 },
                 "cluster_threshold": {
                     "type": "number",
                     "default": 0.14,
                     "description": "Set the clustering threshold Hamming distance value.",
-                    "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+                    "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
+                    "fa_icon": "fab fa-pagelines"
                 }
             },
-            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters."
+            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
+            "fa_icon": "fab fa-pagelines"
         },
         "downstream_options": {
             "title": "Downstream options",
@@ -134,19 +216,23 @@
                 "downstream_only": {
                     "type": "boolean",
                     "description": "Set to true if only downstream analysis is desired, starting from ChangeO tables.",
-                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```"
+                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```",
+                    "fa_icon": "fas fa-angle-double-right"
                 },
                 "skip_downstream": {
                     "type": "boolean",
-                    "description": "Set to true if no downstream analysis is desired"
+                    "description": "Set to true if no downstream analysis is desired",
+                    "fa_icon": "fas fa-angle-double-right"
                 },
                 "changeo_tables": {
                     "type": "string",
                     "description": "Provide ChangeO tables if only downstream analysis is desired.",
-                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```"
+                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```",
+                    "fa_icon": "fas fa-receipt"
                 }
             },
-            "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution"
+            "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
+            "fa_icon": "fas fa-angle-double-right"
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -344,6 +430,9 @@
         },
         {
             "$ref": "#/definitions/umi_barcode_handling"
+        },
+        {
+            "$ref": "#/definitions/primer_handling"
         },
         {
             "$ref": "#/definitions/clustering_threshold_definition"

@@ -16,31 +16,62 @@ if (length(args)<2) {
 
 inputtable = args[1]
 
-IGHV_fasta = args[2]
+loci = args[2]
 
-output_folder = dirname(args[1])
+fastas = args[3:length(args)]
+
+output_folder = dirname(inputtable)
   
 db <- readChangeoDb(inputtable)
-ighv <- readIgFasta(IGHV_fasta, strip_down_name = TRUE, force_caps = TRUE)
+print(colnames(db))
+print(db)
 
-gt <- inferGenotype(db, germline_db = ighv, find_unmutated = FALSE)
+if (loci == "ig"){
 
-gtseq <- genotypeFasta(gt, ighv)
-writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+  db_fasta <- readIgFasta(fastas, strip_down_name = TRUE, force_caps = TRUE)
 
-# Plot genotype
-ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+  gt <- inferGenotype(db, find_unmutated = FALSE)
 
-# Modify allele calls and output TSV file
-db_reassigned <- reassignAlleles(db, gtseq)
-writeChangeoDb(db_reassigned, paste(output_folder,"igh_genotyped.tab",sep="/"))
+  gtseq <- genotypeFasta(gt, db_fasta)
+  writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
-################
-#### shazam ####
-################
+  # Plot genotype
+  ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
 
-dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
+  # Modify allele calls and output TSV file
+  db_reassigned <- reassignAlleles(db, gtseq)
+
+  # Find the Hamming distance
+  dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
                           normalize="len", nproc=1, first = FALSE)
+} else if (loci == "tr") {
+
+  db_fasta_TRAV = fastas[1]
+  db_fasta_TRBV = fastas[2]
+  db_fasta_TRGV = fastas[3]
+  db_fasta_TRGV = fastas[4]
+
+  gt <- inferGenotype(db, find_unmutated = FALSE)
+
+  print(colnames(db_fasta_TRAV))
+
+  gtseq <- genotypeFasta(gt, db_fasta_TRAV)
+  writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+
+  # Plot genotype
+  ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+
+  # Modify allele calls and output TSV file
+  db_reassigned <- reassignAlleles(db, gtseq)
+
+  # Find the Hamming distance
+  dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
+                          normalize="len", nproc=1, first = FALSE)
+} else {
+  stop("Loci specified is not available, please choose from: ig, tr.")
+}
+
+writeChangeoDb(db_reassigned, paste(output_folder,"v_genotyped.tab",sep="/"))
 
 # Find threshold using density method
 output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
