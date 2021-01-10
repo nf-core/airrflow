@@ -4,7 +4,7 @@
 
 [![GitHub Actions CI Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/bcellmagic/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/bcellmagic/actions)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3607408.svg)](https://doi.org/10.5281/zenodo.3607408)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/bcellmagic.svg)](https://hub.docker.com/r/nfcore/bcellmagic)
@@ -38,6 +38,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available options when running the pipeline.
 
+## Pipeline Summary
+
+By default, the pipeline currently performs the following:
+
+<!-- TODO nf-core: Fill in short bullet-pointed list of default steps of pipeline -->
+
+* Sequencing quality control (`FastQC`)
+* Overall pipeline run summaries (`MultiQC`)
+
 ## Documentation
 
 The nf-core/bcellmagic pipeline comes with documentation about the pipeline: [usage](https://nf-co.re/bcellmagic/usage) and [output](https://nf-co.re/bcellmagic/output).
@@ -46,13 +55,18 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline: [us
 
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
+We thank the following people for their extensive assistance in the development
+of this pipeline:
+
+<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 For further information or help, don't hesitate to get in touch on the [Slack `#bcellmagic` channel](https://nfcore.slack.com/channels/bcellmagic) (you can join with [this invite](https://nf-co.re/join/slack)).
 
-## Citation
+## Citations
 
 <!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi. -->
 If you use  nf-core/bcellmagic for your analysis, please cite it using the following doi: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
@@ -65,3 +79,7 @@ You can cite the `nf-core` publication as follows:
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
 > ReadCube: [Full Access Link](https://rdcu.be/b1GjZ)
+
+In addition, references of tools and data used in this pipeline are as follows:
+
+<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
