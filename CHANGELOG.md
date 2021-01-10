@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): Added parameter json schema
 * [#74](https://github.com/nf-core/bcellmagic/pull/74): Added possibility of setting UMI start position and better UMI docs
 * Added primer handling params: `--vprimer_start`, `--cprimer_start`, `--primer_mask_mode`, `--primer_maxeror`
+* Template update to nf-core tools v1.12.1
 
 ### `Fixed`
 
