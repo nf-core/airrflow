@@ -589,7 +589,7 @@ process assemble_pairs{
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_assembly
 
     output:
     set file("${id}_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
