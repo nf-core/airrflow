@@ -68,6 +68,7 @@ if (loci == "ig"){
   # Did not work with "V_CALL_GENOTYPED" for tr loci
   dist_ham <- distToNearest(db, vCallColumn="V_CALL", model="ham", 
                           normalize="len", nproc=1, first = TRUE)
+  print(dist_ham)
 } else {
   stop("Loci specified is not available, please choose from: ig, tr.")
 }
