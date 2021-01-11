@@ -68,7 +68,6 @@ if (loci == "ig"){
   # Did not work with "V_CALL_GENOTYPED" for tr loci
   dist_ham <- distToNearest(db, vCallColumn="V_CALL", model="ham", 
                           normalize="len", nproc=1, first = TRUE)
-  print(dist_ham$DIST_NEAREST)
 } else {
   stop("Loci specified is not available, please choose from: ig, tr.")
 }
@@ -76,7 +75,8 @@ if (loci == "ig"){
 writeChangeoDb(db, paste(output_folder,"db_tr_nogenotyped.tab",sep="/"))
 
 # Find threshold using density method
-output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
+#output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
+output <- findThreshold(dist_ham$DIST_NEAREST, method="gmm")
 threshold <- output@threshold
 
 
