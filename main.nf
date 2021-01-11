@@ -858,11 +858,11 @@ process shazam{
     script:
     if (params.loci == "ig") {
         """
-        TIgGER-shazam.R $tab $params.loci ${imgtbase}/${params.species}/vdj/imgt_human_IGHV.fasta 
+        TIgGER-shazam.R $tab $params.loci $params.threshold_method ${imgtbase}/${params.species}/vdj/imgt_human_IGHV.fasta 
         """
     } else if (params.loci == "tr") {
         """
-        TIgGER-shazam.R $tab $params.loci \\
+        TIgGER-shazam.R $tab $params.loci $params.threshold_method \\
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\

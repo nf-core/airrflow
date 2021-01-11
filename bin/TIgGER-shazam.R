@@ -18,7 +18,9 @@ inputtable = args[1]
 
 loci = args[2]
 
-fastas = args[3:length(args)]
+threshold_method = args[3]
+
+fastas = args[4:length(args)]
 
 output_folder = dirname(inputtable)
   
@@ -48,7 +50,7 @@ if (loci == "ig"){
 
   db_fasta_TRAV = fastas[1]
   db_fasta_TRBV = fastas[2]
-  db_fasta_TRGV = fastas[3]
+  db_fasta_TRDV = fastas[3]
   db_fasta_TRGV = fastas[4]
 
 #  gt <- inferGenotype(db, find_unmutated = FALSE)
@@ -76,9 +78,16 @@ writeChangeoDb(db, paste(output_folder,"db_tr_nogenotyped.tab",sep="/"))
 
 # Find threshold using density method
 #output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
-output <- findThreshold(dist_ham$DIST_NEAREST, method="gmm")
-threshold <- output@threshold
 
+if (threshold_method == "density") {
+  output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
+  threshold <- output@threshold
+} else if (threshold_method == "gmm") {
+  output <- findThreshold(dist_ham$DIST_NEAREST, method="gmm")
+  threshold <- output@threshold
+} else {
+  stop("Threshold method is not available, please choose from: density, gmm")
+}
 
 # Plot distance histogram, density estimate and optimum threshold
 ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(output), device="pdf")
