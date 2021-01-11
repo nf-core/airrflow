@@ -51,27 +51,28 @@ if (loci == "ig"){
   db_fasta_TRGV = fastas[3]
   db_fasta_TRGV = fastas[4]
 
-  gt <- inferGenotype(db, find_unmutated = FALSE)
+#  gt <- inferGenotype(db, find_unmutated = FALSE)
 
-  print(colnames(db_fasta_TRAV))
+#  print(colnames(db_fasta_TRAV))
 
-  gtseq <- genotypeFasta(gt, db_fasta_TRAV)
-  writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+#  gtseq <- genotypeFasta(gt, db_fasta_TRAV)
+#  writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
   # Plot genotype
-  ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+#  ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
 
   # Modify allele calls and output TSV file
-  db_reassigned <- reassignAlleles(db, gtseq)
+#  db_reassigned <- reassignAlleles(db, gtseq)
 
   # Find the Hamming distance
-  dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
+  # Did not work with "V_CALL_GENOTYPED" for tr loci
+  dist_ham <- distToNearest(db, vCallColumn="V_CALL", model="ham", 
                           normalize="len", nproc=1, first = FALSE)
 } else {
   stop("Loci specified is not available, please choose from: ig, tr.")
 }
 
-writeChangeoDb(db_reassigned, paste(output_folder,"v_genotyped.tab",sep="/"))
+writeChangeoDb(db, paste(output_folder,"v_genotyped.tab",sep="/"))
 
 # Find threshold using density method
 output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
