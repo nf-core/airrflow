@@ -72,7 +72,7 @@ if (loci == "ig"){
   stop("Loci specified is not available, please choose from: ig, tr.")
 }
 
-writeChangeoDb(db, paste(output_folder,"v_genotyped.tab",sep="/"))
+writeChangeoDb(db, paste(output_folder,"db_tr_nogenotyped.tab",sep="/"))
 
 # Find threshold using density method
 output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
