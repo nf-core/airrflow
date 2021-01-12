@@ -890,6 +890,7 @@ if (params.loci == "ig"){
 
         output:
         set file("threshold.txt"), file("v_tr_nogenotyped.tab"), val("$id") into ch_threshold_for_clone_definition_tr
+        set file("empty.fasta") into ch_fasta_for_clone_definition_tr
         file "Hamming_distance_threshold.pdf" 
 
         when:
@@ -902,11 +903,11 @@ if (params.loci == "ig"){
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta"
+        touch "empty.fasta"
         """
     }
 
     ch_threshold_for_clone_definition_ig = Channel.empty()
-    ch_fasta_for_clone_definition_tr = Channel.from('NO_FILE')
     ch_fasta_for_clone_definition_ig = Channel.empty()
     create_germlines_log_tr = Channel.empty()
 
@@ -927,7 +928,7 @@ process assign_clones{
 
     input:
     set val(threshold), file(geno), val(id) from ch_threshold_for_clone_definition_ig.mix(ch_threshold_for_clone_definition_tr)
-    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr.first())
+    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr)
 
     output:
     set file("${geno.baseName}_clone-pass.tab"), val("$id") into ch_for_germlines
