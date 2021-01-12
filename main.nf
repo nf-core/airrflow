@@ -850,7 +850,7 @@ if (params.loci == "ig"){
         file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
         output:
-        set file("threshold.txt"), file("v_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition_ig
+        set file("threshold.txt"), file("v_genotyped.tab"), val("$id") into ch_threshold_for_clone_definition_ig
         file("v_genotype.fasta") into ch_fasta_for_clone_definition_ig
         file "Hamming_distance_threshold.pdf" 
         file "genotype.pdf"
