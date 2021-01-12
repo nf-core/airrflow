@@ -866,6 +866,7 @@ if (params.loci == "ig"){
     }
 
     ch_threshold_for_clone_definition_tr = Channel.empty()
+    ch_fasta_for_clone_definition_tr = Channel.empty()
     create_germlines_log_tr = Channel.empty()
 
 } else if (params.loci == "tr"){
@@ -906,6 +907,7 @@ if (params.loci == "ig"){
 
     ch_threshold_for_clone_definition_ig = Channel.empty()
     ch_fasta_for_clone_definition_tr = Channel.from('no_file')
+    ch_fasta_for_clone_definition_ig = Channel.empty()
     create_germlines_log_ig = Channel.empty()
 
 }
