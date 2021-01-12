@@ -927,7 +927,7 @@ process assign_clones{
 
     input:
     set val(threshold), file(geno), val(id) from ch_threshold_for_clone_definition_ig.mix(ch_threshold_for_clone_definition_tr)
-    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr)
+    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr.collect())
 
     output:
     set file("${geno.baseName}_clone-pass.tab"), val("$id") into ch_for_germlines
