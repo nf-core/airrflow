@@ -906,7 +906,7 @@ if (params.loci == "ig"){
     }
 
     ch_threshold_for_clone_definition_ig = Channel.empty()
-    ch_fasta_for_clone_definition_tr = Channel.empty()
+    ch_fasta_for_clone_definition_tr = Channel.from('NO_FILE')
     ch_fasta_for_clone_definition_ig = Channel.empty()
     create_germlines_log_tr = Channel.empty()
 
@@ -927,7 +927,7 @@ process assign_clones{
 
     input:
     set val(threshold), file(geno), val(id) from ch_threshold_for_clone_definition_ig.mix(ch_threshold_for_clone_definition_tr)
-    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr.collect())
+    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr.first())
 
     output:
     set file("${geno.baseName}_clone-pass.tab"), val("$id") into ch_for_germlines
