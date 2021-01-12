@@ -31,6 +31,12 @@ def summary_params = Schema.params_summary_map(workflow, params, json_schema)
 log.info Schema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
+/* --        GENOME PARAMETER VALUES           -- */
+////////////////////////////////////////////////////
+
+params.fasta = Checks.get_genome_attribute(params, 'fasta')
+
+////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
 ////////////////////////////////////////////////////
 
@@ -56,95 +62,96 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.fasta) { ch_fasta = file(params.fasta) } else { exit 1, 'Genome fasta file not specified!' }
 
 
-// If paths to DBS are provided 
-if( params.igblast_base ){
-    Channel.fromPath("${params.igblast_base}")
-    .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-    .set { ch_igblast_db_for_process_igblast_mix }
-} else {
-    ch_igblast_db_for_process_igblast_mix = Channel.empty()
-}
-if( params.imgtdb_base ){
-    Channel.fromPath("${params.imgtdb_base}")
-    .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-    .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
-} else {
-    ch_imgt_db_for_igblast_filter_mix = Channel.empty()
-    ch_imgt_db_for_germline_sequences_mix = Channel.empty()
-    ch_imgt_db_for_shazam_mix = Channel.empty()
-}
+// // If paths to DBS are provided 
+// if( params.igblast_base ){
+//     Channel.fromPath("${params.igblast_base}")
+//     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+//     .set { ch_igblast_db_for_process_igblast_mix }
+// } else {
+//     ch_igblast_db_for_process_igblast_mix = Channel.empty()
+// }
+// if( params.imgtdb_base ){
+//     Channel.fromPath("${params.imgtdb_base}")
+//     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+//     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
+// } else {
+//     ch_imgt_db_for_igblast_filter_mix = Channel.empty()
+//     ch_imgt_db_for_germline_sequences_mix = Channel.empty()
+//     ch_imgt_db_for_shazam_mix = Channel.empty()
+// }
 
 
-//Validate inputs
-if (!params.downstream_only){
-    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
-    if (!params.race_5prime){
-        if (params.vprimers)  { 
-            ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
-        } else { 
-            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
-        }
-    } else {
-        if (params.vprimers) { 
-            exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
-        } else if (params.race_linker) {
-            ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-        } else {
-            exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
-        }
-    }
-    if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata with the '--input' option." }
-} else {
-    ch_cprimers_fasta = Channel.empty()
-    ch_vprimers_fasta = Channel.empty()
-    ch_metadata = Channel.empty()
-}
+// //Validate inputs
+// if (!params.downstream_only){
+//     if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
+//     if (!params.race_5prime){
+//         if (params.vprimers)  { 
+//             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
+//         } else { 
+//             exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
+//         }
+//     } else {
+//         if (params.vprimers) { 
+//             exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
+//         } else if (params.race_linker) {
+//             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+//         } else {
+//             exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
+//         }
+//     }
+//     if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata with the '--input' option." }
+// } else {
+//     ch_cprimers_fasta = Channel.empty()
+//     ch_vprimers_fasta = Channel.empty()
+//     ch_metadata = Channel.empty()
+// }
 
-//Validate UMI position
-if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
-if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
-if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
-//Read processed tabs if downstream_only 
-if (params.downstream_only){
-    Channel
-        .fromFilePairs(params.changeo_tables, size: 1) {file -> file.baseName}
-        .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
-        .set {ch_tabs_for_clonal_analysis}
-        .println()
-} else {
-    ch_tabs_for_clonal_analysis = Channel.empty()
-}
+// //Validate UMI position
+// if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
+// if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
+// if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
+// //Read processed tabs if downstream_only 
+// if (params.downstream_only){
+//     Channel
+//         .fromFilePairs(params.changeo_tables, size: 1) {file -> file.baseName}
+//         .ifEmpty {exit 1, "Cannot find any changeo tables matching: ${params.changeo_tables}.\nTry enclosing paths in quotes!\nTry adding a * wildcard!"}
+//         .set {ch_tabs_for_clonal_analysis}
+//         .println()
+// } else {
+//     ch_tabs_for_clonal_analysis = Channel.empty()
+// }
 
 /*
  * Create a channel for metadata and raw files
  * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
  */
 
-if (!params.downstream_only){
-    Channel.fromPath("${params.input}")
-            .ifEmpty{exit 1, "Please provide metadata file!"}
-            .set { ch_metadata_file_for_process_logs }
+// if (!params.downstream_only){
+//     Channel.fromPath("${params.input}")
+//             .ifEmpty{exit 1, "Please provide metadata file!"}
+//             .set { ch_metadata_file_for_process_logs }
 
-    if (params.index_file) {
-        ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
-                .splitCsv(header: true, sep:'\t')
-                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
-                .dump()
-        ch_read_files_for_merge_r1_umi = Channel.empty()
-    } else {
-        ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
-                .splitCsv(header: true, sep:'\t')
-                .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
-                .dump()
-        ch_read_files_for_merge_r1_umi_index = Channel.empty()
-    }
-} else {
-    ch_read_files_for_merge_r1_umi = Channel.empty()
-    ch_read_files_for_merge_r1_umi_index = Channel.empty()
-    ch_metadata_file_for_process_logs = Channel.empty()
-}
+//     if (params.index_file) {
+//         ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
+//                 .splitCsv(header: true, sep:'\t')
+//                 .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
+//                 .dump()
+//         ch_read_files_for_merge_r1_umi = Channel.empty()
+//     } else {
+//         ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
+//                 .splitCsv(header: true, sep:'\t')
+//                 .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
+//                 .dump()
+//         ch_read_files_for_merge_r1_umi_index = Channel.empty()
+//     }
+// } else {
+//     ch_read_files_for_merge_r1_umi = Channel.empty()
+//     ch_read_files_for_merge_r1_umi_index = Channel.empty()
+//     ch_metadata_file_for_process_logs = Channel.empty()
+// }
 
 
 ////////////////////////////////////////////////////
