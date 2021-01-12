@@ -53,7 +53,7 @@ if (loci == "ig"){
   db_fasta_TRDV = readIgFasta(fastas[3], strip_down_name = TRUE, force_caps = TRUE)
   db_fasta_TRGV = readIgFasta(fastas[4], strip_down_name = TRUE, force_caps = TRUE)
 
-  print(colnames(db_fasta_TRAV))
+  print(db_fasta_TRAV)
 
   gt <- inferGenotype(db, v_call = "V_CALL", find_unmutated = FALSE)
 
