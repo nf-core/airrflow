@@ -832,7 +832,7 @@ process merge_tables{
 
 if (params.loci == "ig"){
     //Shazam! 
-    process shazam{
+    process shazam_ig{
         tag "${id}"    
         publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
             saveAs: {filename ->
@@ -870,7 +870,7 @@ if (params.loci == "ig"){
 
 } else if (params.loci == "tr"){
     //Shazam! 
-    process shazam{
+    process shazam_tr{
         tag "${id}"    
         publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
             saveAs: {filename ->
