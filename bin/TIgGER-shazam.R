@@ -52,7 +52,7 @@ if (loci == "ig"){
                             normalize="len", 
                             nproc=1, 
                             first = FALSE)
-  writeChangeoDb(db_reassigned, paste(output_folder,"igh_genotyped.tab",sep="/"))
+  writeChangeoDb(db_reassigned, paste(output_folder,"v_genotyped.tab",sep="/"))
 
 } else if (loci == "tr") {
 
