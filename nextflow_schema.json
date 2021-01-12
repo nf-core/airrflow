@@ -202,6 +202,12 @@
                     "description": "Set the clustering threshold Hamming distance value.",
                     "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
                     "fa_icon": "fab fa-pagelines"
+                },
+                "threshold_method": {
+                    "type": "string",
+                    "default": "density",
+                    "description": "Set the method for finding the clustering threshold.",
+                    "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances."
                 }
             },
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
