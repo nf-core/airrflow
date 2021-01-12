@@ -44,8 +44,16 @@ if (loci == "ig"){
   db_reassigned <- reassignAlleles(db, gtseq)
 
   # Find the Hamming distance
-  dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
-                          normalize="len", nproc=1, first = FALSE)
+  dist_ham <- distToNearest(db_reassigned, 
+                            vCallColumn="V_CALL_GENOTYPED",
+                            jCallColumn="J_CALL",
+                            sequenceColumn="JUNCTION",
+                            model="ham", 
+                            normalize="len", 
+                            nproc=1, 
+                            first = FALSE)
+  writeChangeoDb(db_reassigned, paste(output_folder,"igh_genotyped.tab",sep="/"))
+
 } else if (loci == "tr") {
 
   db_fasta_TRAV = readIgFasta(fastas[1], strip_down_name = TRUE, force_caps = TRUE)
@@ -53,28 +61,35 @@ if (loci == "ig"){
   db_fasta_TRDV = readIgFasta(fastas[3], strip_down_name = TRUE, force_caps = TRUE)
   db_fasta_TRGV = readIgFasta(fastas[4], strip_down_name = TRUE, force_caps = TRUE)
 
-  print(db_fasta_TRAV)
+  #print(db_fasta_TRAV)
 
-  gt <- inferGenotype(db, v_call = "V_CALL", find_unmutated = FALSE)
+  #gt <- inferGenotype(db, v_call = "V_CALL", find_unmutated = FALSE)
 
-  gtseq <- genotypeFasta(gt, db_fasta_TRAV)
-  writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+  #gtseq <- genotypeFasta(gt, db_fasta_TRAV)
+  #writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
   # Plot genotype
-  ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+  #ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
 
   # Modify allele calls and output TSV file
-  db_reassigned <- reassignAlleles(db, gtseq)
+  #db_reassigned <- reassignAlleles(db, gtseq)
 
   # Find the Hamming distance
   # Did not work with "V_CALL_GENOTYPED" for tr loci
-  dist_ham <- distToNearest(db, vCallColumn="V_CALL_GENOTYPED", model="ham", 
-                          normalize="len", nproc=1, first = TRUE)
+  dist_ham <- distToNearest(db, 
+                            vCallColumn="V_CALL",
+                            jCallColumn="J_CALL",
+                            sequenceColumn="JUNCTION",
+                            model="ham", 
+                            normalize="len", 
+                            nproc=1, 
+                            first = FALSE)
+  
+  writeChangeoDb(db, paste(output_folder,"v_tr_nogenotyped.tab",sep="/"))
+
 } else {
   stop("Loci specified is not available, please choose from: ig, tr.")
 }
-
-writeChangeoDb(db, paste(output_folder,"db_tr_nogenotyped.tab",sep="/"))
 
 # Find threshold using chosen method
 

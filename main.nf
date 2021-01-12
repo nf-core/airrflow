@@ -830,38 +830,71 @@ process merge_tables{
 }
 
 
-//Shazam! 
-process shazam{
-    tag "${id}"    
-    publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
-        saveAs: {filename ->
-            if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
-            else if (filename.indexOf("command_log.txt") > 0) "$filename"
-            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
-            else if (filename == "genotype.pdf") "${id}_genotype.pdf"
-            else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
-            else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
-            else null
-        }
+if (params.loci == "ig"){
+    //Shazam! 
+    process shazam{
+        tag "${id}"    
+        publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
+            saveAs: {filename ->
+                if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
+                else if (filename.indexOf("command_log.txt") > 0) "$filename"
+                else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
+                else if (filename == "genotype.pdf") "${id}_genotype.pdf"
+                else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
+                else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
+                else null
+            }
 
-    input:
-    set val(id), file(tab) from ch_for_shazam
-    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
+        input:
+        set val(id), file(tab) from ch_for_shazam
+        file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
-    output:
-    set file("threshold.txt"), file("v_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition
-    file "Hamming_distance_threshold.pdf" 
-    file "genotype.pdf"
+        output:
+        set file("threshold.txt"), file("v_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition_ig
+        file("v_genotype.fasta") into ch_fasta_for_clone_definition_ig
+        file "Hamming_distance_threshold.pdf" 
+        file "genotype.pdf"
 
-    when:
-    !params.downstream_only
+        when:
+        !params.downstream_only
 
-    script:
-    if (params.loci == "ig") {
+        script:
         """
         TIgGER-shazam.R $tab $params.loci $params.threshold_method ${imgtbase}/${params.species}/vdj/imgt_human_IGHV.fasta 
         """
-    } else if (params.loci == "tr") {
+
+    }
+
+    ch_threshold_for_clone_definition_tr = Channel.empty()
+    create_germlines_log_tr = Channel.empty()
+
+} else if (params.loci == "tr"){
+    //Shazam! 
+    process shazam{
+        tag "${id}"    
+        publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
+            saveAs: {filename ->
+                if (filename == "v_tr_nogenotyped.tab") "${id}_igh_genotyped.tab"
+                else if (filename.indexOf("command_log.txt") > 0) "$filename"
+                else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
+                else if (filename == "genotype.pdf") "${id}_genotype.pdf"
+                else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
+                else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
+                else null
+            }
+
+        input:
+        set val(id), file(tab) from ch_for_shazam
+        file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
+
+        output:
+        set file("threshold.txt"), file("v_tr_nogenotyped.tab"), val("$id") into ch_threshold_for_clone_definition_tr
+        file "Hamming_distance_threshold.pdf" 
+
+        when:
+        !params.downstream_only
+
+        script:
         """
         TIgGER-shazam.R $tab $params.loci $params.threshold_method \\
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
@@ -870,6 +903,10 @@ process shazam{
         "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta"
         """
     }
+
+    ch_threshold_for_clone_definition_ig = Channel.empty()
+    ch_fasta_for_clone_definition_tr = Channel.from('no_file')
+    create_germlines_log_ig = Channel.empty()
 
 }
 
@@ -886,10 +923,12 @@ process assign_clones{
         }
 
     input:
-    set val(threshold), file(geno), file(geno_fasta), val(id) from ch_threshold_for_clone_definition
+    set val(threshold), file(geno), val(id) from ch_threshold_for_clone_definition_ig.mix(ch_threshold_for_clone_definition_tr)
+    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr)
 
     output:
-    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id") into ch_for_germlines
+    set file("${geno.baseName}_clone-pass.tab"), val("$id") into ch_for_germlines
+    file("$geno_fasta") into ch_fasta_for_germlines
     file "${geno.baseName}_clone-pass.tab"
     file "${geno.baseName}_table.tab"
     file "${id}_command_log.txt" into assign_clones_log
@@ -925,16 +964,18 @@ process germline_sequences{
         }
 
     input: 
-    set file(clones), file(geno_fasta), val(id) from ch_for_germlines
+    set file(clones), val(id) from ch_for_germlines
+    file(geno_fasta) from ch_fasta_for_germlines
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
     set val("$id"), file("${id}.tab") into ch_for_lineage_reconstruction
     file "${id}.tab"
-    file "${id}_command_log.txt" into create_germlines_log
+    file "${id}_command_log.txt" into create_germlines_log_ig
 
     when:
     !params.downstream_only
+    params.loci == "ig"
 
     script:
     """
@@ -942,6 +983,8 @@ process germline_sequences{
     ParseLog.py -l "${clones.baseName}.log" -f ID V_CALL D_CALL J_CALL
     """
 }
+
+
 
 //Lineage reconstruction
 process lineage_reconstruction{
@@ -965,6 +1008,7 @@ process lineage_reconstruction{
 
     when:
     !params.downstream_only
+    params.loci == "ig"
 
     script:
     """
@@ -1046,7 +1090,7 @@ process processing_logs{
     file('filter_representative_2/*') from filter_seqs_log.collect()
     file('igblast/*') from igblast_log.collect()
     file('define_clones/*') from assign_clones_log.collect()
-    file('create_germlines/*') from create_germlines_log.collect()
+    file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
     file('metadata.tsv') from ch_metadata_file_for_process_logs
 
     output:
