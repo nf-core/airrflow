@@ -34,7 +34,6 @@ log.info Schema.params_summary_log(workflow, params, json_schema)
 /* --        GENOME PARAMETER VALUES           -- */
 ////////////////////////////////////////////////////
 
-params.fasta = Checks.get_genome_attribute(params, 'fasta')
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
@@ -57,13 +56,26 @@ Checks.hostname(workflow, params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
+checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-if (params.fasta) { ch_fasta = file(params.fasta) } else { exit 1, 'Genome fasta file not specified!' }
+if (params.input) { ch_metadata = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
+// Read input metadata table
+if (params.index_file) {
+    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
+            .splitCsv(header: true, sep:'\t')
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
+            .dump()
+    ch_read_files_for_merge_r1_umi = Channel.empty()
+} else {
+    ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
+            .splitCsv(header: true, sep:'\t')
+            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
+            .dump()
+    ch_read_files_for_merge_r1_umi_index = Channel.empty()
+}
 
 // // If paths to DBS are provided 
 // if( params.igblast_base ){
