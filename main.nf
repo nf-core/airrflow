@@ -975,7 +975,7 @@ process germline_sequences{
     output:
     set val("$id"), file("${id}.tab") into ch_for_lineage_reconstruction
     file "${id}.tab"
-    //file "${id}_command_log.txt" into create_germlines_log_ig
+    file "${id}_command_log.txt" into create_germlines_log_ig
 
     when:
     !params.downstream_only
@@ -1094,7 +1094,7 @@ process processing_logs{
     file('filter_representative_2/*') from filter_seqs_log.collect()
     file('igblast/*') from igblast_log.collect()
     file('define_clones/*') from assign_clones_log.collect()
-    //file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
+    file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
     file('metadata.tsv') from ch_metadata_file_for_process_logs
 
     output:
