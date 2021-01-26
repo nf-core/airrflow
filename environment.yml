@@ -33,7 +33,7 @@ dependencies:
   - conda-forge::r-alakazam=1.0.2
   - conda-forge::r-shazam=1.0.2
   - conda-forge::r-tigger=1.0.0
-  - conda-forge::r-dplyr=1.0.3
+  #- conda-forge::r-dplyr=1.0.3
   #- conda-forge::r-data.table=1.13.6
   #- conda-forge::r-igraph=1.2.6
   #- conda-forge::r-gplots=3.1.1
