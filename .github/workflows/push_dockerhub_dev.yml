@@ -32,5 +32,5 @@ jobs:
       
       - name: Push Docker image for Immcantation to DockerHub (dev)
         run: |
-        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-        docker push nfcore/bcellmagicimmcantation:dev
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push nfcore/bcellmagicimmcantation:dev
