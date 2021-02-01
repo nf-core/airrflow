@@ -24,8 +24,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
-* [#85](https://github.com/nf-core/bcellmagic/pull/85): Updated Immcantation toolset in a separate container due to conflicts.
-
 ### `Deprecated`
 
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): `--SkipDownstream` param changed to `--skip_downstream`
