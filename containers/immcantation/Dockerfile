@@ -16,3 +16,5 @@ RUN conda env export --name nf-core-bcellmagic-immcantation-1.3.0dev > nf-core-b
 # Instruct R processes to use these empty files instead of clashing with a local version
 RUN touch .Rprofile
 RUN touch .Renviron
+
+#change dockerfile
