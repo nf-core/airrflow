@@ -16,7 +16,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Added support for mice data and possibility for other species with params: `--species`
 * Added support for 5' RACE technologiy with params: `--race_5prime`, `--race_linker`
 
-
 ### `Fixed`
 
 * [#74](https://github.com/nf-core/bcellmagic/pull/74): Fixed AWStest workflow
