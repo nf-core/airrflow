@@ -283,14 +283,14 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     multiqc --version &> v_multiqc.txt
-    vsearch --version &> v_vsearch.txt
-    muscle -version &> v_muscle.txt
-    python -c "import presto; print(presto.__version__)" > v_presto.txt
-    python -c "import changeo; print(changeo.__version__)" > v_changeo.txt
-    echo \$(R --version 2>&1) > v_R.txt
-    Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='v_shazam.txt')"
-    Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='v_alakazam.txt')"
-    Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='v_tigger.txt')"
+    #vsearch --version &> v_vsearch.txt
+    #muscle -version &> v_muscle.txt
+    #python -c "import presto; print(presto.__version__)" > v_presto.txt
+    #python -c "import changeo; print(changeo.__version__)" > v_changeo.txt
+    #echo \$(R --version 2>&1) > v_R.txt
+    #Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='v_shazam.txt')"
+    #Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='v_alakazam.txt')"
+    #Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='v_tigger.txt')"
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
@@ -378,6 +378,7 @@ process fastqc {
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -410,6 +411,7 @@ process filter_by_sequence_quality {
 //Mask them primers
 process mask_primers{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -446,6 +448,7 @@ process mask_primers{
 //Pair the R1 and R2
 process pre_consensus_pair{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/pair_post_consensus/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -475,6 +478,7 @@ process pre_consensus_pair{
 //Cluster sets to deal with too low UMI diversity
 process cluster_sets {
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -502,6 +506,7 @@ process cluster_sets {
 //ParseHeaders to annotate barcode into cluster field
 process reheader {
     tag "${id}"
+    tag "immcantation"
 
     input:
     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_reheader
@@ -523,6 +528,7 @@ process reheader {
 //Build UMI consensus
 process build_consensus{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -555,6 +561,7 @@ process build_consensus{
 //Re-pair R1 and R2
 process post_consensus_pair{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/pair_mates_post_consensus/$id", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
@@ -582,6 +589,7 @@ process post_consensus_pair{
 //Assemble the mate pairs
 process assemble_pairs{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_assemble_pairs_logs.tab"
@@ -611,7 +619,7 @@ process assemble_pairs{
 //combine UMI read group size annotations
 process combine_umi_read_groups{
     tag "${id}"
-
+    tag "immcantation"
     input:
     set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
 
@@ -631,7 +639,7 @@ process combine_umi_read_groups{
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
     tag "${id}"
-
+    tag "immcantation"
     input:
     set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
 
@@ -650,7 +658,7 @@ process copy_prcons{
 //Add Metadata annotation to headers
 process metadata_anno{
     tag "${id}"
-
+    tag "immcantation"
     input:
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
@@ -669,6 +677,7 @@ process metadata_anno{
 //Removal of duplicate sequences
 process deduplicate {
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_deduplicate_logs.tab"
@@ -698,6 +707,7 @@ process deduplicate {
 //Filtering to sequences with at least two representative reads and convert to FastA
 process filter_representative_2{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -726,6 +736,7 @@ process filter_representative_2{
 //Run IGBlast
 process igblast{
     tag "${id}"
+    tag "immcantation"
 
     input:
     set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
@@ -747,6 +758,7 @@ process igblast{
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/preprocessing/igblast/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
@@ -833,7 +845,8 @@ process merge_tables{
 if (params.loci == "ig"){
     //Shazam! 
     process shazam_ig{
-        tag "${id}"    
+        tag "${id}"
+        tag "immcantation"
         publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
             saveAs: {filename ->
                 if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
@@ -872,7 +885,8 @@ if (params.loci == "ig"){
 } else if (params.loci == "tr"){
     //Shazam! 
     process shazam_tr{
-        tag "${id}"    
+        tag "${id}"
+        tag "immcantation"
         publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
             saveAs: {filename ->
                 if (filename == "v_tr_nogenotyped.tab") "${id}_igh_genotyped.tab"
@@ -916,7 +930,8 @@ if (params.loci == "ig"){
 
 //Assign clones
 process assign_clones{
-    tag "${id}" 
+    tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/clone_assignment/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_log_table.tab"
@@ -957,6 +972,7 @@ process assign_clones{
 //Reconstruct germline sequences
 process germline_sequences{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/germlines/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".fasta") > 0) "fasta/$filename"
@@ -993,6 +1009,7 @@ process germline_sequences{
 //Lineage reconstruction
 process lineage_reconstruction{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/clonal_analysis/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".graphml") > 0) "$filename"
@@ -1025,6 +1042,7 @@ process lineage_reconstruction{
 //Clonal analysis
 process clonal_analysis{
     tag "${id}"
+    tag "immcantation"
     publishDir "${params.outdir}/clonal_analysis/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "$filename"
@@ -1052,7 +1070,8 @@ process clonal_analysis{
 
 //Repertoire comparison
 process repertoire_comparison{
-    tag "all" 
+    tag "all"
+    tag "immcantation"
     publishDir "${params.outdir}/repertoire_comparison", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "table/$filename"
