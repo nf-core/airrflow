@@ -26,11 +26,4 @@ jobs:
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           docker push nfcore/bcellmagic:dev
-      
-      - name: Build new docker image for Immcantation
-        run: docker build --no-cache ./containers/immcantation/ -t nfcore/bcellmagicimmcantation:dev
-      
-      - name: Push Docker image for Immcantation to DockerHub (dev)
-        run: |
-          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          docker push nfcore/bcellmagicimmcantation:dev
+

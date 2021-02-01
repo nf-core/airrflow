@@ -42,23 +42,6 @@ jobs:
           docker pull nfcore/bcellmagic:dev
           docker tag nfcore/bcellmagic:dev nfcore/bcellmagic:dev
 
-      - name: Check if Dockerfile or Conda environment for Immcantation changed
-        uses: technote-space/get-diff-action@v4
-        with:
-          FILES: |
-            containers/immcantation/Dockerfile
-            containers/immcantation/environment.yml
-
-      - name: Build new docker image immcantation
-        if: env.MATCHED_FILES
-        run: docker build --no-cache ./containers/immcantation/ -t nfcore/bcellmagicimmcantation:dev
-      
-      - name: Pull docker immage immcantation
-        if: ${{ !env.MATCHED_FILES }}
-        run: |
-          docker pull nfcore/bcellmagicimmcantation:dev
-          docker tag nfcore/bcellmagicimmcantation:dev nfcore:bcellmagicimmcantation:dev
-
       - name: Install Nextflow
         env:
           CAPSULE_LOG: none

@@ -27,13 +27,3 @@ jobs:
           docker push nfcore/bcellmagic:latest
           docker tag nfcore/bcellmagic:latest nfcore/bcellmagic:${{ github.event.release.tag_name }}
           docker push nfcore/bcellmagic:${{ github.event.release.tag_name }}
-      
-      - name: Build new docker image Immcantation
-        run: docker build --no-cache ./containers/immcantation/ -t nfcore/bcellmagicimmcantation:latest
-
-      - name: Push Docker image for Immcantation to DockerHub (release)
-        run: |
-          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          docker push nfcore/bcellmagicimmcantation:latest
-          docker tag nfcore/bcellmagicimmcantation:latest nfcore/bcellmagicimmcantation:${{ github.event.release.tag_name }}
-          docker push nfcore/bcellmagicimmcantation:${{ github.event.release.tag_name }}
