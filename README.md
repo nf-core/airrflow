@@ -40,12 +40,27 @@ See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available opt
 
 ## Pipeline Summary
 
-By default, the pipeline currently performs the following:
+By default, the pipeline currently performs the following steps:
 
-<!-- TODO nf-core: Fill in short bullet-pointed list of default steps of pipeline -->
-
-* Sequencing quality control (`FastQC`)
-* Overall pipeline run summaries (`MultiQC`)
+* Raw read quality control (`FastQC`)
+* Preprocessing (`pRESTO`)
+  * Filtering sequences by sequencing quality.
+  * Masking amplicon primers.
+  * Pairing read mates.
+  * Cluster sequences according to similarity, it helps identify if the UMI diversity was not high enough.
+  * Building consensus of sequences with the same UMI barcode.
+  * Re-pairing read mates.
+  * Assembling R1 and R2 read mates.
+  * Removing and annotating read duplicates with different UMI barcodes.
+  * Filtering out sequences that do not have at least 2 duplicates.
+* Assigning gene segment alleles from teh IgBlast database (`ChangeO`).
+* Determining the BCR / TCR genotype of the sample and finding the threshold for clone definition (`TIgGER`, `SHazaM`).
+* Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`ChangeO`).
+* Reconstructing gene calls of germline sequences (`ChangeO`).
+* Generating clonal trees (`Alakazam`).
+* Clonal analysis (`Alakazam`).
+* Repertoire comparison: calculation of clonal diversity and abundance (`Alakazam`).
+* Aggregating QC reports (`MultiQC`).
 
 ## Documentation
 
@@ -55,8 +70,8 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline: [us
 
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
-We thank the following people for their extensive assistance in the development
-of this pipeline:
+<!-- We thank the following people for their extensive assistance in the development
+of this pipeline: -->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
@@ -68,7 +83,6 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi. -->
 If you use  nf-core/bcellmagic for your analysis, please cite it using the following doi: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
 You can cite the `nf-core` publication as follows:
