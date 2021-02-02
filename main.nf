@@ -20,45 +20,59 @@ def helpMessage() {
     nextflow run nf-core/bcellmagic --reads '*_R{1,2}.fastq.gz' -profile standard,docker
 
     Mandatory arguments:
-      --cprimers                    [file]   Path to C-region primers FASTA file
-      --vprimers                    [file]   Path to V-region primers FASTA file
-      --input                       [file]   Path to input TSV file
-      -profile                      [str]    Configuration profile to use. Can use multiple (comma separated)
-                                            Available: standard, conda, docker, singularity, awsbatch, test
+      --cprimers                    [path]   Path to C-region primers FASTA file.
+      --vprimers                    [path]   Path to V-region primers FASTA file.
+      --input                       [path]   Path to input TSV file.
+      -profile                      [str]    Configuration profile to use. Can use multiple (comma separated).
+                                            Available: standard, conda, docker, singularity, awsbatch, test.
 
     Options:
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
-      --imgtdb_base                 [file]   Path to predownloaded imgtDB 
-      --igblast_base                [file]   Path to predownloaded igblastDB
+      --imgtdb_base                 [path]   Path to pre-downloaded IMGT database.
+      --igblast_base                [path]   Path to pre-downloaded igblast database.
+      --save_databases              [bool]   Save databases so you can use the cache in future runs.
+      --species                     [str]    Species to perform Igblast. Choose from: human, mouse.
+      --loci                        [str]    Loci to perform Igblast. Choose from: ig (BCR / Immunoglobulins), tr (TCR).
+
 
     Define clones:
       --set_cluster_threshold       [bool]   Set this parameter to allow manual hamming distance threshold for cell cluster definition.
       --cluster_threshold           [float]  Once set_cluster_threshold is true, set cluster_threshold value (float).
+      --threshold_method            [str]    Set the method for finding the clustering threshold.
     
     UMI barcode handling:
       --index_file                  [file]  If the unique molecular identifiers (UMI) are available in a separate index file, merge it to R1 reads.
       --umi_position                [str]   If UMI are not available in a separate index file, but already merged with the R1, and R2 reads, specify position (R1/R2).
       --umi_length                  [int]   Length of UMI barcodes.
-      --umi_start                   [int]   Start position of UMI barcode if it is located in a separate index file also containing other indices.
+      --umi_start                   [int]   Start position of UMI barcode if it is located in a separate index file also containing other indices.                 [int]   Length of UMI barcodes.
+
+    Primer handling:
+      --vprimer_start               [int]   Start position of V region primers (without counting the UMI barcode).
+      --cprimer_start               [int]   Start position of C region primers (without counting the UMI barcode).
+      --race_5prime                 [int]   The amplification protocol is 5' RACE based (e.g. SMARTer TAKARA), so no V-region primers were used.
+      --race_linker                 [path]  Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).
+      --primer_maxerror             [float] Maximum scoring error for the C and/or V region primers identification.
+      --primer_mask_mode            [str]   Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.
+      --primer_consensus            [float] Maximum error for building primer consensus.
     
     Repertoire downstream analysis:
       --downstream_only             [bool]  If tables are provided in option `--changeo_tables`, then perform only cluster and repertoire analysis steps.
-      --changeo_tables              [file]  Provide Changeo table in '.tsv' if only downstream analysis is desired.
+      --changeo_tables              [path]  Provide Changeo table in '.tsv' if only downstream analysis is desired.
       --skip_downstream             [bool]  Skip downstream clonal and repertoire analysis steps.
 
     Other options:
-      --outdir                      [file]  The output directory where the results will be saved
-      --publish_dir_mode            [str]   Mode for publishing results in the output directory. Available: symlink, rellink, link, copy, copyNoFollow, move (Default: copy)
-      --email                       [email] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --email_on_fail               [email] Same as --email, except only send mail if the workflow is not successful
-      --max_multiqc_email_size      [str]   Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
-      -name                         [str]   Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
+      --outdir                      [file]  The output directory where the results will be saved.
+      --publish_dir_mode            [str]   Mode for publishing results in the output directory. Available: symlink, rellink, link, copy, copyNoFollow, move (Default: copy).
+      --email                       [email] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits.
+      --email_on_fail               [email] Same as --email, except only send mail if the workflow is not successful.
+      --max_multiqc_email_size      [str]   Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB).
+      -name                         [str]   Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
     AWSBatch options:
-      --awsqueue                    [str]   The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   [str]   The AWS Region for your AWS Batch job to run on
-      --awscli                      [str]   Path to the AWS CLI tool
+      --awsqueue                    [str]   The AWSBatch JobQueue that needs to be set when running on AWSBatch.
+      --awsregion                   [str]   The AWS Region for your AWS Batch job to run on.
+      --awscli                      [str]   Path to the AWS CLI tool.
     """.stripIndent()
 }
 
@@ -88,10 +102,10 @@ if (workflow.profile.contains('awsbatch')) {
 }
 
 // Stage config files
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
+ch_output_docs = file("$projectDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 
 // If paths to DBS are provided 
 if( params.igblast_base ){
@@ -114,9 +128,23 @@ if( params.imgtdb_base ){
 
 //Validate inputs
 if (!params.downstream_only){
-    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide C-region primers fasta file with the '--cprimers' option." }
-    if (params.vprimers)  { ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) } else { exit 1, "Please provide V-region primers fasta file with the '--vprimers' option." }
-    if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata!" }
+    if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
+    if (!params.race_5prime){
+        if (params.vprimers)  { 
+            ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
+        } else { 
+            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
+        }
+    } else {
+        if (params.vprimers) { 
+            exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
+        } else if (params.race_linker) {
+            ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else {
+            exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
+        }
+    }
+    if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata with the '--input' option." }
 } else {
     ch_cprimers_fasta = Channel.empty()
     ch_vprimers_fasta = Channel.empty()
@@ -271,8 +299,8 @@ process get_software_versions {
 process fetchDBs{
     tag "fetchBlastDBs"
 
-    publishDir path: { params.saveDBs ? "${params.outdir}/dbs" : params.outdir },
-    saveAs: { params.saveDBs ? it : null }, mode: 'copy'
+    publishDir path: { params.save_databases ? "${params.outdir}/dbs" : params.outdir },
+    saveAs: { params.save_databases ? it : null }, mode: params.publish_dir_mode
 
     when:
     !params.igblast_base | !params.imgtdb_base
@@ -328,21 +356,21 @@ process merge_r1_umi {
 //FastQC 
 process fastqc {
     tag "${id}"
-    publishDir "${params.outdir}/fastqc/$id", mode: 'copy'
+    publishDir "${params.outdir}/fastqc/$id", mode: params.publish_dir_mode
 
     when:
     !params.downstream_only
 
     input:
-    set file(R1), file(R2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
 
     output:
-    set file("${R1}"), file("${R2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
+    set file("${r1}"), file("${r2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
     file "*_fastqc.{zip,html}" into ch_fastqc_results
 
     script:
     """
-    fastqc --quiet --threads $task.cpus "${R1}" "${R2}"
+    fastqc --quiet --threads $task.cpus "${r1}" "${r2}"
     """
 }
 
@@ -350,7 +378,8 @@ process fastqc {
 //Filter by Sequence Quality
 process filter_by_sequence_quality {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -364,28 +393,30 @@ process filter_by_sequence_quality {
     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
 
     output:
-    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_Masking)
-    file "${r1.baseName}_UMI_R1.log"
+    set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_masking)
+    file "${r1.baseName}_R1.log"
     file "${r2.baseName}_R2.log"
-    file "${r1.baseName}_UMI_R1_table.tab"
+    file "${r1.baseName}_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
     file "${id}_command_log.txt" into filter_by_sequence_quality_log
 
     script:
     """
-    FilterSeq.py quality -s $r1 -q 20 --outname "${r1.baseName}" --log "${r1.baseName}_UMI_R1.log" --nproc ${task.cpus} > "${id}_command_log.txt"
+    FilterSeq.py quality -s $r1 -q 20 --outname "${r1.baseName}" --log "${r1.baseName}_R1.log" --nproc ${task.cpus} > "${id}_command_log.txt"
     FilterSeq.py quality -s $r2 -q 20 --outname "${r2.baseName}" --log "${r2.baseName}_R2.log" --nproc ${task.cpus} >> "${id}_command_log.txt"
-    ParseLog.py -l "${r1.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
+    ParseLog.py -l "${r1.baseName}_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
     """
 }
 
 //Mask them primers
 process mask_primers{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
+            else if (filename.indexOf(".tab") > 0) "$filename"
             else null
         }
     
@@ -393,30 +424,32 @@ process mask_primers{
     !params.downstream_only
 
     input:
-    set file(umi_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_Masking
+    set file(r1_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_masking
     file(cprimers) from ch_cprimers_fasta.collect() 
     file(vprimers) from ch_vprimers_fasta.collect()
 
     output:
-    set file("${umi_file.baseName}_UMI_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_umi_file
-    file "${umi_file.baseName}_UMI_R1.log"
+    set file("${r1_file.baseName}_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_prebuild
+    file "${r1_file.baseName}_R1.log"
     file "${r2_file.baseName}_R2.log"
+    file "*.tab"
     file "${id}_command_log.txt" into mask_primers_log
 
     script:
-    def barcodeR1 = (params.index_file & params.umi_position == 'R1') ? "--start $params.umi_length --barcode" : '--start 0'
-    def barcodeR2 = (params.umi_position == 'R2') ? "--start $params.umi_length --barcode" : '--start 0'
+    def primer_start_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
+    def primer_start_R2 = (params.umi_position == 'R2') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
     """
-    MaskPrimers.py score --nproc ${task.cpus} -s $umi_file -p ${cprimers} $barcodeR1 --mode cut --outname ${umi_file.baseName}_UMI_R1 --log ${umi_file.baseName}_UMI_R1.log > "${id}_command_log.txt"
-    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $barcodeR2 --mode cut --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
-    ParseLog.py -l "${umi_file.baseName}_UMI_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
+    MaskPrimers.py score --nproc ${task.cpus} -s $r1_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r1_file.baseName}_R1 --log ${r1_file.baseName}_R1.log > "${id}_command_log.txt"
+    MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
+    ParseLog.py -l "${r1_file.baseName}_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
     """
 }
 
-//Pair the UMI_R1 and R2
-process pair_seq{
+//Pair the R1 and R2
+process pre_consensus_pair{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/pair_sequences/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/pair_post_consensus/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -424,10 +457,10 @@ process pair_seq{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_umi_file
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_prebuild
 
     output:
-    set file("${umi.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_umi_cluster_sets
+    set file("${r1.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_cluster_sets
     file "${id}_command_log.txt" into pair_seq_log
 
     when:
@@ -436,14 +469,17 @@ process pair_seq{
     script:
     def copyfield = (params.index_file & params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
     """
-    PairSeq.py -1 $umi -2 $r2 $copyfield --coord illumina > "${id}_command_log.txt"
+    PairSeq.py -1 $r1 -2 $r2 $copyfield --coord illumina > "${id}_command_log.txt"
     """
 }
+
+
 
 //Cluster sets to deal with too low UMI diversity
 process cluster_sets {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -451,10 +487,10 @@ process cluster_sets {
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_umi_cluster_sets
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_cluster_sets
 
     output:
-    set file ("${umi.baseName}_UMI_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_reheader
+    set file ("${r1.baseName}_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_reheader
     file "${id}_command_log.txt" into cluster_sets_log
 
     when:
@@ -462,7 +498,7 @@ process cluster_sets {
 
     script:
     """
-    ClusterSets.py set --nproc ${task.cpus} -s $umi --outname ${umi.baseName}_UMI_R1 > "${id}_command_log.txt"
+    ClusterSets.py set --nproc ${task.cpus} -s $r1 --outname ${r1.baseName}_R1 > "${id}_command_log.txt"
     ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2 >> "${id}_command_log.txt"
     """
 }
@@ -470,19 +506,20 @@ process cluster_sets {
 //ParseHeaders to annotate barcode into cluster field
 process reheader {
     tag "${id}"
+    tag "immcantation"
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_reheader
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_reheader
 
     output:
-    set file("${umi.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_umi_for_consensus
+    set file("${r1.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_consensus
 
     when:
     !params.downstream_only
 
     script:
     """
-    ParseHeaders.py copy -s $umi -f BARCODE -k CLUSTER --act cat > "${id}_command_log.txt"
+    ParseHeaders.py copy -s $r1 -f BARCODE -k CLUSTER --act cat > "${id}_command_log.txt"
     ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat >> "${id}_command_log.txt"
     """
 }
@@ -491,7 +528,8 @@ process reheader {
 //Build UMI consensus
 process build_consensus{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -499,13 +537,13 @@ process build_consensus{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_umi_for_consensus
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_consensus
 
     output:
-    set file("${umi.baseName}_UMI_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_consensus_passed_umi
-    file "${umi.baseName}_UMI_R1.log"
+    set file("${r1.baseName}_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_post_consensus_pair
+    file "${r1.baseName}_R1.log"
     file "${r2.baseName}_R2.log"
-    file "${umi.baseName}_UMI_R1_table.tab"
+    file "${r1.baseName}_R1_table.tab"
     file "${r2.baseName}_R2_table.tab"
     file "${id}_command_log.txt" into build_consensus_log
 
@@ -514,16 +552,17 @@ process build_consensus{
 
     script:
     """
-    BuildConsensus.py -s $umi --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${umi.baseName}_UMI_R1 --log ${umi.baseName}_UMI_R1.log > "${id}_command_log.txt"
-    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons 0.6 --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log >> "${id}_command_log.txt"
-    ParseLog.py -l "${umi.baseName}_UMI_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
+    BuildConsensus.py -s $r1 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${r1.baseName}_R1 --log ${r1.baseName}_R1.log > "${id}_command_log.txt"
+    BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log >> "${id}_command_log.txt"
+    ParseLog.py -l "${r1.baseName}_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
     """
 }
 
-//Re-pair UMI_R1+R2
-process repair{
+//Re-pair R1 and R2
+process post_consensus_pair{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/repair_mates/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/pair_mates_post_consensus/$id", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -531,10 +570,10 @@ process repair{
         }
 
     input:
-    set file(umi), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_consensus_passed_umi
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_post_consensus_pair
 
     output:
-    set file("*UMI_R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_repaired_UMI_for_assembly
+    set file("*R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_assembly
     file "${id}_command_log.txt" into repair_log
 
     when:
@@ -542,15 +581,16 @@ process repair{
 
     script:
     """
-    PairSeq.py -1 $umi -2 $r2 --coord presto > "${id}_command_log.txt"
+    PairSeq.py -1 $r1 -2 $r2 --coord presto > "${id}_command_log.txt"
     """
 }
    
 
 //Assemble the mate pairs
-process assemble{
+process assemble_pairs{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_assemble_pairs_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -558,7 +598,7 @@ process assemble{
         }
 
     input:
-    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_repaired_UMI_for_assembly
+    set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_assembly
 
     output:
     set file("${id}_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
@@ -579,7 +619,7 @@ process assemble{
 //combine UMI read group size annotations
 process combine_umi_read_groups{
     tag "${id}"
-
+    tag "immcantation"
     input:
     set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
 
@@ -599,7 +639,7 @@ process combine_umi_read_groups{
 //Copy field PRCONS to have annotation for C_primer and V_primer independently
 process copy_prcons{
     tag "${id}"
-
+    tag "immcantation"
     input:
     set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
 
@@ -618,7 +658,7 @@ process copy_prcons{
 //Add Metadata annotation to headers
 process metadata_anno{
     tag "${id}"
-
+    tag "immcantation"
     input:
     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
 
@@ -635,9 +675,10 @@ process metadata_anno{
 }
 
 //Removal of duplicate sequences
-process dedup {
+process deduplicate {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_deduplicate_logs.tab"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -664,9 +705,10 @@ process dedup {
 }
 
 //Filtering to sequences with at least two representative reads and convert to FastA
-process filter_seqs{
+process filter_representative_2{
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf("command_log.txt") > 0) "$filename"
@@ -694,6 +736,7 @@ process filter_seqs{
 //Run IGBlast
 process igblast{
     tag "${id}"
+    tag "immcantation"
 
     input:
     set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
@@ -707,7 +750,7 @@ process igblast{
 
     script:
     """
-    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism human --loci ig --format blast
+    AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism $params.species --loci $params.loci --format blast
     """
 }
 
@@ -715,7 +758,8 @@ process igblast{
 //Process output of IGBLAST, makedb + remove non-functional sequences, filter heavy chain and export records to FastA
 process igblast_filter {
     tag "${id}"
-    publishDir "${params.outdir}/preprocessing/igblast/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/preprocessing/igblast/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "$filename"
             else if (filename.indexOf(".fasta") > 0) "fasta/$filename"
@@ -738,18 +782,42 @@ process igblast_filter {
     !params.downstream_only
 
     script:
-    """
-    MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r ${imgtbase}/human/vdj/imgt_human_IGHV.fasta ${imgtbase}/human/vdj/imgt_human_IGHD.fasta ${imgtbase}/human/vdj/imgt_human_IGHJ.fasta --regions --scores > "${id}_command_log.txt"
-    ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
-    ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL -u IGHV --regex --outname ${id} >> "${id}_command_log.txt"
-    ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
-    """
+    if (params.loci == 'ig'){
+        """
+        MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r \\
+        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta \\
+        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHD.fasta \\
+        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
+        --regions --scores > "${id}_command_log.txt"
+        ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
+        ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL -u "IGH" --regex --logic all --outname ${id} >> "${id}_command_log.txt"
+        ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
+        """
+    } else if (params.loci == 'tr') {
+        """
+        MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAJ.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBD.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBJ.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDD.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDJ.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta" \\
+        --regions --scores > "${id}_command_log.txt"
+        ParseDb.py split -d blast_db-pass.tab -f FUNCTIONAL >> "${id}_command_log.txt"
+        ParseDb.py select -d blast_db-pass_FUNCTIONAL-T.tab -f V_CALL J_CALL -u "TR" --regex --logic all --outname ${id} >> "${id}_command_log.txt"
+        ConvertDb.py fasta -d ${id}_parse-select.tab --if SEQUENCE_ID --sf SEQUENCE_IMGT --mf V_CALL DUPCOUNT >> "${id}_command_log.txt"
+        """
+    }
 }
 
 //Merge tables belonging to the same patient
 process merge_tables{
     tag "merge tables"
-    publishDir "${params.outdir}/genotyping/$source", mode: 'copy'
+    publishDir "${params.outdir}/genotyping/$source", mode: params.publish_dir_mode
 
     input:
     set source, id, file(tab) from ch_for_merge.groupTuple()
@@ -774,42 +842,97 @@ process merge_tables{
 }
 
 
-//Shazam! 
-process shazam{
-    tag "${id}"    
-    publishDir "${params.outdir}/genotyping/$id", mode: 'copy',
-        saveAs: {filename ->
-            if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
-            else if (filename.indexOf("command_log.txt") > 0) "$filename"
-            else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
-            else if (filename == "genotype.pdf") "${id}_genotype.pdf"
-            else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
-            else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
-            else null
-        }
+if (params.loci == "ig"){
+    //Shazam! 
+    process shazam_ig{
+        tag "${id}"
+        tag "immcantation"
+        publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
+            saveAs: {filename ->
+                if (filename == "igh_genotyped.tab") "${id}_igh_genotyped.tab"
+                else if (filename.indexOf("command_log.txt") > 0) "$filename"
+                else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
+                else if (filename == "genotype.pdf") "${id}_genotype.pdf"
+                else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
+                else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
+                else null
+            }
 
-    input:
-    set val(id), file(tab) from ch_for_shazam
-    file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
+        input:
+        set val(id), file(tab) from ch_for_shazam
+        file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
 
-    output:
-    set file("threshold.txt"), file("igh_genotyped.tab"), file("v_genotype.fasta"), val("$id") into ch_threshold_for_clone_definition
-    file "Hamming_distance_threshold.pdf" 
-    file "genotype.pdf"
+        output:
+        set file("threshold.txt"), file("v_genotyped.tab"), val("$id") into ch_threshold_for_clone_definition_ig
+        file("v_genotype.fasta") into ch_fasta_for_clone_definition_ig
+        file "Hamming_distance_threshold.pdf" 
+        file "genotype.pdf"
 
-    when:
-    !params.downstream_only
+        when:
+        !params.downstream_only
 
-    script:
-    """
-    TIgGER-shazam.R $tab ${imgtbase}/human/vdj/imgt_human_IGHV.fasta
-    """
+        script:
+        """
+        TIgGER-shazam.R $tab $params.loci $params.threshold_method ${imgtbase}/${params.species}/vdj/imgt_human_IGHV.fasta 
+        """
+
+    }
+
+    ch_threshold_for_clone_definition_tr = Channel.empty()
+    ch_fasta_for_clone_definition_tr = Channel.empty()
+    create_germlines_log_tr = Channel.empty()
+
+} else if (params.loci == "tr"){
+    //Shazam! 
+    process shazam_tr{
+        tag "${id}"
+        tag "immcantation"
+        publishDir "${params.outdir}/genotyping/$id", mode: params.publish_dir_mode,
+            saveAs: {filename ->
+                if (filename == "v_tr_nogenotyped.tab") "${id}_igh_genotyped.tab"
+                else if (filename.indexOf("command_log.txt") > 0) "$filename"
+                else if (filename == "threshold.txt" && !params.set_cluster_threshold) "${id}_threshold.txt"
+                else if (filename == "genotype.pdf") "${id}_genotype.pdf"
+                else if (filename == "Hamming_distance_threshold.pdf") "${id}_hamming_distance_threshold.pdf"
+                else if (filename == "v_genotype.fasta") "${id}_v_genotype.fasta"
+                else null
+            }
+
+        input:
+        set val(id), file(tab) from ch_for_shazam
+        file imgtbase from ch_imgt_db_for_shazam.mix(ch_imgt_db_for_shazam_mix).collect()
+
+        output:
+        set file("threshold.txt"), file("v_tr_nogenotyped.tab"), val("$id") into ch_threshold_for_clone_definition_tr
+        set file("empty.fasta") into ch_fasta_for_clone_definition_tr
+        file "Hamming_distance_threshold.pdf" 
+
+        when:
+        !params.downstream_only
+
+        script:
+        """
+        TIgGER-shazam.R $tab $params.loci $params.threshold_method \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
+        "${imgtbase}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta"
+        touch "empty.fasta"
+        """
+    }
+
+    ch_threshold_for_clone_definition_ig = Channel.empty()
+    ch_fasta_for_clone_definition_ig = Channel.empty()
+    create_germlines_log_tr = Channel.empty()
+
+
 }
 
 //Assign clones
 process assign_clones{
-    tag "${id}" 
-    publishDir "${params.outdir}/clone_assignment/$id", mode: 'copy',
+    tag "${id}"
+    tag "immcantation"
+    publishDir "${params.outdir}/clone_assignment/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf("table.tab") > 0) "${id}_log_table.tab"
             else if (filename.indexOf("clone-pass.tab") > 0) "${id}_clone_pass.tab"
@@ -819,10 +942,12 @@ process assign_clones{
         }
 
     input:
-    set val(threshold), file(geno), file(geno_fasta), val(id) from ch_threshold_for_clone_definition
+    set val(threshold), file(geno), val(id) from ch_threshold_for_clone_definition_ig.mix(ch_threshold_for_clone_definition_tr)
+    file(geno_fasta) from ch_fasta_for_clone_definition_ig.mix(ch_fasta_for_clone_definition_tr)
 
     output:
-    set file("${geno.baseName}_clone-pass.tab"), file("$geno_fasta"), val("$id") into ch_for_germlines
+    set file("${geno.baseName}_clone-pass.tab"), val("$id") into ch_for_germlines
+    file("$geno_fasta") into ch_fasta_for_germlines
     file "${geno.baseName}_clone-pass.tab"
     file "${geno.baseName}_table.tab"
     file "${id}_command_log.txt" into assign_clones_log
@@ -847,7 +972,8 @@ process assign_clones{
 //Reconstruct germline sequences
 process germline_sequences{
     tag "${id}"
-    publishDir "${params.outdir}/germlines/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/germlines/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".fasta") > 0) "fasta/$filename"
             else if (filename.indexOf(".log") > 0) null
@@ -858,16 +984,18 @@ process germline_sequences{
         }
 
     input: 
-    set file(clones), file(geno_fasta), val(id) from ch_for_germlines
+    set file(clones), val(id) from ch_for_germlines
+    file(geno_fasta) from ch_fasta_for_germlines
     file imgtbase from ch_imgt_db_for_germline_sequences.mix(ch_imgt_db_for_germline_sequences_mix).collect()
 
     output:
     set val("$id"), file("${id}.tab") into ch_for_lineage_reconstruction
     file "${id}.tab"
-    file "${id}_command_log.txt" into create_germlines_log
+    file "${id}_command_log.txt" into create_germlines_log_ig
 
     when:
     !params.downstream_only
+    params.loci == "ig"
 
     script:
     """
@@ -876,10 +1004,13 @@ process germline_sequences{
     """
 }
 
+
+
 //Lineage reconstruction
 process lineage_reconstruction{
     tag "${id}"
-    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".graphml") > 0) "$filename"
             else if (filename.indexOf(".tsv") > 0) "$filename"
@@ -898,6 +1029,7 @@ process lineage_reconstruction{
 
     when:
     !params.downstream_only
+    params.loci == "ig"
 
     script:
     """
@@ -910,7 +1042,8 @@ process lineage_reconstruction{
 //Clonal analysis
 process clonal_analysis{
     tag "${id}"
-    publishDir "${params.outdir}/clonal_analysis/$id", mode: 'copy',
+    tag "immcantation"
+    publishDir "${params.outdir}/clonal_analysis/$id", mode: params.publish_dir_mode,
         saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
@@ -937,8 +1070,9 @@ process clonal_analysis{
 
 //Repertoire comparison
 process repertoire_comparison{
-    tag "all" 
-    publishDir "${params.outdir}/repertoire_comparison", mode: 'copy',
+    tag "all"
+    tag "immcantation"
+    publishDir "${params.outdir}/repertoire_comparison", mode: params.publish_dir_mode,
     saveAs: {filename ->
             if (filename.indexOf(".tab") > 0) "table/$filename"
             else if (filename.indexOf(".zip") > 0) "$filename"
@@ -965,7 +1099,7 @@ process repertoire_comparison{
 
 //Processing logs
 process processing_logs{
-    publishDir "${params.outdir}/parsing_logs", mode: 'copy'
+    publishDir "${params.outdir}/parsing_logs", mode: params.publish_dir_mode
 
     input:
     file('filter_by_sequence_quality/*') from filter_by_sequence_quality_log.collect()
@@ -979,7 +1113,7 @@ process processing_logs{
     file('filter_representative_2/*') from filter_seqs_log.collect()
     file('igblast/*') from igblast_log.collect()
     file('define_clones/*') from assign_clones_log.collect()
-    file('create_germlines/*') from create_germlines_log.collect()
+    file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
     file('metadata.tsv') from ch_metadata_file_for_process_logs
 
     output:
@@ -1092,18 +1226,18 @@ workflow.onComplete {
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
+    def tf = new File("$projectDir/assets/email_template.txt")
     def txt_template = engine.createTemplate(tf).make(email_fields)
     def email_txt = txt_template.toString()
 
     // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
+    def hf = new File("$projectDir/assets/email_template.html")
     def html_template = engine.createTemplate(hf).make(email_fields)
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
+    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
+    def sf = new File("$projectDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
 

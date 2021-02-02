@@ -4,7 +4,7 @@
 
 [![GitHub Actions CI Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/bcellmagic/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/bcellmagic/actions)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3607408.svg)](https://doi.org/10.5281/zenodo.3607408)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/bcellmagic.svg)](https://hub.docker.com/r/nfcore/bcellmagic)
@@ -38,6 +38,30 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available options when running the pipeline.
 
+## Pipeline Summary
+
+By default, the pipeline currently performs the following steps:
+
+* Raw read quality control (`FastQC`)
+* Preprocessing (`pRESTO`)
+  * Filtering sequences by sequencing quality.
+  * Masking amplicon primers.
+  * Pairing read mates.
+  * Cluster sequences according to similarity, it helps identify if the UMI diversity was not high enough.
+  * Building consensus of sequences with the same UMI barcode.
+  * Re-pairing read mates.
+  * Assembling R1 and R2 read mates.
+  * Removing and annotating read duplicates with different UMI barcodes.
+  * Filtering out sequences that do not have at least 2 duplicates.
+* Assigning gene segment alleles from teh IgBlast database (`Change-O`).
+* Determining the BCR / TCR genotype of the sample and finding the threshold for clone definition (`TIgGER`, `SHazaM`).
+* Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
+* Reconstructing gene calls of germline sequences (`Change-O`).
+* Generating clonal trees (`Alakazam`).
+* Clonal analysis (`Alakazam`).
+* Repertoire comparison: calculation of clonal diversity and abundance (`Alakazam`).
+* Aggregating QC reports (`MultiQC`).
+
 ## Documentation
 
 The nf-core/bcellmagic pipeline comes with documentation about the pipeline: [usage](https://nf-co.re/bcellmagic/usage) and [output](https://nf-co.re/bcellmagic/output).
@@ -46,15 +70,19 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline: [us
 
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
+<!-- We thank the following people for their extensive assistance in the development
+of this pipeline: -->
+
+<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 For further information or help, don't hesitate to get in touch on the [Slack `#bcellmagic` channel](https://nfcore.slack.com/channels/bcellmagic) (you can join with [this invite](https://nf-co.re/join/slack)).
 
-## Citation
+## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi. -->
 If you use  nf-core/bcellmagic for your analysis, please cite it using the following doi: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
 You can cite the `nf-core` publication as follows:
@@ -65,3 +93,12 @@ You can cite the `nf-core` publication as follows:
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
 > ReadCube: [Full Access Link](https://rdcu.be/b1GjZ)
+
+In addition, references of tools and data used in this pipeline are as follows:
+
+* **pRESTO** Vander Heiden, J. A., Yaari, G., Uduman, M., Stern, J. N. H., O’Connor, K. C., Hafler, D. A., … Kleinstein, S. H. (2014). pRESTO: a toolkit for processing high-throughput sequencing raw reads of lymphocyte receptor repertoires. Bioinformatics, 30(13), 1930–1932. [https://doi.org/10.1093/bioinformatics/btu138](https://doi.org/10.1093/bioinformatics/btu138).
+* **SHazaM, Change-O** Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data: Table 1. Bioinformatics, 31(20), 3356–3358. [https://doi.org/10.1093/bioinformatics/btv359](https://doi.org/10.1093/bioinformatics/btv359).
+* **Alakazam** Stern, J. N. H., Yaari, G., Vander Heiden, J. A., Church, G., Donahue, W. F., Hintzen, R. Q., … O’Connor, K. C. (2014). B cells populating the multiple sclerosis brain mature in the draining cervical lymph nodes. Science Translational Medicine, 6(248). [https://doi.org/10.1126/scitranslmed.3008879](https://doi.org/10.1126/scitranslmed.3008879).
+* **TIgGER** Gadala-maria, D., Yaari, G., Uduman, M., & Kleinstein, S. H. (2015). Automated analysis of high-throughput B-cell sequencing data reveals a high frequency of novel immunoglobulin V gene segment alleles. Proceedings of the National Academy of Sciences, 112(8), 1–9. [https://doi.org/10.1073/pnas.1417683112](https://doi.org/10.1073/pnas.1417683112).
+* **FastQC** Download: [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+* **MultiQC** Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. [https://doi.org/10.1093/bioinformatics/btw354](https://doi.org/10.1093/bioinformatics/btw354). Download: [https://multiqc.info/](https://multiqc.info/).

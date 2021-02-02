@@ -36,7 +36,7 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile standard,docker --metadata metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
+nextflow run nf-core/bcellmagic -profile standard,docker --input metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
 ```
 
 For more information about the parameters, please refer the corresponding sections.
@@ -50,6 +50,26 @@ results         # Finished results (configurable, see below)
 .nextflow_log   # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
+
+### Input file
+
+The required input file is a TSV file with the following columns, including the exact same headers:
+
+```bash
+ID  Source  Treatment Extraction_time Population  R1  R2  I1
+QMKMK072AD  Patient_2 Drug_treatment  baseline  p sample_S8_L001_R1_001.fastq.gz  sample_S8_L001_R2_001.fastq.gz  sample_S8_L001_I1_001.fastq.gz
+```
+
+The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:
+
+* ID: sample ID, should be unique for each sample.
+* Source: patient or organism code.
+* Treatment: treatment condition applied to the sample.
+* Extraction_time: time of cell extraction for the sample.
+* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).
+* R1: path to fastq file with first mates of paired-end sequencing.
+* R2: path to fastq file with second mates of paired-end sequencing.
+* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column).
 
 ### Updating the pipeline
 
