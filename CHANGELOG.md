@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#74](https://github.com/nf-core/bcellmagic/pull/74): Fixed AWStest workflow
 * [#75](https://github.com/nf-core/bcellmagic/pull/75): Fixed lineage trees publish plots and graphml
 * [#75](https://github.com/nf-core/bcellmagic/pull/75): Assemble process shorten filename to avoid error due to too long filename
+* Order sequence logs by sample ID.
 
 ### `Dependencies`
 
