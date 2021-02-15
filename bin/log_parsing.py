@@ -345,9 +345,14 @@ values = [df_process_list[0].iloc[:,0].tolist(),
           df_process_list[8].loc[:,"repres_2"].tolist(),
           df_process_list[8].loc[:,"pass_igblast"].tolist()]
 
+print("df_process_list")
+print(df_process_list)
+
 final_table = dict(zip(colnames, values))
 df_final_table = pd.DataFrame.from_dict(final_table)
 df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
+print("df_final_table")
+print(df_final_table)
 
 #incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")
