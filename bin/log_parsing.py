@@ -347,6 +347,7 @@ values = [df_process_list[0].iloc[:,0].tolist(),
 
 print("df_process_list")
 print(df_process_list)
+df_process_list.to_csv(path_or_buf="Table_all_details_process.tsv", sep='\t', header=True, index=False)
 
 final_table = dict(zip(colnames, values))
 df_final_table = pd.DataFrame.from_dict(final_table)
