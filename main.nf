@@ -924,8 +924,6 @@ if (params.loci == "ig"){
     ch_threshold_for_clone_definition_ig = Channel.empty()
     ch_fasta_for_clone_definition_ig = Channel.empty()
     create_germlines_log_tr = Channel.empty()
-    create_germlines_log_ig = Channel.empty()
-
 
 }
 
@@ -1114,7 +1112,7 @@ process processing_logs{
     file('filter_representative_2/*') from filter_seqs_log.collect()
     file('igblast/*') from igblast_log.collect()
     file('define_clones/*') from assign_clones_log.collect()
-    file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
+    // file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
     file('metadata.tsv') from ch_metadata_file_for_process_logs
 
     output:
