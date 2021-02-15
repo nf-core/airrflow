@@ -904,7 +904,7 @@ if (params.loci == "ig"){
 
         output:
         set file("threshold.txt"), file("v_tr_nogenotyped.tab"), val("$id") into ch_threshold_for_clone_definition_tr
-        set file("empty.fasta") into ch_fasta_for_clone_definition_tr
+        file("empty.fasta") into ch_fasta_for_clone_definition_tr
         file "Hamming_distance_threshold.pdf" 
 
         when:
