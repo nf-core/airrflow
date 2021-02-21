@@ -4,14 +4,14 @@
 
 params.options = [:]
 
-include {
-    SAMPLESHEET_CHECK } from '../process/samplesheet_check' addParams( options: params.options )
+include { SAMPLESHEET_CHECK } from '../process/samplesheet_check' addParams( options: params.options )
 
 workflow INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.tsv
     
     main:
+    // TODO: avoiding checking samplesheet for now, add samplesheet check later.
     SAMPLESHEET_CHECK ( samplesheet )
         .splitCsv ( header:true, sep:'\t' )
         .map { get_samplesheet_paths(it) }
@@ -28,19 +28,21 @@ def get_samplesheet_paths(LinkedHashMap col) {
     meta.source       = col.Source
     meta.treatment    = col.Treatment
     meta.time         = col.Extraction_time
-    meta.single_end   = collect.single_end.toBoolean()
 
     def array = []
-    if (!file(row.fastq_1).exists()) {
+    if (!file(col.R1).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${row.fastq_1}"
     }
-    if (meta.single_end) {
-        array = [ meta, [ file(row.fastq_1) ] ]
+    if (col.I1) {
+        if (!file(col.I1).exists()) {
+            exit 1, "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${row.fastq_2}"
+        }
+        array = [ meta, [ file(col.R1), file(col.R2), file(col.I1) ] ]
     } else {
-        if (!file(row.fastq_2).exists()) {
+        if (!file(col.R2).exists()) {
             exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${row.fastq_2}"
         }
-        array = [ meta, [ file(row.fastq_1), file(row.fastq_2) ] ]
+        array = [ meta, [ file(col.R1), file(col.R2) ] ]
     }
     return array    
 }
