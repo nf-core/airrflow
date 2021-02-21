@@ -44,11 +44,9 @@ def check_samplesheet(file_in, file_out):
     """
     This function checks that the samplesheet follows the following structure:
 
-    group,replicate,fastq_1,fastq_2
-    WT,1,WT_LIB1_REP1_1.fastq.gz,WT_LIB1_REP1_2.fastq.gz
-    WT,1,WT_LIB2_REP1_1.fastq.gz,WT_LIB2_REP1_2.fastq.gz
-    WT,2,WT_LIB1_REP2_1.fastq.gz,WT_LIB1_REP2_2.fastq.gz
-    KO,1,KO_LIB1_REP1_1.fastq.gz,KO_LIB1_REP1_2.fastq.gz
+    ID	R1	R2	I1	Source	Treatment	Extraction_time	Population
+    Sample1	Sample1_dn_R1.fastq.gz	Sample1_dn_R2.fastq.gz	Sample1_dn_I1.fastq.gz	Patient1	DrugTreatment	baseline	dn
+    Sample2	Sample2_m_R1.fastq.gz	Sample2_m_R2.fastq.gz	Sample2_m_I1.fastq.gz	Patient1	DrugTreatment	baseline	m
     """
 
     sample_run_dict = {}
@@ -57,15 +55,15 @@ def check_samplesheet(file_in, file_out):
         ## Check header
         MIN_COLS = 3
         # TODO nf-core: Update the column names for the input samplesheet
-        HEADER = ["group", "replicate", "fastq_1", "fastq_2"]
-        header = [x.strip('"') for x in fin.readline().strip().split(",")]
+        HEADER = ["ID", "R1", "R2", "I1", "Source", "Treatment", "Extraction_time", "Population"]
+        header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         if header[: len(HEADER)] != HEADER:
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
             sys.exit(1)
 
         ## Check sample entries
         for line in fin:
-            lspl = [x.strip().strip('"') for x in line.strip().split(",")]
+            lspl = [x.strip().strip('"') for x in line.strip().split("\t")]
 
             ## Check valid number of columns per row
             if len(lspl) < len(HEADER):

@@ -60,17 +60,17 @@ checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_metadata = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
+if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 // Read input metadata table
 if (params.index_file) {
-    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
+    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_input )
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
             .dump()
     ch_read_files_for_merge_r1_umi = Channel.empty()
 } else {
-    ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
+    ch_read_files_for_merge_r1_umi = Channel.from( ch_input )
             .splitCsv(header: true, sep:'\t')
             .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
             .dump()
