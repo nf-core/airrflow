@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Added support for TCR data with params: `--loci`
 * Added support for mice data and possibility for other species with params: `--species`
 * Added support for 5' RACE technology with params: `--race_5prime`, `--race_linker`
+* Added tests for TCR data
 
 ### `Fixed`
 
