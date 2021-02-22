@@ -10,14 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): Template update to nf-core tools v1.10.2
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): Added parameter json schema
 * [#74](https://github.com/nf-core/bcellmagic/pull/74): Added possibility of setting UMI start position and better UMI docs
-* Added primer handling params: `--vprimer_start`, `--cprimer_start`, `--primer_mask_mode`, `--primer_maxeror`
+* [#85](https://github.com/nf-core/bcellmagic/pull/85): Added primer handling params: `--vprimer_start`, `--cprimer_start`, `--primer_mask_mode`, `--primer_maxeror`, `--primer_consensus`
 * Template update to nf-core tools v1.12.1
+* [#85](https://github.com/nf-core/bcellmagic/pull/85): Added support for TCR data with params: `--loci`
+* [#85](https://github.com/nf-core/bcellmagic/pull/85): Added support for mice data and possibility for other species with params: `--species`
+* [#85](https://github.com/nf-core/bcellmagic/pull/85): Added support for 5' RACE technology with params: `--race_5prime`, `--race_linker`
+* [#87](https://github.com/nf-core/bcellmagic/pull/87): Added tests for TCR data
 
 ### `Fixed`
 
 * [#74](https://github.com/nf-core/bcellmagic/pull/74): Fixed AWStest workflow
 * [#75](https://github.com/nf-core/bcellmagic/pull/75): Fixed lineage trees publish plots and graphml
 * [#75](https://github.com/nf-core/bcellmagic/pull/75): Assemble process shorten filename to avoid error due to too long filename
+* [#87](https://github.com/nf-core/bcellmagic/pull/87): Order sequence logs by sample ID.
 
 ### `Dependencies`
 

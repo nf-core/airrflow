@@ -331,23 +331,35 @@ colnames = ["Sample",
             "Representative_2",
             "Igblast"]
 
-values = [df_process_list[0].iloc[:,0].tolist(),
-          df_process_list[0].loc[:,"start_R1"].tolist(),
-          df_process_list[0].loc[:,"start_R2"].tolist(),
-          df_process_list[0].loc[:,"pass_R1"].tolist(),
-          df_process_list[0].loc[:,"pass_R2"].tolist(),
-          df_process_list[1].loc[:,"pass_R1"].tolist(),
-          df_process_list[1].loc[:,"pass_R2"].tolist(),
-          df_process_list[2].loc[:,"pass_pairs"].tolist(),
-          df_process_list[5].loc[:,"pass_pairs"].tolist(),
-          df_process_list[6].loc[:,"pass_pairs"].tolist(),
-          df_process_list[7].loc[:,"unique"].tolist(),
-          df_process_list[8].loc[:,"repres_2"].tolist(),
-          df_process_list[8].loc[:,"pass_igblast"].tolist()]
+values = [df_process_list[0].sort_values(by=["Sample"]).iloc[:,0].tolist(),
+          df_process_list[0].sort_values(by=["Sample"]).loc[:,"start_R1"].tolist(),
+          df_process_list[0].sort_values(by=["Sample"]).loc[:,"start_R2"].tolist(),
+          df_process_list[0].sort_values(by=["Sample"]).loc[:,"pass_R1"].tolist(),
+          df_process_list[0].sort_values(by=["Sample"]).loc[:,"pass_R2"].tolist(),
+          df_process_list[1].sort_values(by=["Sample"]).loc[:,"pass_R1"].tolist(),
+          df_process_list[1].sort_values(by=["Sample"]).loc[:,"pass_R2"].tolist(),
+          df_process_list[2].sort_values(by=["Sample"]).loc[:,"pass_pairs"].tolist(),
+          df_process_list[5].sort_values(by=["Sample"]).loc[:,"pass_pairs"].tolist(),
+          df_process_list[6].sort_values(by=["Sample"]).loc[:,"pass_pairs"].tolist(),
+          df_process_list[7].sort_values(by=["Sample"]).loc[:,"unique"].tolist(),
+          df_process_list[8].sort_values(by=["Sample"]).loc[:,"repres_2"].tolist(),
+          df_process_list[8].sort_values(by=["Sample"]).loc[:,"pass_igblast"].tolist()]
+
+# Tables provide extra info and help debugging
+df_process_list[0].to_csv(path_or_buf="Table_all_details_filter_quality.tsv", sep='\t', header=True, index=False)
+df_process_list[1].to_csv(path_or_buf="Table_all_details_mask_primers.tsv", sep='\t', header=True, index=False)
+df_process_list[2].to_csv(path_or_buf="Table_all_details_paired.tsv", sep='\t', header=True, index=False)
+df_process_list[3].to_csv(path_or_buf="Table_all_details_cluster_sets.tsv", sep='\t', header=True, index=False)
+df_process_list[4].to_csv(path_or_buf="Table_all_details_build_consensus.tsv", sep='\t', header=True, index=False)
+df_process_list[5].to_csv(path_or_buf="Table_all_details_repaired.tsv", sep='\t', header=True, index=False)
+df_process_list[6].to_csv(path_or_buf="Table_all_details_assemble_mates.tsv", sep='\t', header=True, index=False)
+df_process_list[7].to_csv(path_or_buf="Table_all_details_deduplicate.tsv", sep='\t', header=True, index=False)
+df_process_list[8].to_csv(path_or_buf="Table_all_details_igblast.tsv", sep='\t', header=True, index=False)
 
 final_table = dict(zip(colnames, values))
 df_final_table = pd.DataFrame.from_dict(final_table)
 df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
+
 
 #incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")

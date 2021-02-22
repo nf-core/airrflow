@@ -40,12 +40,27 @@ See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available opt
 
 ## Pipeline Summary
 
-By default, the pipeline currently performs the following:
+By default, the pipeline currently performs the following steps:
 
-<!-- TODO nf-core: Fill in short bullet-pointed list of default steps of pipeline -->
-
-* Sequencing quality control (`FastQC`)
-* Overall pipeline run summaries (`MultiQC`)
+* Raw read quality control (`FastQC`)
+* Preprocessing (`pRESTO`)
+  * Filtering sequences by sequencing quality.
+  * Masking amplicon primers.
+  * Pairing read mates.
+  * Cluster sequences according to similarity, it helps identify if the UMI diversity was not high enough.
+  * Building consensus of sequences with the same UMI barcode.
+  * Re-pairing read mates.
+  * Assembling R1 and R2 read mates.
+  * Removing and annotating read duplicates with different UMI barcodes.
+  * Filtering out sequences that do not have at least 2 duplicates.
+* Assigning gene segment alleles from teh IgBlast database (`Change-O`).
+* Determining the BCR / TCR genotype of the sample and finding the threshold for clone definition (`TIgGER`, `SHazaM`).
+* Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
+* Reconstructing gene calls of germline sequences (`Change-O`).
+* Generating clonal trees (`Alakazam`).
+* Clonal analysis (`Alakazam`).
+* Repertoire comparison: calculation of clonal diversity and abundance (`Alakazam`).
+* Aggregating QC reports (`MultiQC`).
 
 ## Documentation
 
@@ -55,8 +70,8 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline: [us
 
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
-We thank the following people for their extensive assistance in the development
-of this pipeline:
+<!-- We thank the following people for their extensive assistance in the development
+of this pipeline: -->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
@@ -68,7 +83,6 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi. -->
 If you use  nf-core/bcellmagic for your analysis, please cite it using the following doi: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
 You can cite the `nf-core` publication as follows:
@@ -82,4 +96,9 @@ You can cite the `nf-core` publication as follows:
 
 In addition, references of tools and data used in this pipeline are as follows:
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+* **pRESTO** Vander Heiden, J. A., Yaari, G., Uduman, M., Stern, J. N. H., O’Connor, K. C., Hafler, D. A., … Kleinstein, S. H. (2014). pRESTO: a toolkit for processing high-throughput sequencing raw reads of lymphocyte receptor repertoires. Bioinformatics, 30(13), 1930–1932. [https://doi.org/10.1093/bioinformatics/btu138](https://doi.org/10.1093/bioinformatics/btu138).
+* **SHazaM, Change-O** Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data: Table 1. Bioinformatics, 31(20), 3356–3358. [https://doi.org/10.1093/bioinformatics/btv359](https://doi.org/10.1093/bioinformatics/btv359).
+* **Alakazam** Stern, J. N. H., Yaari, G., Vander Heiden, J. A., Church, G., Donahue, W. F., Hintzen, R. Q., … O’Connor, K. C. (2014). B cells populating the multiple sclerosis brain mature in the draining cervical lymph nodes. Science Translational Medicine, 6(248). [https://doi.org/10.1126/scitranslmed.3008879](https://doi.org/10.1126/scitranslmed.3008879).
+* **TIgGER** Gadala-maria, D., Yaari, G., Uduman, M., & Kleinstein, S. H. (2015). Automated analysis of high-throughput B-cell sequencing data reveals a high frequency of novel immunoglobulin V gene segment alleles. Proceedings of the National Academy of Sciences, 112(8), 1–9. [https://doi.org/10.1073/pnas.1417683112](https://doi.org/10.1073/pnas.1417683112).
+* **FastQC** Download: [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+* **MultiQC** Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. [https://doi.org/10.1093/bioinformatics/btw354](https://doi.org/10.1093/bioinformatics/btw354). Download: [https://multiqc.info/](https://multiqc.info/).
