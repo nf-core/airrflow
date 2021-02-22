@@ -117,11 +117,13 @@
                 },
                 "umi_length": {
                     "type": "integer",
-                    "description": "UMI barcode length in nucleotides."
+                    "description": "UMI barcode length in nucleotides.",
+                    "fa_icon": "fas fa-barcode"
                 },
                 "umi_start": {
                     "type": "integer",
-                    "description": "UMI barcode start position."
+                    "description": "UMI barcode start position.",
+                    "fa_icon": "fas fa-barcode"
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
@@ -207,7 +209,8 @@
                     "type": "string",
                     "default": "density",
                     "description": "Set the method for finding the clustering threshold.",
-                    "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances."
+                    "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances.",
+                    "fa_icon": "fab fa-pagelines"
                 }
             },
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
@@ -240,6 +243,25 @@
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
             "fa_icon": "fas fa-angle-double-right"
         },
+        "software_packaging_options": {
+            "title": "Software packaging options",
+            "type": "object",
+            "description": "Options for software packaging",
+            "default": "",
+            "properties": {
+                "enable_conda": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-box",
+                    "description": "Enable conda to run pipeline with conda environment."
+                },
+                "singularity_pull_docker_container": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-box",
+                    "description": "Pull docker container and convert to singularity at run time."
+                }
+            },
+            "fa_icon": "fas fa-box"
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -260,6 +282,15 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
                     "default": true
+                },
+                "genome": {
+                    "type": "string",
+                    "hidden": true
+                },
+                "genomes": {
+                    "type": "string",
+                    "default": "[]",
+                    "hidden": true
                 }
             }
         },
@@ -341,6 +372,15 @@
                     "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-cogs",
                     "hidden": true
+                },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "Add title for the multiqc report",
+                    "default": "''"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip MultiQC process"
                 }
             }
         },
@@ -445,6 +485,9 @@
         },
         {
             "$ref": "#/definitions/downstream_options"
+        },
+        {
+            "$ref": "#/definitions/software_packaging_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
