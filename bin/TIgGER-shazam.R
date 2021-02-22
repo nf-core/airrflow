@@ -26,7 +26,6 @@ output_folder = dirname(inputtable)
   
 db <- readChangeoDb(inputtable)
 print(colnames(db))
-print(db)
 
 if (loci == "ig"){
 
