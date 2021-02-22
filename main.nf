@@ -185,6 +185,7 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 
 // Local: Modules
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions' addParams( options: [publish_files : ['csv':'']] )
+include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:]                          )
@@ -219,6 +220,13 @@ workflow {
     )
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
     
+
+    /*
+    * Module: merge UMI-R1
+    */
+    MERGE_UMI (
+        INPUT_CHECK.out.reads
+    )
 
     /*
      * MODULE: Pipeline reporting
