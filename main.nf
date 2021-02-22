@@ -186,6 +186,7 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 // Local: Modules
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions' addParams( options: [publish_files : ['csv':'']] )
 include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
+include { GUNZIP } from './modules/local/process/gunzip'                               addParams( options: [:] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:]                          )
@@ -208,25 +209,32 @@ workflow {
     /*
      * SUBWORKFLOW: Read in samplesheet, validate and stage input files
      */
-    INPUT_CHECK ( 
-        ch_input
-    )
+    INPUT_CHECK ( ch_input )
+    .groupTuple(by: [0])
+    .map{ it -> [ it[0], it[1].flatten() ] }
+    .set{ ch_fastqc }
+
+    ch_merge_umi_gunzip = ch_fastqc.map{ it -> it.flatten() }
 
     /*
      * MODULE: Run FastQC
      */
-    FASTQC (
-        INPUT_CHECK.out.reads
-    )
+    FASTQC (ch_fastqc)
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
     
+    if (params.index_file) {
+        //MERGE_UMI: merge umi from index file if provided to start of R1 read. Gunzip fastq.gz to fastq.
+        MERGE_UMI ( ch_merge_umi_gunzip )
+        .set{ ch_gunzip }
+    } else {
+        ch_gunzip = ch_merge_umi_gunzip
+    }
 
-    /*
-    * Module: merge UMI-R1
-    */
-    MERGE_UMI (
-        INPUT_CHECK.out.reads
+    //GUNZIP: gunzip fastq.gz to fastq
+    GUNZIP (
+        ch_gunzip
     )
+    ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
 
     /*
      * MODULE: Pipeline reporting
