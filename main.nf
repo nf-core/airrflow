@@ -904,7 +904,7 @@ if (params.loci == "ig"){
 
         output:
         set file("threshold.txt"), file("v_tr_nogenotyped.tab"), val("$id") into ch_threshold_for_clone_definition_tr
-        set file("empty.fasta") into ch_fasta_for_clone_definition_tr
+        file("empty.fasta") into ch_fasta_for_clone_definition_tr
         file "Hamming_distance_threshold.pdf" 
 
         when:
@@ -924,7 +924,6 @@ if (params.loci == "ig"){
     ch_threshold_for_clone_definition_ig = Channel.empty()
     ch_fasta_for_clone_definition_ig = Channel.empty()
     create_germlines_log_tr = Channel.empty()
-
 
 }
 
@@ -1113,7 +1112,6 @@ process processing_logs{
     file('filter_representative_2/*') from filter_seqs_log.collect()
     file('igblast/*') from igblast_log.collect()
     file('define_clones/*') from assign_clones_log.collect()
-    file('create_germlines/*') from create_germlines_log_ig.mix(create_germlines_log_tr).collect()
     file('metadata.tsv') from ch_metadata_file_for_process_logs
 
     output:
