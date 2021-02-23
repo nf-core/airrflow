@@ -166,8 +166,8 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions' addParams( options: [publish_files : ['csv':'']] )
 include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
 include { GUNZIP } from './modules/local/process/gunzip'                               addParams( options: [:] )
-include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'           addParams( options: [:] )
-include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'       addParams( options: [:] )
+include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'           addParams( options: modules['presto_filterseq'] )
+include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'       addParams( options: modules['presto_maskprimers'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -220,8 +220,8 @@ workflow {
     //PRESTO MASKPRIMERS: Mask primers
     PRESTO_MASKPRIMERS ( 
         PRESTO_FILTERSEQ.out.reads,
-        ch_cprimers_fasta,
-        ch_vprimers_fasta
+        ch_cprimers_fasta.collect(),
+        ch_vprimers_fasta.collect()
     )
 
     // Software versions
