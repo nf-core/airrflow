@@ -188,6 +188,8 @@ include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_ver
 include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
 include { GUNZIP } from './modules/local/process/gunzip'                               addParams( options: [:] )
 include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'           addParams( options: [:] )
+
+
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:]                          )
 
@@ -234,17 +236,15 @@ workflow {
 
     //PRESTO FILTERSEQ: Filter sequences by quality score
     PRESTO_FILTERSEQ ( GUNZIP.out.reads )
+    ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
 
-    /*
-     * MODULE: Pipeline reporting
-     */
+
+    // Software versions
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
     )
 
-    /*
-     * MultiQC
-     */  
+    // MultiQC
     if (!params.skip_multiqc) {
         workflow_summary    = Schema.params_summary_multiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
@@ -342,91 +342,6 @@ workflow.onComplete {
 //     """
 // }
 
-// //Merge I1 UMIs into R1 file
-// process merge_r1_umi {
-//     tag "${id}"
-
-//     when:
-//     !params.downstream_only
-
-//     input:
-//     set val(id), val(source), val(treatment), val(extraction_time), val(population), file(R1), file(R2), file(I1) from ch_read_files_for_merge_r1_umi_index.mix(ch_read_files_for_merge_r1_umi)
-
-//     output:
-//     set file("${id}_${R1.baseName}"), file("${id}_${R2.baseName}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_fastqc
-
-//     script:
-//     if (params.index_file) {
-//         """
-//         merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz --umi_start $params.umi_start --umi_length $params.umi_length
-//         gunzip -f "UMI_R1.fastq.gz" 
-//         mv "UMI_R1.fastq" "${id}_${R1.baseName}"
-//         gunzip -f "${R2}"
-//         mv "${R2.baseName}" "${id}_${R2.baseName}"
-//         """
-//     } else {
-//         """
-//         gunzip -f "${R1}"
-//         mv "${R1.baseName}" "${id}_${R1.baseName}"
-//         gunzip -f "${R2}"
-//         mv "${R2.baseName}" "${id}_${R2.baseName}"
-//         """
-//     }
-// }
-
-// //FastQC 
-// process fastqc {
-//     tag "${id}"
-//     publishDir "${params.outdir}/fastqc/$id", mode: params.publish_dir_mode
-
-//     when:
-//     !params.downstream_only
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_fastqc
-
-//     output:
-//     set file("${r1}"), file("${r2}"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_read_files_for_filtering
-//     file "*_fastqc.{zip,html}" into ch_fastqc_results
-
-//     script:
-//     """
-//     fastqc --quiet --threads $task.cpus "${r1}" "${r2}"
-//     """
-// }
-
-
-// //Filter by Sequence Quality
-// process filter_by_sequence_quality {
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/filter_by_sequence_quality/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "$filename"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     when:
-//     !params.downstream_only
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_read_files_for_filtering
-
-//     output:
-//     set file("${r1.baseName}_quality-pass.fastq"), file("${r2.baseName}_quality-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into (ch_filtered_by_seq_quality_for_primer_masking)
-//     file "${r1.baseName}_R1.log"
-//     file "${r2.baseName}_R2.log"
-//     file "${r1.baseName}_R1_table.tab"
-//     file "${r2.baseName}_R2_table.tab"
-//     file "${id}_command_log.txt" into filter_by_sequence_quality_log
-
-//     script:
-//     """
-//     FilterSeq.py quality -s $r1 -q 20 --outname "${r1.baseName}" --log "${r1.baseName}_R1.log" --nproc ${task.cpus} > "${id}_command_log.txt"
-//     FilterSeq.py quality -s $r2 -q 20 --outname "${r2.baseName}" --log "${r2.baseName}_R2.log" --nproc ${task.cpus} >> "${id}_command_log.txt"
-//     ParseLog.py -l "${r1.baseName}_R1.log" "${r2.baseName}_R2.log" -f ID QUALITY
-//     """
-// }
 
 // //Mask them primers
 // process mask_primers{

@@ -148,25 +148,6 @@
                     "description": "Start position of C region primers (without counting the UMI barcode).",
                     "fa_icon": "fas fa-dna"
                 },
-                "primer_maxerror": {
-                    "type": "number",
-                    "default": 0.2,
-                    "description": "Maximum scoring error for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-exclamation-triangle"
-                },
-                "primer_mask_mode": {
-                    "type": "string",
-                    "default": "cut",
-                    "description": "Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.",
-                    "enum": [
-                        "cut",
-                        "mask",
-                        "trim",
-                        "tag"
-                    ],
-                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
-                    "fa_icon": "fas fa-cut"
-                },
                 "race_linker": {
                     "type": "string",
                     "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
@@ -176,6 +157,40 @@
                     "type": "boolean",
                     "description": "The amplification protocol is 5' RACE based (e.g. SMARTer TAKARA), so no V-region primers were used.",
                     "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
+        "presto_options": {
+            "title": "Presto options",
+            "type": "object",
+            "description": "Options for the presto tools",
+            "default": "",
+            "properties": {
+                "filterseq_q": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Quality threshold for Presto FilterSeq sequence filtering.",
+                    "fa_icon": "fas fa-filter"
+                },
+                "primer_mask_mode": {
+                    "type": "string",
+                    "default": "cut",
+                    "description": "Masking mode for the Presto MaskPrimer process. Available: cut, mask, trim, tag.",
+                    "enum": [
+                        "cut",
+                        "mask",
+                        "trim",
+                        "tag"
+                    ],
+                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "primer_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-exclamation-triangle"
                 },
                 "primer_consensus": {
                     "type": "number",
@@ -184,7 +199,7 @@
                     "fa_icon": "fas fa-align-center"
                 }
             },
-            "fa_icon": "fas fa-dna"
+            "fa_icon": "fas fa-align-center"
         },
         "clustering_threshold_definition": {
             "title": "Clustering threshold definition",
@@ -479,6 +494,9 @@
         },
         {
             "$ref": "#/definitions/primer_handling"
+        },
+        {
+            "$ref": "#/definitions/presto_options"
         },
         {
             "$ref": "#/definitions/clustering_threshold_definition"
