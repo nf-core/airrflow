@@ -163,11 +163,12 @@ def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
 
 // Local: Modules
-include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions' addParams( options: [publish_files : ['csv':'']] )
-include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
-include { GUNZIP } from './modules/local/process/gunzip'                               addParams( options: [:] )
-include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'           addParams( options: modules['presto_filterseq'] )
-include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'       addParams( options: modules['presto_maskprimers'] )
+include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
+include { MERGE_UMI } from './modules/local/process/merge_UMI'                          addParams( options: [:] )
+include { GUNZIP } from './modules/local/process/gunzip'                                addParams( options: [:] )
+include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
+include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
+include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'                      addParams( options: modules['presto_pair'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -222,6 +223,11 @@ workflow {
         PRESTO_FILTERSEQ.out.reads,
         ch_cprimers_fasta.collect(),
         ch_vprimers_fasta.collect()
+    )
+
+    //PRESTO PAIR: Pre-consensus pair
+    PRESTO_PAIRSEQ (
+        PRESTO_MASKPRIMERS.out.reads,
     )
 
     // Software versions
@@ -328,41 +334,6 @@ workflow.onComplete {
 // }
 
 
-// //Mask them primers
-// process mask_primers{
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/mask_primers/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "$filename"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else if (filename.indexOf(".tab") > 0) "$filename"
-//             else null
-//         }
-    
-//     when:
-//     !params.downstream_only
-
-//     input:
-//     set file(r1_file), file(r2_file), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_filtered_by_seq_quality_for_primer_masking
-//     file(cprimers) from ch_cprimers_fasta.collect() 
-//     file(vprimers) from ch_vprimers_fasta.collect()
-
-//     output:
-//     set file("${r1_file.baseName}_R1_primers-pass.fastq"), file("${r2_file.baseName}_R2_primers-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_pair_seq_prebuild
-//     file "${r1_file.baseName}_R1.log"
-//     file "${r2_file.baseName}_R2.log"
-//     file "*.tab"
-//     file "${id}_command_log.txt" into mask_primers_log
-
-//     script:
-//     def primer_start_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
-//     def primer_start_R2 = (params.umi_position == 'R2') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
-//     """
-//     MaskPrimers.py score --nproc ${task.cpus} -s $r1_file -p ${cprimers} $primer_start_R1 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r1_file.baseName}_R1 --log ${r1_file.baseName}_R1.log > "${id}_command_log.txt"
-//     MaskPrimers.py score --nproc ${task.cpus} -s $r2_file -p ${vprimers} $primer_start_R2 --maxerror ${params.primer_maxerror} --mode ${params.primer_mask_mode} --outname ${r2_file.baseName}_R2 --log ${r2_file.baseName}_R2.log >> "${id}_command_log.txt"
-//     ParseLog.py -l "${r1_file.baseName}_R1.log" "${r2_file.baseName}_R2.log" -f ID PRIMER ERROR
-//     """
-// }
 
 // //Pair the R1 and R2
 // process pre_consensus_pair{
