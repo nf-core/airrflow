@@ -5,11 +5,11 @@ def options    = initOptions(params.options)
 
 process PRESTO_FILTERSEQ {
     tag "$meta.id"
-    tag "process_medium"
+    label "process_medium"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"filterseq/${meta.id}") }
 
     conda (params.enable_conda ? "bioconda::presto=0.6.2=py_0" : null)              // Conda package
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

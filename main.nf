@@ -62,20 +62,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
-// Read input metadata table
-if (params.index_file) {
-    ch_read_files_for_merge_r1_umi_index = Channel.from( ch_input )
-            .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
-            .dump()
-    ch_read_files_for_merge_r1_umi = Channel.empty()
-} else {
-    ch_read_files_for_merge_r1_umi = Channel.from( ch_input )
-            .splitCsv(header: true, sep:'\t')
-            .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
-            .dump()
-    ch_read_files_for_merge_r1_umi_index = Channel.empty()
-}
 
 // // If paths to DBS are provided 
 // if( params.igblast_base ){
@@ -96,30 +82,23 @@ if (params.index_file) {
 // }
 
 
-// //Validate inputs
-// if (!params.downstream_only){
-//     if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
-//     if (!params.race_5prime){
-//         if (params.vprimers)  { 
-//             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
-//         } else { 
-//             exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
-//         }
-//     } else {
-//         if (params.vprimers) { 
-//             exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
-//         } else if (params.race_linker) {
-//             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-//         } else {
-//             exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
-//         }
-//     }
-//     if (params.input)  { ch_metadata = file(params.input, checkIfExists: true) } else { exit 1, "Please provide input file with sample metadata with the '--input' option." }
-// } else {
-//     ch_cprimers_fasta = Channel.empty()
-//     ch_vprimers_fasta = Channel.empty()
-//     ch_metadata = Channel.empty()
-// }
+// Validate primer protocol
+if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
+if (!params.race_5prime){
+    if (params.vprimers)  { 
+        ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
+    } else { 
+        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
+    }
+} else {
+    if (params.vprimers) { 
+        exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
+    } else if (params.race_linker) {
+        ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+    } else {
+        exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
+    }
+}
 
 // //Validate UMI position
 // if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
@@ -188,14 +167,14 @@ include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_ver
 include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
 include { GUNZIP } from './modules/local/process/gunzip'                               addParams( options: [:] )
 include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'           addParams( options: [:] )
-
+include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'       addParams( options: [:] )
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:]                          )
+include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
 
 // nf-core/modules: Modules
-include { FASTQC                } from './modules/nf-core/software/fastqc/main'        addParams( options: modules['fastqc']            )
-include { MULTIQC               } from './modules/nf-core/software/multiqc/main'       addParams( options: multiqc_options              )
+include { FASTQC                } from './modules/nf-core/software/fastqc/main'        addParams( options: modules['fastqc'] )
+include { MULTIQC               } from './modules/nf-core/software/multiqc/main'       addParams( options: multiqc_options )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -238,6 +217,12 @@ workflow {
     PRESTO_FILTERSEQ ( GUNZIP.out.reads )
     ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
 
+    //PRESTO MASKPRIMERS: Mask primers
+    PRESTO_MASKPRIMERS ( 
+        PRESTO_FILTERSEQ.out.reads,
+        ch_cprimers_fasta,
+        ch_vprimers_fasta
+    )
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
