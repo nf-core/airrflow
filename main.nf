@@ -168,7 +168,8 @@ include { MERGE_UMI } from './modules/local/process/merge_UMI'                  
 include { GUNZIP } from './modules/local/process/gunzip'                                addParams( options: [:] )
 include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
 include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
-include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'                      addParams( options: modules['presto_pair'] )
+include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
+include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -227,8 +228,14 @@ workflow {
 
     //PRESTO PAIR: Pre-consensus pair
     PRESTO_PAIRSEQ (
-        PRESTO_MASKPRIMERS.out.reads,
+        PRESTO_MASKPRIMERS.out.reads
     )
+
+    //PRESTO CLUSTERSETS: cluster sequences by similarity
+    PRESTO_CLUSTERSETS (
+        PRESTO_PAIRSEQ.out.reads
+    )
+    ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
@@ -332,36 +339,6 @@ workflow.onComplete {
 //     echo "FetchDBs process finished."
 //     """
 // }
-
-
-
-// //Pair the R1 and R2
-// process pre_consensus_pair{
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/pair_post_consensus/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "$filename"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_pair_seq_prebuild
-
-//     output:
-//     set file("${r1.baseName}_pair-pass.fastq"), file("${r2.baseName}_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_cluster_sets
-//     file "${id}_command_log.txt" into pair_seq_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     def copyfield = (params.index_file & params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
-//     """
-//     PairSeq.py -1 $r1 -2 $r2 $copyfield --coord illumina > "${id}_command_log.txt"
-//     """
-// }
-
 
 
 // //Cluster sets to deal with too low UMI diversity
