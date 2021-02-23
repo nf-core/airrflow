@@ -170,6 +170,7 @@ include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'    
 include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
 include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
 include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
+include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_cluster'    addParams( options: [:] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -200,7 +201,7 @@ workflow {
     ch_merge_umi_gunzip = ch_fastqc.map{ it -> it.flatten() }
 
     //FastQC
-    FASTQC (ch_fastqc)
+    FASTQC ( ch_fastqc )
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
     
     //Merge UMI from index file to R1 if provided
@@ -236,6 +237,11 @@ workflow {
         PRESTO_PAIRSEQ.out.reads
     )
     ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
+
+    //PRESTO PARSEHEADERS: annotate cluster into barcode field
+    PRESTO_PARSE_CLUSTER (
+        PRESTO_CLUSTERSETS.out.reads
+    )
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
@@ -337,34 +343,6 @@ workflow.onComplete {
 //     unzip databases.zip
 
 //     echo "FetchDBs process finished."
-//     """
-// }
-
-
-// //Cluster sets to deal with too low UMI diversity
-// process cluster_sets {
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/cluster_sets/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "$filename"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_cluster_sets
-
-//     output:
-//     set file ("${r1.baseName}_R1_cluster-pass.fastq"), file("${r2.baseName}_R2_cluster-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_reheader
-//     file "${id}_command_log.txt" into cluster_sets_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     ClusterSets.py set --nproc ${task.cpus} -s $r1 --outname ${r1.baseName}_R1 > "${id}_command_log.txt"
-//     ClusterSets.py set --nproc ${task.cpus} -s $r2 --outname ${r2.baseName}_R2 >> "${id}_command_log.txt"
 //     """
 // }
 
