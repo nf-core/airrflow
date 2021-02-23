@@ -187,7 +187,7 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions' addParams( options: [publish_files : ['csv':'']] )
 include { MERGE_UMI } from './modules/local/process/merge_UMI'                         addParams( options: [:] )
 include { GUNZIP } from './modules/local/process/gunzip'                               addParams( options: [:] )
-
+include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'           addParams( options: [:] )
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:]                          )
 
@@ -216,14 +216,12 @@ workflow {
 
     ch_merge_umi_gunzip = ch_fastqc.map{ it -> it.flatten() }
 
-    /*
-     * MODULE: Run FastQC
-     */
+    //FastQC
     FASTQC (ch_fastqc)
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
     
+    //Merge UMI from index file to R1 if provided
     if (params.index_file) {
-        //MERGE_UMI: merge umi from index file if provided to start of R1 read. Gunzip fastq.gz to fastq.
         MERGE_UMI ( ch_merge_umi_gunzip )
         .set{ ch_gunzip }
     } else {
@@ -231,10 +229,11 @@ workflow {
     }
 
     //GUNZIP: gunzip fastq.gz to fastq
-    GUNZIP (
-        ch_gunzip
-    )
+    GUNZIP ( ch_gunzip )
     ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
+
+    //PRESTO FILTERSEQ: Filter sequences by quality score
+    PRESTO_FILTERSEQ ( GUNZIP.out.reads )
 
     /*
      * MODULE: Pipeline reporting
