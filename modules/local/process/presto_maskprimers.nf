@@ -5,7 +5,7 @@ def options    = initOptions(params.options)
 
 process PRESTO_MASKPRIMERS {
     tag "$meta.id"
-    label "process_medium"
+    label "process_high"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
