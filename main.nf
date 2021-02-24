@@ -173,6 +173,8 @@ include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'
 include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_cluster'    addParams( options: [:] )
 include { PRESTO_BUILDCONSENSUS } from './modules/local/process/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
 include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
+include { PRESTO_ASSEMBLEPAIRS } from './modules/local/process/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
+
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
 
@@ -252,6 +254,11 @@ workflow {
     //PRESTO PAIRSEQ: post-consensus pair 
     PRESTO_POSTCONSENSUS_PAIRSEQ (
         PRESTO_BUILDCONSENSUS.out.reads
+    )
+
+    //PRESTO ASSEMBLEPAIRS: assemble read pairs
+    PRESTO_ASSEMBLEPAIRS (
+        PRESTO_POSTCONSENSUS_PAIRSEQ.out.reads
     )
 
     // Software versions
@@ -357,62 +364,7 @@ workflow.onComplete {
 //     """
 // }
 
-
-// //Re-pair R1 and R2
-// process post_consensus_pair{
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/pair_mates_post_consensus/$id", mode: params.publish_dir_mode,
-//     saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "${id}_repair_mates_logs.tab"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_post_consensus_pair
-
-//     output:
-//     set file("*R1_consensus-pass_pair-pass.fastq"), file("*R2_consensus-pass_pair-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_assembly
-//     file "${id}_command_log.txt" into repair_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     PairSeq.py -1 $r1 -2 $r2 --coord presto > "${id}_command_log.txt"
-//     """
-// }
    
-
-// //Assemble the mate pairs
-// process assemble_pairs{
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/assemble_pairs/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "${id}_assemble_pairs_logs.tab"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_assembly
-
-//     output:
-//     set file("${id}_assemble-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_combine_UMI
-//     file "${id}.log"
-//     file "${id}_table.tab"
-//     file "${id}_command_log.txt" into assemble_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     AssemblePairs.py align -1 $r1 -2 $r2 --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${id} --log ${id}.log > "${id}_command_log.txt"
-//     ParseLog.py -l "${id}.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
-//     """
-// }
 
 // //combine UMI read group size annotations
 // process combine_umi_read_groups{
