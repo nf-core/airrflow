@@ -172,7 +172,7 @@ include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'        
 include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_cluster'    addParams( options: [:] )
 include { PRESTO_BUILDCONSENSUS } from './modules/local/process/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
-
+include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
 
@@ -237,7 +237,7 @@ workflow {
     PRESTO_CLUSTERSETS (
         PRESTO_PAIRSEQ.out.reads
     )
-    ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
+    //ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
 
     //PRESTO PARSEHEADERS: annotate cluster into barcode field
     PRESTO_PARSE_CLUSTER (
@@ -247,6 +247,11 @@ workflow {
     //PRESTO BUILDCONSENSUS: build consensus of sequences with same UMI barcode
     PRESTO_BUILDCONSENSUS (
         PRESTO_PARSE_CLUSTER.out.reads
+    )
+
+    //PRESTO PAIRSEQ: post-consensus pair 
+    PRESTO_POSTCONSENSUS_PAIRSEQ (
+        PRESTO_BUILDCONSENSUS.out.reads
     )
 
     // Software versions
@@ -352,37 +357,6 @@ workflow.onComplete {
 //     """
 // }
 
-// //Build UMI consensus
-// process build_consensus{
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/build_consensus/$id", mode: params.publish_dir_mode,
-//     saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "$filename"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_consensus
-
-//     output:
-//     set file("${r1.baseName}_R1_consensus-pass.fastq"), file("${r2.baseName}_R2_consensus-pass.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_post_consensus_pair
-//     file "${r1.baseName}_R1.log"
-//     file "${r2.baseName}_R2.log"
-//     file "${r1.baseName}_R1_table.tab"
-//     file "${r2.baseName}_R2_table.tab"
-//     file "${id}_command_log.txt" into build_consensus_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     BuildConsensus.py -s $r1 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${r1.baseName}_R1 --log ${r1.baseName}_R1.log > "${id}_command_log.txt"
-//     BuildConsensus.py -s $r2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${r2.baseName}_R2 --log ${r2.baseName}_R2.log >> "${id}_command_log.txt"
-//     ParseLog.py -l "${r1.baseName}_R1.log" "${r2.baseName}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
-//     """
-// }
 
 // //Re-pair R1 and R2
 // process post_consensus_pair{

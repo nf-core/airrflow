@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_PAIRSEQ {
+process PRESTO_POSTCONSENSUS_PAIRSEQ {
     tag "$meta.id"
     label "process_low"
 
@@ -26,8 +26,7 @@ process PRESTO_PAIRSEQ {
     path "*_command_log.txt", emit: logs
 
     script:
-    def copyfield = (params.index_file & params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
     """
-    PairSeq.py -1 '${meta.id}_R1.fastq' -2 '${meta.id}_R2.fastq' $copyfield --coord illumina > "${meta.id}_command_log.txt"
+    PairSeq.py -1 '${meta.id}_R1.fastq' -2 '${meta.id}_R2.fastq' --coord presto > "${meta.id}_command_log.txt"
     """
 }
