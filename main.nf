@@ -176,6 +176,8 @@ include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_po
 include { PRESTO_ASSEMBLEPAIRS } from './modules/local/process/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
 include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/process/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
 include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COPY } from './modules/local/process/presto_parseheaders'      addParams( options: modules['presto_parseheaders_copy'] )
+include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/process/presto_parseheaders_metadata'       addParams( options: [:] )
+include { PRESTO_COLLAPSESEQ } from './modules/local/process/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -273,6 +275,15 @@ workflow {
         PRESTO_PARSEHEADERS_COLLAPSE.out.reads
     )
 
+    //PRESTO PARSEHEADERS METADATA: annotate metadata on primer headers
+    PRESTO_PARSEHEADERS_METADATA (
+        PRESTO_PARSEHEADERS_COPY.out.reads
+    )
+
+    //PRESTO COLLAPSESEQ: deduplicate 
+    PRESTO_COLLAPSESEQ (
+        PRESTO_PARSEHEADERS_METADATA.out.reads
+    )
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
@@ -377,73 +388,6 @@ workflow.onComplete {
 //     """
 // }
 
-
-// //Copy field PRCONS to have annotation for C_primer and V_primer independently
-// process copy_prcons{
-//     tag "${id}"
-
-//     input:
-//     set file(combined), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_prcons_parseheaders
-
-//     output:
-//     set file("*reheader_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_metadata_anno
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     ParseHeaders.py copy -s $combined -f PRCONS PRCONS --act first last -k C_PRIMER V_PRIMER
-//     """
-// }
-
-// //Add Metadata annotation to headers
-// process metadata_anno{
-//     tag "${id}"
-
-//     input:
-//     set file(prcons), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_metadata_anno
-
-//     output:
-//     set file("*_reheader_reheader_reheader.fastq"), val("$id"), val("$source") into ch_for_dedup
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     ParseHeaders.py add -s $prcons -f SAMPLE_CODE SOURCE TREATMENT EXTRACT_TIME POPULATION -u $id $source $treatment $extraction_time $population
-//     """
-// }
-
-// //Removal of duplicate sequences
-// process deduplicate {
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/deduplicate/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "${id}_deduplicate_logs.tab"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(dedup), val(id), val(source) from ch_for_dedup
-
-//     output:
-//     set file("${dedup.baseName}_UMI_R1_R2_collapse-unique.fastq"), val("$id"), val("$source") into ch_for_filtering
-//     file "${dedup.baseName}_UMI_R1_R2.log"
-//     file "${dedup.baseName}_UMI_R1_R2_table.tab"
-//     file "${id}_command_log.txt" into dedup_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     CollapseSeq.py -s $dedup -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${dedup.baseName}_UMI_R1_R2 --log ${dedup.baseName}_UMI_R1_R2.log > "${id}_command_log.txt"
-//     ParseLog.py -l "${dedup.baseName}_UMI_R1_R2.log" -f HEADER DUPCOUNT
-//     """
-// }
 
 // //Filtering to sequences with at least two representative reads and convert to FastA
 // process filter_representative_2{
