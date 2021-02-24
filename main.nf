@@ -62,6 +62,28 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
+// Validate primer protocol
+if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
+if (!params.race_5prime){
+    if (params.vprimers)  { 
+        ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
+    } else { 
+        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
+    }
+} else {
+    if (params.vprimers) { 
+        exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
+    } else if (params.race_linker) {
+        ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+    } else {
+        exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
+    }
+}
+
+// Validate UMI position
+if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
+if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
+if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
 // // If paths to DBS are provided 
 // if( params.igblast_base ){
@@ -81,29 +103,6 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provi
 //     ch_imgt_db_for_shazam_mix = Channel.empty()
 // }
 
-
-// Validate primer protocol
-if (params.cprimers)  { ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true) } else { exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option." }
-if (!params.race_5prime){
-    if (params.vprimers)  { 
-        ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true) 
-    } else { 
-        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--race_5prime' option." 
-    }
-} else {
-    if (params.vprimers) { 
-        exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or the option '--race_5prime'."
-    } else if (params.race_linker) {
-        ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-    } else {
-        exit 1, "The 5' RACE protocol requires a linker or Template Switch oligo sequence, please provide it with the option '--race_linker'."
-    }
-}
-
-// //Validate UMI position
-// if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
-// if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
-// if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 // //Read processed tabs if downstream_only 
 // if (params.downstream_only){
 //     Channel
@@ -115,34 +114,7 @@ if (!params.race_5prime){
 //     ch_tabs_for_clonal_analysis = Channel.empty()
 // }
 
-/*
- * Create a channel for metadata and raw files
- * Columns = id, source, treatment, extraction_time, population, R1, R2, I1
- */
 
-// if (!params.downstream_only){
-//     Channel.fromPath("${params.input}")
-//             .ifEmpty{exit 1, "Please provide metadata file!"}
-//             .set { ch_metadata_file_for_process_logs }
-
-//     if (params.index_file) {
-//         ch_read_files_for_merge_r1_umi_index = Channel.from( ch_metadata )
-//                 .splitCsv(header: true, sep:'\t')
-//                 .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true),file("${col.R2}", checkifExists: true), file("${col.I1}", checkifExists: true))}
-//                 .dump()
-//         ch_read_files_for_merge_r1_umi = Channel.empty()
-//     } else {
-//         ch_read_files_for_merge_r1_umi = Channel.from( ch_metadata )
-//                 .splitCsv(header: true, sep:'\t')
-//                 .map { col -> tuple("${col.ID}", "${col.Source}", "${col.Treatment}","${col.Extraction_time}","${col.Population}", file("${col.R1}", checkifExists: true), file("${col.R2}", checkifExists: true))}
-//                 .dump()
-//         ch_read_files_for_merge_r1_umi_index = Channel.empty()
-//     }
-// } else {
-//     ch_read_files_for_merge_r1_umi = Channel.empty()
-//     ch_read_files_for_merge_r1_umi_index = Channel.empty()
-//     ch_metadata_file_for_process_logs = Channel.empty()
-// }
 
 
 ////////////////////////////////////////////////////
@@ -166,6 +138,7 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
 include { MERGE_UMI } from './modules/local/process/merge_UMI'                          addParams( options: [:] )
 include { GUNZIP } from './modules/local/process/gunzip'                                addParams( options: [:] )
+//PRESTO
 include { PRESTO_FILTERSEQ } from './modules/local/process/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
 include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
 include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
@@ -179,6 +152,9 @@ include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COPY } from './modules/loca
 include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/process/presto_parseheaders_metadata'       addParams( options: [:] )
 include { PRESTO_COLLAPSESEQ } from './modules/local/process/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
 include { PRESTO_SPLITSEQ } from './modules/local/process/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
+//CHANGEO
+include { FETCH_DATABASES } from './modules/local/process/fetch_databases'              addParams( options: [:] )
+include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngenes'      addParams( options: [:] ) 
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -289,6 +265,15 @@ workflow {
     //PRESTO SPLITSEQ: filter out sequences with less than 2 representative duplicates with different UMIs
     PRESTO_SPLITSEQ (
         PRESTO_COLLAPSESEQ.out.reads
+    )
+
+    //FETCH DATABASES
+    FETCH_DATABASES()
+
+    //CHANGEO ASSIGNGENES: run Igblast
+    CHANGEO_ASSIGNGENES (
+        PRESTO_SPLITSEQ.out.fasta,
+        FETCH_DATABASES.out.igblast
     )
 
     // Software versions
