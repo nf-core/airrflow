@@ -171,6 +171,7 @@ include { PRESTO_MASKPRIMERS } from './modules/local/process/presto_maskprimers'
 include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
 include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_cluster'    addParams( options: [:] )
+include { PRESTO_BUILDCONSENSUS } from './modules/local/process/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -241,6 +242,11 @@ workflow {
     //PRESTO PARSEHEADERS: annotate cluster into barcode field
     PRESTO_PARSE_CLUSTER (
         PRESTO_CLUSTERSETS.out.reads
+    )
+
+    //PRESTO BUILDCONSENSUS: build consensus of sequences with same UMI barcode
+    PRESTO_BUILDCONSENSUS (
+        PRESTO_PARSE_CLUSTER.out.reads
     )
 
     // Software versions
@@ -345,27 +351,6 @@ workflow.onComplete {
 //     echo "FetchDBs process finished."
 //     """
 // }
-
-// //ParseHeaders to annotate barcode into cluster field
-// process reheader {
-//     tag "${id}"
-
-//     input:
-//     set file(r1), file(r2), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_reheader
-
-//     output:
-//     set file("${r1.baseName}_reheader.fastq"), file("${r2.baseName}_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_consensus
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     ParseHeaders.py copy -s $r1 -f BARCODE -k CLUSTER --act cat > "${id}_command_log.txt"
-//     ParseHeaders.py copy -s $r2 -f BARCODE -k CLUSTER --act cat >> "${id}_command_log.txt"
-//     """
-// }
-
 
 // //Build UMI consensus
 // process build_consensus{
