@@ -395,33 +395,6 @@ workflow.onComplete {
 // }
 
 
-// //Filtering to sequences with at least two representative reads and convert to FastA
-// process filter_representative_2{
-//     tag "${id}"
-//     publishDir "${params.outdir}/preprocessing/filter_representative_2/$id", mode: params.publish_dir_mode,
-//         saveAs: {filename ->
-//             if (filename.indexOf("table.tab") > 0) "$filename"
-//             else if (filename.indexOf("command_log.txt") > 0) "$filename"
-//             else null
-//         }
-
-//     input:
-//     set file(dedupped), val(id), val(source) from ch_for_filtering
-
-//     output:
-//     set file("${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"), val("$id"), val("$source") into ch_fasta_for_igblast
-//     file "${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta"
-//     file "${id}_command_log.txt" into filter_seqs_log
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     SplitSeq.py group -s $dedupped -f CONSCOUNT --num 2 --outname ${dedupped.baseName}_UMI_R1_R2 > "${id}_command_log.txt"
-//     sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
-//     """
-// }
 
 // //Run IGBlast
 // process igblast{
