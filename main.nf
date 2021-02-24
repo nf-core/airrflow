@@ -178,6 +178,7 @@ include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/
 include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COPY } from './modules/local/process/presto_parseheaders'      addParams( options: modules['presto_parseheaders_copy'] )
 include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/process/presto_parseheaders_metadata'       addParams( options: [:] )
 include { PRESTO_COLLAPSESEQ } from './modules/local/process/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
+include { PRESTO_SPLITSEQ } from './modules/local/process/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -280,9 +281,14 @@ workflow {
         PRESTO_PARSEHEADERS_COPY.out.reads
     )
 
-    //PRESTO COLLAPSESEQ: deduplicate 
+    //PRESTO COLLAPSESEQ: mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
     PRESTO_COLLAPSESEQ (
         PRESTO_PARSEHEADERS_METADATA.out.reads
+    )
+
+    //PRESTO SPLITSEQ: filter out sequences with less than 2 representative duplicates with different UMIs
+    PRESTO_SPLITSEQ (
+        PRESTO_COLLAPSESEQ.out.reads
     )
 
     // Software versions
