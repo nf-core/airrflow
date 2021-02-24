@@ -26,6 +26,6 @@ process PRESTO_PARSEHEADERS {
     
     script:
     """
-    ParseHeaders.py $options.subcommand -s $reads -o "${meta.id}_reheader-pass.fastq" $options.args
+    ParseHeaders.py $options.subcommand -s $reads -o "${reads.baseName}_reheader-pass.fastq" $options.args
     """
 }

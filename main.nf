@@ -174,8 +174,8 @@ include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_clus
 include { PRESTO_BUILDCONSENSUS } from './modules/local/process/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
 include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'                         addParams( options: modules['presto_postconsensus_pairseq'] )
 include { PRESTO_ASSEMBLEPAIRS } from './modules/local/process/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
-include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/process/presto_parseheaders'                                  addParams( options: modules['presto_parseheaders_collapse'] )
-
+include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/process/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
+include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COPY } from './modules/local/process/presto_parseheaders'      addParams( options: modules['presto_parseheaders_copy'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -267,6 +267,12 @@ workflow {
     PRESTO_PARSEHEADERS_COLLAPSE (
         PRESTO_ASSEMBLEPAIRS.out.reads
     )
+
+    //PRESTO PARSEHEADERS COPY: annotate primers in C_PRIMER and V_PRIMER field
+    PRESTO_PARSEHEADERS_COPY (
+        PRESTO_PARSEHEADERS_COLLAPSE.out.reads
+    )
+
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
