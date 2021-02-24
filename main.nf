@@ -172,8 +172,10 @@ include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'        
 include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_cluster'    addParams( options: [:] )
 include { PRESTO_BUILDCONSENSUS } from './modules/local/process/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
-include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
+include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'                         addParams( options: modules['presto_postconsensus_pairseq'] )
 include { PRESTO_ASSEMBLEPAIRS } from './modules/local/process/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
+include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/process/presto_parseheaders'                                  addParams( options: modules['presto_parseheaders_collapse'] )
+
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -259,6 +261,11 @@ workflow {
     //PRESTO ASSEMBLEPAIRS: assemble read pairs
     PRESTO_ASSEMBLEPAIRS (
         PRESTO_POSTCONSENSUS_PAIRSEQ.out.reads
+    )
+
+    //PRESTO PARSEHEADERS COLLAPSE: combine UMI duplicate count
+    PRESTO_PARSEHEADERS_COLLAPSE (
+        PRESTO_ASSEMBLEPAIRS.out.reads
     )
 
     // Software versions
@@ -361,27 +368,6 @@ workflow.onComplete {
 //     unzip databases.zip
 
 //     echo "FetchDBs process finished."
-//     """
-// }
-
-   
-
-// //combine UMI read group size annotations
-// process combine_umi_read_groups{
-//     tag "${id}"
-
-//     input:
-//     set file(assembled), val(id), val(source), val(treatment), val(extraction_time), val(population) from ch_for_combine_UMI
-
-//     output:
-//     set file("*_reheader.fastq"), val("$id"), val("$source"), val("$treatment"), val("$extraction_time"), val("$population") into ch_for_prcons_parseheaders
-
-//     when:
-//     !params.downstream_only
-    
-//     script:
-//     """
-//     ParseHeaders.py collapse -s $assembled -f CONSCOUNT --act min
 //     """
 // }
 
