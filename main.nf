@@ -154,7 +154,8 @@ include { PRESTO_COLLAPSESEQ } from './modules/local/process/presto_collapseseq'
 include { PRESTO_SPLITSEQ } from './modules/local/process/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
 //CHANGEO
 include { FETCH_DATABASES } from './modules/local/process/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngenes'      addParams( options: [:] ) 
+include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
+include { CHANGEO_MAKEDB } from './modules/local/process/changeo_makedb'                addParams( options: modules['changeo_makedb'] ) 
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -279,9 +280,11 @@ workflow {
 
 
     //CHANGEO MAKE_DB
-//    CHANGEO_MAKEDB (
-//
-//    )
+    CHANGEO_MAKEDB (
+        CHANGEO_ASSIGNGENES.out.fasta,
+        CHANGEO_ASSIGNGENES.out.blast,
+        FETCH_DATABASES.out.imgt
+    )
 
 
     // Software versions

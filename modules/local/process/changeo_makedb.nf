@@ -20,13 +20,35 @@ process CHANGEO_MAKEDB {
     input:
     tuple val(meta), path(reads) // reads in fasta format
     path(igblast) // igblast fasta from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect()
+    path(imgt_base)
 
     output:
-    tuple val(meta), path("*igblast.fmt7"), emit: blast
-    tuple val(meta), path("$reads"), emit: fasta
+    tuple val(meta), path("*db-pass.tsv"), emit: tab //sequence table in AIRR format
+    path("*_command_log.txt"), emit: logs //process logs
 
     script:
-    """
-    AssignGenes.py igblast -s $reads -b $igblast --organism $params.species --loci $params.loci --format blast
-    """
+    if (params.loci == 'ig'){
+        """
+        MakeDb.py igblast -i $igblast -s $reads -r \\
+        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta \\
+        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHD.fasta \\
+        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
+        --regions default --format airr > "${meta.id}_command_log.txt"
+        """
+    } else if (params.loci == 'tr') {
+        """
+        MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAJ.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBD.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBJ.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDD.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDJ.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta" \\
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta" \\
+        --regions default --format airr > "${meta.id}_command_log.txt"
+        """
+    }
 }
