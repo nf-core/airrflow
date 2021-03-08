@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process CHANGEO_ASSIGNGENES {
+process CHANGEO_MAKEDB {
     tag "$meta.id"
 
     publishDir "${params.outdir}",
@@ -19,17 +19,14 @@ process CHANGEO_ASSIGNGENES {
 
     input:
     tuple val(meta), path(reads) // reads in fasta format
-    path(igblast) // igblast fasta
+    path(igblast) // igblast fasta from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect()
 
     output:
-    path("*igblast.fmt7"), emit: blast
+    tuple val(meta), path("*igblast.fmt7"), emit: blast
     tuple val(meta), path("$reads"), emit: fasta
-    path "*.version.txt" , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
     """
-    AssignGenes.py igblast -s $reads -b $igblast --organism $params.species --loci $params.loci --format blast --outname "$meta.id"
-    AssignGenes.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
+    AssignGenes.py igblast -s $reads -b $igblast --organism $params.species --loci $params.loci --format blast
     """
 }

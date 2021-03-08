@@ -275,6 +275,14 @@ workflow {
         PRESTO_SPLITSEQ.out.fasta,
         FETCH_DATABASES.out.igblast
     )
+    ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
+
+
+    //CHANGEO MAKE_DB
+//    CHANGEO_MAKEDB (
+//
+//    )
+
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
@@ -350,54 +358,6 @@ workflow.onComplete {
 //     Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='v_alakazam.txt')"
 //     Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='v_tigger.txt')"
 //     scrape_software_versions.py &> software_versions_mqc.yaml
-//     """
-// }
-
-// //Download data process
-// process fetchDBs{
-//     tag "fetchBlastDBs"
-
-//     publishDir path: { params.save_databases ? "${params.outdir}/dbs" : params.outdir },
-//     saveAs: { params.save_databases ? it : null }, mode: params.publish_dir_mode
-
-//     when:
-//     !params.igblast_base | !params.imgtdb_base
-
-//     output:
-//     file "igblast_base" into ch_igblast_db_for_process_igblast
-//     file "imgtdb_base" into (ch_imgt_db_for_igblast_filter,ch_imgt_db_for_shazam,ch_imgt_db_for_germline_sequences)
-    
-//     script:
-//     """
-//     echo "Fetching databases..."
-
-//     wget https://raw.githubusercontent.com/nf-core/test-datasets/bcellmagic/database-cache/databases.zip
-
-//     unzip databases.zip
-
-//     echo "FetchDBs process finished."
-//     """
-// }
-
-
-
-// //Run IGBlast
-// process igblast{
-//     tag "${id}"
-
-//     input:
-//     set file('input_igblast.fasta'), val(id), val(source) from ch_fasta_for_igblast
-//     file igblast from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect() 
-
-//     output:
-//     set file("*igblast.fmt7"), file('input_igblast.fasta'), val("$id"), val("$source") into ch_igblast_filter
-
-//     when:
-//     !params.downstream_only
-
-//     script:
-//     """
-//     AssignGenes.py igblast -s input_igblast.fasta -b $igblast --organism $params.species --loci $params.loci --format blast
 //     """
 // }
 
