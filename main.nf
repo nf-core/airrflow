@@ -156,7 +156,7 @@ include { PRESTO_SPLITSEQ } from './modules/local/process/presto_splitseq'      
 include { FETCH_DATABASES } from './modules/local/process/fetch_databases'              addParams( options: [:] )
 include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
 include { CHANGEO_MAKEDB } from './modules/local/process/changeo_makedb'                addParams( options: modules['changeo_makedb'] ) 
-
+include { CHANGEO_PARSEDB_SPLIT } from './modules/local/process/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
 
@@ -278,12 +278,16 @@ workflow {
     )
     ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
 
-
-    //CHANGEO MAKE_DB
+    //CHANGEO MAKEDB
     CHANGEO_MAKEDB (
         CHANGEO_ASSIGNGENES.out.fasta,
         CHANGEO_ASSIGNGENES.out.blast,
         FETCH_DATABASES.out.imgt
+    )
+
+    // CHANGEO ParseDB
+    CHANGEO_PARSEDB_SPLIT (
+        CHANGEO_MAKEDB.out.tab
     )
 
 

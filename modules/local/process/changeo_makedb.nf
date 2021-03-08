@@ -33,7 +33,7 @@ process CHANGEO_MAKEDB {
         ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta \\
         ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHD.fasta \\
         ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
-        --regions default --format airr > "${meta.id}_command_log.txt"
+        --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
         """
     } else if (params.loci == 'tr') {
         """
@@ -48,7 +48,7 @@ process CHANGEO_MAKEDB {
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDJ.fasta" \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta" \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta" \\
-        --regions default --format airr > "${meta.id}_command_log.txt"
+        --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
         """
     }
 }
