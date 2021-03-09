@@ -28,6 +28,7 @@ def get_samplesheet_paths(LinkedHashMap col) {
     meta.source       = col.Source
     meta.treatment    = col.Treatment
     meta.time         = col.Extraction_time
+    meta.population   = col.Population
 
     def array = []
     if (!file(col.R1).exists()) {

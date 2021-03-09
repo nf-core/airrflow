@@ -158,9 +158,11 @@ include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngene
 include { CHANGEO_MAKEDB } from './modules/local/process/changeo_makedb'                addParams( options: modules['changeo_makedb'] ) 
 include { CHANGEO_PARSEDB_SPLIT } from './modules/local/process/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
 include { CHANGEO_PARSEDB_SELECT } from './modules/local/process/changeo_parsedb_select' addParams( options: modules['changeo_parsedb_select'] )
+include { CHANGEO_CONVERTDB_FASTA } from './modules/local/process/changeo_convertdb_fasta' addParams( options: modules['changeo_convertdb_fasta'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
+include { MERGE_TABLES_WF       } from './modules/local/subworkflow/merge_tables_wf'      addParams( options: modules['merge_tables'] )
 
 // nf-core/modules: Modules
 include { FASTQC                } from './modules/nf-core/software/fastqc/main'        addParams( options: modules['fastqc'] )
@@ -296,6 +298,16 @@ workflow {
     CHANGEO_PARSEDB_SELECT (
         CHANGEO_PARSEDB_SPLIT.out.tab
     )
+
+    // Changeo Convertdb fasta: convert sequence table to fasta.
+    CHANGEO_CONVERTDB_FASTA ( 
+        CHANGEO_PARSEDB_SELECT.out.tab
+    )
+
+    // Subworkflow: merge tables from the same patient
+    MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
+    
+    // Merge tables from the same patient
 
 
     // Software versions

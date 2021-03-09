@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process CHANGEO_PARSEDB_SELECT {
+process CHANGEO_CONVERTDB_FASTA {
     tag "$meta.id"
 
     publishDir "${params.outdir}",
@@ -21,17 +21,10 @@ process CHANGEO_PARSEDB_SELECT {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*parse-select.tsv"), emit: tab // sequence tsv in AIRR format
-    path("*_command_log.txt"), emit: logs //process logs
+    tuple val(meta), path("*.fasta"), emit: fasta // sequence tsv in AIRR format
 
     script:
-    if (params.loci == 'ig') {
-        """
-        ParseDb.py select -d $tab -f v_call j_call -u "IGH" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
-        """
-    } else if (params.loci == 'tr') {
-        """
-        ParseDb.py select -d $tab -f v_call j_call -u "TR" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
-        """
-    }
+    """
+    ConvertDb.py fasta -d $tab $options.args
+    """
 }
