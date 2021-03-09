@@ -157,6 +157,8 @@ include { FETCH_DATABASES } from './modules/local/process/fetch_databases'      
 include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
 include { CHANGEO_MAKEDB } from './modules/local/process/changeo_makedb'                addParams( options: modules['changeo_makedb'] ) 
 include { CHANGEO_PARSEDB_SPLIT } from './modules/local/process/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
+include { CHANGEO_PARSEDB_SELECT } from './modules/local/process/changeo_parsedb_select' addParams( options: modules['changeo_parsedb_select'] )
+
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
 
@@ -285,9 +287,14 @@ workflow {
         FETCH_DATABASES.out.imgt
     )
 
-    // CHANGEO ParseDB
+    // CHANGEO ParseDB: select only productive sequences.
     CHANGEO_PARSEDB_SPLIT (
         CHANGEO_MAKEDB.out.tab
+    )
+
+    // Changeo ParseDB select: selecting IGH for ig loci, TR for tr loci.
+    CHANGEO_PARSEDB_SELECT (
+        CHANGEO_PARSEDB_SPLIT.out.tab
     )
 
 
