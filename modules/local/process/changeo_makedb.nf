@@ -37,7 +37,7 @@ process CHANGEO_MAKEDB {
         """
     } else if (params.loci == 'tr') {
         """
-        MakeDb.py igblast -i blast.fmt7 -s fasta.fasta -r \\
+        MakeDb.py igblast -i $igblast -s $reads -r \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAJ.fasta" \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
