@@ -159,6 +159,8 @@ include { CHANGEO_MAKEDB } from './modules/local/process/changeo_makedb'        
 include { CHANGEO_PARSEDB_SPLIT } from './modules/local/process/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
 include { CHANGEO_PARSEDB_SELECT } from './modules/local/process/changeo_parsedb_select' addParams( options: modules['changeo_parsedb_select'] )
 include { CHANGEO_CONVERTDB_FASTA } from './modules/local/process/changeo_convertdb_fasta' addParams( options: modules['changeo_convertdb_fasta'] )
+//SHAZAM
+include { SHAZAM_TIGGER_THRESHOLD } from './modules/local/process/shazam_tigger_threshold' addParams( options: modules['shazam_tigger_threshold'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -300,14 +302,20 @@ workflow {
     )
 
     // Changeo Convertdb fasta: convert sequence table to fasta.
-    CHANGEO_CONVERTDB_FASTA ( 
+    CHANGEO_CONVERTDB_FASTA (
         CHANGEO_PARSEDB_SELECT.out.tab
     )
 
     // Subworkflow: merge tables from the same patient
     MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
     
-    // Merge tables from the same patient
+    // Shazam clonal threshold and tigger genotyping
+    SHAZAM_TIGGER_THRESHOLD(
+        MERGE_TABLES_WF.out,
+        FETCH_DATABASES.out.imgt
+        )
+
+    ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
 
 
     // Software versions
