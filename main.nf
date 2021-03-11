@@ -161,6 +161,8 @@ include { CHANGEO_PARSEDB_SELECT } from './modules/local/process/changeo_parsedb
 include { CHANGEO_CONVERTDB_FASTA } from './modules/local/process/changeo_convertdb_fasta' addParams( options: modules['changeo_convertdb_fasta'] )
 //SHAZAM
 include { SHAZAM_TIGGER_THRESHOLD } from './modules/local/process/shazam_tigger_threshold' addParams( options: modules['shazam_tigger_threshold'] )
+//CHANGEO
+include { CHANGEO_DEFINECLONES } from './modules/local/process/changeo_defineclones'    addParams( options: modules['changeo_defineclones'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -316,6 +318,13 @@ workflow {
         )
 
     ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
+
+    //Changeo define clones
+    CHANGEO_DEFINECLONES(
+        SHAZAM_TIGGER_THRESHOLD.out.tab,
+        SHAZAM_TIGGER_THRESHOLD.out.threshold,
+        SHAZAM_TIGGER_THRESHOLD.out.fasta
+    )
 
 
     // Software versions
