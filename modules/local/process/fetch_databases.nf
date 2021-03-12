@@ -10,11 +10,11 @@ process FETCH_DATABASES {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "bioconda::wget=1.20.1" : null)              // Conda package
+    conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/wget:1.20.1"  // Singularity image
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-91e61e7331dcf9dede9440679ae179eef1d60410:d7c34e324b30d1d37f98bb56af08b91a4725aa2a-0"  // Singularity image
     } else {
-        container "quay.io/biocontainers/wget:1.20.1"                        // Docker image
+        container "quay.io/biocontainers/mulled-v2-91e61e7331dcf9dede9440679ae179eef1d60410:d7c34e324b30d1d37f98bb56af08b91a4725aa2a-0"                        // Docker image
     }
 
     output:
@@ -25,9 +25,11 @@ process FETCH_DATABASES {
     """
     echo "Fetching databases..."
 
-    wget https://raw.githubusercontent.com/nf-core/test-datasets/bcellmagic/database-cache/databases.zip
+    fetch_imgt.sh -o imgtdb_base
 
-    unzip databases.zip
+    fetch_igblastdb.sh -x -o igblast_base
+
+    imgt2igblast.sh -i ./imgtdb_base -o igblast_base
 
     echo "FetchDBs process finished."
     """
