@@ -19,7 +19,7 @@ process CHANGEO_DEFINECLONES {
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
-    val(threshold)
+    val(threshold) // threshold file
     path(geno_fasta) // igblast fasta
 
     output:
