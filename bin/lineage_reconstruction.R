@@ -1,16 +1,6 @@
 #!/usr/bin/env Rscript
 
 library(alakazam)
-library(ggplot2)
-library(data.table)
-library(dplyr)
-library(tigger)
-library(shazam)
-library(igraph)
-library(gplots)
-library(circlize)
-library(UpSetR)
-library(gtools)
 
 theme_set(theme_bw(base_family = "ArialMT") + 
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
