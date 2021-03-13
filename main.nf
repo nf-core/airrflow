@@ -145,11 +145,11 @@ include { PRESTO_PAIRSEQ } from './modules/local/process/presto_pairseq'        
 include { PRESTO_CLUSTERSETS } from './modules/local/process/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 include { PRESTO_PARSE_CLUSTER } from './modules/local/process/presto_parse_cluster'    addParams( options: [:] )
 include { PRESTO_BUILDCONSENSUS } from './modules/local/process/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
-include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'                         addParams( options: modules['presto_postconsensus_pairseq'] )
+include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/process/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
 include { PRESTO_ASSEMBLEPAIRS } from './modules/local/process/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
 include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/process/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
 include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COPY } from './modules/local/process/presto_parseheaders'      addParams( options: modules['presto_parseheaders_copy'] )
-include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/process/presto_parseheaders_metadata'       addParams( options: [:] )
+include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/process/presto_parseheaders_metadata'    addParams( options: [:] )
 include { PRESTO_COLLAPSESEQ } from './modules/local/process/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
 include { PRESTO_SPLITSEQ } from './modules/local/process/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
 //CHANGEO
@@ -157,12 +157,14 @@ include { FETCH_DATABASES } from './modules/local/process/fetch_databases'      
 include { CHANGEO_ASSIGNGENES } from './modules/local/process/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
 include { CHANGEO_MAKEDB } from './modules/local/process/changeo_makedb'                addParams( options: modules['changeo_makedb'] ) 
 include { CHANGEO_PARSEDB_SPLIT } from './modules/local/process/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT } from './modules/local/process/changeo_parsedb_select' addParams( options: modules['changeo_parsedb_select'] )
-include { CHANGEO_CONVERTDB_FASTA } from './modules/local/process/changeo_convertdb_fasta' addParams( options: modules['changeo_convertdb_fasta'] )
+include { CHANGEO_PARSEDB_SELECT } from './modules/local/process/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
+include { CHANGEO_CONVERTDB_FASTA } from './modules/local/process/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
 //SHAZAM
-include { SHAZAM_TIGGER_THRESHOLD } from './modules/local/process/shazam_tigger_threshold' addParams( options: modules['shazam_tigger_threshold'] )
+include { SHAZAM_TIGGER_THRESHOLD } from './modules/local/process/shazam_tigger_threshold'  addParams( options: modules['shazam_tigger_threshold'] )
 //CHANGEO
-include { CHANGEO_DEFINECLONES } from './modules/local/process/changeo_defineclones'    addParams( options: modules['changeo_defineclones'] )
+include { CHANGEO_DEFINECLONES } from './modules/local/process/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
+include { CHANGEO_CREATEGERMLINES } from './modules/local/process/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
+include { CHANGEO_BUILDTREES } from './modules/local/process/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -315,7 +317,7 @@ workflow {
     SHAZAM_TIGGER_THRESHOLD(
         MERGE_TABLES_WF.out,
         FETCH_DATABASES.out.imgt
-        )
+    )
 
     ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
 
@@ -324,6 +326,18 @@ workflow {
         SHAZAM_TIGGER_THRESHOLD.out.tab,
         SHAZAM_TIGGER_THRESHOLD.out.threshold,
         SHAZAM_TIGGER_THRESHOLD.out.fasta
+    )
+
+    //Changeo create germlines
+    CHANGEO_CREATEGERMLINES(
+        CHANGEO_DEFINECLONES.out.tab,
+        CHANGEO_DEFINECLONES.out.fasta,
+        FETCH_DATABASES.out.imgt
+    )
+
+    //Changeo build trees
+    CHANGEO_BUILDTREES(
+        CHANGEO_CREATEGERMLINES.out.tab
     )
 
 
