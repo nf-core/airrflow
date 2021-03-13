@@ -26,6 +26,6 @@ process CHANGEO_BUILDTREES {
     script:
     def software = getSoftwareName(task.process)
     """
-    BuildTrees.py -d ${tab} --outname ${meta.id} --log ${meta.id}.log --collapse --nproc $task.cpus
+    BuildTrees.py -d ${tab} --outname ${meta.id} --log ${meta.id}.log --collapse --nproc $task.cpus --igphyml
     """
 }
