@@ -23,8 +23,8 @@ process CHANGEO_DEFINECLONES {
     path(geno_fasta) // igblast fasta
 
     output:
-    tuple val(meta), path("*clone-pass.tab"), emit: tab // sequence tsv table in AIRR format
-    path "*.command_log.txt" , emit: logs
+    tuple val(meta), path("*clone-pass.tsv"), emit: tab // sequence tsv table in AIRR format
+    path "*_command_log.txt" , emit: logs
     path("${geno_fasta}"), emit: fasta // genotype fasta
 
     script:
