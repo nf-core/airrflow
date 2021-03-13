@@ -14,24 +14,23 @@ if (length(args)<2) {
     stop("Two arguments must be supplied (input file tab and input file fasta).\n", call.=FALSE)
   } 
 
+# Get input from args
 inputtable = args[1]
-
 loci = args[2]
-
 threshold_method = args[3]
-
 fastas = args[4:length(args)]
 
 output_folder = dirname(inputtable)
-  
-db <- readChangeoDb(inputtable)
+
+#db <- readChangeoDb(inputtable)
+db <- read.table(inputtable, header=TRUE, sep="\t")
 print(colnames(db))
 
 if (loci == "ig"){
 
-  db_fasta <- readIgFasta(fastas, strip_down_name = TRUE, force_caps = TRUE)
+  db_fasta <- readIgFasta(fastas, strip_down_name = TRUE)
 
-  gt <- inferGenotype(db, v_call = "v_call", seq="sequence_alignment",find_unmutated = FALSE)
+  gt <- inferGenotype(db, v_call = "v_call", find_unmutated = T)
 
   gtseq <- genotypeFasta(gt, db_fasta)
   writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
