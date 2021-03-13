@@ -61,12 +61,8 @@ if (loci == "ig"){
 
   gt <- inferGenotype(db, v_call = "v_call", find_unmutated = FALSE)
 
-  gtseq_TRAV <- genotypeFasta(gt, db_fasta_TRAV)
-  writeFasta(gtseq, paste(output_folder,"TRAV_genotype.fasta",sep="/"))
-
-  gtseq_TRBV <- genotypeFasta(gt, db_fasta_TRBV)
-  writeFasta(gtseq, paste(output_folder,"TRBV_genotype.fasta",sep="/"))
-  
+  gtseq <- genotypeFasta(gt, c(db_fasta_TRAV,db_fasta_TRBV,db_fasta_TRDV))
+  writeFasta(gtseq, paste(output_folder,"TRxV_genotype.fasta",sep="/"))
 
   # Plot genotype
   ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
