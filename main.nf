@@ -167,6 +167,7 @@ include { CHANGEO_CREATEGERMLINES } from './modules/local/process/changeo_create
 include { CHANGEO_BUILDTREES } from './modules/local/process/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
 //ALAKAZAM
 include { ALAKAZAM_LINEAGE } from './modules/local/process/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
+include { ALAKAZAM_SHAZAM_REPERTOIRES } from './modules/local/process/alakazam_shazam_repertoires.nf'   addParams ( options: modules['alakazam_shazam_repertoires'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -348,7 +349,14 @@ workflow {
     )
 
     ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
-    
+
+    //ch_all_tabs_repertoire = ALAKAZAM_LINEAGE.out.tab.collect()
+
+    // Alakazam shazam repertoire comparison
+    //ALAKAZAM_SHAZAM_REPERTOIRES(
+    //    ch_all_tabs_repertoire
+    //)
+
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
