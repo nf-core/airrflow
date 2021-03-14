@@ -27,7 +27,7 @@ process MERGE_UMI {
         mv "UMI_R1.fastq.gz" "${meta.id}_UMI_R1.fastq.gz"
         mv "${R2}" "${meta.id}_R2.fastq.gz"
         """
-    else {
+    } else {
         """
         mv "${R1}" "${meta.id}_R1.fastq.gz"
         mv "${R2}" "${meta.id}_R2.fastq.gz"
