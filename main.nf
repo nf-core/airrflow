@@ -203,15 +203,10 @@ workflow {
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
     
     //Merge UMI from index file to R1 if provided
-    if (params.index_file) {
-        MERGE_UMI ( ch_merge_umi_gunzip )
-        .set{ ch_gunzip }
-    } else {
-        ch_gunzip = ch_merge_umi_gunzip
-    }
+    MERGE_UMI ( ch_merge_umi_gunzip )
 
     //GUNZIP: gunzip fastq.gz to fastq
-    GUNZIP ( ch_gunzip )
+    GUNZIP ( MERGE_UMI.out.reads )
     ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
 
     //PRESTO FILTERSEQ: Filter sequences by quality score

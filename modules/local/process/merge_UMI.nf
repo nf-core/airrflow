@@ -18,12 +18,19 @@ process MERGE_UMI {
     tuple val(meta), path(R1), path(R2), path(I1)
 
     output:
-    tuple val(meta), path('*_UMI_R1.fastq.gz'), path('*_R2.fastq.gz')   , emit: reads
+    tuple val(meta), path('*_R1.fastq.gz'), path('*_R2.fastq.gz')   , emit: reads
 
     script:
-    """
-    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz --umi_start $params.umi_start --umi_length $params.umi_length
-    mv "UMI_R1.fastq.gz" "${meta.id}_UMI_R1.fastq.gz"
-    mv "${R2}" "${meta.id}_R2.fastq.gz"
-    """
+    if (params.index_file) {
+        """
+        merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz --umi_start $params.umi_start --umi_length $params.umi_length
+        mv "UMI_R1.fastq.gz" "${meta.id}_UMI_R1.fastq.gz"
+        mv "${R2}" "${meta.id}_R2.fastq.gz"
+        """
+    else {
+        """
+        mv "${R1}" "${meta.id}_R1.fastq.gz"
+        mv "${R2}" "${meta.id}_R2.fastq.gz"
+        """
+    }
 }
