@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process MERGE_UMI {
+process RENAME_FASTQ {
     tag "$meta.id"
 
     conda (params.enable_conda ? "conda-forge::python=3.8.0 conda-forge::biopython=1.74" : null)
@@ -15,15 +15,14 @@ process MERGE_UMI {
     }
 
     input:
-    tuple val(meta), path(R1), path(R2), path(I1)
+    tuple val(meta), path(R1), path(R2)
 
     output:
     tuple val(meta), path('*_R1.fastq.gz'), path('*_R2.fastq.gz')   , emit: reads
 
     script:
     """
-    merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz --umi_start $params.umi_start --umi_length $params.umi_length
-    mv "UMI_R1.fastq.gz" "${meta.id}_UMI_R1.fastq.gz"
+    mv "${R1}" "${meta.id}_R1.fastq.gz"
     mv "${R2}" "${meta.id}_R2.fastq.gz"
     """
 }
