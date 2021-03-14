@@ -33,3 +33,4 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='shazam.version.txt')"
     echo \$(R --version 2>&1) | awk -F' '  '{print \$3}' > R.version.txt
     """
+}
