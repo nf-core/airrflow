@@ -165,6 +165,8 @@ include { SHAZAM_TIGGER_THRESHOLD } from './modules/local/process/shazam_tigger_
 include { CHANGEO_DEFINECLONES } from './modules/local/process/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
 include { CHANGEO_CREATEGERMLINES } from './modules/local/process/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
 include { CHANGEO_BUILDTREES } from './modules/local/process/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
+//ALAKAZAM
+include { ALAKAZAM_LINEAGE } from './modules/local/process/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -336,10 +338,16 @@ workflow {
     )
 
     //Changeo build trees
-    CHANGEO_BUILDTREES(
+    //CHANGEO_BUILDTREES(
+    //    CHANGEO_CREATEGERMLINES.out.tab
+    //)
+
+    // Lineage reconstruction alakazam
+    ALAKAZAM_LINEAGE(
         CHANGEO_CREATEGERMLINES.out.tab
     )
 
+    ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEATE.out.version.first().ifEmpty(null)).dump()
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 

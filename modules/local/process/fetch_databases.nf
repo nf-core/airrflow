@@ -22,6 +22,7 @@ process FETCH_DATABASES {
     path("imgtdb_base"), emit: imgt
     
     script:
+    //TODO: get db versions
     """
     echo "Fetching databases..."
 

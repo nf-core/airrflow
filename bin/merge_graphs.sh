@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 
 DIR="lineage_reconstruction/Graphml_trees"   # input files
 
