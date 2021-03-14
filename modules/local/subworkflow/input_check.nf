@@ -32,16 +32,16 @@ def get_samplesheet_paths(LinkedHashMap col) {
 
     def array = []
     if (!file(col.R1).exists()) {
-        exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${row.fastq_1}"
+        exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${col.fastq_1}"
     }
     if (col.I1) {
         if (!file(col.I1).exists()) {
-            exit 1, "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${row.fastq_2}"
+            exit 1, "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${col.fastq_2}"
         }
         array = [ meta, [ file(col.R1), file(col.R2), file(col.I1) ] ]
     } else {
         if (!file(col.R2).exists()) {
-            exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${row.fastq_2}"
+            exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${col.fastq_2}"
         }
         array = [ meta, [ file(col.R1), file(col.R2) ] ]
     }
