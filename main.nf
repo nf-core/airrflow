@@ -347,8 +347,8 @@ workflow {
         CHANGEO_CREATEGERMLINES.out.tab
     )
 
-    ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEATE.out.version.first().ifEmpty(null)).dump()
-
+    ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
+    
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
