@@ -85,23 +85,17 @@ if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set
 if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
 if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
-// // If paths to DBS are provided 
-// if( params.igblast_base ){
-//     Channel.fromPath("${params.igblast_base}")
-//     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-//     .set { ch_igblast_db_for_process_igblast_mix }
-// } else {
-//     ch_igblast_db_for_process_igblast_mix = Channel.empty()
-// }
-// if( params.imgtdb_base ){
-//     Channel.fromPath("${params.imgtdb_base}")
-//     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-//     .into { ch_imgt_db_for_igblast_filter_mix;ch_imgt_db_for_shazam_mix;ch_imgt_db_for_germline_sequences_mix }
-// } else {
-//     ch_imgt_db_for_igblast_filter_mix = Channel.empty()
-//     ch_imgt_db_for_germline_sequences_mix = Channel.empty()
-//     ch_imgt_db_for_shazam_mix = Channel.empty()
-// }
+// If paths to DBS are provided 
+if( params.igblast_base ){
+    Channel.fromPath("${params.igblast_base}")
+    .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+    .set { ch_igblast }
+}
+if( params.imgtdb_base ){
+    Channel.fromPath("${params.imgtdb_base}")
+    .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+    .set { ch_imgt }
+}
 
 // //Read processed tabs if downstream_only 
 // if (params.downstream_only){
@@ -284,12 +278,16 @@ workflow {
     )
 
     //FETCH DATABASES
-    FETCH_DATABASES()
+    if (!params.igblast_base | !params.imgtdb_base) {
+        FETCH_DATABASES()
+        ch_igblast = FETCH_DATABASES.out.igblast
+        ch_imgt = FETCH_DATABASES.out.imgt
+    }
 
     //CHANGEO ASSIGNGENES: run Igblast
     CHANGEO_ASSIGNGENES (
         PRESTO_SPLITSEQ.out.fasta,
-        FETCH_DATABASES.out.igblast
+        ch_igblast
     )
     ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
 
@@ -297,7 +295,7 @@ workflow {
     CHANGEO_MAKEDB (
         CHANGEO_ASSIGNGENES.out.fasta,
         CHANGEO_ASSIGNGENES.out.blast,
-        FETCH_DATABASES.out.imgt
+        ch_imgt
     )
 
     // CHANGEO ParseDB: select only productive sequences.
@@ -321,7 +319,7 @@ workflow {
     // Shazam clonal threshold and tigger genotyping
     SHAZAM_TIGGER_THRESHOLD(
         MERGE_TABLES_WF.out,
-        FETCH_DATABASES.out.imgt
+        ch_imgt
     )
 
     ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
@@ -337,7 +335,7 @@ workflow {
     CHANGEO_CREATEGERMLINES(
         CHANGEO_DEFINECLONES.out.tab,
         CHANGEO_DEFINECLONES.out.fasta,
-        FETCH_DATABASES.out.imgt
+        ch_imgt
     )
 
     //Changeo build trees
