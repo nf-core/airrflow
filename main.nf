@@ -295,7 +295,7 @@ workflow {
     CHANGEO_MAKEDB (
         CHANGEO_ASSIGNGENES.out.fasta,
         CHANGEO_ASSIGNGENES.out.blast,
-        ch_imgt
+        ch_imgt.collect()
     )
 
     // CHANGEO ParseDB: select only productive sequences.
@@ -319,7 +319,7 @@ workflow {
     // Shazam clonal threshold and tigger genotyping
     SHAZAM_TIGGER_THRESHOLD(
         MERGE_TABLES_WF.out,
-        ch_imgt
+        ch_imgt.collect()
     )
 
     ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
@@ -335,7 +335,7 @@ workflow {
     CHANGEO_CREATEGERMLINES(
         CHANGEO_DEFINECLONES.out.tab,
         CHANGEO_DEFINECLONES.out.fasta,
-        ch_imgt
+        ch_imgt.collect()
     )
 
     //Changeo build trees
