@@ -287,7 +287,7 @@ workflow {
     //CHANGEO ASSIGNGENES: run Igblast
     CHANGEO_ASSIGNGENES (
         PRESTO_SPLITSEQ.out.fasta,
-        ch_igblast
+        ch_igblast.collect()
     )
     ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
 
