@@ -162,7 +162,9 @@ include { CHANGEO_CREATEGERMLINES } from './modules/local/process/changeo_create
 include { CHANGEO_BUILDTREES } from './modules/local/process/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
 //ALAKAZAM
 include { ALAKAZAM_LINEAGE } from './modules/local/process/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
-include { ALAKAZAM_SHAZAM_REPERTOIRES } from './modules/local/process/alakazam_shazam_repertoires.nf'   addParams ( options: modules['alakazam_shazam_repertoires'] )
+include { ALAKAZAM_SHAZAM_REPERTOIRES } from './modules/local/process/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
+//LOG PARSING
+include { PARSE_LOGS } from './modules/local/process/parse_logs'                        addParams( options: modules['parse_logs'] )
 
 // Local: Sub-workflows
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'       addParams( options: [:] )
@@ -356,6 +358,23 @@ workflow {
     //ALAKAZAM_SHAZAM_REPERTOIRES(
     //    ch_all_tabs_repertoire
     //)
+
+    // Process logs
+    PARSE_LOGS(
+        PRESTO_FILTERSEQ.out.logs.collect(),
+        PRESTO_MASKPRIMERS.out.logs.collect(),
+        PRESTO_PAIRSEQ.out.logs.collect(),
+        PRESTO_CLUSTERSETS.out.logs.collect(),
+        PRESTO_BUILDCONSENSUS.out.logs.collect(),
+        PRESTO_POSTCONSENSUS_PAIRSEQ.out.logs.collect(),
+        PRESTO_ASSEMBLEPAIRS.out.logs.collect(),
+        PRESTO_COLLAPSESEQ.out.logs.collect(),
+        PRESTO_SPLITSEQ.out.logs.collect(),
+        CHANGEO_MAKEDB.out.logs.collect(),
+        CHANGEO_DEFINECLONES.out.logs.collect(),
+        CHANGEO_CREATEGERMLINES.out.logs.collect(),
+        ch_input
+    )
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
