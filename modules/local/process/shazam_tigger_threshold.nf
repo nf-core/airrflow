@@ -26,6 +26,7 @@ process SHAZAM_TIGGER_THRESHOLD {
     path("threshold.txt"), emit: threshold
     path("*.version.txt") , emit: version
     path("*genotype.fasta"), emit: fasta
+    path("*/*.pdf")
 
     script:
     def software = getSoftwareName(task.process)
