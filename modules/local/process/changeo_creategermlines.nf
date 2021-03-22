@@ -33,7 +33,7 @@ process CHANGEO_CREATEGERMLINES {
         """
         CreateGermlines.py -d ${tab} -g dmask --cloned -r ${geno_fasta} \\
         ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHD.fasta \\
-        ${imgtbase}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
+        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
         --log ${meta.id}.log --outname ${meta.id} > ${meta.id}_command_log.txt
         ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
         """

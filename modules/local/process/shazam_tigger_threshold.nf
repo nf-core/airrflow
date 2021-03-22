@@ -34,6 +34,9 @@ process SHAZAM_TIGGER_THRESHOLD {
     if (params.loci == 'ig'){
         """
         TIgGER-shazam.R $tab $params.loci $params.threshold_method ${imgt_base}/${params.species}/vdj/imgt_human_IGHV.fasta 
+        Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
+        Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
+        
         """
     } else if (params.loci == 'tr'){
         """
