@@ -11,6 +11,8 @@
 
 nextflow.enable.dsl = 2
 
+log.info Headers.nf_core(workflow, params.monochrome_logs)
+
 ////////////////////////////////////////////////////
 /* --               PRINT HELP                 -- */
 ////////////////////////////////////////////////////
@@ -19,21 +21,16 @@ def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
     // TODO nf-core: Update typical command used to run pipeline
     def command = "nextflow run nf-core/bcellmagic -profile <docker/singularity/podman/conda/institute> --input metadata.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta"
-    log.info Schema.params_help(workflow, params, json_schema, command)
+    log.info NfcoreSchema.params_help(workflow, params, json_schema, command)
     exit 0
 }
 
 ////////////////////////////////////////////////////
-/* --         PRINT PARAMETER SUMMARY          -- */
-////////////////////////////////////////////////////
-
-def summary_params = Schema.params_summary_map(workflow, params, json_schema)
-log.info Schema.params_summary_log(workflow, params, json_schema)
-
-////////////////////////////////////////////////////
-/* --        GENOME PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
-
+/* --         VALIDATE PARAMETERS              -- */
+////////////////////////////////////////////////////+
+if (params.validate_params) {
+    NfcoreSchema.validateParameters(params, json_schema, log)
+}
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
@@ -109,6 +106,11 @@ if( params.imgtdb_base ){
 // }
 
 
+////////////////////////////////////////////////////
+/* --         PRINT PARAMETER SUMMARY          -- */
+////////////////////////////////////////////////////
+def summary_params = NfcoreSchema.params_summary_map(workflow, params, json_schema)
+log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
 
 
 ////////////////////////////////////////////////////
@@ -408,6 +410,11 @@ workflow {
 workflow.onComplete {
     Completion.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     Completion.summary(workflow, params, log)
+}
+
+workflow.onError {
+    // Print unexpected parameters - easiest is to just rerun validation
+    NfcoreSchema.validateParameters(params, json_schema, log)
 }
 
 ////////////////////////////////////////////////////
