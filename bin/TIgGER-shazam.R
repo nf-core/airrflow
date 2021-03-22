@@ -4,6 +4,7 @@ library(stringi)
 library(alakazam)
 library(tigger)
 library(shazam)
+library(dplyr)
 
 # Set random seed for reproducibility
 set.seed(12345)
@@ -24,15 +25,21 @@ output_folder = dirname(inputtable)
 
 #db <- readChangeoDb(inputtable)
 db <- read.table(inputtable, header=TRUE, sep="\t")
-print(colnames(db))
+#print(colnames(db))
 
 if (loci == "ig"){
 
   db_fasta <- readIgFasta(fastas, strip_down_name = TRUE)
 
-  gt <- inferGenotype(db, v_call = "v_call", find_unmutated = T)
+  gt <- inferGenotype(db, v_call = "v_call", find_unmutated = F)
+  print(colnames(gt))
 
-  gtseq <- genotypeFasta(gt, db_fasta)
+  # Filter out Duplicate sequences as not supported by Tigger 1.0.0
+  print(gt)
+  gt_filt <- filter(gt, !grepl("D", gene))
+  print(gt_filt)
+
+  gtseq <- genotypeFasta(gt_filt, db_fasta)
   writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
   # Plot genotype
