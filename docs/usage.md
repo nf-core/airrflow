@@ -6,8 +6,6 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
-
 The Bcellmagic pipeline allows processing bulk targeted BCR sequencing data. Support for processing TCR sequencing is currently under implementation.
 
 ## Supported sequencing technologies
