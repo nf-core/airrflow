@@ -5,6 +5,7 @@ def options    = initOptions(params.options)
 
 process PRESTO_CLUSTERSETS {
     tag "$meta.id"
+    label "process_long_parallelized"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
