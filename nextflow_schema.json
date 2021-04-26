@@ -11,9 +11,7 @@
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
             "required": [
-                "input",
-                "cprimers",
-                "vprimers"
+                "input"
             ],
             "properties": {
                 "input": {
@@ -117,11 +115,13 @@
                 },
                 "umi_length": {
                     "type": "integer",
-                    "description": "UMI barcode length in nucleotides."
+                    "description": "UMI barcode length in nucleotides.",
+                    "fa_icon": "fas fa-barcode"
                 },
                 "umi_start": {
                     "type": "integer",
-                    "description": "UMI barcode start position."
+                    "description": "UMI barcode start position.",
+                    "fa_icon": "fas fa-barcode"
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
@@ -146,25 +146,6 @@
                     "description": "Start position of C region primers (without counting the UMI barcode).",
                     "fa_icon": "fas fa-dna"
                 },
-                "primer_maxerror": {
-                    "type": "number",
-                    "default": 0.2,
-                    "description": "Maximum scoring error for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-exclamation-triangle"
-                },
-                "primer_mask_mode": {
-                    "type": "string",
-                    "default": "cut",
-                    "description": "Masking mode for the Mask Primer process. Available: cut, mask, trim, tag.",
-                    "enum": [
-                        "cut",
-                        "mask",
-                        "trim",
-                        "tag"
-                    ],
-                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
-                    "fa_icon": "fas fa-cut"
-                },
                 "race_linker": {
                     "type": "string",
                     "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
@@ -174,6 +155,40 @@
                     "type": "boolean",
                     "description": "The amplification protocol is 5' RACE based (e.g. SMARTer TAKARA), so no V-region primers were used.",
                     "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
+        "presto_options": {
+            "title": "Presto options",
+            "type": "object",
+            "description": "Options for the presto tools",
+            "default": "",
+            "properties": {
+                "filterseq_q": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Quality threshold for Presto FilterSeq sequence filtering.",
+                    "fa_icon": "fas fa-filter"
+                },
+                "primer_mask_mode": {
+                    "type": "string",
+                    "default": "cut",
+                    "description": "Masking mode for the Presto MaskPrimer process. Available: cut, mask, trim, tag.",
+                    "enum": [
+                        "cut",
+                        "mask",
+                        "trim",
+                        "tag"
+                    ],
+                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "primer_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-exclamation-triangle"
                 },
                 "primer_consensus": {
                     "type": "number",
@@ -182,7 +197,7 @@
                     "fa_icon": "fas fa-align-center"
                 }
             },
-            "fa_icon": "fas fa-dna"
+            "fa_icon": "fas fa-align-center"
         },
         "clustering_threshold_definition": {
             "title": "Clustering threshold definition",
@@ -207,7 +222,8 @@
                     "type": "string",
                     "default": "density",
                     "description": "Set the method for finding the clustering threshold.",
-                    "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances."
+                    "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances.",
+                    "fa_icon": "fab fa-pagelines"
                 }
             },
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
@@ -240,6 +256,25 @@
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
             "fa_icon": "fas fa-angle-double-right"
         },
+        "software_packaging_options": {
+            "title": "Software packaging options",
+            "type": "object",
+            "description": "Options for software packaging",
+            "default": "",
+            "properties": {
+                "enable_conda": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-box",
+                    "description": "Enable conda to run pipeline with conda environment."
+                },
+                "singularity_pull_docker_container": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-box",
+                    "description": "Pull docker container and convert to singularity at run time."
+                }
+            },
+            "fa_icon": "fas fa-box"
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -260,6 +295,15 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
                     "default": true
+                },
+                "genome": {
+                    "type": "string",
+                    "hidden": true
+                },
+                "genomes": {
+                    "type": "string",
+                    "default": "[]",
+                    "hidden": true
                 }
             }
         },
@@ -292,12 +336,12 @@
                         "move"
                     ]
                 },
-                "name": {
-                    "type": "string",
-                    "description": "Workflow name.",
-                    "fa_icon": "fas fa-fingerprint",
-                    "hidden": true,
-                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
                 },
                 "email_on_fail": {
                     "type": "string",
@@ -341,6 +385,22 @@
                     "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-cogs",
                     "hidden": true
+                },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "Add title for the multiqc report",
+                    "default": "''"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip MultiQC process"
+                },
+                "show_hidden_params": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-eye-slash",
+                    "description": "Show all params when using `--help`",
+                    "hidden": true,
+                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 }
             }
         },
@@ -364,6 +424,7 @@
                     "description": "Maximum amount of memory that can be requested for any single job.",
                     "default": "128.GB",
                     "fa_icon": "fas fa-memory",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
                 },
@@ -372,6 +433,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }
@@ -441,10 +503,16 @@
             "$ref": "#/definitions/primer_handling"
         },
         {
+            "$ref": "#/definitions/presto_options"
+        },
+        {
             "$ref": "#/definitions/clustering_threshold_definition"
         },
         {
             "$ref": "#/definitions/downstream_options"
+        },
+        {
+            "$ref": "#/definitions/software_packaging_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

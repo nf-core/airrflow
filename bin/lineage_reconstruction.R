@@ -1,21 +1,32 @@
 #!/usr/bin/env Rscript
 
 library(alakazam)
-library(ggplot2)
-library(data.table)
-library(dplyr)
-library(tigger)
-library(shazam)
 library(igraph)
-library(gplots)
-library(circlize)
-library(UpSetR)
-library(gtools)
+library(dplyr)
 
 theme_set(theme_bw(base_family = "ArialMT") + 
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 
-datadir <- "."
+args = commandArgs(trailingOnly=TRUE)
+
+if (length(args)<1) {
+    stop("Input file argument must be supplied.\n", call.=FALSE)
+  }
+
+# Get input table from args
+inputtable = args[1]
+node_text = args[2]
+
+avail_text = c("c_primer", "treatment", "population", "source", 
+                "extract_time", "sample", "sample_pop", "clone_id", "seq_id", "none")
+
+if (node_text %in% avail_text) {
+    print(paste0("Node string set to: ",node_text))
+} else {
+    stop(paste0("Node string must be one of: ", avail_text))
+}
+
+# Set output directories
 patdir_lineage <- "lineage_reconstruction"
 dir.create(patdir_lineage)
 patdir_lineage_trees <- paste(patdir_lineage, "Clone_tree_plots", sep = "/")
@@ -24,59 +35,82 @@ patdir_lineage_graphml <- paste(patdir_lineage, "Graphml_trees", sep = "/")
 dir.create(patdir_lineage_graphml)
 
 # Read patient table
-fname <- system(paste0("find '",datadir,"' -name '*.tab'"), intern=T)
-df_pat <- read.csv(fname, sep="\t")
-df_pat$SAMPLE <- as.factor(paste(df_pat$TREATMENT, df_pat$EXTRACT_TIME, df_pat$SOURCE, sep="_"))
-df_pat$SAMPLE_POP <- as.factor(paste(df_pat$TREATMENT, df_pat$EXTRACT_TIME, df_pat$SOURCE, df_pat$POPULATION, sep="_"))
-
-##################
-# Clonal lineages
-#################
+df_pat <- read.csv(inputtable, sep="\t")
+df_pat$sample <- as.factor(paste(df_pat$treatment, df_pat$extract_time, df_pat$source, sep="_"))
+df_pat$sample_pop <- as.factor(paste(df_pat$treatment, df_pat$extract_time, df_pat$source, df_pat$population, sep="_"))
 
 # save clonal table
-countclones <- countClones(df_pat,clone="CLONE", copy="DUPCOUNT")
-write.table(countclones, paste(patdir_lineage, "/", "Clones_table_patient_", df_pat$SOURCE[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
+countclones <- countClones(df_pat, clone="clone_id", copy="duplicate_count")
+write.table(countclones, paste("Clones_table_patient_", df_pat$source[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
 # Restrict clonal tree size
-clones <- subset(countclones, SEQ_COUNT > 2 & SEQ_COUNT < 1000)
+clones <- filter(countclones, seq_count > 2 & seq_count < 1000)
+write.table(clones, paste("Clones_table_patient_filtered_", df_pat$source[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
+# Get dnapars exec path
 dnapars_exec_tab <- read.csv("dnapars_exec.txt", header=F)
 dnapars_exec <- as.character(dnapars_exec_tab[1,1])
 
-save_graph <- function(df_pat, clone_id){
-    print(paste0("Started processing clone:",clone_id))
-    sub_db_clone <- subset(df_pat, CLONE == clone_id)
-    sub_db_clone$CLONE <- sapply(sub_db_clone$CLONE, as.character)
-    sub_db_clone$SAMPLE <- sapply(sub_db_clone$SAMPLE, as.character)
-    sub_db_clone$SAMPLE_POP <- sapply(sub_db_clone$SAMPLE_POP, as.character)
-    sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
-    sub_db_clone$TREATMENT <- sapply(sub_db_clone$TREATMENT, as.character)
-    sub_db_clone$POPULATION <- sapply(sub_db_clone$POPULATION, as.character)
-    sub_db_clone$SOURCE <- sapply(sub_db_clone$SOURCE, as.character)
-    sub_db_clone$EXTRACT_TIME <- sapply(sub_db_clone$EXTRACT_TIME, as.character)
-    sub_db_clone$C_PRIMER <- sapply(sub_db_clone$C_PRIMER, as.character)
+# Create clonal tree per clone
+save_graph <- function(df_pat, clone_num){
+    print(paste0("Started processing clone:",clone_num))
+    sub_db_clone <- subset(df_pat, clone_id == clone_num)
+    sub_db_clone$clone_id <- sapply(sub_db_clone$clone_id, as.character)
+    sub_db_clone$sample <- sapply(sub_db_clone$sample, as.character)
+    sub_db_clone$sample_pop <- sapply(sub_db_clone$sample_pop, as.character)
+    sub_db_clone$c_primer <- sapply(sub_db_clone$c_primer, as.character)
+    sub_db_clone$treatment <- sapply(sub_db_clone$treatment, as.character)
+    sub_db_clone$population <- sapply(sub_db_clone$population, as.character)
+    sub_db_clone$source <- sapply(sub_db_clone$source, as.character)
+    sub_db_clone$extract_time <- sapply(sub_db_clone$extract_time, as.character)
     
-    clone <- makeChangeoClone(sub_db_clone, text_fields = c("C_PRIMER", "TREATMENT", "POPULATION", "SOURCE", "EXTRACT_TIME", "SAMPLE", "SAMPLE_POP", "CLONE"), num_fields = "DUPCOUNT")
-
-
-    graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T)
+    # Make changeo clone
+    clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "treatment", "population", "source", 
+                                                            "extract_time", "sample", "sample_pop", "clone_id"), 
+                                            num_fields = "duplicate_count")
+    
+    # Build Phylip lineage
+    graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
     
     #Modify graph and plot attributes
     V(graph)$color <- "steelblue"
     V(graph)$color[V(graph)$name == "Germline"] <- "black"
     V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
-    V(graph)$label <- V(graph)$POPULATION
+
+    # Set label on the nodes
+    if ( node_text == "extract_time" ) {
+        V(graph)$label <- V(graph)$extract_time
+    } else if ( node_text == "c_primer" ) {
+        V(graph)$label <- V(graph)$c_primer
+    } else if ( node_text == "treatment" ) {
+        V(graph)$label <- V(graph)$treatment
+    } else if ( node_text == "sample" ) {
+        V(graph)$label <- V(graph)$sample
+    } else if ( node_text == "sample_pop" ) {
+        V(graph)$label <- V(graph)$sample_pop
+    } else if ( node_text == "clone_id" ) {
+        V(graph)$label <- V(graph)$clone_id
+    } else if ( node_text == "c_primer" ) {
+        V(graph)$label <- V(graph)$c_primer
+    } else if ( node_text == "population" ) {
+        V(graph)$label <- V(graph)$population
+    } else if ( node_text == "seq_id" ){
+        V(graph)$label <- V(graph)$name
+    } else if ( node_text == "none" ) {
+        V(graph)$label <- ""
+    }
+        
 
     # Remove large default margins
     par(mar=c(0, 0, 0, 0) + 0.1)
-    vsize = V(graph)$DUPCOUNT
+    vsize = V(graph)$duplicate_count
     vsize[is.na(vsize)] <- 1
 
     # Save graph in graphML format
-    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$SOURCE[1],  "_clone_id_", clone_id, ".txt", sep=""), format = c("graphml"))
+    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$source[1],  "_clone_id_", clone_num, ".txt", sep=""), format = c("graphml"))
 
-    # Plot
-    svg(filename = paste(patdir_lineage_trees,"/Clone_tree_", clone@data$SOURCE[1], "_clone_id_", clone_id, ".svg", sep=""))
+    # Plot tree
+    pdf(paste(patdir_lineage_trees,"/Clone_tree_", clone@data$source[1], "_clone_id_", clone_num, ".pdf", sep=""))
     plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
         vertex.label.color="black", vertex.size=(vsize/20 + 6))
     legend("topleft", c("Germline", "Inferred", "Sample"), 
@@ -85,11 +119,13 @@ save_graph <- function(df_pat, clone_id){
     
 }
 
-for (clone_id in clones$CLONE){
-    tryCatch(withCallingHandlers(save_graph(df_pat, clone_id), 
-                   error=function(e) {print(paste0("Skipping clone due to problem:", clone_id))},
-                   warning=function(w) {print(paste0("Warning for clone:", clone_id))
+for (clone_num in clones$clone_id){
+    tryCatch(withCallingHandlers(save_graph(df_pat, clone_num), 
+                   error=function(e) {print(paste0("Skipping clone due to problem:", clone_num))
+                                       print("Here is the original error message:")
+                                       print(e)},
+                   warning=function(w) {print(paste0("Warning for clone:", clone_num))
                                invokeRestart("muffleWarning")}), 
-           error = function(e) { print(paste0("Processed clone:", clone_id)) })
+           error = function(e) { print(paste0("Processed clone:", clone_num)) })
 }
 

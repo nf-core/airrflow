@@ -1,4 +1,5 @@
 #!/bin/bash
+
 DIR="lineage_reconstruction/Graphml_trees"   # input files
 
 IDX=0
