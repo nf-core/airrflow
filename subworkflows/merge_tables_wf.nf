@@ -4,7 +4,7 @@
 
 params.options = [:]
 
-include { MERGE_TABLES } from '../process/merge_tables' addParams( options: params.options )
+include { MERGE_TABLES } from '../modules/local/merge_tables' addParams( options: params.options )
 
 workflow MERGE_TABLES_WF {
     take:
