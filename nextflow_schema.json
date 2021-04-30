@@ -110,20 +110,17 @@
                 "vprimer_start": {
                     "type": "integer",
                     "description": "Start position of V region primers (without counting the UMI barcode).",
-                    "fa_icon": "fas fa-dna",
-                    "default": "0"
+                    "fa_icon": "fas fa-dna"
                 },
                 "cprimer_start": {
                     "type": "integer",
                     "description": "Start position of C region primers (without counting the UMI barcode).",
-                    "fa_icon": "fas fa-dna",
-                    "default": "0"
+                    "fa_icon": "fas fa-dna"
                 },
                 "race_linker": {
                     "type": "string",
                     "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
-                    "fa_icon": "fas fa-dna",
-                    "default": "''"
+                    "fa_icon": "fas fa-dna"
                 },
                 "cprimer_position": {
                     "type": "string",
@@ -165,13 +162,12 @@
                     "type": "integer",
                     "description": "UMI barcode length in nucleotides.",
                     "fa_icon": "fas fa-barcode",
-                    "default": "8"
+                    "default": 8
                 },
                 "umi_start": {
                     "type": "integer",
                     "description": "UMI barcode start position.",
-                    "fa_icon": "fas fa-barcode",
-                    "default": "0"
+                    "fa_icon": "fas fa-barcode"
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
