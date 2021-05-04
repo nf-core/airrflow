@@ -1,9 +1,9 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_PARSE_CLUSTER {
+process PRESTO_POSTCONSENSUS_PAIRSEQ {
     tag "$meta.id"
     label "process_low"
 
@@ -19,15 +19,14 @@ process PRESTO_PARSE_CLUSTER {
     }
 
     input:
-    tuple val(meta), path(R1), path(R2)
+    tuple val(meta), path("${meta.id}_R1.fastq"), path("${meta.id}_R2.fastq")
 
     output:
-    tuple val(meta), path("*R1_cluster-pass_reheader.fastq"), path("*R2_cluster-pass_reheader.fastq"), emit: reads
-    path("*_log.txt"), emit: logs
+    tuple val(meta), path("*R1_pair-pass.fastq"), path("*R2_pair-pass.fastq") , emit: reads
+    path "*_command_log.txt", emit: logs
 
     script:
     """
-    ParseHeaders.py copy -s $R1 -f BARCODE -k CLUSTER --act cat > "${meta.id}_command_log.txt"
-    ParseHeaders.py copy -s $R2 -f BARCODE -k CLUSTER --act cat >> "${meta.id}_command_log.txt"
+    PairSeq.py -1 '${meta.id}_R1.fastq' -2 '${meta.id}_R2.fastq' --coord presto > "${meta.id}_command_log.txt"
     """
 }

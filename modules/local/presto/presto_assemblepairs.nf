@@ -1,11 +1,11 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_PARSEHEADERS_METADATA {
+process PRESTO_ASSEMBLEPAIRS {
     tag "$meta.id"
-    label "process_low"
+    tag 'process_long_parallelized'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,13 +19,17 @@ process PRESTO_PARSEHEADERS_METADATA {
     }
 
     input:
-    tuple val(meta), path(reads)
+    tuple val(meta), path(R1), path(R2)
 
     output:
-    tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
-    
+    tuple val(meta), path("*_assemble-pass.fastq"), emit: reads
+    path("*_command_log.txt"), emit: logs
+    path("*.log")
+    path("*_table.tab")
+
     script:
     """
-    ParseHeaders.py add -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f SAMPLE_CODE SOURCE TREATMENT EXTRACT_TIME POPULATION -u ${meta.id} ${meta.source} ${meta.treatment} ${meta.time} ${meta.population}
+    AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}.log -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
     """
 }

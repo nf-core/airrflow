@@ -1,9 +1,9 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_BUILDCONSENSUS {
+process PRESTO_CLUSTERSETS {
     tag "$meta.id"
     label "process_long_parallelized"
 
@@ -22,18 +22,16 @@ process PRESTO_BUILDCONSENSUS {
     tuple val(meta), path(R1), path(R2)
 
     output:
-    tuple val(meta), path("*_R1_consensus-pass.fastq"), path("*_R2_consensus-pass.fastq"), emit: reads
+    tuple val(meta), path("*_R1_cluster-pass.fastq"), path("*_R2_cluster-pass.fastq"), emit: reads
     path("*_command_log.txt"), emit: logs
-    path("*_R1.log")
-    path("*_R2.log")
-    path("*_R1_table.tab")
-    path("*_R2_table.tab")
-
+    //path("*.version.txt"), emit: version
 
     script:
     """
-    BuildConsensus.py -s $R1 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${meta.id}_R1 --log ${meta.id}_R1.log > "${meta.id}_command_log.txt"
-    BuildConsensus.py -s $R2 --bf CLUSTER --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror 0.1 --maxgap 0.5 --outname ${meta.id}_R2 --log ${meta.id}_R2.log >> "${meta.id}_command_log.txt"
-    ParseLog.py -l "${meta.id}_R1.log" "${meta.id}_R2.log" -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
+    ClusterSets.py set --nproc ${task.cpus} -s $R1 --outname ${meta.id}_R1 --exec vsearch > "${meta.id}_command_log.txt"
+    ClusterSets.py set --nproc ${task.cpus} -s $R2 --outname ${meta.id}_R2 --exec vsearch >> "${meta.id}_command_log.txt"
     """
+    //TODO add version scraping for vsearch
+    // tried with:  vsearch --version > vsearch.txt; cat vsearch.txt | head -n 1 | grep -Eo "v[0-9\.]{4,7}" > vsearch.version.txt
+
 }

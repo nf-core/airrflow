@@ -1,10 +1,11 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_COLLAPSESEQ {
+process PRESTO_PARSE_CLUSTER {
     tag "$meta.id"
+    label "process_low"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -18,18 +19,15 @@ process PRESTO_COLLAPSESEQ {
     }
 
     input:
-    tuple val(meta), path(reads)
+    tuple val(meta), path(R1), path(R2)
 
     output:
-    tuple val(meta), path("*_collapse-unique.fastq") , emit: reads
-    path("*_command_log.txt") , emit: logs
-    path("*.log")
-    path("*_table.tab")
-    
+    tuple val(meta), path("*R1_cluster-pass_reheader.fastq"), path("*R2_cluster-pass_reheader.fastq"), emit: reads
+    path("*_log.txt"), emit: logs
 
     script:
     """
-    CollapseSeq.py -s $reads -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
-    ParseLog.py -l "${meta.id}.log" -f HEADER DUPCOUNT
+    ParseHeaders.py copy -s $R1 -f BARCODE -k CLUSTER --act cat > "${meta.id}_command_log.txt"
+    ParseHeaders.py copy -s $R2 -f BARCODE -k CLUSTER --act cat >> "${meta.id}_command_log.txt"
     """
 }

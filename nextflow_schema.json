@@ -90,6 +90,51 @@
             "help_text": "",
             "fa_icon": "fas fa-database"
         },
+        "primer_handling": {
+            "title": "Primer handling",
+            "type": "object",
+            "description": "Define the primer region start and how to deal with the primer alignment.",
+            "default": "",
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "default": "pcr_umi",
+                    "fa_icon": "fas fa-flask",
+                    "description": "Protocol used for the V(D)J amplicon sequencing.",
+                    "enum": [
+                        "pcr_umi",
+                        "race_5p_umi"
+                    ],
+                    "help_text": "Available protocols are:\n- `pcr_umi`: (default). PCR amplification with UMI barcodes. Please also provide the C-primer (`--cprimers`) and V-primer (`--vprimers`) sequences, specify the UMI barcode length (`--umi_length`) and position (`--umi_position`), the V-primer start (`--vprimer_start`), and C-primer start (`--cprimer_start`) and position (`--cprimer_position`).\n- `race_5p_umi`: 5'-RACE amplification with UMI barcodes. Please also provide the C-primer (`--cprimers`) and linker or template switch oligo sequences (`--race_linker`), specify the UMI barcode length (`--umi_length`) and position (`--umi_position`), the C-primer start (`--cprimer_start`) and position (`--cprimer_position`)."
+                },
+                "vprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of V region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna"
+                },
+                "cprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of C region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna"
+                },
+                "race_linker": {
+                    "type": "string",
+                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
+                    "fa_icon": "fas fa-dna"
+                },
+                "cprimer_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Indicate if C region primers are in the R1 or R2 reads.",
+                    "enum": [
+                        "R1",
+                        "R2"
+                    ]
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
         "umi_barcode_handling": {
             "title": "UMI barcode handling",
             "type": "object",
@@ -116,7 +161,8 @@
                 "umi_length": {
                     "type": "integer",
                     "description": "UMI barcode length in nucleotides.",
-                    "fa_icon": "fas fa-barcode"
+                    "fa_icon": "fas fa-barcode",
+                    "default": 8
                 },
                 "umi_start": {
                     "type": "integer",
@@ -129,35 +175,6 @@
                 "umi_length"
             ],
             "fa_icon": "fas fa-barcode"
-        },
-        "primer_handling": {
-            "title": "Primer handling",
-            "type": "object",
-            "description": "Define the primer region start and how to deal with the primer alignment.",
-            "default": "",
-            "properties": {
-                "vprimer_start": {
-                    "type": "integer",
-                    "description": "Start position of V region primers (without counting the UMI barcode).",
-                    "fa_icon": "fas fa-dna"
-                },
-                "cprimer_start": {
-                    "type": "integer",
-                    "description": "Start position of C region primers (without counting the UMI barcode).",
-                    "fa_icon": "fas fa-dna"
-                },
-                "race_linker": {
-                    "type": "string",
-                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
-                    "fa_icon": "fas fa-dna"
-                },
-                "race_5prime": {
-                    "type": "boolean",
-                    "description": "The amplification protocol is 5' RACE based (e.g. SMARTer TAKARA), so no V-region primers were used.",
-                    "fa_icon": "fas fa-dna"
-                }
-            },
-            "fa_icon": "fas fa-dna"
         },
         "presto_options": {
             "title": "Presto options",
@@ -235,22 +252,10 @@
             "description": "Define downstream analysis options.",
             "default": "",
             "properties": {
-                "downstream_only": {
-                    "type": "boolean",
-                    "description": "Set to true if only downstream analysis is desired, starting from ChangeO tables.",
-                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```",
-                    "fa_icon": "fas fa-angle-double-right"
-                },
                 "skip_downstream": {
                     "type": "boolean",
                     "description": "Set to true if no downstream analysis is desired",
                     "fa_icon": "fas fa-angle-double-right"
-                },
-                "changeo_tables": {
-                    "type": "string",
-                    "description": "Provide ChangeO tables if only downstream analysis is desired.",
-                    "help_text": "On some occasions, you might just want to run the pipeline for the clonal analysis and repertoire analysis steps. In this case, run the pipeline setting the `--downstream_only` parameter, and specify the path to your input Change-O tsv table with the parameter `--changeo_tables` as follows:\n\n```bash\n--downstream_only --changeo_tables \"path/to/changeo/tables/*.tab\"\n```",
-                    "fa_icon": "fas fa-receipt"
                 }
             },
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
@@ -497,10 +502,10 @@
             "$ref": "#/definitions/databases_cache"
         },
         {
-            "$ref": "#/definitions/umi_barcode_handling"
+            "$ref": "#/definitions/primer_handling"
         },
         {
-            "$ref": "#/definitions/primer_handling"
+            "$ref": "#/definitions/umi_barcode_handling"
         },
         {
             "$ref": "#/definitions/presto_options"

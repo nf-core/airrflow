@@ -1,9 +1,9 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_PAIRSEQ {
+process PRESTO_PARSEHEADERS_PRIMERS {
     tag "$meta.id"
     label "process_low"
 
@@ -19,15 +19,20 @@ process PRESTO_PAIRSEQ {
     }
 
     input:
-    tuple val(meta), path("${meta.id}_R1.fastq"), path("${meta.id}_R2.fastq")
+    tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*R1_pair-pass.fastq"), path("*R2_pair-pass.fastq") , emit: reads
-    path "*_command_log.txt", emit: logs
-
+    tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
+    
     script:
-    def copyfield = (params.index_file & params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
-    """
-    PairSeq.py -1 '${meta.id}_R1.fastq' -2 '${meta.id}_R2.fastq' $copyfield --coord illumina > "${meta.id}_command_log.txt"
-    """
+    if (params.cprimer_position == "R1") {
+        """
+        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f PRCONS PRCONS --act first last -k C_PRIMER V_PRIMER
+        """
+    } else if (params.cprimer_position == "R2") {
+        """
+        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f PRCONS PRCONS --act first last -k V_PRIMER C_PRIMER
+        """
+    }
+
 }

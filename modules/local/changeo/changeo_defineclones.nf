@@ -1,9 +1,9 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process CHANGEO_PARSEDB_SELECT {
+process CHANGEO_DEFINECLONES {
     tag "$meta.id"
 
     publishDir "${params.outdir}",
@@ -18,20 +18,25 @@ process CHANGEO_PARSEDB_SELECT {
     }
 
     input:
-    tuple val(meta), path(tab) // sequence tsv in AIRR format
+    tuple val(meta), path(tab) // sequence tsv table in AIRR format
+    val(threshold) // threshold file
+    path(geno_fasta) // igblast fasta
 
     output:
-    tuple val(meta), path("*parse-select.tsv"), emit: tab // sequence tsv in AIRR format
-    path("*_command_log.txt"), emit: logs //process logs
+    tuple val(meta), path("*clone-pass.tsv"), emit: tab // sequence tsv table in AIRR format
+    path "*_command_log.txt" , emit: logs
+    path("${geno_fasta}"), emit: fasta // genotype fasta
 
     script:
-    if (params.loci == 'ig') {
-        """
-        ParseDb.py select -d $tab -f v_call j_call -u "IGH" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
-        """
-    } else if (params.loci == 'tr') {
-        """
-        ParseDb.py select -d $tab -f v_call j_call -u "TR" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
-        """
+    def software = getSoftwareName(task.process)
+    if (params.set_cluster_threshold) {
+        thr = params.cluster_threshold
+    } else {
+        thr = file(threshold).text
+        thr = thr.trim()
     }
+    """
+    DefineClones.py -d $tab --act set --model ham --norm len --dist $thr --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    ParseLog.py -l "${meta.id}.log" -f id v_call j_call junction_length cloned filtered clones
+    """
 }

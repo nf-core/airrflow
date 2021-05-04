@@ -1,11 +1,10 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_CLUSTERSETS {
+process PRESTO_COLLAPSESEQ {
     tag "$meta.id"
-    label "process_long_parallelized"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,19 +18,18 @@ process PRESTO_CLUSTERSETS {
     }
 
     input:
-    tuple val(meta), path(R1), path(R2)
+    tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_R1_cluster-pass.fastq"), path("*_R2_cluster-pass.fastq"), emit: reads
-    path("*_command_log.txt"), emit: logs
-    //path("*.version.txt"), emit: version
+    tuple val(meta), path("*_collapse-unique.fastq") , emit: reads
+    path("*_command_log.txt") , emit: logs
+    path("*.log")
+    path("*_table.tab")
+    
 
     script:
     """
-    ClusterSets.py set --nproc ${task.cpus} -s $R1 --outname ${meta.id}_R1 --exec vsearch > "${meta.id}_command_log.txt"
-    ClusterSets.py set --nproc ${task.cpus} -s $R2 --outname ${meta.id}_R2 --exec vsearch >> "${meta.id}_command_log.txt"
+    CollapseSeq.py -s $reads -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    ParseLog.py -l "${meta.id}.log" -f HEADER DUPCOUNT
     """
-    //TODO add version scraping for vsearch
-    // tried with:  vsearch --version > vsearch.txt; cat vsearch.txt | head -n 1 | grep -Eo "v[0-9\.]{4,7}" > vsearch.version.txt
-
 }

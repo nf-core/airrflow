@@ -1,11 +1,10 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_PARSEHEADERS {
+process PRESTO_SPLITSEQ {
     tag "$meta.id"
-    label "process_low"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -22,10 +21,12 @@ process PRESTO_PARSEHEADERS {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
-    
+    tuple val(meta), path("*_atleast-2.fasta"), emit: fasta
+    path("*_command_log.txt"), emit: logs
+
     script:
     """
-    ParseHeaders.py $options.subcommand -s $reads -o "${reads.baseName}_reheader-pass.fastq" $options.args
+    SplitSeq.py group -s $reads --outname ${meta.id} -f CONSCOUNT --num 2 --fasta > "${meta.id}_command_log.txt"
     """
+    // TODO: sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
 }
