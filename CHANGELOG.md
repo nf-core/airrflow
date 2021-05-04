@@ -3,8 +3,9 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.3.0dev] - date
+## [2.0dev] - date
 
+* The pipeline was ported to the Nextflow DSL2 syntax.
 ### `Added`
 
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): Template update to nf-core tools v1.10.2
@@ -16,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#85](https://github.com/nf-core/bcellmagic/pull/85): Added support for mice data and possibility for other species with params: `--species`
 * [#85](https://github.com/nf-core/bcellmagic/pull/85): Added support for 5' RACE technology with params: `--race_5prime`, `--race_linker`
 * [#87](https://github.com/nf-core/bcellmagic/pull/87): Added tests for TCR data
+* [#102](https://github.com/nf-core/bcellmagic/pull/102): Added param `--protocol`.
+* [#102](https://github.com/nf-core/bcellmagic/pull/102): Added support for C-primer in any R1 or R2 with param `--cprimer_position`.
+* [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0 and NXF 21.04.0.
+
 
 ### `Fixed`
 
@@ -32,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): `--metadata` param changed to `--input`
 * `--saveDBs` param change to `--save_databases`
 * Default for `--umi_length` changed to 0
+* [#102](https://github.com/nf-core/bcellmagic/pull/102): `--race_5prime` param deprecated in favor of `--protocol`.
 
 ## [1.2.0] - 2020-01-14 - "Riddikulus"
 
