@@ -12,9 +12,9 @@ process FETCH_DATABASES {
 
     conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e5bd866a6803c301bf10b82e697c5dd2e49810a1-0"  // Singularity image
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e5bd866a6803c301bf10b82e697c5dd2e49810a1-1"  // Singularity image
     } else {
-        container "quay.io/biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e5bd866a6803c301bf10b82e697c5dd2e49810a1-0"                        // Docker image
+        container "quay.io/biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e5bd866a6803c301bf10b82e697c5dd2e49810a1-1"                        // Docker image
     }
 
     output:
