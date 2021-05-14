@@ -307,20 +307,17 @@ workflow BCELLMAGIC {
     //)
 
     // Lineage reconstruction alakazam
-    ALAKAZAM_LINEAGE(
-        CHANGEO_CREATEGERMLINES.out.tab
-    )
+    if (!params.skip_lineage) {
+        ALAKAZAM_LINEAGE(
+            CHANGEO_CREATEGERMLINES.out.tab
+        )
+    }
 
     ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
 
-    //ch_all_tabs_repertoire = ALAKAZAM_LINEAGE.out.tab.collect()
+    ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab.collect()
 
-    // Alakazam shazam repertoire comparison
-    //ALAKAZAM_SHAZAM_REPERTOIRES(
-    //    ch_all_tabs_repertoire
-    //)
-
-    // Process logs parsing: getting sequence numbers
+        // Process logs parsing: getting sequence numbers
     PARSE_LOGS(
         PRESTO_FILTERSEQ.out.logs.collect(),
         PRESTO_MASKPRIMERS.out.logs.collect(),
@@ -336,6 +333,14 @@ workflow BCELLMAGIC {
         CHANGEO_CREATEGERMLINES.out.logs.collect(),
         ch_input
     )
+
+    // Alakazam shazam repertoire comparison report
+    if (!params.skip_report){
+        ALAKAZAM_SHAZAM_REPERTOIRES(
+            ch_all_tabs_repertoire,
+            PARSE_LOGS.out.logs
+        )
+    }
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 

@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Added support for C-primer in any R1 or R2 with param `--cprimer_position`.
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0 and NXF 21.04.0.
 * [#103](https://github.com/nf-core/bcellmagic/pull/103): Added full size tests (pcr_umi).
-
+* Added parameter `--skip_lineages`.
 ### `Fixed`
 
 * [#74](https://github.com/nf-core/bcellmagic/pull/74): Fixed AWStest workflow
@@ -36,11 +36,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Deprecated`
 
-* [#69](https://github.com/nf-core/bcellmagic/pull/69): `--SkipDownstream` param changed to `--skip_downstream`
+* [#69](https://github.com/nf-core/bcellmagic/pull/69): `--SkipDownstream` param changed to `--skip_downstream`.
 * [#69](https://github.com/nf-core/bcellmagic/pull/69): `--metadata` param changed to `--input`
 * `--saveDBs` param change to `--save_databases`
 * Default for `--umi_length` changed to 0
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): `--race_5prime` param deprecated in favor of `--protocol`.
+* `--skip_downstream` changed to `--skip_report`.
 
 ## [1.2.0] - 2020-01-14 - "Riddikulus"
 
