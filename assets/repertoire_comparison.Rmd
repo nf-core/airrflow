@@ -1,0 +1,185 @@
+---
+output:
+  html_document:
+    toc: true                               # table of contents
+    toc_float: true                         # float the table of contents to the left of the main document content
+    toc_depth: 3                            # header levels 1,2,3
+    theme: default
+    number_sections: false                  # add section numbering to headers
+    df_print: paged                         # tables are printed as an html table with support for pagination over rows and columns
+    css: ./nf-core_style.css
+    highlight: pygments
+    pdf_document: true
+  html_notebook: 
+    toc: yes
+bibliography: ./references.bibtex
+---
+
+
+---
+title: "Repertoire analysis"
+subtitle: "Clonal abundance, diversity and V-family gene usage"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(alakazam)
+library(shazam)
+library(stringr)
+
+theme_set(theme_bw(base_family = "ArialMT") + 
+            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
+knitr::opts_chunk$set(echo = FALSE)
+```
+***
+
+# Bcellmagic analysis pipeline
+
+## Number of sequences
+
+Number of reads for each of the samples and number of sequences left after representative analysis steps.
+
+```{r seq_numbers, echo=FALSE, results='asis'}
+tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
+kable(tab_seqs) %>%
+    kable_styling("hover") %>%
+    scroll_box(width = "100%", height = "400px")
+```
+
+
+```{r read_data, include=FALSE}
+# Reading data tables and ceating output folders
+datadir <- "."
+outdir <- "repertoire_comparison"
+
+# setwd to results folder (containing alakazam, shazam, etc. folders)
+
+### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
+
+all_files <- system(paste0("find '",datadir,"' -name '*germ-pass.tsv'"), intern=T)
+
+dir.create(outdir)
+diversity_dir <- paste(outdir, "Diversity", sep="/")
+abundance_dir <- paste(outdir, "Abundance", sep="/")
+isotype_dir <- paste(outdir, "Isotype", sep="/")
+vfamily_dir <- paste(outdir, "V_family", sep="/")
+mutation_dir <- paste(outdir, "Mutational_load", sep="/")
+dir.create(diversity_dir)
+dir.create(abundance_dir)
+dir.create(isotype_dir)
+dir.create(vfamily_dir)
+dir.create(mutation_dir)
+
+# Generate one big dataframe from all patient dataframes
+df_all = data.frame()
+for (file in all_files){
+  fname = file
+  print(fname)
+  
+  df_pat <- read.csv(fname, sep="\t")
+  
+  df_all <- rbind(df_all, df_pat)
+  
+}
+
+write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
+
+# Remove underscores in these columns
+df_all$treatment <- sapply(df_all$treatment, function(x) str_replace(as.character(x), "_", ""))
+df_all$source <- sapply(df_all$source, function(x) str_replace(as.character(x), "_", ""))
+df_all$extract_time <- sapply(df_all$extract_time, function(x) str_replace(as.character(x), "_", ""))
+df_all$population <- sapply(df_all$population, function(x) str_replace(as.character(x), "_", ""))
+
+# Annotate sample and samplepop (sample + population) by add ing all the conditions
+df_all$sample <- as.factor(paste(df_all$treatment, df_all$extract_time, df_all$source, sep="_"))
+df_all$sample_pop <- as.factor(paste(df_all$treatment, df_all$extract_time, df_all$source, df_all$population, sep="_"))
+
+# Set number of bootrstraps
+nboot = 200
+```
+
+# Clonal abundance
+
+Clonal abundance profiles in the repertoires for each of the subjects. Clones are ordered from bigger to smaller in the x axis (Rank 1 to number of clones). 
+Their relative abundance in the repertoire is represented on the y axis.
+
+```{r clonal_abundance, echo=FALSE}
+abund <- estimateAbundance(df_all, group = "sample", ci=0.95, nboot=nboot)
+abund@abundance$treatment <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
+abund@abundance$time_point <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund@abundance$patient <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
+abund_main <- paste0("Clonal abundance (N=", abund@n[1], ")")
+
+p_ca <- ggplot(abund@abundance, aes(x = rank, y = p, 
+                                  group = sample)) + 
+  geom_ribbon(aes(ymin = lower, 
+                  ymax = upper, fill = time_point), alpha = 0.4) + 
+  geom_line(aes(color = time_point)) +
+  ggtitle(abund_main) + 
+  xlab("Rank") + ylab("Abundance") + 
+  scale_x_log10(limits = NULL, 
+                breaks = scales::trans_breaks("log10", function(x) 10^x), 
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) + 
+  scale_y_continuous(labels = scales::percent) +
+  facet_grid(cols = vars(patient), rows = vars(treatment), scales="free", drop = T)
+p_ca
+```
+
+```{r include = FALSE}
+ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf"), device="pdf", width = 25, height = 10, units="cm")
+ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
+write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
+```
+
+Clonal abundance per population. If different types of B-cell or T-cell populations are provided, here
+the clonal abundance is plotted for each patient and B / T-cell population.
+
+```{r clonal_abundance_pop, echo=FALSE}
+abund <- estimateAbundance(df_all, clone="clone_id", group = "sample_pop", ci=0.95, nboot=nboot)
+abund@abundance$treatment <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
+abund@abundance$time_point <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund@abundance$patient <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
+abund@abundance$population <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
+
+abund_main <- paste0("Clonal abundance (N=", abund@n[1], ")")
+pop_ca <- ggplot(abund@abundance, aes(x = rank, y = p, 
+                                  group = sample_pop)) + 
+  geom_ribbon(aes(ymin = lower, 
+                  ymax = upper, fill = time_point), alpha = 0.4) + 
+  geom_line(aes(color = time_point)) +
+  ggtitle(abund_main) + 
+  xlab("Rank") + ylab("Abundance") + 
+  scale_x_log10(limits = NULL, 
+                breaks = scales::trans_breaks("log10", function(x) 10^x), 
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) + 
+  scale_y_continuous(labels = scales::percent) +
+  facet_grid(cols=vars(patient), rows=vars(population), scales="free", drop = T)
+pop_ca
+```
+```{r include=FALSE}
+ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_population.pdf"), device="pdf", 
+      width = 30, height = 20, units="cm")
+ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_population.png"), device="png", 
+      width = 30, height = 20, units="cm")
+```
+
+
+## Embedded Application
+
+It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+
+
+Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+
+You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+
+In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+
+
+

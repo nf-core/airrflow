@@ -34,7 +34,7 @@ process PARSE_LOGS {
     path('metadata.tsv') //METADATA
 
     output:
-    path "Table_sequences_process.tsv"
+    path "Table_sequences_process.tsv", emit: logs
 
     script:
     '''

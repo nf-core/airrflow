@@ -1,0 +1,54 @@
+body {
+    font-family: Calibri, helvetica, sans-serif;
+}
+
+
+h1 {
+    color: rgb(36, 176, 100);
+    font-size: 200%;
+}
+
+h2 {
+    color: rgb(36, 176, 100);
+    font-size: 150%;
+}
+
+h3 {
+    font-size: 100%;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 100%;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.watermark {
+    opacity: 0.1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    font-size: 500%;
+    color: #24B064;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #24B064;
+    border-color: #24B064;
+}
+.list-group-item.active:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #24B064;
+    border-color: #24B064;
+}
+
+#TOC {
+    background: url("https://raw.githubusercontent.com/nf-core/bcellmagic/master/docs/images/Bcellmagic_logo.png");
+    background-size: contain;
+    padding-top: 120px !important;
+    background-repeat: no-repeat;
+}
