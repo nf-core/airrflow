@@ -531,5 +531,12 @@
         {
             "$ref": "#/definitions/institutional_config_options"
         }
-    ]
+    ],
+    "properties": {
+        "airrflow": {
+            "type": "boolean",
+            "fa_icon": "fas fa-project-diagram",
+            "description": "Whether to run the Bcellmagic workflow (false) or the AIRRflow workflow (true)"
+        }
+    }
 }

@@ -59,7 +59,10 @@ log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
 /////////////////////////////
 
 workflow {
-    include { BCELLMAGIC } from './bcellmagic' addParams( summary_params: summary_params )
-    BCELLMAGIC()
+    if (params.airrflow) {
+    } else {
+        include { BCELLMAGIC } from './bcellmagic' addParams( summary_params: summary_params )
+        BCELLMAGIC()
+    }
 }
 
