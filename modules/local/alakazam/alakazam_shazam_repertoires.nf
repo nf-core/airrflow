@@ -4,18 +4,18 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process ALAKAZAM_SHAZAM_REPERTOIRES {
-    tag "$meta.id"
+    tag "report"
     label 'process_high'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'report', publish_id:'') }
 
     conda (params.enable_conda ? "conda-forge::r-base=4.0.3 conda-forge::r-alakazam=1.0.2 conda-forge::r-shazam=1.0.2" : null)              // Conda package
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/quay.io/biocontainers/mulled-v2-62e1fba87191802d6c6cd9a0faee2e3aba60bcae:bd564bd32d225d1eab3f128ae5276187ea6730d1-0"  // Singularity image
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-3420a264d7f8006cc73fc3c3843d4545b235404f:4cc818718337222966d00ce39968abea1c328367-0"  // Singularity image
     } else {
-        container "nfcore/bcellmagic:2.0dev"                        // Docker image
+        container "quay.io/biocontainers/mulled-v2-3420a264d7f8006cc73fc3c3843d4545b235404f:4cc818718337222966d00ce39968abea1c328367-0"                        // Docker image
     }
 
     input:
@@ -25,7 +25,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     output:
     tuple val(meta), path("${tab}"), emit: tab
     path("*.version.txt"), emit: version
-    path("repertoire_comparison/*")
+    path("repertoire_comparison")
     path("Bcellmagic_report.html")
 
     script:

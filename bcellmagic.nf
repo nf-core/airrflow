@@ -121,7 +121,7 @@ include { CHANGEO_DEFINECLONES } from './modules/local/changeo/changeo_defineclo
 include { CHANGEO_CREATEGERMLINES } from './modules/local/changeo/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
 include { CHANGEO_BUILDTREES } from './modules/local/changeo/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
 //ALAKAZAM
-include { ALAKAZAM_LINEAGE } from './modules/local/alakazam/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
+include { ALAKAZAM_LINEAGE } from './modules/local/alakazam/alakazam_lineage'            addParams( options: [:] )
 include { ALAKAZAM_SHAZAM_REPERTOIRES } from './modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
 //LOG PARSING
 include { PARSE_LOGS } from './modules/local/parse_logs'                        addParams( options: modules['parse_logs'] )

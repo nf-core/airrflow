@@ -105,9 +105,18 @@ nboot = 200
 
 # Clonal abundance
 
-Clonal abundance profiles in the repertoires for each of the subjects. Clones are ordered from bigger to smaller in the x axis (Rank 1 to number of clones). 
-Their relative abundance in the repertoire is represented on the y axis.
+For plotting the clonal abundance, the clones were ordered by size from bigger clones to smaller clones (x-axis, Rank). 
+The Abundance of each clone was represented as the percentage of unique sequences in the clone, with respect to the total 
+number of unique sequences in that subject (By Patient) or in the B-cell sample (By Cell Population). 
 
+To correct for the different number of sequences in each of the samples, the Bootstrapping technique was employed, 
+in which 1000 random bootstrap samples were taken, with size the number of sequences in the sample with less sequences (N). 
+The solid line shows the mean Abundance of the Bootstrap samples, whereas the transparent area shows the full Abundance 
+range of the Bootstrap samples.
+
+All clonal abundance plots and tables with abundance values can be found under `repertoire_analysis/Abundance`.
+
+## Clonal abundance per subject
 ```{r clonal_abundance, echo=FALSE}
 abund <- estimateAbundance(df_all, group = "sample", ci=0.95, nboot=nboot)
 abund@abundance$treatment <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
@@ -137,18 +146,20 @@ ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png
 write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
 ```
 
-Clonal abundance per population. If different types of B-cell or T-cell populations are provided, here
+## Clonal abundance per cell population
+
+If different types of B-cell or T-cell populations are provided, here
 the clonal abundance is plotted for each patient and B / T-cell population.
 
 ```{r clonal_abundance_pop, echo=FALSE}
-abund <- estimateAbundance(df_all, clone="clone_id", group = "sample_pop", ci=0.95, nboot=nboot)
-abund@abundance$treatment <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
-abund@abundance$time_point <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
-abund@abundance$patient <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
-abund@abundance$population <- sapply(abund@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
+abund_pop <- estimateAbundance(df_all, clone="clone_id", group = "sample_pop", ci=0.95, nboot=nboot)
+abund_pop@abundance$treatment <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
+abund_pop@abundance$time_point <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund_pop@abundance$patient <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
+abund_pop@abundance$population <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
 
-abund_main <- paste0("Clonal abundance (N=", abund@n[1], ")")
-pop_ca <- ggplot(abund@abundance, aes(x = rank, y = p, 
+abund_main <- paste0("Clonal abundance (N=", abund_pop@n[1], ")")
+pop_ca <- ggplot(abund_pop@abundance, aes(x = rank, y = p, 
                                   group = sample_pop)) + 
   geom_ribbon(aes(ymin = lower, 
                   ymax = upper, fill = time_point), alpha = 0.4) + 
@@ -169,17 +180,193 @@ ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_p
       width = 30, height = 20, units="cm")
 ```
 
+# Clonal diversity
 
-## Embedded Application
+The clonal diversity $D$ of the repertoire was calculated according to the general formula of Hill Diversity 
+numbers:
 
-It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+$$
+\begin{aligned}
+  ^{q}D = \left( \sum_{i=1}^Rp_i^q \right)^{1/(1-q)}
+\end{aligned}
+$$
 
+where:
 
-Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+* $p_i$ is the proportion of unique sequences belonging to clone $i$.
+* $q$ are the values of the different diversity numbers.
+* $R$ is the Richness, the number of different clones in the sample.
 
-You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+At $q=1$ the function is undefined and the limit to zero equals the exponential of the Shannon Entropy:
 
-In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+$$
+\begin{aligned}
+ ^{1}D = exp \left(  \sum_{i=1}^Rp_i ln(p_i)  \right)
+\end{aligned}
+$$
 
+The intuition about the different Hill Diversity values is the following:
 
+* At $q=0$ the diversity index equals the number of clones in the sample.
+* At $q=1$ the diversity index is the geometric mean of the clones in the sample, 
+weighted by their proportion in the sample.
+* At $q>1$ more weight is given to the clones with higher proportions in the sample.
 
+All clonal diversity plots and tables with diversity values can be found under `repertoire_analysis/Diversity`.
+
+## Clonal diversity per subject
+```{r clonal_diversity, echo = FALSE}
+sample_div <- alphaDiversity(abund, group="sample", min_q=0, max_q=4, step_q=0.05,
+                            ci=0.95, nboot=nboot)
+sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
+
+sample_div@diversity$treatment <- sapply(sample_div@diversity$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_div@diversity$time_point <- sapply(sample_div@diversity$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_div@diversity$patient <- sapply(sample_div@diversity$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
+div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, 
+                                      group = sample)) + 
+  geom_ribbon(aes(ymin = d_lower, 
+                  ymax = d_upper, 
+                  fill = time_point), alpha = 0.4) +
+  geom_line(aes(color = time_point)) +
+  xlab("q") + ylab(expression(""^q * D)) +
+  ggtitle(sample_main) + 
+  facet_grid(cols=vars(patient))
+div_p
+```
+```{r include = FALSE}
+ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
+ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
+```
+
+### Clonal diversity at specific q values {.tabset .tabset-fade .tabset-pills}
+
+#### q=1 {-}
+
+```{r clonal_diversity_q1, echo = FALSE}
+sample_div_q1 <- sample_div@diversity[which(sample_div@diversity$q == 1),]
+
+sample_main <- paste0("Sample diversity at q=1 (N=", sample_div@n[1], ")")
+
+dodge <- position_dodge(width = 0.9)
+dq1 <- ggplot(sample_div_q1, aes(y=d, x=time_point)) + 
+  geom_point(position=dodge, stat="identity", size = 3) +
+  geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=1)") +
+  ggtitle(sample_main) +
+  facet_grid(cols=vars(patient), drop=T, space="free", scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dq1
+```
+```{r, include = FALSE}
+ggsave(plot = dq1, filename = paste0(diversity_dir,"/Diversity_q1_test_subject.png"), device="png", 
+      width = 20, height = 10, units="cm")
+ggsave(plot = dq1, filename = paste0(diversity_dir,"/Diversity_q1_test_subject.pdf"), device="pdf", 
+      width = 20, height = 10, units="cm")
+```
+
+#### q=0 {-}
+
+```{r clonal_diversity_q0, echo = FALSE}
+sample_div_q0 <- sample_div@diversity[which(sample_div@diversity$q == 0),]
+
+sample_main <- paste0("Sample diversity at q=0 (N=", sample_div@n[1], ")")
+
+dodge <- position_dodge(width = 0.9)
+dq0 <- ggplot(sample_div_q0, aes(y=d, x=time_point)) + 
+  geom_point(position=dodge, stat="identity", size = 3) +
+  geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=0)") +
+  ggtitle(sample_main) +
+  facet_grid(cols=vars(patient), drop=T, scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dq0
+```
+
+```{r, include = FALSE}
+ggsave(plot = dq0, filename = paste0(diversity_dir,"/Diversity_q0_test_subject.png"), device="png", 
+      width = 20, height = 10, units="cm")
+ggsave(plot = dq0, filename = paste0(diversity_dir,"/Diversity_q0_test_subject.pdf"), device="pdf", 
+      width = 20, height = 10, units="cm")
+```
+
+## Clonal diversity per cell population
+
+```{r clonal_diversity_pop, echo = FALSE}
+sample_div_pop <- alphaDiversity(abund_pop, group="sample_pop", min_q=0, max_q=4, step_q=0.05,
+                                ci=0.95, nboot=nboot)
+sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
+
+sample_div_pop@diversity$treatment <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_div_pop@diversity$time_point <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_div_pop@diversity$patient <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
+sample_div_pop@diversity$population <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
+
+div_pop <- ggplot(sample_div_pop@diversity, aes(x = q, y = d, group = sample_pop)) + 
+  geom_ribbon(aes(ymin = d_lower, 
+                  ymax = d_upper, fill = time_point), alpha = 0.4) +
+  geom_line(aes(color = time_point)) +
+  xlab("q") + ylab(expression(""^q * D)) +
+  ggtitle(sample_main) + 
+  facet_grid(cols=vars(patient), rows=vars(population), scales="free", drop = T)
+div_pop
+```
+
+```{r, include=FALSE}
+ggsave(plot = div_pop, filename = paste0(diversity_dir,"/Diversity_subject_population.svg"), device="svg", 
+        width = 25, height = 20, units="cm")
+ggsave(plot = div_pop, filename = paste0(diversity_dir,"/Diversity_subject_population.pdf"), device="pdf", 
+        width = 25, height = 20, units="cm")
+```
+
+### Clonal diversity per population at specific q values {.tabset .tabset-fade .tabset-pills}
+
+#### q=1 {-}
+
+```{r clonal_diversity_q1_pop, echo = FALSE}
+sample_div_q1 <- sample_div_pop@diversity[which(sample_div_pop@diversity$q == 1),]
+
+sample_main <- paste0("Sample diversity at q=1 (N=", sample_div_pop@n[1], ")")
+
+dodge <- position_dodge(width = 0.9)
+dq1_pop <- ggplot(sample_div_q1, aes(y=d, x=time_point)) + 
+  geom_point(position=dodge, stat="identity", size = 3) +
+  geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=1)") +
+  ggtitle(sample_main) +
+  facet_grid(cols=vars(patient), rows=vars(population), drop=T, scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dq1_pop
+```
+```{r, include = FALSE}
+ggsave(plot = dq1_pop, filename = paste0(diversity_dir,"/Diversity_q1_test_population.png"), device="png", 
+      width = 20, height = 10, units="cm")
+ggsave(plot = dq1_pop, filename = paste0(diversity_dir,"/Diversity_q1_test_population.pdf"), device="pdf", 
+      width = 20, height = 10, units="cm")
+```
+
+#### q=0 {-}
+
+```{r clonal_diversity_q0_pop, echo = FALSE}
+sample_div_q0 <- sample_div_pop@diversity[which(sample_div_pop@diversity$q == 0),]
+
+sample_main <- paste0("Sample diversity at q=0 (N=", sample_div_pop@n[1], ")")
+
+dodge <- position_dodge(width = 0.9)
+dq0_pop <- ggplot(sample_div_q0, aes(y=d, x=time_point)) + 
+  geom_point(position=dodge, stat="identity", size = 3) +
+  geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+  xlab("") + ylab("Diversity (q=0)") +
+  ggtitle(sample_main) +
+  facet_grid(cols=vars(patient), rows=vars(population), drop=T, scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dq0_pop
+```
+
+```{r, include = FALSE}
+ggsave(plot = dq0_pop, filename = paste0(diversity_dir,"/Diversity_q0_test_population.png"), device="png", 
+      width = 20, height = 10, units="cm")
+ggsave(plot = dq0_pop, filename = paste0(diversity_dir,"/Diversity_q0_test_population.pdf"), device="pdf", 
+      width = 20, height = 10, units="cm")
+```
