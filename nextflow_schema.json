@@ -567,7 +567,8 @@
             "description": "Path to IMGT database, with IMGT gapped sequences"
         },
         "reassign": {
-            "type": "string",
+            "type": "boolean",
+            "default": "true",            
             "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
         },
         "productive_only": {
