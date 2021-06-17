@@ -577,7 +577,8 @@
             "description": "Subset to productive  sequences"
         },
         "remove_chimeric": {
-            "type": "string",
+            "type": "boolean",
+            "default": "true",            
             "description": "Whether to apply the chimera removal filter"
         },
         "threshold": {
