@@ -8,7 +8,7 @@ params.options = [:]
  */
 process FASTA_FROM_TSV {
     tag "${input_id}"
-    //label 'process_low'
+    label 'process_low'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
