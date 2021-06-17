@@ -14,6 +14,17 @@
                 "input"
             ],
             "properties": {
+                "subworkflow": {
+                    "type": "string",
+                    "default": "bcellmagic",
+                    "fa_icon": "fas fa-project-diagram",
+                    "hidden": true,
+                    "description": "Specify the subworkflow to be executed.",
+                    "enum": [
+                        "bcellmagic",
+                        "airrflow"
+                    ]
+                },
                 "input": {
                     "type": "string",
                     "fa_icon": "fas fa-dna",
@@ -171,9 +182,6 @@
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
-            "required": [
-                "umi_length"
-            ],
             "fa_icon": "fas fa-barcode"
         },
         "presto_options": {
@@ -533,10 +541,63 @@
         }
     ],
     "properties": {
-        "airrflow": {
-            "type": "boolean",
-            "fa_icon": "fas fa-project-diagram",
-            "description": "Whether to run the Bcellmagic workflow (false) or the AIRRflow workflow (true)"
+        "collapseby": {
+            "type": "string",
+            "default": "filename,cell_id",
+            "description": "Name of the field used to collapse duplicated sequences"
+        },
+        "cloneby": {
+            "type": "string",
+            "default": "subject_id",
+            "description": "Name of the field used to group data files to identify clones"
+        },
+        "igblastn": {
+            "type": "string",
+            "default": "/usr/local/bin/igblastn",
+            "description": "Path to igblastn executable"
+        },
+        "igblast_db": {
+            "type": "string",
+            "default": "/usr/local/share/igblast/",
+            "description": "Path igblast database"
+        },
+        "imgt_db": {
+            "type": "string",
+            "default": "/usr/local/share/germlines/imgt/",
+            "description": "Path to IMGT database, with IMGT gapped sequences"
+        },
+        "reassign": {
+            "type": "string",
+            "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
+        },
+        "productive_only": {
+            "type": "string",
+            "default": "true",
+            "description": "Subset to productive  sequences"
+        },
+        "remove_chimeric": {
+            "type": "string",
+            "description": "Whether to apply the chimera removal filter"
+        },
+        "threshold": {
+            "type": "string",
+            "default": "auto",
+            "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
+        },
+        "miairr": {
+            "type": "string",
+            "default": "/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/bcellmagic/assets/airrflow/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+            "description": "Path to MiAIRR-BioSample mapping"
+        },
+        "immcantation_container": {
+            "type": "string",
+            "default": "immcantation/airrflow:devel",
+            "description": "Immcantation container"
+        },
+        "immcantation_pipelines": {
+            "type": "string",
+            "default": "/usr/local/bin/",
+            "description": "Path to immcantation pipelines"
         }
     }
 }
