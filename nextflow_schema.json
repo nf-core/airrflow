@@ -571,7 +571,7 @@
             "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
         },
         "productive_only": {
-            "type": "string",
+            "type": "boolean",
             "default": "true",
             "description": "Subset to productive  sequences"
         },
