@@ -593,7 +593,7 @@
         },
         "immcantation_container": {
             "type": "string",
-            "default": "immcantation/airrflow:devel",
+            "default": "immcantation/airrflow:dev",
             "description": "Immcantation container"
         },
         "immcantation_pipelines": {
