@@ -45,7 +45,7 @@ def get_meta (LinkedHashMap col) {
     meta.collapseby_size  = col.collapseby_size
     meta.cloneby_group = col.cloneby_group
     meta.cloneby_size = col.cloneby_size
-    meta.filetype = col.filetye
+    meta.filetype = col.filetype
 
     return meta    
 }
