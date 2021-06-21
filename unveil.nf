@@ -87,19 +87,19 @@ workflow UNVEIL {
     UNVEIL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
 
     // If reassign requested, generate fasta from the tsv files    
-    if (params.reassign) {
-        ch_fasta_from_tsv = FASTA_FROM_TSV(UNVEIL_INPUT_CHECK.out.ch_tsv).ch_fasta_from_tsv
-        ch_software_versions = ch_software_versions.mix(FASTA_FROM_TSV.out.version.first().ifEmpty(null))
-    } else {
-        ch_fasta_from_tsv = Channel.empty()
-    }
+    //if (params.reassign) {
+    //ch_fasta_from_tsv = FASTA_FROM_TSV(UNVEIL_INPUT_CHECK.out.ch_tsv).ch_fasta_from_tsv
+    //ch_software_versions = ch_software_versions.mix(FASTA_FROM_TSV.out.version.first().ifEmpty(null))
+    //} else {
+    //   ch_fasta_from_tsv = Channel.empty()
+    //}
 
     // mix all fasta
-    ch_fasta = ch_fasta_from_tsv.mix(UNVEIL_INPUT_CHECK.out.ch_fasta)
+    //ch_fasta = ch_fasta_from_tsv.mix(UNVEIL_INPUT_CHECK.out.ch_fasta)
 
     // Assign genes
-    CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)
-    ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
+    //CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)
+    //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
     
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
