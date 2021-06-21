@@ -568,17 +568,17 @@
         },
         "reassign": {
             "type": "boolean",
-            "default": "true",            
+            "default": true,
             "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
         },
         "productive_only": {
             "type": "boolean",
-            "default": "true",
+            "default": true,
             "description": "Subset to productive  sequences"
         },
         "remove_chimeric": {
             "type": "boolean",
-            "default": "true",            
+            "default": true,
             "description": "Whether to apply the chimera removal filter"
         },
         "threshold": {
