@@ -22,7 +22,7 @@
                     "description": "Specify the subworkflow to be executed.",
                     "enum": [
                         "bcellmagic",
-                        "airrflow"
+                        "unveil"
                     ]
                 },
                 "input": {
@@ -588,7 +588,7 @@
         },
         "miairr": {
             "type": "string",
-            "default": "/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/bcellmagic/assets/airrflow/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+            "default": "bcellmagic/assets/unveil/mapping_MiAIRR_BioSample_v1.3.1.tsv",
             "description": "Path to MiAIRR-BioSample mapping"
         },
         "immcantation_container": {

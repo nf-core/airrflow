@@ -60,20 +60,20 @@ def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
 
 // Local: Sub-workflows
-include { AIRRFLOW_INPUT_CHECK } from './subworkflows/airrflow_input_check'       addParams( options: [:] )
+include { UNVEIL_INPUT_CHECK } from './subworkflows/unveil_input_check'       addParams( options: [:] )
 
 // Modules: local
 include { GET_SOFTWARE_VERSIONS     } from './modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-include { IMMCANTATION  } from './modules/local/airrflow/immcantation_container_version' addParams( options: [:] )
-include { FASTA_FROM_TSV            } from './modules/local/airrflow/fasta_from_tsv' addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES } from './modules/local/airrflow/assign_genes' addParams( options: [:] )
+include { IMMCANTATION  } from './modules/local/unveil/immcantation_container_version' addParams( options: [:] )
+include { FASTA_FROM_TSV            } from './modules/local/unveil/fasta_from_tsv' addParams( options: [:] )
+include { CHANGEO_ASSIGNGENES } from './modules/local/unveil/assign_genes' addParams( options: [:] )
 
 
 // nf-core/modules: Modules
 include { MULTIQC               } from './modules/nf-core/software/multiqc/main'       addParams( options: multiqc_options )
 
 
-workflow AIRRFLOW {
+workflow UNVEIL {
 
     ch_software_versions = Channel.empty()
     
@@ -84,18 +84,18 @@ workflow AIRRFLOW {
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files
-    AIRRFLOW_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
+    UNVEIL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
 
     // If reassign requested, generate fasta from the tsv files    
     if (params.reassign) {
-        ch_fasta_from_tsv = FASTA_FROM_TSV(AIRRFLOW_INPUT_CHECK.out.ch_tsv).ch_fasta_from_tsv
+        ch_fasta_from_tsv = FASTA_FROM_TSV(UNVEIL_INPUT_CHECK.out.ch_tsv).ch_fasta_from_tsv
         ch_software_versions = ch_software_versions.mix(FASTA_FROM_TSV.out.version.first().ifEmpty(null))
     } else {
         ch_fasta_from_tsv = Channel.empty()
     }
 
     // mix all fasta
-    ch_fasta = ch_fasta_from_tsv.mix(AIRRFLOW_INPUT_CHECK.out.ch_fasta)
+    ch_fasta = ch_fasta_from_tsv.mix(UNVEIL_INPUT_CHECK.out.ch_fasta)
 
     // Assign genes
     CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)
