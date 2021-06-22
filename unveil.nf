@@ -86,8 +86,7 @@ workflow UNVEIL {
 
     // If reassign requested, generate fasta from the tsv files    
     if (params.reassign) {
-        //ch_fasta_from_tsv = FASTA_FROM_TSV(UNVEIL_INPUT_CHECK.out.ch_tsv).ch_fasta_from_tsv
-        CHANGEO_CONVERTDB_FASTA(UNVEIL_INPUT_CHECK.out.ch_tsv)
+        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(UNVEIL_INPUT_CHECK.out.ch_tsv)
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
 
     } else {
@@ -95,7 +94,7 @@ workflow UNVEIL {
     }
 
     // mix all fasta
-    //ch_fasta = ch_fasta_from_tsv.mix(UNVEIL_INPUT_CHECK.out.ch_fasta)
+    // ch_fasta = ch_fasta_from_tsv.mix(UNVEIL_INPUT_CHECK.out.ch_fasta)
 
     // Assign genes
     //CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)
