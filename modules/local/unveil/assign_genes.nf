@@ -13,16 +13,11 @@ process CHANGEO_ASSIGNGENES {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'assign_genes', publish_id:'') }
 
     conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
-    if (params.immcantation_container) {
-         container params.immcantation_container
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"  // Singularity image
     } else {
-        if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-            container "https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"  // Singularity image
-        } else {
-            container "quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"                        // Docker image
-        }
+        container "quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"                        // Docker image
     }
-
 
     input:
     tuple file(repertoire_fasta), val(subject_id), val(organism), val(collapseby_group), val(collapseby_size), val(cloneby_group), val(cloneby_size), val(filetype), val(input_id)

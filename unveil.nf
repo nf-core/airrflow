@@ -66,6 +66,7 @@ include { UNVEIL_INPUT_CHECK } from './subworkflows/unveil_input_check'       ad
 include { GET_SOFTWARE_VERSIONS     } from './modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
 include { IMMCANTATION  } from './modules/local/unveil/immcantation_container_version' addParams( options: [:] )
 include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
+// include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
 // nf-core/modules: Modules
 include { MULTIQC               } from './modules/nf-core/software/multiqc/main'       addParams( options: multiqc_options )
@@ -75,7 +76,7 @@ workflow UNVEIL {
 
     ch_software_versions = Channel.empty()
     
-    if (params.immcantation_container) {
+    if (workflow.container) {
         IMMCANTATION()
         ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
     }
@@ -88,14 +89,13 @@ workflow UNVEIL {
     if (params.reassign) {
         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(UNVEIL_INPUT_CHECK.out.ch_tsv)
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
-
     } else {
         ch_fasta_from_tsv = Channel.empty()
     }
 
     // mix all fasta
-    // ch_fasta = ch_fasta_from_tsv.mix(UNVEIL_INPUT_CHECK.out.ch_fasta)
-
+    ch_fasta = UNVEIL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
+   
     // Assign genes
     //CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)
     //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
