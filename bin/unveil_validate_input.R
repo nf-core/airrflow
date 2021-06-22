@@ -166,7 +166,7 @@ input <- input %>%
    mutate(cloneby_size=n()) %>%
    ungroup()
 
-input$input_id <- paste0("input_id_", 1:nrow(input))
+input$id <- paste0("input_id_", 1:nrow(input))
 
 # Write validation results to a file
 write.table(input, file=paste0(opt$OUTPUT,".tsv"), sep="\t",

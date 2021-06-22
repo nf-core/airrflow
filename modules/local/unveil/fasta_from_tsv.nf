@@ -7,7 +7,7 @@ params.options = [:]
  * Generate fasta from from AIRR rearrangement tsv file
  */
 process FASTA_FROM_TSV {
-    tag "${input_id}"
+    tag "$meta.id"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -23,7 +23,7 @@ process FASTA_FROM_TSV {
     }
 
     input:
-    tuple file(filename), val(subject_id), val(organism), val(collapseby_group), val(collapseby_size), val(cloneby_group), val(cloneby_size), val(filetype), val(input_id)
+    tuple val(meta)
     
     output:
     tuple file("*.fasta"), val(subject_id), val(organism), val(collapseby_group), val(collapseby_size), val(cloneby_group), val(cloneby_size), val(filetype), val(input_id), emit: ch_fasta_from_tsv
@@ -32,7 +32,7 @@ process FASTA_FROM_TSV {
     script:
     def software = getSoftwareName(task.process)
     """
-    ConvertDb.py fasta -d "${filename}" --if sequence_id --sf sequence --mf cell_id consensus_count duplicate_count c_call c_cigar c_sequence_start c_sequence_end
+    ConvertDb.py fasta -d "${meta.filename}" --if sequence_id --sf sequence --mf cell_id consensus_count duplicate_count c_call c_cigar c_sequence_start c_sequence_end
     ConvertDb.py --version >  FASTA_FROM_TSV.version.txt
     """
 }

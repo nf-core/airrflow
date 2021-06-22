@@ -20,6 +20,6 @@ process IMMCANTATION {
     script:
     def software = getSoftwareName(task.process)
     """
-    versions report | head -n 1 > GET_IMMCANTATION_VERSION.version.txt
+    versions report | head -n 1 > ${software}.version.txt
     """
 }
