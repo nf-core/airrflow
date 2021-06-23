@@ -13,12 +13,14 @@ process VALIDATE_INPUT {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'validated_input', publish_id:'') }
 
     conda (params.enable_conda ? { exit 1 "TODO: set up conda for SAMPLESHEET_CHECK_AIRR." } : null)
-    if (!workflow.container && !process.container) {
+    if (!params.custom_container) {
         if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
             container "https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"  // Singularity image
         } else {
             container "quay.io/biocontainers/python:3.8.3"  // Docker image
         }
+    } else {
+        container params.custom_container
     }
 
     input:

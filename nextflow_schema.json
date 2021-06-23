@@ -500,6 +500,69 @@
                     "fa_icon": "fas fa-users-cog"
                 }
             }
+        },
+        "subworkflow_unveil": {
+            "title": "Subworkflow Unveil",
+            "type": "object",
+            "description": "Arguments for this subworkflow",
+            "default": "",
+            "properties": {
+                "collapseby": {
+                    "type": "string",
+                    "default": "filename,cell_id",
+                    "description": "Name of the field used to collapse duplicated sequences"
+                },
+                "cloneby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to identify clones"
+                },
+                "igblastn": {
+                    "type": "string",
+                    "default": "/usr/local/bin/igblastn",
+                    "description": "Path to igblastn executable"
+                },
+                "igblast_db": {
+                    "type": "string",
+                    "default": "/usr/local/share/igblast/",
+                    "description": "Path igblast database"
+                },
+                "imgt_db": {
+                    "type": "string",
+                    "default": "/usr/local/share/germlines/imgt/",
+                    "description": "Path to IMGT database, with IMGT gapped sequences"
+                },
+                "reassign": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
+                },
+                "productive_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Subset to productive  sequences"
+                },
+                "remove_chimeric": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to apply the chimera removal filter"
+                },
+                "threshold": {
+                    "type": "string",
+                    "default": "auto",
+                    "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
+                },
+                "miairr": {
+                    "type": "string",
+                    "default": "bcellmagic/assets/unveil/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "description": "Path to MiAIRR-BioSample mapping"
+                },
+                "immcantation_pipelines": {
+                    "type": "string",
+                    "default": "/usr/local/bin/",
+                    "description": "Path to immcantation pipelines"
+                }
+            }
         }
     },
     "allOf": [
@@ -538,68 +601,9 @@
         },
         {
             "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/subworkflow_unveil"
         }
-    ],
-    "properties": {
-        "collapseby": {
-            "type": "string",
-            "default": "filename,cell_id",
-            "description": "Name of the field used to collapse duplicated sequences"
-        },
-        "cloneby": {
-            "type": "string",
-            "default": "subject_id",
-            "description": "Name of the field used to group data files to identify clones"
-        },
-        "igblastn": {
-            "type": "string",
-            "default": "/usr/local/bin/igblastn",
-            "description": "Path to igblastn executable"
-        },
-        "igblast_db": {
-            "type": "string",
-            "default": "/usr/local/share/igblast/",
-            "description": "Path igblast database"
-        },
-        "imgt_db": {
-            "type": "string",
-            "default": "/usr/local/share/germlines/imgt/",
-            "description": "Path to IMGT database, with IMGT gapped sequences"
-        },
-        "reassign": {
-            "type": "boolean",
-            "default": true,
-            "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
-        },
-        "productive_only": {
-            "type": "boolean",
-            "default": true,
-            "description": "Subset to productive  sequences"
-        },
-        "remove_chimeric": {
-            "type": "boolean",
-            "default": true,
-            "description": "Whether to apply the chimera removal filter"
-        },
-        "threshold": {
-            "type": "string",
-            "default": "auto",
-            "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
-        },
-        "miairr": {
-            "type": "string",
-            "default": "bcellmagic/assets/unveil/mapping_MiAIRR_BioSample_v1.3.1.tsv",
-            "description": "Path to MiAIRR-BioSample mapping"
-        },
-        "immcantation_container": {
-            "type": "string",
-            "default": "immcantation/airrflow:dev",
-            "description": "Immcantation container"
-        },
-        "immcantation_pipelines": {
-            "type": "string",
-            "default": "/usr/local/bin/",
-            "description": "Path to immcantation pipelines"
-        }
-    }
+    ]
 }

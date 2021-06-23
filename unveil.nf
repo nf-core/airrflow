@@ -76,7 +76,7 @@ workflow UNVEIL {
 
     ch_software_versions = Channel.empty()
     
-    if (workflow.container) {
+    if (params.custom_container) {
         IMMCANTATION()
         ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
     }
