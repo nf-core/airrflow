@@ -38,9 +38,17 @@ if (params.miairr)  {
       file(params.miairr, checkIfExists: true) 
 } 
 
-igblast_db = params.igblast_db
-imgt_db = params.imgt_db
-igblastn = params.igblastn
+// If paths to DBS are provided 
+if( params.igblast_base ){
+    Channel.fromPath("${params.igblast_base}")
+    .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+    .set { ch_igblast }
+}
+if( params.imgtdb_base ){
+    Channel.fromPath("${params.imgtdb_base}")
+    .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+    .set { ch_imgt }
+}
 
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
@@ -66,6 +74,8 @@ include { REVEAL_INPUT_CHECK } from './subworkflows/reveal_input_check'       ad
 include { GET_SOFTWARE_VERSIONS     } from './modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
 include { IMMCANTATION  } from './modules/local/reveal/immcantation_container_version' addParams( options: [:] )
 include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
+include { FETCH_DATABASES } from './modules/local/fetch_databases'              addParams( options: [:] )
+
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
 // nf-core/modules: Modules
@@ -96,10 +106,15 @@ workflow REVEAL {
     // mix all fasta
     ch_fasta = REVEAL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
    
-    // Assign genes
-    //CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)
-    //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
-    
+    // FETCH DATABASES
+    if (!params.igblast_base | !params.imgtdb_base) {
+        FETCH_DATABASES()
+        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_igblast = FETCH_DATABASES.out.igblast
+        ch_imgt = FETCH_DATABASES.out.imgt
+    }
+
+
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
     )
