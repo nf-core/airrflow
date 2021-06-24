@@ -6,9 +6,9 @@ params.options = [:]
 
 include {
     VALIDATE_INPUT
-    } from '../modules/local/unveil/validate_input' addParams( options: params.options )
+    } from '../modules/local/reveal/validate_input' addParams( options: params.options )
 
-workflow UNVEIL_INPUT_CHECK {
+workflow REVEAL_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.csv
     miairr      

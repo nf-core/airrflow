@@ -36,6 +36,6 @@ process VALIDATE_INPUT {
 
     script:  // This script is bundled with the pipeline, in bin/
     """
-    unveil_validate_input.R --input "${samplesheet}" --collapseby ${collapseby} --cloneby ${cloneby} --output "validated_input" --miairr "${miairr}"
+    reveal_validate_input.R --input "${samplesheet}" --collapseby ${collapseby} --cloneby ${cloneby} --output "validated_input" --miairr "${miairr}"
     """
 }

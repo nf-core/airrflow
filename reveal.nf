@@ -60,11 +60,11 @@ def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
 
 // Local: Sub-workflows
-include { UNVEIL_INPUT_CHECK } from './subworkflows/unveil_input_check'       addParams( options: [:] )
+include { REVEAL_INPUT_CHECK } from './subworkflows/reveal_input_check'       addParams( options: [:] )
 
 // Modules: local
 include { GET_SOFTWARE_VERSIONS     } from './modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-include { IMMCANTATION  } from './modules/local/unveil/immcantation_container_version' addParams( options: [:] )
+include { IMMCANTATION  } from './modules/local/reveal/immcantation_container_version' addParams( options: [:] )
 include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
@@ -72,7 +72,7 @@ include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_conver
 include { MULTIQC               } from './modules/nf-core/software/multiqc/main'       addParams( options: multiqc_options )
 
 
-workflow UNVEIL {
+workflow REVEAL {
 
     ch_software_versions = Channel.empty()
     
@@ -83,18 +83,18 @@ workflow UNVEIL {
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files
-    UNVEIL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
+    REVEAL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
 
     // If reassign requested, generate fasta from the tsv files    
     if (params.reassign) {
-        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(UNVEIL_INPUT_CHECK.out.ch_tsv)
+        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(REVEAL_INPUT_CHECK.out.ch_tsv)
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
     } else {
         ch_fasta_from_tsv = Channel.empty()
     }
 
     // mix all fasta
-    ch_fasta = UNVEIL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
+    ch_fasta = REVEAL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
    
     // Assign genes
     //CHANGEO_ASSIGNGENES (ch_fasta, igblast_db, imgt_db, igblastn)

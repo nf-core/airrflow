@@ -22,7 +22,7 @@
                     "description": "Specify the subworkflow to be executed.",
                     "enum": [
                         "bcellmagic",
-                        "unveil"
+                        "reveal"
                     ]
                 },
                 "input": {
@@ -501,8 +501,8 @@
                 }
             }
         },
-        "subworkflow_unveil": {
-            "title": "Subworkflow Unveil",
+        "subworkflow_reveal": {
+            "title": "Subworkflow Reveal",
             "type": "object",
             "description": "Arguments for this subworkflow",
             "default": "",
@@ -554,7 +554,7 @@
                 },
                 "miairr": {
                     "type": "string",
-                    "default": "bcellmagic/assets/unveil/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping"
                 },
                 "immcantation_pipelines": {
@@ -603,7 +603,7 @@
             "$ref": "#/definitions/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/subworkflow_unveil"
+            "$ref": "#/definitions/subworkflow_reveal"
         }
     ]
 }
