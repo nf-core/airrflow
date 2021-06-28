@@ -39,12 +39,12 @@ if (params.miairr)  {
 } 
 
 // If paths to DBS are provided 
-if( params.igblast_base ){
+if (params.igblast_base){
     Channel.fromPath("${params.igblast_base}")
     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
     .set { ch_igblast }
 }
-if( params.imgtdb_base ){
+if (params.imgtdb_base){
     Channel.fromPath("${params.imgtdb_base}")
     .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
     .set { ch_imgt }
@@ -75,6 +75,8 @@ include { GET_SOFTWARE_VERSIONS     } from './modules/local/get_software_version
 include { IMMCANTATION  } from './modules/local/reveal/immcantation_container_version' addParams( options: [:] )
 include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
 include { FETCH_DATABASES } from './modules/local/fetch_databases'              addParams( options: [:] )
+include { CHANGEO_ASSIGNGENES_REVEAL } from './modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
+include { CHANGEO_MAKEDB } from './modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] ) 
 
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
@@ -97,7 +99,7 @@ workflow REVEAL {
 
     // If reassign requested, generate fasta from the tsv files    
     if (params.reassign) {
-        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(REVEAL_INPUT_CHECK.out.ch_tsv)
+        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(REVEAL_INPUT_CHECK.out.ch_tsv).fasta
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
     } else {
         ch_fasta_from_tsv = Channel.empty()
@@ -105,16 +107,33 @@ workflow REVEAL {
 
     // mix all fasta
     ch_fasta = REVEAL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
-   
-    // FETCH DATABASES
+
+   // FETCH DATABASES
+   // TODO: this can take a long time, and the progress shows 0%. Would be
+   // nice to have some better progress reporting.
+   // And maybe run this is 2 separate steps, one for IMGT and one for IgBLAST?
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
     }
+    
+    // Run Igblast for gene assignment
+    CHANGEO_ASSIGNGENES_REVEAL (
+        ch_fasta,
+        ch_igblast.collect()
+    )
+    //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.version.first().ifEmpty(null))
+    
+    // Parse IgBlast results
+    CHANGEO_MAKEDB (
+        CHANGEO_ASSIGNGENES_REVEAL.out.fasta,
+        CHANGEO_ASSIGNGENES_REVEAL.out.blast,
+        ch_imgt.collect()
+    )
 
-
+    // Software versions
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
     )

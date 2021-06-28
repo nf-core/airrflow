@@ -517,21 +517,6 @@
                     "default": "subject_id",
                     "description": "Name of the field used to group data files to identify clones"
                 },
-                "igblastn": {
-                    "type": "string",
-                    "default": "/usr/local/bin/igblastn",
-                    "description": "Path to igblastn executable"
-                },
-                "igblast_db": {
-                    "type": "string",
-                    "default": "/usr/local/share/igblast/",
-                    "description": "Path igblast database"
-                },
-                "imgt_db": {
-                    "type": "string",
-                    "default": "/usr/local/share/germlines/imgt/",
-                    "description": "Path to IMGT database, with IMGT gapped sequences"
-                },
                 "reassign": {
                     "type": "boolean",
                     "default": true,
@@ -605,5 +590,11 @@
         {
             "$ref": "#/definitions/subworkflow_reveal"
         }
-    ]
+    ],
+    "properties": {
+        "custom_container": {
+            "type": "string",
+            "description": "Specify an Immcantation container to be used in all pipeline processes."
+        }
+    }
 }

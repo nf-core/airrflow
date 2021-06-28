@@ -39,7 +39,7 @@ def get_meta (LinkedHashMap col) {
     meta.id     = col.id
     meta.filename     = col.filename
     meta.subject_id   = col.subject_id
-    meta.organism     = col.organism
+    meta.species     = col.species
     meta.collapseby_group = col.collapseby_group
     meta.collapseby_size  = col.collapseby_size
     meta.cloneby_group = col.cloneby_group

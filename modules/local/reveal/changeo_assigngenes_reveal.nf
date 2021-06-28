@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process CHANGEO_ASSIGNGENES {
+process CHANGEO_ASSIGNGENES_REVEAL {
     tag "$meta.id"
 
     publishDir "${params.outdir}",
@@ -32,8 +32,9 @@ process CHANGEO_ASSIGNGENES {
 
     script:
     def software = getSoftwareName(task.process)
+    // TODO: loci should be specified in metatada: meta.loci
     """
-    AssignGenes.py igblast -s $reads -b $igblast --organism $params.species --loci $params.loci --format blast --outname "$meta.id"
+    AssignGenes.py igblast -s $reads -b $igblast --organism "$meta.species" --loci ig --format blast --outname "$meta.id"
     AssignGenes.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
     """
 }

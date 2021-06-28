@@ -27,28 +27,18 @@ process CHANGEO_MAKEDB {
     path("*_command_log.txt"), emit: logs //process logs
 
     script:
+    def software = getSoftwareName(task.process)
     if (params.loci == 'ig'){
         """
         MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta \\
-        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHD.fasta \\
-        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHJ.fasta \\
-        --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
+        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IG*.fasta \\
+        --regions default --format airr --outname "${meta.id}" > "${meta.id}_${task.process}_command_log.txt"
         """
     } else if (params.loci == 'tr') {
         """
         MakeDb.py igblast -i $igblast -s $reads -r \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAJ.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBD.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBJ.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDD.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDJ.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGJ.fasta" \\
-        --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
+        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TR*.fasta" \\
+        --regions default --format airr --outname "${meta.id}" > "${meta.id}_${task.process}_command_log.txt"
         """
     }
 }
