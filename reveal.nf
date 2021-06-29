@@ -78,6 +78,7 @@ include { FETCH_DATABASES } from './modules/local/fetch_databases'              
 include { CHANGEO_ASSIGNGENES_REVEAL } from './modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
 include { CHANGEO_MAKEDB } from './modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] ) 
 include { FILTER_QUALITY  } from './modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
+include { CHANGEO_PARSEDB_SPLIT } from './modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 
 
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
@@ -137,6 +138,16 @@ workflow REVEAL {
 
     // Apply quality filters
     FILTER_QUALITY(CHANGEO_MAKEDB.out.tab)
+
+    // Select only productive sequences.
+    if (params.productive_only) {
+        ch_repertoire = CHANGEO_PARSEDB_SPLIT (
+            FILTER_QUALITY.out.tab
+        )
+    } else {
+        ch_repertoire = FILTER_QUALITY.out.tab
+    }
+
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
