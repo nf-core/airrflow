@@ -31,7 +31,7 @@ process CHANGEO_CONVERTDB_FASTA {
     script:
     def software = getSoftwareName(task.process)
     """
-    ConvertDb.py fasta -d $tab $options.args
+    ConvertDb.py fasta -d $tab $options.args --outname ${meta.id}
     ConvertDb.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
     """
 }
