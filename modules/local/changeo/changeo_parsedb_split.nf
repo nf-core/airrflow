@@ -26,6 +26,6 @@ process CHANGEO_PARSEDB_SPLIT {
 
     script:
     """
-    ParseDb.py split -d $tab -f productive --outname ${meta.id} > "${meta.id}_command_log.txt"
+    ParseDb.py split -d $tab -f productive --outname ${meta.id} > "${meta.id}_${task.process}_command_log.txt"
     """
 }
