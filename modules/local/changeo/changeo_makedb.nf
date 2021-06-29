@@ -28,17 +28,9 @@ process CHANGEO_MAKEDB {
 
     script:
     def software = getSoftwareName(task.process)
-    if (params.loci == 'ig'){
-        """
-        MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/imgt_${params.species}_IG*.fasta \\
-        --regions default --format airr --outname "${meta.id}" > "${meta.id}_${task.process}_command_log.txt"
-        """
-    } else if (params.loci == 'tr') {
-        """
-        MakeDb.py igblast -i $igblast -s $reads -r \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TR*.fasta" \\
-        --regions default --format airr --outname "${meta.id}" > "${meta.id}_${task.process}_command_log.txt"
-        """
-    }
+    """
+    MakeDb.py igblast -i $igblast -s $reads -r \\
+    ${imgt_base}/${params.species}/vdj/ \\
+    --regions default --format airr --outname "${meta.id}" > "${meta.id}_${task.process}_command_log.txt"
+    """
 }
