@@ -77,6 +77,8 @@ include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_conver
 include { FETCH_DATABASES } from './modules/local/fetch_databases'              addParams( options: [:] )
 include { CHANGEO_ASSIGNGENES_REVEAL } from './modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
 include { CHANGEO_MAKEDB } from './modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] ) 
+include { FILTER_QUALITY  } from './modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
+
 
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
@@ -111,7 +113,7 @@ workflow REVEAL {
    // FETCH DATABASES
    // TODO: this can take a long time, and the progress shows 0%. Would be
    // nice to have some better progress reporting.
-   // And maybe run this is 2 separate steps, one for IMGT and one for IgBLAST?
+   // And maybe run this as 2 separate steps, one for IMGT and one for IgBLAST?
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
@@ -132,6 +134,9 @@ workflow REVEAL {
         CHANGEO_ASSIGNGENES_REVEAL.out.blast,
         ch_imgt.collect()
     )
+
+    // Apply quality filters
+    FILTER_QUALITY(CHANGEO_MAKEDB.out.tab)
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
