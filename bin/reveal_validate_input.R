@@ -43,8 +43,8 @@ opt
 getwd()
 
 # Settings
-# Valid organisms. Use lower case. 
-valid_organisms <- list("human"=c("human", "homo sapiens", "h. sapiens", "hs"),
+# Valid species. Use lower case. 
+valid_species <- list("human"=c("human", "homo sapiens", "h. sapiens", "hs"),
                         "mouse"=c("mouse", "mus musculus", "mm"))
 # Check miairr file
 if (!("MIAIRR" %in% names(opt))) {
@@ -60,16 +60,15 @@ if (!("INPUT" %in% names(opt))) {
 input <- read.csv(opt$INPUT,sep = "\t", header=TRUE, stringsAsFactors = F)
 
 # Validate metadata file
-# TODO: organism not used anymore, standard changed to species
 miairr_metadata <- read.csv(opt$MIAIRR, sep="\t", stringsAsFactors = F)
 mandatory <- miairr_metadata[['Mandatory.BioSample.attribute']] == TRUE
-mandatory_fields <- c(miairr_metadata[['AIRR.Formats.WG.field.name']][mandatory], "pcr_target_locus", "single_cell")
+mandatory_fields <- setdiff(c(miairr_metadata[['AIRR.Formats.WG.field.name']][mandatory], "pcr_target_locus", "single_cell", "species"), "organism")
 
 if (!all(mandatory_fields %in% colnames(input))) {
    missing_fields <- mandatory_fields[mandatory_fields %in% colnames(input) == FALSE]
-   if ((missing_fields == "organism") & ("species" %in% colnames(input))) {
-         message("Missing 'organism' field, using 'species' field instead.")
-         input[['organism']] <- input[['species']]
+   if ((missing_fields == "species") & ("organism" %in% colnames(input))) {
+         message("Missing 'species' field, using 'organism' field instead.")
+         input[['species']] <- input[['organism']]
    } else {
       stop("Missing MiAIRR fields: ", paste(missing_fields,collapse=", "))
    }
@@ -92,35 +91,35 @@ if (length(dup_filenames)>0) {
 
 #TODO validate MiAIRR fields
 
-# `organism` must exist, then translate to name format 
+# `species` must exist, then translate to name format 
 # suitable for igblast and downstream analysis
-get_valid_organism <- function(dictionary, words) {
-   dictionary <-  bind_rows(lapply(dictionary, function(x) {data.frame("organism"=x)} ), .id="valid_organism")
+get_valid_species <- function(dictionary, words) {
+   dictionary <-  bind_rows(lapply(dictionary, function(x) {data.frame("species"=x)} ), .id="valid_species")
    sapply(words, function(word){
-      valid_organism <- dictionary %>%
-         filter(organism == tolower(word)) %>%
-         distinct(valid_organism)
-      if (nrow(valid_organism)>0){
+      valid_species <- dictionary %>%
+         filter(species == tolower(word)) %>%
+         distinct(valid_species)
+      if (nrow(valid_species)>0){
          if(length(col)>1) {
-            warning("Multiple `organism` mappings found for ",word,": ", paste(as.character(valid_organism), collapse=","))
+            warning("Multiple `species` mappings found for ",word,": ", paste(as.character(valid_species), collapse=","))
             NA
          } else {
-            as.character(valid_organism)
+            as.character(valid_species)
          }
       } else {
-         warning("No `organism` mapping available for: `",word,"`.")
+         warning("No `species` mapping available for: `",word,"`.")
          NA
       } 
    })
 }
 
-organisms <- get_valid_organism(valid_organisms, input[['organism']])
-input[,'organism'] <- organisms
-not_valid_organisms <- organisms[is.na(organisms)]
+species <- get_valid_species(valid_species, input[['species']])
+input[,'species'] <- species
+not_valid_species <- species[is.na(species)]
 
-input[,'valid_organism'] <- TRUE
-if (length(not_valid_organisms)>0) {
-   input[is.na(organisms),'valid_organism'] <- FALSE  
+input[,'valid_species'] <- TRUE
+if (length(not_valid_species)>0) {
+   input[is.na(species),'valid_species'] <- FALSE  
 }
 
 
@@ -197,7 +196,7 @@ dt <- DT::datatable(input,
 
 DT::saveWidget(dt, file=paste0(opt$OUTPUT,".html"))
 
-check_fields <- c("valid_filename", "valid_organism", "valid_collapseby", "valid_cloneby", "valid_single_cell", "valid_pcr_target_locus")
+check_fields <- c("valid_filename", "valid_species", "valid_collapseby", "valid_cloneby", "valid_single_cell", "valid_pcr_target_locus")
 not_valid_rows <- which(rowSums(input[, check_fields, drop=FALSE]) < length(check_fields))
 
 if (length(not_valid_rows) > 0) {

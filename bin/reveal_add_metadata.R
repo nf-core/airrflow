@@ -61,7 +61,7 @@ if (nrow(metadata) != 1 ) {
 internal_fields <-
     c( 
        "valid_filename",
-       "valid_organism",
+       "valid_species",
        "valid_collapseby",
        "collapseby_group",
        "collapseby_size",
