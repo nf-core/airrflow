@@ -63,7 +63,7 @@ input <- read.csv(opt$INPUT,sep = "\t", header=TRUE, stringsAsFactors = F)
 # TODO: organism not used anymore, standard changed to species
 miairr_metadata <- read.csv(opt$MIAIRR, sep="\t", stringsAsFactors = F)
 mandatory <- miairr_metadata[['Mandatory.BioSample.attribute']] == TRUE
-mandatory_fields <- miairr_metadata[['AIRR.Formats.WG.field.name']][mandatory]
+mandatory_fields <- c(miairr_metadata[['AIRR.Formats.WG.field.name']][mandatory], "pcr_target_locus", "single_cell")
 
 if (!all(mandatory_fields %in% colnames(input))) {
    missing_fields <- mandatory_fields[mandatory_fields %in% colnames(input) == FALSE]
@@ -168,6 +168,20 @@ input <- input %>%
 
 input$id <- paste0("input_id_", 1:nrow(input))
 
+# Validate single_Cell field. Should be true or false
+input$valid_single_cell <- input[['single_cell']] %in% c(T,F,"true", "false", "TRUE","FALSE")
+is_single_cell <- input[['single_cell']] %in% c(T,"true", "TRUE") 
+if (sum(is_single_cell)>0) {
+   input[['single_cell']][is_single_cell] <- "true"
+}
+if (sum(!is_single_cell)>0) {
+   input[['single_cell']][!is_single_cell] <- "false"
+}
+
+# Validate pcr_target_locus
+input[['valid_pcr_target_locus']]  <- tolower(input[['pcr_target_locus']]) %in% tolower(c("IGH", "IGI", "IGK", "IGL", "TRA", "TRB", "TRD", "TRG", "IG", "TR"))
+input[['locus']] <- tolower(substr(input[['pcr_target_locus']],1,2))
+
 # Write validation results to a file
 write.table(input, file=paste0(opt$OUTPUT,".tsv"), sep="\t",
             quote=FALSE, row.names = FALSE)
@@ -183,7 +197,7 @@ dt <- DT::datatable(input,
 
 DT::saveWidget(dt, file=paste0(opt$OUTPUT,".html"))
 
-check_fields <- c("valid_filename", "valid_organism", "valid_collapseby", "valid_cloneby")
+check_fields <- c("valid_filename", "valid_organism", "valid_collapseby", "valid_cloneby", "valid_single_cell", "valid_pcr_target_locus")
 not_valid_rows <- which(rowSums(input[, check_fields, drop=FALSE]) < length(check_fields))
 
 if (length(not_valid_rows) > 0) {

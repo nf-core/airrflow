@@ -79,6 +79,10 @@ include { CHANGEO_ASSIGNGENES_REVEAL } from './modules/local/reveal/changeo_assi
 include { CHANGEO_MAKEDB } from './modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] ) 
 include { FILTER_QUALITY  } from './modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_PARSEDB_SPLIT } from './modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
+include { FILTER_JUNCTION_MOD3  } from './modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
+include { CHIMERIC  } from './modules/local/reveal/chimeric' addParams( options: modules['filter_quality_reveal'] )
+include { ADD_META_TO_TAB  } from './modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
+
 
 
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
@@ -139,15 +143,34 @@ workflow REVEAL {
     // Apply quality filters
     FILTER_QUALITY(CHANGEO_MAKEDB.out.tab)
 
-    // Select only productive sequences.
+    // Select only productive sequences and
+    // sequences with junction length multiple of 3
     if (params.productive_only) {
-        ch_repertoire = CHANGEO_PARSEDB_SPLIT (
+        CHANGEO_PARSEDB_SPLIT (
             FILTER_QUALITY.out.tab
         )
+        ch_repertoire = FILTER_JUNCTION_MOD3(CHANGEO_PARSEDB_SPLIT.out.tab).tab
     } else {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
 
+    // For bulk datasets, remove chimeric sequences
+    ch_repertoire
+    .branch { it ->
+        single: it[0].single_cell == 'true'
+        bulk:   it[0].single_cell == 'false'
+    }
+    .set{ch_repertoire_by_processing}
+
+    CHIMERIC(
+        ch_repertoire_by_processing.bulk,
+        ch_imgt.collect()
+    )
+
+    // Mix with single
+    ch_chimeric_pass = ch_repertoire_by_processing.single.mix(CHIMERIC.out.tab)
+
+    ch_annotated_repertoires = ADD_META_TO_TAB(ch_chimeric_pass, REVEAL_INPUT_CHECK.out.validated_input)
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 

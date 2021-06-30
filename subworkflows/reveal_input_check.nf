@@ -16,7 +16,8 @@ workflow REVEAL_INPUT_CHECK {
     cloneby
 
     main:
-    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby).validated_input
+    validated_input = VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby).validated_input
+    validated_input
             .splitCsv(header: true, sep:'\t')
             .map { get_meta(it) }
             .branch { it ->
@@ -28,6 +29,7 @@ workflow REVEAL_INPUT_CHECK {
     emit:
     ch_fasta = ch_metadata.fasta
     ch_tsv = ch_metadata.tsv
+    validated_input = validated_input
 }
 
 
@@ -45,6 +47,9 @@ def get_meta (LinkedHashMap col) {
     meta.cloneby_group = col.cloneby_group
     meta.cloneby_size = col.cloneby_size
     meta.filetype = col.filetype
+    meta.single_cell = col.single_cell
+    meta.pcr_target_locus = col.pcr_target_locus
+    meta.locus = col.locus
 
     if (!file(col.filename).exists()) {
         exit 1, "ERROR: Please check input samplesheet: filename does not exist!\n${col.filename}"
