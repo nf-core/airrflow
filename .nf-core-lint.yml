@@ -1,2 +1,7 @@
 files_unchanged:
   - lib/NfcoreSchema.groovy
+actions_awsfulltest:
+params_used:
+files_exist:
+  - environment.yml
+  - Dockerfile
