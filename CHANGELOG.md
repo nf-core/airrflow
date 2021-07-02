@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0dev] - date
+## [2.0.0dev] - date
 
 * The pipeline was ported to the Nextflow DSL2 syntax.
 
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Added support for C-primer in any R1 or R2 with param `--cprimer_position`.
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0 and NXF 21.04.0.
 * [#103](https://github.com/nf-core/bcellmagic/pull/103): Added full size tests (pcr_umi).
+* [#112](https://github.com/nf-core/bcellmagic/pull/112): Template update to nf-core tools v1.14
 
 ### `Fixed`
 
