@@ -283,7 +283,7 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes/",
+                    "default": "s3://ngi-igenomes/igenomes",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -294,15 +294,6 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
                     "default": true
-                },
-                "genome": {
-                    "type": "string",
-                    "hidden": true
-                },
-                "genomes": {
-                    "type": "string",
-                    "default": "[]",
-                    "hidden": true
                 }
             }
         },

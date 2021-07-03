@@ -36,7 +36,7 @@ process CHANGEO_MAKEDB {
     } else if (params.loci == 'tr') {
         """
         MakeDb.py igblast -i $igblast -s $reads -r \\
-        "${imgt_base}/${params.species}/vdj/ \\
+        ${imgt_base}/${params.species}/vdj/ \\
         --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
         """
     }
