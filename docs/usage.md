@@ -6,38 +6,19 @@
 
 ## Introduction
 
-The Bcellmagic pipeline allows processing bulk targeted BCR sequencing data. Support for processing TCR sequencing is currently under implementation.
-
-## Supported sequencing technologies
-
-### UMI barcoded paired-end sequencing
-
-This sequencing type requires providing sequences for the V-region primers as well as the C-region primers.
-
-### UMI barcoded 5'RACE paired-end sequencing
-
-This sequencig type requires providing only sequences for the C-region primers.
-
-## UMI barcode handling
-
-Unique Molecular Identifiers (UMIs) enable the quantification of BCR abundancy in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
-The UMI indices are random nucleotide sequences of a pre-determined length that are added to the sequencing libraries before any PCR amplification steps, for example as part of the primer sequences.
-
-The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
-
-* UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
-
-* UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
+The Bcellmagic pipeline allows processing bulk targeted BCR and TCR sequencing data.
 
 ## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+The typical command for running the pipeline to analyse BCR repertoires is as follows:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile standard,docker --input metasheet_test.tsv --cprimers CPrimers.fasta --vprimers VPrimers.fasta --max_memory 8.GB --max_cpus 8
+nextflow run nf-core/bcellmagic -profile docker --input samplesheet.tsv --protocol pcr_umi --cprimers CPrimers.fasta --vprimers VPrimers.fasta --umi_length 12 --loci ig --max_memory 8.GB --max_cpus 8
 ```
 
-For more information about the parameters, please refer the corresponding sections.
+To analyze TCR repertoires, just provide `--loci tr` instead.
+
+For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/bcellmagic/parameters).
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -51,7 +32,7 @@ results         # Finished results (configurable, see below)
 
 ### Input file
 
-The required input file is a TSV file with the following columns, including the exact same headers:
+The required input file is a sample sheet in TSV format (tab separated) containing the following columns, including the exact same headers:
 
 ```bash
 ID  Source  Treatment Extraction_time Population  R1  R2  I1
@@ -68,6 +49,144 @@ The metadata specified in the input file will then be automatically annotated in
 * R1: path to fastq file with first mates of paired-end sequencing.
 * R2: path to fastq file with second mates of paired-end sequencing.
 * I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column).
+
+## Supported sequencing protocols
+
+### Protocol: UMI barcoded multiplex PCR
+
+This sequencing type requires setting `--protocol pcr_umi` and providing sequences for the V-region primers as well as the C-region primers. Some examples of UMI and barcode configurations are provided.
+
+#### R1 read contains UMI barcode and C primer
+
+The `--cprimer_position` and `--umi_position` parameters need to be set to R1 (this is the default).
+If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--umi_start 0 \
+--cprimer_start 0 \
+--cprimer_position R1
+```
+
+![nf-core/bcellmagic](images/Primers_R1_UMI_C.png)
+
+#### R1 read contains UMI barcode and V primer
+
+The `--umi_position` parameter needs to be set to R1. 
+If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero). Set `--cprimer_position R2`.
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--umi_start 0 \
+--vprimer_start 0 \
+--cprimer_position R2
+```
+
+![nf-core/bcellmagic](images/Primers_R1_UMI_V.png)
+
+#### R2 read contains UMI barcode and C primer
+
+The `--umi_position` and `--cprimer_position` parameters need to be set to R2.
+If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero).
+If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero).
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R2 \
+--umi_start 0 \
+--cprimer_start 0 \
+--cprimer_position R2
+```
+
+![nf-core/bcellmagic](images/Primers_R1_V.png)
+
+### Protocol: UMI barcoded 5'RACE PCR
+
+This sequencing type requires setting `--protocol race_5p_umi` and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run Bcellmagic to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
+
+#### Takara Bio SMARTer Human BCR
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol race_5p_umi \
+--cprimers CPrimers.fasta \
+--race_linker linker.fasta \
+--loci tr \
+--umi_length 12 \
+--umi_position R2 \
+--umi_start 0 \
+--cprimer_start 7 \
+--cprimer_position R1
+```
+
+![nf-core/bcellmagic](images/TAKARA_RACE_BCR.png)
+
+#### Takara Bio SMARTer Human TCR v2
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol race_5p_umi \
+--cprimers CPrimers.fasta \
+--race_linker linker.fasta \
+--loci tr \
+--umi_length 12 \
+--umi_position R2 \
+--umi_start 0 \
+--cprimer_start 5 \
+--cprimer_position R1
+```
+
+For this protocol, the takara linkers are:
+
+```txt
+>takara-linker
+GTAC
+```
+
+And the C-region primers are:
+
+```txt
+>TRAC
+CAGGGTCAGGGTTCTGGATATN
+>TRBC
+GGAACACSTTKTTCAGGTCCTC
+>TRDC
+GTTTGGTATGAGGCTGACTTCN
+>TRGC
+CATCTGCATCAAGTTGTTTATC
+```
+
+![nf-core/bcellmagic](images/TAKARA_RACE_TCR.png)
+
+## UMI barcode handling
+
+Unique Molecular Identifiers (UMIs) enable the quantification of BCR or TCR abundance in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
+The UMI indices are random nucleotide sequences of a pre-determined length that are added to the sequencing libraries before any PCR amplification steps, for example as part of the primer sequences.
+
+The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
+
+* UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+
+* UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
 
 ### Updating the pipeline
 
