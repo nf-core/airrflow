@@ -251,13 +251,7 @@
             "type": "object",
             "description": "Define downstream analysis options.",
             "default": "",
-            "properties": {
-                "skip_downstream": {
-                    "type": "boolean",
-                    "description": "Set to true if no downstream analysis is desired",
-                    "fa_icon": "fas fa-angle-double-right"
-                }
-            },
+            "properties": {},
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
             "fa_icon": "fas fa-angle-double-right"
         },
@@ -522,5 +516,13 @@
         {
             "$ref": "#/definitions/institutional_config_options"
         }
-    ]
+    ],
+    "properties": {
+        "skip_report": {
+            "type": "string"
+        },
+        "skip_lineage": {
+            "type": "string"
+        }
+    }
 }

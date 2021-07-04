@@ -5,7 +5,7 @@ def options    = initOptions(params.options)
 
 process PRESTO_ASSEMBLEPAIRS {
     tag "$meta.id"
-    tag 'process_long_parallelized'
+    label 'process_long_parallelized'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
