@@ -6,7 +6,7 @@
 
 ## Introduction
 
-The Bcellmagic pipeline allows processing bulk targeted BCR and TCR sequencing data.
+The Bcellmagic pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
 
 ## Running the pipeline
 
@@ -78,7 +78,7 @@ nextflow run nf-core/bcellmagic -profile docker \
 
 #### R1 read contains UMI barcode and V primer
 
-The `--umi_position` parameter needs to be set to R1. 
+The `--umi_position` parameter needs to be set to R1.
 If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero). Set `--cprimer_position R2`.
 
 ```bash
