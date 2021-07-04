@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Added parameter `--skip_lineages`.
 * [#112](https://github.com/nf-core/bcellmagic/pull/112): Template update to nf-core tools v1.14.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Added Bcellmagic html report.
+* [#114](https://github.com/nf-core/bcellmagic/pull/114): Improved documentation on amplicon protocol support.
 
 ### `Fixed`
 
