@@ -25,8 +25,8 @@ process ALAKAZAM_LINEAGE {
     tuple val(meta), path("${tab}"), emit: tab
     path("*.version.txt"), emit: version
     path("*.tsv")
-    path("lineage_reconstruction/Clone_tree_plots/*.pdf")
-    path("lineage_reconstruction/Graphml_trees/All_graphs_patient.graphml")
+    path("Clone_tree_plots/*.pdf")
+    path("Graphml_trees/All_graphs_patient.graphml")
 
     script:
     def software = getSoftwareName(task.process)

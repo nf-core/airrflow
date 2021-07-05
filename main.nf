@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                         nf-core/bcellmagic
+                        nf-core/bcellmagic
 ========================================================================================
- nf-core/bcellmagic Analysis Pipeline.
- #### Homepage / Documentation
- https://github.com/nf-core/bcellmagic
+    GitHub  : https://github.com/nf-core/bcellmagic
+    Website : https://nf-co.re/rnaseq
+    Slack   : https://nfcore.slack.com/channels/bcellmagic
 ----------------------------------------------------------------------------------------
 */
 

@@ -259,13 +259,7 @@
             "type": "object",
             "description": "Define downstream analysis options.",
             "default": "",
-            "properties": {
-                "skip_downstream": {
-                    "type": "boolean",
-                    "description": "Set to true if no downstream analysis is desired",
-                    "fa_icon": "fas fa-angle-double-right"
-                }
-            },
+            "properties": {},
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
             "fa_icon": "fas fa-angle-double-right"
         },
@@ -297,7 +291,7 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes/",
+                    "default": "s3://ngi-igenomes/igenomes",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -308,15 +302,6 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
                     "default": true
-                },
-                "genome": {
-                    "type": "string",
-                    "hidden": true
-                },
-                "genomes": {
-                    "type": "string",
-                    "default": "[]",
-                    "hidden": true
                 }
             }
         },
@@ -595,6 +580,14 @@
         "custom_container": {
             "type": "string",
             "description": "Specify an Immcantation container to be used in all pipeline processes."
+        }
+    ],
+    "properties": {
+        "skip_report": {
+            "type": "string"
+        },
+        "skip_lineage": {
+            "type": "string"
         }
     }
 }

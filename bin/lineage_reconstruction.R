@@ -11,11 +11,13 @@ args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)<1) {
     stop("Input file argument must be supplied.\n", call.=FALSE)
-  }
+}
 
 # Get input table from args
 inputtable = args[1]
 node_text = args[2]
+
+print(paste0("Node text: ", node_text))
 
 avail_text = c("c_primer", "treatment", "population", "source", 
                 "extract_time", "sample", "sample_pop", "clone_id", "seq_id", "none")
@@ -27,11 +29,9 @@ if (node_text %in% avail_text) {
 }
 
 # Set output directories
-patdir_lineage <- "lineage_reconstruction"
-dir.create(patdir_lineage)
-patdir_lineage_trees <- paste(patdir_lineage, "Clone_tree_plots", sep = "/")
+patdir_lineage_trees <- "Clone_tree_plots"
 dir.create(patdir_lineage_trees)
-patdir_lineage_graphml <- paste(patdir_lineage, "Graphml_trees", sep = "/")
+patdir_lineage_graphml <- "Graphml_trees"
 dir.create(patdir_lineage_graphml)
 
 # Read patient table
@@ -90,8 +90,6 @@ save_graph <- function(df_pat, clone_num){
         V(graph)$label <- V(graph)$sample_pop
     } else if ( node_text == "clone_id" ) {
         V(graph)$label <- V(graph)$clone_id
-    } else if ( node_text == "c_primer" ) {
-        V(graph)$label <- V(graph)$c_primer
     } else if ( node_text == "population" ) {
         V(graph)$label <- V(graph)$population
     } else if ( node_text == "seq_id" ){
@@ -121,11 +119,11 @@ save_graph <- function(df_pat, clone_num){
 
 for (clone_num in clones$clone_id){
     tryCatch(withCallingHandlers(save_graph(df_pat, clone_num), 
-                   error=function(e) {print(paste0("Skipping clone due to problem:", clone_num))
-                                       print("Here is the original error message:")
-                                       print(e)},
-                   warning=function(w) {print(paste0("Warning for clone:", clone_num))
-                               invokeRestart("muffleWarning")}), 
-           error = function(e) { print(paste0("Processed clone:", clone_num)) })
+                    error=function(e) {print(paste0("Skipping clone due to problem:", clone_num))
+                                        print("Here is the original error message:")
+                                        print(e)},
+                    warning=function(w) {print(paste0("Warning for clone:", clone_num))
+                                        invokeRestart("muffleWarning")}), 
+                    error = function(e) { print(paste0("Processed clone:", clone_num)) })
 }
 
