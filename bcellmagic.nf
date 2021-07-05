@@ -338,7 +338,7 @@ workflow BCELLMAGIC {
     if (!params.skip_report){
         ALAKAZAM_SHAZAM_REPERTOIRES(
             ch_all_tabs_repertoire,
-            PARSE_LOGS.out.logs
+            PARSE_LOGS.out.logs.collect()
         )
     }
 
