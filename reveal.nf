@@ -82,6 +82,7 @@ include { CHANGEO_PARSEDB_SPLIT } from './modules/local/changeo/changeo_parsedb_
 include { FILTER_JUNCTION_MOD3  } from './modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
 include { CHIMERIC  } from './modules/local/reveal/chimeric' addParams( options: modules['filter_quality_reveal'] )
 include { ADD_META_TO_TAB  } from './modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
+include { COLLAPSE_DUPLICATES  } from './modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 
 
 
@@ -155,6 +156,7 @@ workflow REVEAL {
     }
 
     // For bulk datasets, remove chimeric sequences
+    // if requested
     if (params.remove_chimeric) {
         ch_repertoire
         .branch { it ->
@@ -169,10 +171,21 @@ workflow REVEAL {
         // Mix with single
         ch_chimeric_pass = ch_repertoire_by_processing.single.mix(CHIMERIC.out.tab)
     } else {
-        ch_chimeric_pass = ch_repertoire_by_processing.flatten()
+        ch_chimeric_pass = ch_repertoire
     }
-  
+
     ch_annotated_repertoires = ADD_META_TO_TAB(ch_chimeric_pass, REVEAL_INPUT_CHECK.out.validated_input)
+
+    // Collapse duplicates
+    // https://www.nextflow.io/docs/latest/operator.html#grouptuple
+    ch_collapsable = ch_annotated_repertoires.tab
+     .map{ it -> [ it[0].single_cell, it[0], it[1] ] }
+     .groupTuple(by: [0])
+     .map{ it -> [it[1], it[2].toList()] }
+     .dump()
+
+    COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)    
+    
 
     // Software versions
     GET_SOFTWARE_VERSIONS ( 
