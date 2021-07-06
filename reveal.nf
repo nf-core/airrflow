@@ -155,21 +155,23 @@ workflow REVEAL {
     }
 
     // For bulk datasets, remove chimeric sequences
-    ch_repertoire
-    .branch { it ->
-        single: it[0].single_cell == 'true'
-        bulk:   it[0].single_cell == 'false'
+    if (params.remove_chimeric) {
+        ch_repertoire
+        .branch { it ->
+            single: it[0].single_cell == 'true'
+            bulk:   it[0].single_cell == 'false'
+        }
+        .set{ch_repertoire_by_processing}
+        CHIMERIC(
+            ch_repertoire_by_processing.bulk,
+            ch_imgt.collect()
+        ).tab
+        // Mix with single
+        ch_chimeric_pass = ch_repertoire_by_processing.single.mix(CHIMERIC.out.tab)
+    } else {
+        ch_chimeric_pass = ch_repertoire_by_processing.flatten()
     }
-    .set{ch_repertoire_by_processing}
-
-    CHIMERIC(
-        ch_repertoire_by_processing.bulk,
-        ch_imgt.collect()
-    )
-
-    // Mix with single
-    ch_chimeric_pass = ch_repertoire_by_processing.single.mix(CHIMERIC.out.tab)
-
+  
     ch_annotated_repertoires = ADD_META_TO_TAB(ch_chimeric_pass, REVEAL_INPUT_CHECK.out.validated_input)
 
     // Software versions

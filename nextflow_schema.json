@@ -259,9 +259,16 @@
             "type": "object",
             "description": "Define downstream analysis options.",
             "default": "",
-            "properties": {},
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
-            "fa_icon": "fas fa-angle-double-right"
+            "fa_icon": "fas fa-angle-double-right",
+            "properties": {
+                "skip_report": {
+                    "type": "string"
+                },
+                "skip_lineage": {
+                    "type": "string"
+                }
+            }
         },
         "software_packaging_options": {
             "title": "Software packaging options",
@@ -580,14 +587,6 @@
         "custom_container": {
             "type": "string",
             "description": "Specify an Immcantation container to be used in all pipeline processes."
-        }
-    ],
-    "properties": {
-        "skip_report": {
-            "type": "string"
-        },
-        "skip_lineage": {
-            "type": "string"
         }
     }
 }

@@ -52,7 +52,7 @@ if (!("INPUTID" %in% names(opt))) {
 metadata <- read.csv(opt$METADATA,sep = "\t", header=TRUE, stringsAsFactors = F) 
 
 metadata <- metadata %>%
-    filter(input_id == opt$INPUTID)
+    filter(id == opt$INPUTID)
 
 if (nrow(metadata) != 1 ) {
     stop("Expecting nrow(metadata) == 1; nrow(metadata) == ", nrow(metadata), " found")
