@@ -384,7 +384,7 @@ Gene family usage is normalized by the number of clones.
 
 ### By patient {-}
 
-```{r, echo=F, fig.asp=0.8, fig.align='center'}
+```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="sample", mode="family", clone="clone_id")
 family$treatment <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$time_point <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -397,7 +397,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
   theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
   ylab("Frequency") +
   xlab("") +
-  facet_wrap(vars(treatment, patient), scales="free_x") +
+  facet_wrap(vars(treatment,patient), scales="free_x", ncol = 1) +
   theme(legend.position = "none")
 g2
 
@@ -409,7 +409,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"
 
 ### By Population {-}
 
-```{r, echo=F, fig.width=8, fig.asp=0.8, fig.align='center'}
+```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="sample_pop", 
                     mode="family", clone = "clone_id")
 family$treatment <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
@@ -424,7 +424,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
   theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
   ylab("Frequency") +
   xlab("") +
-  facet_grid(cols=vars(treatment, patient), rows=vars(population)) +
+  facet_grid(cols=vars(treatment, patient), rows=vars(population), ncol=1) +
   theme(legend.position = "none")
 g2
 
@@ -444,7 +444,7 @@ All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ### By clones {-}
 
-```{r, echo=F, fig.width=7, fig.asp=0.8, fig.align='center'}
+```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="sample", mode="gene", clone = "clone_id")
 family$treatment <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$time_point <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -468,7 +468,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_da
 
 ### By sequences {-}
 
-```{r, echo=F, fig.width=7, fig.asp=0.8, fig.align='center'}
+```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="sample", mode="gene")
 family$treatment <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$time_point <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
