@@ -309,13 +309,16 @@ workflow BCELLMAGIC {
     // Lineage reconstruction alakazam
     if (!params.skip_lineage) {
         ALAKAZAM_LINEAGE(
-            CHANGEO_CREATEGERMLINES.out.tab
+            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'changeo_output')
         )
     }
 
     ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
 
-    ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab.collect()
+    ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
+                                                    .map{ it -> [ it[1] ] }
+                                                    .collect()
+                                                    .dump(tag:'repertoire_all')
 
         // Process logs parsing: getting sequence numbers
     PARSE_LOGS(
