@@ -424,7 +424,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
   theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
   ylab("Frequency") +
   xlab("") +
-  facet_grid(cols=vars(treatment, patient), rows=vars(population), ncol=1) +
+  facet_grid(cols=vars(treatment), rows=vars(patient,population)) +
   theme(legend.position = "none")
 g2
 
