@@ -24,11 +24,11 @@ process PRESTO_MASKPRIMERS {
     path(vprimers)
 
     output:
-    tuple val(meta), path("*_R1_primers-pass.fastq"), file("*_R2_primers-pass.fastq") , emit: reads
+    tuple val(meta), path("*_R1_primers-pass.fastq"), path("*_R2_primers-pass.fastq") , emit: reads
     path "*_command_log.txt", emit: logs
     path "*_R1.log"
     path "*_R2.log"
-    path "*.tab"
+    path "*.tab", emit: log_tab
 
 
     script:
