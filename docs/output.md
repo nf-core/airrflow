@@ -30,7 +30,7 @@ and processes data using the following steps:
   * [Convert database to fasta](#convert-database-to-fasta)
 * [Shazam](#shazam) - Genotyping and Clonal threshold
   * [Genotyping and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
-* [Change-O](#change-o)
+* [Change-O define clones ](#change-o-define-clones)
   * [Define clones](#define-clones) - Defining clonal B-cell or T-cell groups
   * [Reconstruct germlines](#reconstruct-germlines) - Reconstruct gene calls of germline sequences
 * [Lineage reconstruction](#lineage-reconstruction) - Clonal lineage reconstruction.
@@ -260,7 +260,7 @@ For each subject (patient) there is a subfolder containing:
   * `genotype.pdf`: Plot representing the patient genotype assessed by TigGER.
   * `v_genotype.fasta`: Fasta sequences of the personalized patient genotype.
 
-## Change-O
+## Change-O define clones
 
 ### Define clones
 
