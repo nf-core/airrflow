@@ -19,11 +19,10 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     }
 
     input:
-    tuple val(meta), path(tab) // sequence tsv table in AIRR format
+    path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
 
     output:
-    tuple val(meta), path("${tab}"), emit: tab
     path("*.version.txt"), emit: version
     path("repertoire_comparison")
     path("Bcellmagic_report.html")

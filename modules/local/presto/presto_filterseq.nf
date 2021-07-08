@@ -27,8 +27,7 @@ process PRESTO_FILTERSEQ {
     path "*.version.txt" , emit: version
     path "*_R1.log"
     path "*_R2.log"
-    path "*_R1_table.tab"
-    path "*_R2_table.tab"
+    path "*.tab" , emit: log_tab
 
     script:
     def software = getSoftwareName(task.process)

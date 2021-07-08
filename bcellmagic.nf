@@ -98,13 +98,13 @@ include { PRESTO_FILTERSEQ } from './modules/local/presto/presto_filterseq'     
 include { PRESTO_MASKPRIMERS } from './modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
 include { PRESTO_PAIRSEQ } from './modules/local/presto/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
 include { PRESTO_CLUSTERSETS } from './modules/local/presto/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
-include { PRESTO_PARSE_CLUSTER } from './modules/local/presto/presto_parse_cluster'    addParams( options: [:] )
+include { PRESTO_PARSE_CLUSTER } from './modules/local/presto/presto_parse_cluster'    addParams( options: modules['presto_parse_clusters'] )
 include { PRESTO_BUILDCONSENSUS } from './modules/local/presto/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
 include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/presto/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
 include { PRESTO_ASSEMBLEPAIRS } from './modules/local/presto/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
 include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/presto/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
-include { PRESTO_PARSEHEADERS_PRIMERS } from './modules/local/presto/presto_parseheaders_primers'      addParams( options: [:] )
-include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/presto/presto_parseheaders_metadata'    addParams( options: [:] )
+include { PRESTO_PARSEHEADERS_PRIMERS } from './modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers'] )
+include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/presto/presto_parseheaders_metadata'    addParams( options: modules['presto_parseheaders_metadata'] )
 include { PRESTO_COLLAPSESEQ } from './modules/local/presto/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
 include { PRESTO_SPLITSEQ } from './modules/local/presto/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
 //CHANGEO
@@ -309,13 +309,16 @@ workflow BCELLMAGIC {
     // Lineage reconstruction alakazam
     if (!params.skip_lineage) {
         ALAKAZAM_LINEAGE(
-            CHANGEO_CREATEGERMLINES.out.tab
+            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'changeo_output')
         )
     }
 
     ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
 
-    ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab.collect()
+    ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
+                                                    .map{ it -> [ it[1] ] }
+                                                    .collect()
+                                                    .dump(tag:'repertoire_all')
 
         // Process logs parsing: getting sequence numbers
     PARSE_LOGS(
@@ -338,7 +341,7 @@ workflow BCELLMAGIC {
     if (!params.skip_report){
         ALAKAZAM_SHAZAM_REPERTOIRES(
             ch_all_tabs_repertoire,
-            PARSE_LOGS.out.logs
+            PARSE_LOGS.out.logs.collect()
         )
     }
 

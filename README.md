@@ -12,7 +12,7 @@
 
 ## Introduction
 
-The nf-core/bcellmagic pipeline is built to analyze B-cell repertoire sequencing data. It makes use of the [Immcantation 2.5.0](https://immcantation.readthedocs.io/en/version-2.5.0/) toolset and requires targeted sequencing data of the V, D, J and C regions of the B-cell receptor (primers for the V and C genes).
+The nf-core/bcellmagic pipeline is built to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
@@ -33,7 +33,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
     ```bash
-    nextflow run nf-core/bcellmagic -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input "metasheet_test.tsv" --cprimers "CPrimers.fasta" --vprimers "VPrimers.fasta"
+    nextflow run nf-core/bcellmagic -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input "samplesheet.tsv" --protocol "pcr_umi" --cprimers "CPrimers.fasta" --vprimers "VPrimers.fasta" --umi_length 12 --loci "ig"
     ```
 
 See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available options when running the pipeline.
@@ -81,7 +81,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use  nf-core/bcellmagic for your analysis, please cite it using the following doi: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
+If you use  nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
 You can cite the `nf-core` publication as follows:
 
