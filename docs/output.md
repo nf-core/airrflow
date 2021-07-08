@@ -30,7 +30,7 @@ and processes data using the following steps:
   * [Convert database to fasta](#convert-database-to-fasta)
 * [Shazam](#shazam) - Genotyping and Clonal threshold
   * [Genotyping and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
-* [Change-O define clones ](#change-o-define-clones)
+* [Change-O define clones](#change-o-define-clones)
   * [Define clones](#define-clones) - Defining clonal B-cell or T-cell groups
   * [Reconstruct germlines](#reconstruct-germlines) - Reconstruct gene calls of germline sequences
 * [Lineage reconstruction](#lineage-reconstruction) - Clonal lineage reconstruction.
