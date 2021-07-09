@@ -32,5 +32,6 @@ process CHANGEO_ASSIGNGENES {
     """
     AssignGenes.py igblast -s $reads -b $igblast --organism $params.species --loci $params.loci --format blast --nproc $task.cpus --outname "$meta.id"
     AssignGenes.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
+    igblastn -version | grep -o "igblast[0-9\\. ]\{4,8\}" | grep -o "[0-9\\. ]\{4,8\}" > igblast.version.txt
     """
 }
