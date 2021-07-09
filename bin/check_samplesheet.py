@@ -52,9 +52,12 @@ def check_samplesheet(file_in):
         ## Check header
         MIN_COLS = 7
         HEADER = ["ID", "R1", "R2", "I1", "Source", "Treatment", "Extraction_time", "Population"]
+        HEADER_NOI1 = ["ID", "R1", "R2", "Source", "Treatment", "Extraction_time", "Population"]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
-        if header[: len(HEADER)] != HEADER:
+        if not (header[: len(HEADER)] == HEADER or header[: len(HEADER)] == HEADER_NOI1):
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
+            print("or  {} != {}".format(",".join(header), ",".join(HEADER_NOI1)))
+
             sys.exit(1)
 
         ## Check sample entries
