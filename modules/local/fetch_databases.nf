@@ -20,10 +20,11 @@ process FETCH_DATABASES {
     output:
     path("igblast_base"), emit: igblast
     path("imgtdb_base"), emit: imgt
+    path "*.version.txt" , emit: version
     
     script:
-    //TODO: get db versions
     """
     fetch_databases.sh
+    echo $(date "+%F") > IMGT.version.txt
     """
 }
