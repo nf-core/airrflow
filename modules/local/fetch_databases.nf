@@ -25,6 +25,6 @@ process FETCH_DATABASES {
     script:
     """
     fetch_databases.sh
-    echo $(date "+%F") > IMGT.version.txt
+    echo \$(date "+%F") > IMGT.version.txt
     """
 }
