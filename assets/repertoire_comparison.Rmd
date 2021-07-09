@@ -494,7 +494,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence
 
 If you use nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
-Please also cite the `nf-core` publication [@ewels].
+Please also cite the `nf-core` publication [@ewels2020].
 
 In addition, citations for the tools and data used in this pipeline are as follows:
 
