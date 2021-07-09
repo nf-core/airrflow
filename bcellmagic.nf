@@ -245,6 +245,7 @@ workflow BCELLMAGIC {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
+        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
     }
 
     // Run Igblast for gene assignment
