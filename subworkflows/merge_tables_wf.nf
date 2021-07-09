@@ -1,5 +1,5 @@
 /*
- * Check input samplesheet and get read channels
+ * Get tables and group together the ones from the same subject
  */
 
 params.options = [:]
@@ -8,10 +8,9 @@ include { MERGE_TABLES } from '../modules/local/merge_tables' addParams( options
 
 workflow MERGE_TABLES_WF {
     take:
-    tables // file: /path/to/samplesheet.tsv
+    tables
     
     main:
-    // TODO: avoiding checking samplesheet for now, add samplesheet check later.
     tables        
         .dump()
         .map{it -> [ it[0].source, it[0].id, it[1] ]}
