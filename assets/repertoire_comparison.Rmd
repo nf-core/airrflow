@@ -489,3 +489,18 @@ ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.
 
 write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_data.tsv"), sep = "\t", quote = F, row.names = F)
 ```
+
+# Citations
+
+If you use nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
+
+Please also cite the `nf-core` publication [@ewels].
+
+In addition, citations for the tools and data used in this pipeline are as follows:
+
+* **pRESTO** [@VanderHeiden2014]
+* **SHazaM, Change-O** [@Gupta2015]
+* **Alakazam** [@Stern2014]
+* **TIgGER** [@Gadala-Maria2015]
+* **FastQC** [@andrews2010]
+* **MultiQC** [@ewels2016]
