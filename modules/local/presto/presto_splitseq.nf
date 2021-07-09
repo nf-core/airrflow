@@ -28,5 +28,4 @@ process PRESTO_SPLITSEQ {
     """
     SplitSeq.py group -s $reads --outname ${meta.id} -f CONSCOUNT --num 2 --fasta > "${meta.id}_command_log.txt"
     """
-    // TODO: sed -n '1~4s/^@/>/p;2~4p' ${dedupped.baseName}_UMI_R1_R2_atleast-2.fastq > ${dedupped.baseName}_UMI_R1_R2_atleast-2.fasta
 }

@@ -193,7 +193,7 @@ workflow BCELLMAGIC {
     PRESTO_CLUSTERSETS (
         PRESTO_PAIRSEQ.out.reads
     )
-    // ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
 
     // Annotate cluster into barcode field
     PRESTO_PARSE_CLUSTER (
@@ -245,6 +245,7 @@ workflow BCELLMAGIC {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
+        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
     }
 
     // Run Igblast for gene assignment
