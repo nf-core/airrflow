@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Analysis of data with RACE 5' protocol is now supported
 * Scripts to download and build new versions of the IMGT database have been added
 * Improvement of UMI handling and possibility to exchange position of C and V-primers
-* Updated to new versions of Immcantation Framework, giving support to AIRR format
+* Updated to new versions of Immcantation Framework, providing support for the AIRR format
 
 ### `Added`
 
