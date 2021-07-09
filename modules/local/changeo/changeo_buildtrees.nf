@@ -5,6 +5,7 @@ def options    = initOptions(params.options)
 
 process CHANGEO_BUILDTREES {
     tag "$meta.id"
+    label 'process_medium'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
