@@ -25,6 +25,7 @@ process SAMPLESHEET_CHECK {
     script:  // This script is bundled with the pipeline, in nf-core/dsltwotest/bin/
     // TODO: update to check samplesheet
     """
+    check_samplesheet.py $samplesheet
     cp $samplesheet samplesheet.valid.tsv
     """
 }
