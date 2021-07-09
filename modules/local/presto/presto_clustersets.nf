@@ -33,6 +33,6 @@ process PRESTO_CLUSTERSETS {
     ClusterSets.py set --nproc ${task.cpus} -s $R1 --outname ${meta.id}_R1 --exec vsearch --log ${meta.id}_R1.log > "${meta.id}_command_log.txt"
     ClusterSets.py set --nproc ${task.cpus} -s $R2 --outname ${meta.id}_R2 --exec vsearch --log ${meta.id}_R2.log >> "${meta.id}_command_log.txt"
     ParseLog.py -l "${meta.id}_R1.log" "${meta.id}_R2.log" -f ID BARCODE SEQCOUNT CLUSTERS
-    vsearch --version &> vsearch.txt; cat vsearch.txt | head -n 1 | grep -o "v[0-9\\.]\{4,7\}" > vsearch.version.txt
+    vsearch --version &> vsearch.txt; cat vsearch.txt | head -n 1 | grep -o 'v[0-9\\.]\{4,7\}' > vsearch.version.txt
     """
 }
