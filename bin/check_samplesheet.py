@@ -10,12 +10,11 @@ import argparse
 
 
 def parse_args(args=None):
-    Description = "Reformat nf-core/bcellmagic samplesheet file and check its contents."
-    Epilog = "Example usage: python check_samplesheet.py <FILE_IN> <FILE_OUT>"
+    Description = "Read nf-core/bcellmagic samplesheet file and check its contents."
+    Epilog = "Example usage: python check_samplesheet.py <FILE_IN>"
 
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
     parser.add_argument("FILE_IN", help="Input samplesheet file.")
-    parser.add_argument("FILE_OUT", help="Output file.")
     return parser.parse_args(args)
 
 
