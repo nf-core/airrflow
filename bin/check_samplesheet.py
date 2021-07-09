@@ -54,7 +54,7 @@ def check_samplesheet(file_in):
         HEADER = ["ID", "R1", "R2", "I1", "Source", "Treatment", "Extraction_time", "Population"]
         HEADER_NOI1 = ["ID", "R1", "R2", "Source", "Treatment", "Extraction_time", "Population"]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
-        if not (header[: len(HEADER)] == HEADER or header[: len(HEADER)] == HEADER_NOI1):
+        if not (header == HEADER or header == HEADER_NOI1):
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
             print("or  {} != {}".format(",".join(header), ",".join(HEADER_NOI1)))
 
@@ -65,7 +65,7 @@ def check_samplesheet(file_in):
             lspl = [x.strip().strip('"') for x in line.strip().split("\t")]
 
             ## Check valid number of columns per row
-            if len(lspl) < len(HEADER):
+            if len(lspl) < len(header):
                 print_error(
                     "Invalid number of columns (minimum = {})!".format(len(HEADER)),
                     "Line",
