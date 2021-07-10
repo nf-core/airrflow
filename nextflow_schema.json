@@ -259,29 +259,16 @@
             "type": "object",
             "description": "Define downstream analysis options.",
             "default": "",
-<<<<<<< HEAD
-=======
             "properties": {
                 "skip_report": {
-                    "type": "boolean",
-                    "description": "Skip repertoire analysis and report generation."
+                    "type": "string"
                 },
                 "skip_lineage": {
-                    "type": "boolean",
-                    "description": "Skip clonal lineage analysis and lineage tree plotting."
+                    "type": "string"
                 }
             },
->>>>>>> dsl2
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
-            "fa_icon": "fas fa-angle-double-right",
-            "properties": {
-                "skip_report": {
-                    "type": "string"
-                },
-                "skip_lineage": {
-                    "type": "string"
-                }
-            }
+            "fa_icon": "fas fa-angle-double-right"
         },
         "software_packaging_options": {
             "title": "Software packaging options",
@@ -298,6 +285,10 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-box",
                     "description": "Pull docker container and convert to singularity at run time."
+                },
+                "custom_container": {
+                    "type": "string",
+                    "description": "Specify an Immcantation container to be used in all pipeline processes."
                 }
             },
             "fa_icon": "fas fa-box"
@@ -595,11 +586,5 @@
         {
             "$ref": "#/definitions/subworkflow_reveal"
         }
-    ],
-    "properties": {
-        "custom_container": {
-            "type": "string",
-            "description": "Specify an Immcantation container to be used in all pipeline processes."
-        }
-    }
+    ]
 }
