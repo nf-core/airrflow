@@ -23,21 +23,16 @@ fastas = args[4:length(args)]
 
 output_folder = dirname(inputtable)
 
-#db <- readChangeoDb(inputtable)
 db <- read.table(inputtable, header=TRUE, sep="\t")
-#print(colnames(db))
 
 if (loci == "ig"){
 
   db_fasta <- readIgFasta(fastas, strip_down_name = TRUE)
 
   gt <- inferGenotype(db, v_call = "v_call", find_unmutated = F)
-  print(colnames(gt))
 
   # Filter out Duplicate sequences as not supported by Tigger 1.0.0
-  print(gt)
   gt_filt <- filter(gt, !grepl("D", gene))
-  print(gt_filt)
 
   gtseq <- genotypeFasta(gt_filt, db_fasta)
   writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
@@ -78,7 +73,6 @@ if (loci == "ig"){
   db_reassigned <- reassignAlleles(db, gtseq)
 
   # Find the Hamming distance
-  # TODO: check that this is fine (what about TRBV, etc.)
   dist_ham <- distToNearest(db_reassigned, 
                             vCallColumn="v_call",
                             jCallColumn="j_call",
@@ -109,5 +103,4 @@ if (threshold_method == "density") {
 # Plot distance histogram, density estimate and optimum threshold
 ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(output), device="pdf")
 
-print(threshold)
 write.table(threshold, file= paste(output_folder,"threshold.txt",sep="/"), quote=FALSE, sep="", row.names = FALSE, col.names = FALSE)

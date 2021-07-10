@@ -26,8 +26,7 @@ process PRESTO_BUILDCONSENSUS {
     path("*_command_log.txt"), emit: logs
     path("*_R1.log")
     path("*_R2.log")
-    path("*_R1_table.tab")
-    path("*_R2_table.tab")
+    path("*.tab"), emit: log_tab
 
 
     script:

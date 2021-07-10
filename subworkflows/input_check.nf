@@ -11,7 +11,6 @@ workflow INPUT_CHECK {
     samplesheet // file: /path/to/samplesheet.tsv
     
     main:
-    // TODO: avoiding checking samplesheet for now, add samplesheet check later.
     SAMPLESHEET_CHECK ( samplesheet )
         .splitCsv ( header:true, sep:'\t' )
         .map { get_samplesheet_paths(it) }

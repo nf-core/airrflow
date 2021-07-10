@@ -45,7 +45,7 @@ write.table(countclones, paste("Clones_table_patient_", df_pat$source[1],".tsv",
 
 # Restrict clonal tree size
 clones <- filter(countclones, seq_count > 2 & seq_count < 1000)
-write.table(clones, paste("Clones_table_patient_filtered_", df_pat$source[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
+write.table(clones, paste("Clones_table_patient_filtered_between_3_and_1000_", df_pat$source[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
 # Get dnapars exec path
 dnapars_exec_tab <- read.csv("dnapars_exec.txt", header=F)

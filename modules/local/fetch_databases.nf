@@ -27,10 +27,8 @@ process FETCH_DATABASES {
     path "*.version.txt" , emit: version
     
     script:
-    //TODO: get db versions. Currently using the download date
-    def software = getSoftwareName(task.process)
     """
     fetch_databases.sh
-    sed -n '2p' imgtdb_base/IMGT.yaml | awk -F' '  '{print \$2}' > ${software}-IMGT.version.txt
+    echo \$(date "+%F") > IMGT.version.txt
     """
 }

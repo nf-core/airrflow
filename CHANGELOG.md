@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Analysis of data with RACE 5' protocol is now supported
 * Scripts to download and build new versions of the IMGT database have been added
 * Improvement of UMI handling and possibility to exchange position of C and V-primers
-* Updated to new versions of Immcantation Framework, giving support to AIRR format
+* Updated to new versions of Immcantation Framework, providing support for the AIRR format
 
 ### `Added`
 
@@ -27,10 +27,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#87](https://github.com/nf-core/bcellmagic/pull/87): Added tests for TCR data
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Added param `--protocol`.
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Added support for C-primer in any R1 or R2 with param `--cprimer_position`.
-* [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0 and NXF 21.04.0.
+* [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0 and NXF 21.04.1.
 * [#103](https://github.com/nf-core/bcellmagic/pull/103): Added full size tests (pcr_umi).
-* Added parameter `--skip_lineages`.
-* [#112](https://github.com/nf-core/bcellmagic/pull/112): Template update to nf-core tools v1.14
+* [#114](https://github.com/nf-core/bcellmagic/pull/114): Added parameter `--skip_lineages`.
+* [#112](https://github.com/nf-core/bcellmagic/pull/112): Template update to nf-core tools v1.14.
+* [#114](https://github.com/nf-core/bcellmagic/pull/114): Added Bcellmagic html report.
+* [#114](https://github.com/nf-core/bcellmagic/pull/114): Improved documentation on amplicon protocol support.
+* [#115](https://github.com/nf-core/bcellmagic/pull/115): Improved output file structure and documentation.
 
 ### `Fixed`
 
@@ -39,7 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#75](https://github.com/nf-core/bcellmagic/pull/75): Assemble process shorten filename to avoid error due to too long filename
 * [#87](https://github.com/nf-core/bcellmagic/pull/87): Order sequence logs by sample ID.
 * [#104](https://github.com/nf-core/bcellmagic/pull/104): Fix bug in pairseq barcode copy before consensus.
-* Analysis not restricted to Ig heavy chains.
+* [#114](https://github.com/nf-core/bcellmagic/pull/114): Analysis not restricted to Ig heavy chains.
 
 ### `Dependencies`
 
