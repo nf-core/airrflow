@@ -1,5 +1,6 @@
 #!/bin/bash
-DIR="lineage_reconstruction/Graphml_trees"   # input files
+
+DIR="Graphml_trees"   # input files
 
 IDX=0
 for FILE in ${DIR}/*.txt       # get the file names you want to work on

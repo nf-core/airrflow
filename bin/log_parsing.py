@@ -216,36 +216,26 @@ for process in processes:
 
     elif process in ["igblast"]:
         s_code = []
-        pass_blast1 = []
-        fail_blast1 = []
-        pass_blast2 = []
-        fail_blast2 = []
+        pass_blast = []
+        fail_blast = []
         for logfile in log_files:
-            c = 0
             with open(logfile, "r") as f:
                 # print(f.read())
                 for line in f:
                     if "PASS>" in line:
-                        if c < 1:
                             s_code.append(logfile.split("/")[1].split("_")[0])
-                            pass_blast1.append(line.strip().lstrip("PASS> "))
-                        else:
-                            pass_blast2.append(line.strip().lstrip("PASS> "))
+                            pass_blast.append(line.strip().lstrip("PASS> "))
                     elif "FAIL>" in line:
-                        if c < 1:
-                            fail_blast1.append(line.strip().lstrip("FAIL> "))
-                            c += 1
-                        else:
-                            fail_blast2.append(line.strip().lstrip("FAIL> "))
+                            fail_blast.append(line.strip().lstrip("FAIL> "))
 
-        pass_fail = [list(map(int, pass_blast1)), list(map(int, fail_blast1))]
+        pass_fail = [list(map(int, pass_blast)), list(map(int, fail_blast))]
         repres_2 = [sum(x) for x in zip(*pass_fail)]
 
         df_process = pd.DataFrame.from_dict({
             "Sample": s_code,
             "repres_2": repres_2,
-            "pass_igblast": pass_blast2,
-            "fail_igblast": fail_blast2,
+            "pass_igblast": pass_blast,
+            "fail_igblast": fail_blast,
         })
 
         df_process_list.append(df_process)
@@ -357,6 +347,7 @@ df_process_list[7].to_csv(path_or_buf="Table_all_details_deduplicate.tsv", sep='
 df_process_list[8].to_csv(path_or_buf="Table_all_details_igblast.tsv", sep='\t', header=True, index=False)
 
 final_table = dict(zip(colnames, values))
+print(final_table)
 df_final_table = pd.DataFrame.from_dict(final_table)
 df_final_table = df_final_table.sort_values(['Sample'], ascending=[1])
 
