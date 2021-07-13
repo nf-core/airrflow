@@ -61,20 +61,20 @@ def check_samplesheet(file_in):
             sys.exit(1)
 
         ## Check sample entries
-        for line in fin:
+        for line_num,line in enumerate(fin):
             lspl = [x.strip().strip('"') for x in line.strip().split("\t")]
 
             ## Check valid number of columns per row
             if len(lspl) < len(header):
                 print_error(
-                    "Invalid number of columns (minimum = {})!".format(len(HEADER)),
-                    "Line",
+                    "Invalid number of columns in this row (should be {})!".format(len(header)),
+                    "Line {}".format(line_num),
                     line,
                 )
             num_cols = len([x for x in lspl if x])
             if num_cols < MIN_COLS:
                 print_error(
-                    "Invalid number of populated columns (minimum = {})!".format(MIN_COLS),
+                    "Invalid number of populated columns (should be {})!".format(MIN_COLS),
                     "Line",
                     line,
                 )

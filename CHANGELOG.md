@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.0dev] - date
+## [2.0.0] - 2021-07-13 "Lumos"
 
 ### :warning: Major enhancements
 
@@ -55,7 +55,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | muscle       | v3.8.1551   |             |
 | vsearch      | v2.11.1     |             |
 | fastqc       | 0.11.8      | 0.11.9      |
-| multiqc      | 1.9         | 1.9         |
+| multiqc      | 1.9         | 1.11         |
 | matplotlib   | 3.0.3       |             |
 | cd-hit       | 4.8.1       |             |
 | blast        | 2.7.1       |             |
