@@ -21,6 +21,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     input:
     path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
+    path(repertoire_report)
 
     output:
     path("*.version.txt"), emit: version
@@ -30,7 +31,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     script:
     def software = getSoftwareName(task.process)
     """
-    execute_report.R "$projectDir/assets/repertoire_comparison.Rmd"
+    execute_report.R repertoire_comparison.Rmd
     Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='${software}.version.txt')"
     Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='shazam.version.txt')"
     echo \$(R --version 2>&1) | awk -F' '  '{print \$3}' > R.version.txt
