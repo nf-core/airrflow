@@ -79,7 +79,7 @@ ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.y
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 // Rmarkdown report file
-ch_rmarkdown_report      = channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
+ch_rmarkdown_report      = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
                                     "$projectDir/assets/nf-core-bcellmagic_logo.png"], 
