@@ -4,14 +4,14 @@
 
 params.options = [:]
 
-include { MERGE_TABLES } from '../modules/local/merge_tables' addParams( options: params.options )
+include { MERGE_TABLES } from '../../modules/local/merge_tables' addParams( options: params.options )
 
 workflow MERGE_TABLES_WF {
     take:
     tables
-    
+
     main:
-    tables        
+    tables
         .dump()
         .map{it -> [ it[0].source, it[0].id, it[1] ]}
         .groupTuple()
@@ -19,14 +19,14 @@ workflow MERGE_TABLES_WF {
         .map{ get_meta_tabs(it) }
         .dump()
         .set{ch_merge_tables}
-    
+
     MERGE_TABLES( ch_merge_tables )
 
     emit:
     MERGE_TABLES.out.tab // channel: [ val(meta), tab ]
 }
 
-// Function to map 
+// Function to map
 def get_meta_tabs(arr) {
     def meta = [:]
     meta.id           = arr[0]
@@ -36,5 +36,5 @@ def get_meta_tabs(arr) {
 
         array = [ meta, arr[2].flatten() ]
 
-    return array    
+    return array
 }
