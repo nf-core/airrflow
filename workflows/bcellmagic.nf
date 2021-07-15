@@ -81,52 +81,52 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 def modules = params.modules.clone()
 
 // Local: Modules
-include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-include { MERGE_UMI } from './modules/local/merge_UMI'                          addParams( options: [:] )
-include { RENAME_FASTQ } from './modules/local/rename_fastq'                    addParams( options: [:] )
-include { GUNZIP } from './modules/local/gunzip'                                addParams( options: [:] )
+include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
+include { MERGE_UMI } from '../modules/local/merge_UMI'                          addParams( options: [:] )
+include { RENAME_FASTQ } from '../modules/local/rename_fastq'                    addParams( options: [:] )
+include { GUNZIP } from '../modules/local/gunzip'                                addParams( options: [:] )
 
 //PRESTO
-include { PRESTO_FILTERSEQ } from './modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
-include { PRESTO_MASKPRIMERS } from './modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
-include { PRESTO_PAIRSEQ } from './modules/local/presto/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
-include { PRESTO_CLUSTERSETS } from './modules/local/presto/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
-include { PRESTO_PARSE_CLUSTER } from './modules/local/presto/presto_parse_cluster'    addParams( options: modules['presto_parse_clusters'] )
-include { PRESTO_BUILDCONSENSUS } from './modules/local/presto/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
-include { PRESTO_POSTCONSENSUS_PAIRSEQ } from './modules/local/presto/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
-include { PRESTO_ASSEMBLEPAIRS } from './modules/local/presto/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
-include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from './modules/local/presto/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
-include { PRESTO_PARSEHEADERS_PRIMERS } from './modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers'] )
-include { PRESTO_PARSEHEADERS_METADATA } from './modules/local/presto/presto_parseheaders_metadata'    addParams( options: modules['presto_parseheaders_metadata'] )
-include { PRESTO_COLLAPSESEQ } from './modules/local/presto/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
-include { PRESTO_SPLITSEQ } from './modules/local/presto/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
+include { PRESTO_FILTERSEQ } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
+include { PRESTO_MASKPRIMERS } from '../modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
+include { PRESTO_PAIRSEQ } from '../modules/local/presto/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
+include { PRESTO_CLUSTERSETS } from '../modules/local/presto/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
+include { PRESTO_PARSE_CLUSTER } from '../modules/local/presto/presto_parse_cluster'    addParams( options: modules['presto_parse_clusters'] )
+include { PRESTO_BUILDCONSENSUS } from '../modules/local/presto/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
+include { PRESTO_POSTCONSENSUS_PAIRSEQ } from '../modules/local/presto/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
+include { PRESTO_ASSEMBLEPAIRS } from '../modules/local/presto/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
+include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from '../modules/local/presto/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
+include { PRESTO_PARSEHEADERS_PRIMERS } from '../modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers'] )
+include { PRESTO_PARSEHEADERS_METADATA } from '../modules/local/presto/presto_parseheaders_metadata'    addParams( options: modules['presto_parseheaders_metadata'] )
+include { PRESTO_COLLAPSESEQ } from '../modules/local/presto/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
+include { PRESTO_SPLITSEQ } from '../modules/local/presto/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
 
 //CHANGEO
-include { FETCH_DATABASES } from './modules/local/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
-include { CHANGEO_MAKEDB } from './modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
-include { CHANGEO_PARSEDB_SPLIT } from './modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT } from './modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
-include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
+include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
+include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
+include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
+include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
+include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
+include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
 
 //SHAZAM
-include { SHAZAM_TIGGER_THRESHOLD } from './modules/local/shazam/shazam_tigger_threshold'  addParams( options: modules['shazam_tigger_threshold'] )
+include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'  addParams( options: modules['shazam_tigger_threshold'] )
 
 //CHANGEO
-include { CHANGEO_DEFINECLONES } from './modules/local/changeo/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
-include { CHANGEO_CREATEGERMLINES } from './modules/local/changeo/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
-include { CHANGEO_BUILDTREES } from './modules/local/changeo/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
+include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
+include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
+include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
 
 //ALAKAZAM
-include { ALAKAZAM_LINEAGE } from './modules/local/alakazam/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
-include { ALAKAZAM_SHAZAM_REPERTOIRES } from './modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
+include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
+include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
 
 //LOG PARSING
-include { PARSE_LOGS } from './modules/local/parse_logs'                        addParams( options: modules['parse_logs'] )
+include { PARSE_LOGS } from '../modules/local/parse_logs'                        addParams( options: modules['parse_logs'] )
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from './subworkflows/local/input_check'       addParams( options: [:] )
-include { MERGE_TABLES_WF       } from './subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
+include { INPUT_CHECK           } from '../subworkflows/local/input_check'       addParams( options: [:] )
+include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
 
 /*
 ========================================================================================
@@ -140,8 +140,8 @@ multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                } from './modules/nf-core/modules/fastqc/main'        addParams( options: modules['fastqc'] )
-include { MULTIQC               } from './modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
+include { FASTQC                } from '../modules/nf-core/modules/fastqc/main'        addParams( options: modules['fastqc'] )
+include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
 
 /*
 ========================================================================================
