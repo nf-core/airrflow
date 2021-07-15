@@ -264,6 +264,10 @@
                 "skip_lineage": {
                     "type": "boolean",
                     "description": "Skip clonal lineage analysis and lineage tree plotting."
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip multiqc report generation."
                 }
             },
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
