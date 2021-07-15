@@ -3,9 +3,6 @@ include { saveFiles } from './functions'
 
 params.options = [:]
 
-/*
- * Reformat design file and check validity
- */
 process SAMPLESHEET_CHECK {
     tag "$samplesheet"
     publishDir "${params.outdir}",
@@ -17,13 +14,12 @@ process SAMPLESHEET_CHECK {
 
     input:
     path samplesheet
-    
+
     output:
     path '*.tsv'
 
 
     script:  // This script is bundled with the pipeline, in nf-core/dsltwotest/bin/
-    // TODO: update to check samplesheet
     """
     check_samplesheet.py $samplesheet
     cp $samplesheet samplesheet.valid.tsv

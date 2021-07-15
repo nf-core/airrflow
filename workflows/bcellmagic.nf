@@ -125,8 +125,8 @@ include { ALAKAZAM_SHAZAM_REPERTOIRES } from './modules/local/alakazam/alakazam_
 include { PARSE_LOGS } from './modules/local/parse_logs'                        addParams( options: modules['parse_logs'] )
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from './subworkflows/input_check'       addParams( options: [:] )
-include { MERGE_TABLES_WF       } from './subworkflows/merge_tables_wf'      addParams( options: modules['merge_tables'] )
+include { INPUT_CHECK           } from './subworkflows/local/input_check'       addParams( options: [:] )
+include { MERGE_TABLES_WF       } from './subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
 
 /*
 ========================================================================================
