@@ -341,6 +341,7 @@ Reconstructing clonal linage with the [Alakazam R package](https://alakazam.read
 </details>
 
 Calculation of several repertoire characteristics (diversity, abundance, V gene usage) for comparison between subjects, time points and cell populations. An Rmarkdown report is generated with the [Alakazam R package](https://alakazam.readthedocs.io/en/stable/).
+
 ## Log parsing
 
 <details markdown="1">
@@ -356,7 +357,6 @@ Parsing the logs from the previous processes. Summary of the number of sequences
 ## Databases
 
 Copy of the downloaded IMGT database by the process `fetch_databases`, used for the gene assignment step.
-
 
 ## MultiQC
 
