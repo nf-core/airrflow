@@ -506,9 +506,6 @@
             "$ref": "#/definitions/downstream_options"
         },
         {
-            "$ref": "#/definitions/software_packaging_options"
-        },
-        {
             "$ref": "#/definitions/reference_genome_options"
         },
         {
