@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2021-07-13 "Lumos"
+## [2.0.0] - 2021-07-16 "Lumos"
 
 ### :warning: Major enhancements
 
@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#87](https://github.com/nf-core/bcellmagic/pull/87): Order sequence logs by sample ID.
 * [#104](https://github.com/nf-core/bcellmagic/pull/104): Fix bug in pairseq barcode copy before consensus.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Analysis not restricted to Ig heavy chains.
+* [#123](https://github.com/nf-core/bcellmagic/pull/123): Fix report Rmarkdown reading for running on AWS.
 
 ### `Dependencies`
 
