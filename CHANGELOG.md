@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Added Bcellmagic html report.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Improved documentation on amplicon protocol support.
 * [#115](https://github.com/nf-core/bcellmagic/pull/115): Improved output file structure and documentation.
+* [#124](https://github.com/nf-core/bcellmagic/pull/124): Template updte to nf-core tools v2.0.1
 
 ### `Fixed`
 

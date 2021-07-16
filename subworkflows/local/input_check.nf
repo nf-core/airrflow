@@ -4,12 +4,12 @@
 
 params.options = [:]
 
-include { SAMPLESHEET_CHECK } from '../modules/local/samplesheet_check' addParams( options: params.options )
+include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check' addParams( options: params.options )
 
 workflow INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.tsv
-    
+
     main:
     SAMPLESHEET_CHECK ( samplesheet )
         .splitCsv ( header:true, sep:'\t' )
@@ -20,7 +20,7 @@ workflow INPUT_CHECK {
     reads // channel: [ val(meta), [ reads ] ]
 }
 
-// Function to map 
+// Function to map
 def get_samplesheet_paths(LinkedHashMap col) {
     def meta = [:]
     meta.id           = col.ID
@@ -44,5 +44,5 @@ def get_samplesheet_paths(LinkedHashMap col) {
         }
         array = [ meta, [ file(col.R1), file(col.R2) ] ]
     }
-    return array    
+    return array
 }

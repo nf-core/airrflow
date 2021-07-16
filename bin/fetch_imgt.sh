@@ -45,7 +45,7 @@ SPECIES_QUERY=("human:Homo+sapiens"
                 "mouse:Mus")
 # Associative array (for BASH v3) with species name replacements
 SPECIES_REPLACE=('human:s/Homo sapiens/Homo_sapiens/g'
-                'mouse:s/Mus musculus/Mus_musculus/g')   
+                'mouse:s/Mus musculus/Mus_musculus/g')
 
 # Counter for loop iteration, used for getting the right values of SPECIES_REPLACE
 COUNT=0
@@ -55,10 +55,10 @@ do
     KEY=${SPECIES%%:*}
     VALUE=${SPECIES#*:}
     REPLACE_VALUE=${SPECIES_REPLACE[$COUNT]#*:}
-	echo "Downloading ${KEY} repertoires into ${OUTDIR}"
+    echo "Downloading ${KEY} repertoires into ${OUTDIR}"
 
-	# Download VDJ
-	echo "|- VDJ regions"
+    # Download VDJ
+    echo "|- VDJ regions"
     FILE_PATH="${OUTDIR}/${KEY}/vdj"
     FILE_PATH_AA="${OUTDIR}/${KEY}/vdj_aa"
     mkdir -p $FILE_PATH $FILE_PATH_AA
@@ -119,7 +119,7 @@ do
         rm $TMP_FILE
     done
 
-	# Download leaders
+    # Download leaders
     echo "|- Spliced leader regions"
     FILE_PATH="${OUTDIR}/${KEY}/leader"
     mkdir -p $FILE_PATH
@@ -152,7 +152,7 @@ do
         rm $TMP_FILE
     done
 
-	# Download constant regions
+    # Download constant regions
     echo "|- Spliced constant regions"
     FILE_PATH="${OUTDIR}/${KEY}/constant/"
     mkdir -p $FILE_PATH

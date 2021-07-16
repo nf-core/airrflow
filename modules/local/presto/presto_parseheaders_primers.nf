@@ -23,7 +23,7 @@ process PRESTO_PARSEHEADERS_PRIMERS {
 
     output:
     tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
-    
+
     script:
     if (params.cprimer_position == "R1") {
         """
