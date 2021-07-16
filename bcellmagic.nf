@@ -54,9 +54,11 @@ if (params.protocol == "pcr_umi"){
 }
 
 // Validate UMI position
-if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
-if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
-if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
+if (params.umi) {
+    if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
+    if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
+    if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
+}
 
 // If paths to DBS are provided 
 if( params.igblast_base ){
@@ -161,12 +163,16 @@ workflow BCELLMAGIC {
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
     
     // Merge UMI from index file to R1 if provided
-    if (params.index_file) {
-        MERGE_UMI ( ch_merge_umi_gunzip )
-        .set{ ch_gunzip }
+    if (params.umi) {
+        if (params.index_file) {
+            MERGE_UMI ( ch_merge_umi_gunzip )
+            .set{ ch_gunzip }
+        } else {
+            RENAME_FASTQ ( ch_merge_umi_gunzip )
+            .set{ ch_gunzip }
+        }
     } else {
-        RENAME_FASTQ ( ch_merge_umi_gunzip )
-        .set{ ch_gunzip }
+        ch_gunzip = ch_merge_umi_gunzip
     }
 
     // gunzip fastq.gz to fastq

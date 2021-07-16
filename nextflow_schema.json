@@ -147,6 +147,12 @@
                     "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
                     "fa_icon": "fas fa-barcode"
                 },
+                "umi": {
+                    "type": "boolean",
+                    "description": "Indicate if UMI indices are present in this experiment.",
+                    "help_text": "Set to `true` if UMI barcodes exist. If there are no UMI barcodes set to false.",
+                    "fa_icon": "fas fa-barcode"
+                },
                 "umi_position": {
                     "type": "string",
                     "default": "R1",
@@ -172,7 +178,6 @@
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
             "required": [
-                "umi_length"
             ],
             "fa_icon": "fas fa-barcode"
         },
