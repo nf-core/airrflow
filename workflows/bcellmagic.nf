@@ -68,7 +68,7 @@ if( params.imgtdb_base ){
 ========================================================================================
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
@@ -76,6 +76,13 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ========================================================================================
 */
+
+// Rmarkdown report file
+ch_rmarkdown_report      = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
+                                    "$projectDir/assets/references.bibtex",
+                                    "$projectDir/assets/nf-core_style.css",
+                                    "$projectDir/assets/nf-core-bcellmagic_logo.png"],
+                                    checkIfExists: true).dump(tag: 'report files')
 
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
@@ -351,7 +358,8 @@ workflow BCELLMAGIC {
     if (!params.skip_report){
         ALAKAZAM_SHAZAM_REPERTOIRES(
             ch_all_tabs_repertoire,
-            PARSE_LOGS.out.logs.collect()
+            PARSE_LOGS.out.logs.collect(),
+            ch_rmarkdown_report.collect()
         )
     }
 
@@ -368,7 +376,7 @@ workflow BCELLMAGIC {
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
-        ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
