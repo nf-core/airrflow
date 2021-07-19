@@ -28,8 +28,14 @@ process PRESTO_COLLAPSESEQ {
     
 
     script:
+    script_options = ''
+    if (params.umi) {
+        options = '--uf PRCONS --cf CONSCOUNT --act sum'
+    }
     """
-    CollapseSeq.py -s $reads -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    CollapseSeq.py -s $reads -n 20 --inner --outname ${meta.id} \
+        ${script_options} \
+        --log ${meta.id}.log > "${meta.id}_command_log.txt"
     ParseLog.py -l "${meta.id}.log" -f HEADER DUPCOUNT
     """
 }

@@ -171,75 +171,106 @@ workflow BCELLMAGIC {
             RENAME_FASTQ ( ch_merge_umi_gunzip )
             .set{ ch_gunzip }
         }
+
+        // gunzip fastq.gz to fastq
+        GUNZIP ( ch_gunzip )
+        ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
+
+        // Filter sequences by quality score
+        PRESTO_FILTERSEQ ( GUNZIP.out.reads )
+        ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
+
+        // Mask primers
+        PRESTO_MASKPRIMERS (
+            PRESTO_FILTERSEQ.out.reads,
+            ch_cprimers_fasta.collect(),
+            ch_vprimers_fasta.collect()
+        )
+
+        // Pre-consensus pair
+        PRESTO_PAIRSEQ (
+            PRESTO_MASKPRIMERS.out.reads
+        )
+
+        // Cluster sequences by similarity
+        PRESTO_CLUSTERSETS (
+            PRESTO_PAIRSEQ.out.reads
+        )
+        ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
+
+        // Annotate cluster into barcode field
+        PRESTO_PARSE_CLUSTER (
+            PRESTO_CLUSTERSETS.out.reads
+        )
+
+        // Build consensus of sequences with same UMI barcode
+        PRESTO_BUILDCONSENSUS (
+            PRESTO_PARSE_CLUSTER.out.reads
+        )
+
+        // Post-consensus pair
+        PRESTO_POSTCONSENSUS_PAIRSEQ (
+            PRESTO_BUILDCONSENSUS.out.reads
+        )
+
+        // Assemble read pairs
+        PRESTO_ASSEMBLEPAIRS (
+            PRESTO_POSTCONSENSUS_PAIRSEQ.out.reads
+        )
+
+        // Combine UMI duplicate count
+        PRESTO_PARSEHEADERS_COLLAPSE (
+            PRESTO_ASSEMBLEPAIRS.out.reads
+        )
+
+        // Annotate primers in C_PRIMER and V_PRIMER field
+        PRESTO_PARSEHEADERS_PRIMERS (
+            PRESTO_PARSEHEADERS_COLLAPSE.out.reads
+        )
+
+        // Annotate metadata on primer headers
+        PRESTO_PARSEHEADERS_METADATA (
+            PRESTO_PARSEHEADERS_PRIMERS.out.reads
+        )
+
+        // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
+        PRESTO_COLLAPSESEQ (
+            PRESTO_PARSEHEADERS_METADATA.out.reads
+        )
+
     } else {
+
+        // No UMIs available
+
         ch_gunzip = ch_merge_umi_gunzip
+
+        // gunzip fastq.gz to fastq
+        GUNZIP ( ch_gunzip )
+        ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
+
+        // Assemble read pairs
+        PRESTO_ASSEMBLEPAIRS (
+            GUNZIP.out.reads
+        )
+
+        // Filter sequences by quality score
+        PRESTO_FILTERSEQ (
+            PRESTO_ASSEMBLEPAIRS.out.reads
+        )
+        ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
+
+        // Mask primers
+        PRESTO_MASKPRIMERS (
+            PRESTO_FILTERSEQ.out.reads,
+            ch_cprimers_fasta.collect(),
+            ch_vprimers_fasta.collect()
+        )
+
+        // Remove duplicate sequences
+        PRESTO_COLLAPSESEQ (
+            PRESTO_MASKPRIMERS.out.reads
+        )
     }
-
-    // gunzip fastq.gz to fastq
-    GUNZIP ( ch_gunzip )
-    ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
-
-    // Filter sequences by quality score
-    PRESTO_FILTERSEQ ( GUNZIP.out.reads )
-    ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
-
-    // Mask primers
-    PRESTO_MASKPRIMERS ( 
-        PRESTO_FILTERSEQ.out.reads,
-        ch_cprimers_fasta.collect(),
-        ch_vprimers_fasta.collect()
-    )
-
-    // Pre-consensus pair
-    PRESTO_PAIRSEQ (
-        PRESTO_MASKPRIMERS.out.reads
-    )
-
-    // Cluster sequences by similarity
-    PRESTO_CLUSTERSETS (
-        PRESTO_PAIRSEQ.out.reads
-    )
-    ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
-
-    // Annotate cluster into barcode field
-    PRESTO_PARSE_CLUSTER (
-        PRESTO_CLUSTERSETS.out.reads
-    )
-
-    // Build consensus of sequences with same UMI barcode
-    PRESTO_BUILDCONSENSUS (
-        PRESTO_PARSE_CLUSTER.out.reads
-    )
-
-    // Post-consensus pair 
-    PRESTO_POSTCONSENSUS_PAIRSEQ (
-        PRESTO_BUILDCONSENSUS.out.reads
-    )
-
-    // Assemble read pairs
-    PRESTO_ASSEMBLEPAIRS (
-        PRESTO_POSTCONSENSUS_PAIRSEQ.out.reads
-    )
-
-    // Combine UMI duplicate count
-    PRESTO_PARSEHEADERS_COLLAPSE (
-        PRESTO_ASSEMBLEPAIRS.out.reads
-    )
-
-    // Annotate primers in C_PRIMER and V_PRIMER field
-    PRESTO_PARSEHEADERS_PRIMERS (
-        PRESTO_PARSEHEADERS_COLLAPSE.out.reads
-    )
-
-    // Annotate metadata on primer headers
-    PRESTO_PARSEHEADERS_METADATA (
-        PRESTO_PARSEHEADERS_PRIMERS.out.reads
-    )
-
-    // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
-    PRESTO_COLLAPSESEQ (
-        PRESTO_PARSEHEADERS_METADATA.out.reads
-    )
 
     // Filter out sequences with less than 2 representative duplicates with different UMIs
     PRESTO_SPLITSEQ (
@@ -327,22 +358,42 @@ workflow BCELLMAGIC {
                                                     .collect()
                                                     .dump(tag:'repertoire_all')
 
-        // Process logs parsing: getting sequence numbers
-    PARSE_LOGS(
-        PRESTO_FILTERSEQ.out.logs.collect(),
-        PRESTO_MASKPRIMERS.out.logs.collect(),
-        PRESTO_PAIRSEQ.out.logs.collect(),
-        PRESTO_CLUSTERSETS.out.logs.collect(),
-        PRESTO_BUILDCONSENSUS.out.logs.collect(),
-        PRESTO_POSTCONSENSUS_PAIRSEQ.out.logs.collect(),
-        PRESTO_ASSEMBLEPAIRS.out.logs.collect(),
-        PRESTO_COLLAPSESEQ.out.logs.collect(),
-        PRESTO_SPLITSEQ.out.logs.collect(),
-        CHANGEO_MAKEDB.out.logs.collect(),
-        CHANGEO_DEFINECLONES.out.logs.collect(),
-        CHANGEO_CREATEGERMLINES.out.logs.collect(),
-        ch_input
-    )
+    // Process logs parsing: getting sequence numbers
+    if (params.umi) {
+        PARSE_LOGS(
+            PRESTO_FILTERSEQ.out.logs.collect(),
+            PRESTO_MASKPRIMERS.out.logs.collect(),
+            PRESTO_PAIRSEQ.out.logs.collect(),
+            PRESTO_CLUSTERSETS.out.logs.collect(),
+            PRESTO_BUILDCONSENSUS.out.logs.collect(),
+            PRESTO_POSTCONSENSUS_PAIRSEQ.out.logs.collect(),
+            PRESTO_ASSEMBLEPAIRS.out.logs.collect(),
+            PRESTO_COLLAPSESEQ.out.logs.collect(),
+            PRESTO_SPLITSEQ.out.logs.collect(),
+            CHANGEO_MAKEDB.out.logs.collect(),
+            CHANGEO_DEFINECLONES.out.logs.collect(),
+            CHANGEO_CREATEGERMLINES.out.logs.collect(),
+            ch_input
+        )
+    } else {
+        // Empty lists as a workaround for optional input
+        // see: https://github.com/nextflow-io/nextflow/issues/1694
+        PARSE_LOGS(
+            PRESTO_FILTERSEQ.out.logs.collect(),
+            PRESTO_MASKPRIMERS.out.logs.collect(),
+            [],
+            [],
+            [],
+            [],
+            PRESTO_ASSEMBLEPAIRS.out.logs.collect(),
+            PRESTO_COLLAPSESEQ.out.logs.collect(),
+            PRESTO_SPLITSEQ.out.logs.collect(),
+            CHANGEO_MAKEDB.out.logs.collect(),
+            CHANGEO_DEFINECLONES.out.logs.collect(),
+            [],
+            ch_input
+        )
+    }
 
     // Alakazam shazam repertoire comparison report
     if (!params.skip_report){
