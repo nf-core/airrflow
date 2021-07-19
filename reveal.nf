@@ -96,7 +96,7 @@ workflow REVEAL {
 
     ch_software_versions = Channel.empty()
     
-    if (params.custom_container) {
+    if (params.immcantation_container ) {
         IMMCANTATION()
         ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
     }
@@ -184,7 +184,7 @@ workflow REVEAL {
      .map{ it -> [it[1], it[2].toList()] }
      .dump()
 
-    COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)    
+    //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)    
     
 
     // Software versions
