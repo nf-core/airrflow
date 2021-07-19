@@ -4,6 +4,7 @@ library(stringi)
 library(alakazam)
 library(tigger)
 library(shazam)
+library(dplyr)
 
 # Set random seed for reproducibility
 set.seed(12345)
@@ -12,43 +13,94 @@ args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)<2) {
     stop("Two arguments must be supplied (input file tab and input file fasta).\n", call.=FALSE)
-  } 
+}
 
+# Get input from args
 inputtable = args[1]
+loci = args[2]
+threshold_method = args[3]
+fastas = args[4:length(args)]
 
-IGHV_fasta = args[2]
+output_folder = dirname(inputtable)
 
-output_folder = dirname(args[1])
-  
-db <- readChangeoDb(inputtable)
-ighv <- readIgFasta(IGHV_fasta, strip_down_name = TRUE, force_caps = TRUE)
+db <- read.table(inputtable, header=TRUE, sep="\t")
 
-gt <- inferGenotype(db, germline_db = ighv, find_unmutated = FALSE)
+if (loci == "ig"){
 
-gtseq <- genotypeFasta(gt, ighv)
-writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+    db_fasta <- readIgFasta(fastas, strip_down_name = TRUE)
 
-# Plot genotype
-ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+    gt <- inferGenotype(db, v_call = "v_call", find_unmutated = F)
 
-# Modify allele calls and output TSV file
-db_reassigned <- reassignAlleles(db, gtseq)
-writeChangeoDb(db_reassigned, paste(output_folder,"igh_genotyped.tab",sep="/"))
+    # Filter out Duplicate sequences as not supported by Tigger 1.0.0
+    gt_filt <- filter(gt, !grepl("D", gene))
 
-################
-#### shazam ####
-################
+    gtseq <- genotypeFasta(gt_filt, db_fasta)
+    writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
 
-dist_ham <- distToNearest(db_reassigned, vCallColumn="V_CALL_GENOTYPED", model="ham", 
-                          normalize="len", nproc=1, first = FALSE)
+    # Plot genotype
+    ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
 
-# Find threshold using density method
-output <- findThreshold(dist_ham$DIST_NEAREST, method="density")
-threshold <- output@threshold
+    # Modify allele calls and output TSV file
+    db_reassigned <- reassignAlleles(db, gtseq)
 
+    # Find the Hamming distance
+    dist_ham <- distToNearest(db_reassigned,
+                                vCallColumn="v_call_genotyped",
+                                jCallColumn="j_call",
+                                sequenceColumn="junction",
+                                model="ham",
+                                normalize="len",
+                                nproc=1,
+                                first = FALSE)
+    writeChangeoDb(db_reassigned, paste(output_folder,"v_genotyped.tab",sep="/"))
+
+} else if (loci == "tr") {
+
+    db_fasta_TRAV = readIgFasta(fastas[1], strip_down_name = TRUE, force_caps = TRUE)
+    db_fasta_TRBV = readIgFasta(fastas[2], strip_down_name = TRUE, force_caps = TRUE)
+    db_fasta_TRDV = readIgFasta(fastas[3], strip_down_name = TRUE, force_caps = TRUE)
+    db_fasta_TRGV = readIgFasta(fastas[4], strip_down_name = TRUE, force_caps = TRUE)
+
+    gt <- inferGenotype(db, v_call = "v_call", find_unmutated = FALSE)
+
+    gtseq <- genotypeFasta(gt, c(db_fasta_TRAV,db_fasta_TRBV,db_fasta_TRDV))
+    writeFasta(gtseq, paste(output_folder,"TRxV_genotype.fasta",sep="/"))
+
+    # Plot genotype
+    ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+
+    # Modify allele calls and output TSV file
+    db_reassigned <- reassignAlleles(db, gtseq)
+
+    # Find the Hamming distance
+    dist_ham <- distToNearest(db_reassigned,
+                                vCallColumn="v_call",
+                                jCallColumn="j_call",
+                                sequenceColumn="junction",
+                                model="ham",
+                                normalize="len",
+                                nproc=1,
+                                first = FALSE)
+
+    writeChangeoDb(db, paste(output_folder,"v_tr_genotyped.tab",sep="/"))
+
+} else {
+    stop("Loci specified is not available, please choose from: ig, tr.")
+}
+
+# Find threshold using chosen method
+
+if (threshold_method == "density") {
+    output <- findThreshold(dist_ham$dist_nearest, method="density")
+    threshold <- output@threshold
+} else if (threshold_method == "gmm") {
+    output <- findThreshold(dist_ham$dist_nearest, method="gmm")
+    threshold <- output@threshold
+} else {
+    stop("Threshold method is not available, please choose from: density, gmm")
+}
 
 # Plot distance histogram, density estimate and optimum threshold
 ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(output), device="pdf")
 
-print(threshold)
 write.table(threshold, file= paste(output_folder,"threshold.txt",sep="/"), quote=FALSE, sep="", row.names = FALSE, col.names = FALSE)

@@ -3,9 +3,11 @@ work/
 data/
 results/
 .DS_Store
-tests/test_data
-runBcellmagic.sh
-.idea/
+testing/
+testing*
 *.pyc
 node_modules/
 package-lock.json
+.idea/
+nf-params.json
+.vscode/
