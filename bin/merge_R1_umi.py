@@ -5,10 +5,19 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-R1", "--R1_filename", type=str, help="Path of R1 fastq.gz file.")
-parser.add_argument("-I1", "--I1_filename", type=str, help="Path of I1 fastq.gz file containing the UMI barcode.")
-parser.add_argument("-s", "--umi_start", type=int, help="UMI start position in index file.")
+parser.add_argument(
+    "-I1",
+    "--I1_filename",
+    type=str,
+    help="Path of I1 fastq.gz file containing the UMI barcode.",
+)
+parser.add_argument(
+    "-s", "--umi_start", type=int, help="UMI start position in index file."
+)
 parser.add_argument("-l", "--umi_length", type=int, help="UMI length.")
-parser.add_argument("-o", "--outname", type=str, default="UMI_R1.fastq.gz", help="Name of output file.")
+parser.add_argument(
+    "-o", "--outname", type=str, default="UMI_R1.fastq.gz", help="Name of output file."
+)
 
 args = parser.parse_args()
 
@@ -24,7 +33,7 @@ with gzopen(args.outname, "wt") as out_handle:
         i += 1
         record_R1 = next(records_R1)
         record_I1 = record_I1[umi_start:umi_end]
-        if (record_R1.id == record_I1.id):
+        if record_R1.id == record_I1.id:
             record_UMI_R1 = record_I1 + record_R1
             SeqIO.write(record_UMI_R1, out_handle, "fastq")
             if i % 100000 == 0:

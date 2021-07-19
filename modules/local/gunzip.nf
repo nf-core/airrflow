@@ -2,10 +2,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options = initOptions(params.options)
 
 process GUNZIP {
     tag "$meta.id"
+    label 'process_medium'
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

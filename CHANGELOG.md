@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2021-07-13 "Lumos"
+## [2.0.0] - 2021-07-19 "Lumos"
 
 ### :warning: Major enhancements
 
@@ -27,13 +27,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#87](https://github.com/nf-core/bcellmagic/pull/87): Added tests for TCR data
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Added param `--protocol`.
 * [#102](https://github.com/nf-core/bcellmagic/pull/102): Added support for C-primer in any R1 or R2 with param `--cprimer_position`.
-* [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0 and NXF 21.04.1.
+* [#102](https://github.com/nf-core/bcellmagic/pull/102): Bump versions to 2.0.
 * [#103](https://github.com/nf-core/bcellmagic/pull/103): Added full size tests (pcr_umi).
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Added parameter `--skip_lineages`.
 * [#112](https://github.com/nf-core/bcellmagic/pull/112): Template update to nf-core tools v1.14.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Added Bcellmagic html report.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Improved documentation on amplicon protocol support.
 * [#115](https://github.com/nf-core/bcellmagic/pull/115): Improved output file structure and documentation.
+* [#124](https://github.com/nf-core/bcellmagic/pull/124): Template updte to nf-core tools v2.0.1
 
 ### `Fixed`
 
@@ -43,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#87](https://github.com/nf-core/bcellmagic/pull/87): Order sequence logs by sample ID.
 * [#104](https://github.com/nf-core/bcellmagic/pull/104): Fix bug in pairseq barcode copy before consensus.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Analysis not restricted to Ig heavy chains.
+* [#123](https://github.com/nf-core/bcellmagic/pull/123): Fix report Rmarkdown reading for running on AWS.
 
 ### `Dependencies`
 

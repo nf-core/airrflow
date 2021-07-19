@@ -1,10 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options = initOptions(params.options)
 
 process FETCH_DATABASES {
     tag "IMGT IGBLAST"
+    label 'process_low'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -21,7 +22,7 @@ process FETCH_DATABASES {
     path("igblast_base"), emit: igblast
     path("imgtdb_base"), emit: imgt
     path "*.version.txt" , emit: version
-    
+
     script:
     """
     fetch_databases.sh

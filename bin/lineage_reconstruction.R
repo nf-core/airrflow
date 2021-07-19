@@ -4,7 +4,7 @@ library(alakazam)
 library(igraph)
 library(dplyr)
 
-theme_set(theme_bw(base_family = "ArialMT") + 
+theme_set(theme_bw(base_family = "ArialMT") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 
 args = commandArgs(trailingOnly=TRUE)
@@ -19,7 +19,7 @@ node_text = args[2]
 
 print(paste0("Node text: ", node_text))
 
-avail_text = c("c_primer", "treatment", "population", "source", 
+avail_text = c("c_primer", "treatment", "population", "source",
                 "extract_time", "sample", "sample_pop", "clone_id", "seq_id", "none")
 
 if (node_text %in% avail_text) {
@@ -63,15 +63,15 @@ save_graph <- function(df_pat, clone_num){
     sub_db_clone$population <- sapply(sub_db_clone$population, as.character)
     sub_db_clone$source <- sapply(sub_db_clone$source, as.character)
     sub_db_clone$extract_time <- sapply(sub_db_clone$extract_time, as.character)
-    
+
     # Make changeo clone
-    clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "treatment", "population", "source", 
-                                                            "extract_time", "sample", "sample_pop", "clone_id"), 
+    clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "treatment", "population", "source",
+                                                            "extract_time", "sample", "sample_pop", "clone_id"),
                                             num_fields = "duplicate_count")
-    
+
     # Build Phylip lineage
     graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
-    
+
     #Modify graph and plot attributes
     V(graph)$color <- "steelblue"
     V(graph)$color[V(graph)$name == "Germline"] <- "black"
@@ -97,7 +97,7 @@ save_graph <- function(df_pat, clone_num){
     } else if ( node_text == "none" ) {
         V(graph)$label <- ""
     }
-        
+
 
     # Remove large default margins
     par(mar=c(0, 0, 0, 0) + 0.1)
@@ -111,19 +111,19 @@ save_graph <- function(df_pat, clone_num){
     pdf(paste(patdir_lineage_trees,"/Clone_tree_", clone@data$source[1], "_clone_id_", clone_num, ".pdf", sep=""))
     plot(graph, layout=layout_as_tree, edge.arrow.mode=0, vertex.frame.color="black",
         vertex.label.color="black", vertex.size=(vsize/20 + 6))
-    legend("topleft", c("Germline", "Inferred", "Sample"), 
+    legend("topleft", c("Germline", "Inferred", "Sample"),
         fill=c("black", "white", "steelblue"), cex=0.75)
     dev.off()
-    
+
 }
 
 for (clone_num in clones$clone_id){
-    tryCatch(withCallingHandlers(save_graph(df_pat, clone_num), 
+    tryCatch(withCallingHandlers(save_graph(df_pat, clone_num),
                     error=function(e) {print(paste0("Skipping clone due to problem:", clone_num))
                                         print("Here is the original error message:")
                                         print(e)},
                     warning=function(w) {print(paste0("Warning for clone:", clone_num))
-                                        invokeRestart("muffleWarning")}), 
+                                        invokeRestart("muffleWarning")}),
                     error = function(e) { print(paste0("Processed clone:", clone_num)) })
 }
 

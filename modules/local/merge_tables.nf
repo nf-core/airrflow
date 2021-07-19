@@ -3,10 +3,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options = initOptions(params.options)
 
 process MERGE_TABLES {
     tag "$meta.id"
+    label 'process_low'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -31,7 +32,7 @@ process MERGE_TABLES {
     echo "${meta.samples}"
     echo "${tab}"
     echo "${tab.join('\n')}" > tab.list
-    
+
     head -n 1 ${tab[0]} > ${meta.id}.tsv
     tail -n +2 ${tab} >> ${meta.id}.tsv
     sed -i '/==>/d' ${meta.id}.tsv

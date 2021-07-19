@@ -1,25 +1,20 @@
-/*
- * This file holds several functions specific to the pipeline.
- */
+//
+// This file holds several functions specific to the workflow/bcellmagic.nf in the nf-core/bcellmagic pipeline
+//
 
-class Workflow {
+class WorkflowBcellmagic {
 
-    // Citation string
-    private static String citation(workflow) {
-        return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-               "* The pipeline\n" + 
-               "  https://doi.org/10.5281/zenodo.2642009\n\n" +
-               "* The nf-core framework\n" +
-               "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
-               "* Software dependencies\n" +
-               "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
+    //
+    // Check and validate parameters
+    //
+    public static void initialise(params, log) {
+
     }
 
-
-    /*
-     * Get workflow summary for MultiQC
-     */
-    static String paramsSummaryMultiqc(workflow, summary) {
+    //
+    // Get workflow summary for MultiQC
+    //
+    public static String paramsSummaryMultiqc(workflow, summary) {
         String summary_section = ''
         for (group in summary.keySet()) {
             def group_params = summary.get(group)  // This gets the parameters of that particular group
