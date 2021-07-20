@@ -97,7 +97,9 @@ include { GUNZIP } from '../modules/local/gunzip'                               
 
 //PRESTO
 include { PRESTO_FILTERSEQ } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
+include { PRESTO_FILTERSEQ_POSTASSEMBLY } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
 include { PRESTO_MASKPRIMERS } from '../modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
+include { PRESTO_MASKPRIMERS_POSTASSEMBLY } from '../modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
 include { PRESTO_PAIRSEQ } from '../modules/local/presto/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
 include { PRESTO_CLUSTERSETS } from '../modules/local/presto/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 include { PRESTO_PARSE_CLUSTER } from '../modules/local/presto/presto_parse_cluster'    addParams( options: modules['presto_parse_clusters'] )
@@ -275,21 +277,21 @@ workflow BCELLMAGIC {
         )
 
         // Filter sequences by quality score
-        PRESTO_FILTERSEQ (
+        PRESTO_FILTERSEQ_POSTASSEMBLY (
             PRESTO_ASSEMBLEPAIRS.out.reads
         )
-        ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ_POSTASSEMBLY.out.version.first().ifEmpty(null))
 
         // Mask primers
-        PRESTO_MASKPRIMERS (
-            PRESTO_FILTERSEQ.out.reads,
+        PRESTO_MASKPRIMERS_POSTASSEMBLY (
+            PRESTO_FILTERSEQ_POSTASSEMBLY.out.reads,
             ch_cprimers_fasta.collect(),
             ch_vprimers_fasta.collect()
         )
 
         // Remove duplicate sequences
         PRESTO_COLLAPSESEQ (
-            PRESTO_MASKPRIMERS.out.reads
+            PRESTO_MASKPRIMERS_POSTASSEMBLY.out.reads
         )
     }
 
@@ -395,8 +397,8 @@ workflow BCELLMAGIC {
         // Empty lists as a workaround for optional input
         // see: https://github.com/nextflow-io/nextflow/issues/1694
         PARSE_LOGS(
-            PRESTO_FILTERSEQ.out.logs.collect(),
-            PRESTO_MASKPRIMERS.out.logs.collect(),
+            PRESTO_FILTERSEQ_POSTASSEMBLY.out.logs.collect(),
+            PRESTO_MASKPRIMERS_POSTASSEMBLY.out.logs.collect(),
             [],
             [],
             [],

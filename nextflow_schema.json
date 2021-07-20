@@ -224,6 +224,12 @@
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-cut"
                 },
+                "maskprimer_revpr": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-barcode"
+                },
                 "primer_maxerror": {
                     "type": "number",
                     "default": 0.2,
