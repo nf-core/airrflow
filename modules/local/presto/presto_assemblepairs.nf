@@ -28,8 +28,8 @@ process PRESTO_ASSEMBLEPAIRS {
     path("*_table.tab")
 
     script:
-    script_options = ''
-    parse_options = ''
+    def script_options = ''
+    def parse_options = ''
     if (params.umi) {
         script_options = '--1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS'
         parse_options = 'ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE'

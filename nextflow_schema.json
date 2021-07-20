@@ -154,8 +154,9 @@
                 },
                 "umi": {
                     "type": "boolean",
-                    "description": "Indicate if UMI indices are present in this experiment.",
-                    "help_text": "Set to `true` if UMI barcodes exist. If there are no UMI barcodes set to false.",
+                    "default": "true",
+                    "description": "Indicate if UMIs are present in this experiment.",
+                    "help_text": "Set to `true` if UMI barcodes exist. If there are no UMI barcodes set to `false`.",
                     "fa_icon": "fas fa-barcode"
                 },
                 "umi_position": {
@@ -197,6 +198,18 @@
                     "default": 20,
                     "description": "Quality threshold for Presto FilterSeq sequence filtering.",
                     "fa_icon": "fas fa-filter"
+                },
+                "assemblepairs_coord": {
+                    "type": "string",
+                    "default": "presto",
+                    "description": "The format of the sequence identifier which defines shared coordinate information across paired ends. Default is presto- assuming UMIs are present, this will likely be the format from upstream presto steps. If UMIs are not present, typically use `sra` or `illumina` depending on your data source.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "assemblepairs_maxerrror": {
+                    "type": "number",
+                    "default": 0.3,
+                    "description": "Maximum allowable error rate for de novo assembly.",
+                    "fa_icon": "fas fa-exclamation-triangle"
                 },
                 "primer_mask_mode": {
                     "type": "string",
