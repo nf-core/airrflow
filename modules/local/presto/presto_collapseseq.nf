@@ -28,9 +28,9 @@ process PRESTO_COLLAPSESEQ {
 
 
     script:
-    script_options = ''
+    def script_options = ''
     if (params.umi) {
-        options = '--uf PRCONS --cf CONSCOUNT --act sum'
+        script_options = '--uf PRCONS --cf CONSCOUNT --act sum'
     }
     """
     CollapseSeq.py -s $reads -n 20 --inner --outname ${meta.id} \
