@@ -246,24 +246,10 @@ workflow BCELLMAGIC {
             PRESTO_ASSEMBLEPAIRS.out.reads
         )
 
-        // Annotate primers in C_PRIMER and V_PRIMER field
-        PRESTO_PARSEHEADERS_PRIMERS (
-            PRESTO_PARSEHEADERS_COLLAPSE.out.reads
-        )
-
-        // Annotate metadata on primer headers
-        PRESTO_PARSEHEADERS_METADATA (
-            PRESTO_PARSEHEADERS_PRIMERS.out.reads
-        )
-
-        // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
-        PRESTO_COLLAPSESEQ (
-            PRESTO_PARSEHEADERS_METADATA.out.reads
-        )
-
     } else {
-
-        // No UMIs available
+        //
+        // No-UMIs available
+        //
 
         ch_gunzip = ch_merge_umi_gunzip
 
@@ -289,11 +275,27 @@ workflow BCELLMAGIC {
             ch_vprimers_fasta.collect()
         )
 
-        // Remove duplicate sequences
-        PRESTO_COLLAPSESEQ (
+        // Combine duplicate counts
+        PRESTO_PARSEHEADERS_COLLAPSE (
             PRESTO_MASKPRIMERS_POSTASSEMBLY.out.reads
         )
+
     }
+
+    // Annotate primers in C_PRIMER and V_PRIMER field
+    PRESTO_PARSEHEADERS_PRIMERS (
+        PRESTO_PARSEHEADERS_COLLAPSE.out.reads
+    )
+
+    // Annotate metadata on primer headers
+    PRESTO_PARSEHEADERS_METADATA (
+        PRESTO_PARSEHEADERS_PRIMERS.out.reads
+    )
+
+    // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
+    PRESTO_COLLAPSESEQ (
+        PRESTO_PARSEHEADERS_METADATA.out.reads
+    )
 
     // Filter out sequences with less than 2 representative duplicates with different UMIs
     PRESTO_SPLITSEQ (

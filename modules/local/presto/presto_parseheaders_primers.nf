@@ -25,13 +25,17 @@ process PRESTO_PARSEHEADERS_PRIMERS {
     tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
 
     script:
+    def field_names = "PRIMER PRIMER"
+    if (params.umi) {
+        field_names = "PRCONS PRCONS"
+    }
     if (params.cprimer_position == "R1") {
         """
-        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f PRCONS PRCONS --act first last -k C_PRIMER V_PRIMER
+        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f $field_names --act first last -k C_PRIMER V_PRIMER
         """
     } else if (params.cprimer_position == "R2") {
         """
-        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f PRCONS PRCONS --act first last -k V_PRIMER C_PRIMER
+        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f $field_names --act first last -k V_PRIMER C_PRIMER
         """
     }
 
