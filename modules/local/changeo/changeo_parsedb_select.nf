@@ -28,7 +28,7 @@ process CHANGEO_PARSEDB_SELECT {
     script:
     if (params.loci == 'ig') {
         """
-        ParseDb.py select -d $tab -f v_call j_call -u "IGH" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
+        ParseDb.py select -d $tab -f v_call j_call -u "IG[HLK]" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
         """
     } else if (params.loci == 'tr') {
         """
