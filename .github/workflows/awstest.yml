@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Launch workflow via tower
         uses: nf-core/tower-action@master
-        
+
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           bearer_token: ${{ secrets.TOWER_BEARER_TOKEN }}

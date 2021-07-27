@@ -3,33 +3,45 @@
 [![GitHub Actions CI Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/bcellmagic/actions?query=workflow%3A%22nf-core+CI%22)
 [![GitHub Actions Linting Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/bcellmagic/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/bcellmagic/results)
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
-
+[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.04.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23bcellmagic-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/bcellmagic)
 [![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-<!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
-**nf-core/bcellmagic** is a bioinformatics best-practice analysis pipeline for B and T cell repertoire analysis pipeline with the Immcantation framework..
+The nf-core/bcellmagic pipeline is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-<!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable -->
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/bcellmagic/results).
 
 ## Pipeline summary
 
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+By default, the pipeline currently performs the following steps:
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+* Raw read quality control (`FastQC`)
+* Pre-processing (`pRESTO`)
+    * Filtering sequences by sequencing quality.
+    * Masking amplicon primers.
+    * Pairing read mates.
+    * Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough.
+    * Building consensus of sequences with the same UMI barcode.
+    * Re-pairing read mates.
+    * Assembling R1 and R2 read mates.
+    * Removing and annotating read duplicates with different UMI barcodes.
+    * Filtering out sequences that do not have at least 2 duplicates.
+* Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
+* Determining the BCR / TCR genotype of the sample and finding the threshold for clone definition (`TIgGER`, `SHazaM`).
+* Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
+* Reconstructing gene calls of germline sequences (`Change-O`).
+* Generating clonal trees (`Alakazam`).
+* Repertoire analysis: calculation of clonal diversity and abundance (`Alakazam`).
+* Aggregating QC reports (`MultiQC`).
 
 ## Quick Start
 
@@ -49,11 +61,18 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 4. Start running your own analysis!
 
-    <!-- TODO nf-core: Update the example "typical command" below used to run the pipeline -->
-
-    ```console
-    nextflow run nf-core/bcellmagic -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input samplesheet.csv --genome GRCh37
+    ```bash
+    nextflow run nf-core/bcellmagic \
+    -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+    --input samplesheet.tsv \
+    --protocol pcr_umi \
+    --cprimers CPrimers.fasta \
+    --vprimers VPrimers.fasta \
+    --umi_length 12 \
+    --loci "ig"
     ```
+
+See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available options when running the pipeline.
 
 ## Documentation
 
@@ -63,9 +82,8 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline [usa
 
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+<!-- We thank the following people for their extensive assistance in the development
+of this pipeline: -->
 
 ## Contributions and Support
 
@@ -75,10 +93,8 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  nf-core/bcellmagic for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 You can cite the `nf-core` publication as follows:

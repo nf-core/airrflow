@@ -6,60 +6,28 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
-
-## Samplesheet input
-
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
-
-```console
---input '[path to samplesheet file]'
-```
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
-### Full samplesheet
-
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
-```
-
-| Column         | Description                                                                                                                                                                            |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `sample`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+The Bcellmagic pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
 
 ## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+The typical command for running the pipeline to analyse BCR repertoires is as follows:
 
-```console
-nextflow run nf-core/bcellmagic --input samplesheet.csv --genome GRCh37 -profile docker
+```bash
+nextflow run nf-core/bcellmagic \
+-profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--loci ig \
+--max_memory 8.GB \
+--max_cpus 8
 ```
 
+To analyze TCR repertoires, just provide `--loci tr` instead and adapt the rest of the parameters as needed.
+
+For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/bcellmagic/parameters).
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -70,6 +38,164 @@ results         # Finished results (configurable, see below)
 .nextflow_log   # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
+
+### Input samplesheet
+
+The required input file is a sample sheet in TSV format (tab separated) containing the following columns, including the exact same headers:
+
+```bash
+ID  R1  R2  I1  Source  Treatment Extraction_time Population
+QMKMK072AD  sample_S8_L001_R1_001.fastq.gz  sample_S8_L001_R2_001.fastq.gz  sample_S8_L001_I1_001.fastq.gz  Patient_2 Drug_treatment  baseline  p
+```
+
+The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables generated by the pipeline. Where:
+
+* ID: sample ID, should be unique for each sample.
+* R1: path to fastq file with first mates of paired-end sequencing.
+* R2: path to fastq file with second mates of paired-end sequencing.
+* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column).
+* Source: subject or organism code.
+* Treatment: treatment condition applied to the sample.
+* Extraction_time: time of cell extraction for the sample.
+* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).
+
+## Supported sequencing protocols
+
+### Protocol: UMI barcoded multiplex PCR
+
+This sequencing type requires setting `--protocol pcr_umi` and providing sequences for the V-region primers as well as the C-region primers. Some examples of UMI and barcode configurations are provided.
+
+#### R1 read contains UMI barcode and C primer
+
+The `--cprimer_position` and `--umi_position` parameters need to be set to R1 (this is the default).
+If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--umi_start 0 \
+--cprimer_start 0 \
+--cprimer_position R1
+```
+
+![nf-core/bcellmagic](images/Primers_R1_UMI_C.png)
+
+#### R1 read contains UMI barcode and V primer
+
+The `--umi_position` parameter needs to be set to R1.
+If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero). Set `--cprimer_position R2`.
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--umi_start 0 \
+--vprimer_start 0 \
+--cprimer_position R2
+```
+
+![nf-core/bcellmagic](images/Primers_R1_UMI_V.png)
+
+#### R2 read contains UMI barcode and C primer
+
+The `--umi_position` and `--cprimer_position` parameters need to be set to R2.
+If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero).
+If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero).
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R2 \
+--umi_start 0 \
+--cprimer_start 0 \
+--cprimer_position R2
+```
+
+![nf-core/bcellmagic](images/Primers_R1_V.png)
+
+### Protocol: UMI barcoded 5'RACE PCR
+
+This sequencing type requires setting `--protocol race_5p_umi` and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run Bcellmagic to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
+
+#### Takara Bio SMARTer Human BCR
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol race_5p_umi \
+--cprimers CPrimers.fasta \
+--race_linker linker.fasta \
+--loci tr \
+--umi_length 12 \
+--umi_position R2 \
+--umi_start 0 \
+--cprimer_start 7 \
+--cprimer_position R1
+```
+
+![nf-core/bcellmagic](images/TAKARA_RACE_BCR.png)
+
+#### Takara Bio SMARTer Human TCR v2
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--protocol race_5p_umi \
+--cprimers CPrimers.fasta \
+--race_linker linker.fasta \
+--loci tr \
+--umi_length 12 \
+--umi_position R2 \
+--umi_start 0 \
+--cprimer_start 5 \
+--cprimer_position R1
+```
+
+For this protocol, the takara linkers are:
+
+```txt
+>takara-linker
+GTAC
+```
+
+And the C-region primers are:
+
+```txt
+>TRAC
+CAGGGTCAGGGTTCTGGATATN
+>TRBC
+GGAACACSTTKTTCAGGTCCTC
+>TRDC
+GTTTGGTATGAGGCTGACTTCN
+>TRGC
+CATCTGCATCAAGTTGTTTATC
+```
+
+![nf-core/bcellmagic](images/TAKARA_RACE_TCR.png)
+
+## UMI barcode handling
+
+Unique Molecular Identifiers (UMIs) enable the quantification of BCR or TCR abundance in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
+The UMI indices are random nucleotide sequences of a pre-determined length that are added to the sequencing libraries before any PCR amplification steps, for example as part of the primer sequences.
+
+The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
+
+* UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+
+* UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
 
 ### Updating the pipeline
 

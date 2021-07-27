@@ -1,23 +1,15 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-    nf-core/bcellmagic
+                        nf-core/bcellmagic
 ========================================================================================
-    Github : https://github.com/nf-core/bcellmagic
-    Website: https://nf-co.re/bcellmagic
-    Slack  : https://nfcore.slack.com/channels/bcellmagic
+    GitHub  : https://github.com/nf-core/bcellmagic
+    Website : https://nf-co.re/bcellmagic
+    Slack   : https://nfcore.slack.com/channels/bcellmagic
 ----------------------------------------------------------------------------------------
 */
 
 nextflow.enable.dsl = 2
-
-/*
-========================================================================================
-    GENOME PARAMETER VALUES
-========================================================================================
-*/
-
-params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
 
 /*
 ========================================================================================

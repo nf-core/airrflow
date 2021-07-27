@@ -1,12 +1,17 @@
 // Import generic module functions
-include { saveFiles } from './functions'
+include { saveFiles; initOptions } from './functions'
 
 params.options = [:]
+options = initOptions(params.options)
+
 
 process GET_SOFTWARE_VERSIONS {
+    tag 'versions'
+    label 'process_low'
+
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', meta:[:], publish_by_meta:[]) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', publish_id:'') }
 
     conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -24,7 +29,7 @@ process GET_SOFTWARE_VERSIONS {
     path "software_versions.tsv"     , emit: tsv
     path 'software_versions_mqc.yaml', emit: yaml
 
-    script: // This script is bundled with the pipeline, in nf-core/bcellmagic/bin/
+    script:
     """
     echo $workflow.manifest.version > pipeline.version.txt
     echo $workflow.nextflow.version > nextflow.version.txt
