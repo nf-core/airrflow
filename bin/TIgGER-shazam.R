@@ -27,12 +27,16 @@ db <- read.table(inputtable, header=TRUE, sep="\t")
 
 if (loci == "ig"){
 
-    db_fasta <- readIgFasta(fastas, strip_down_name = TRUE)
+    db_fasta <- c()
+    for (fasta in fastas) {
+        dbf <- readIgFasta(fasta, strip_down_name = TRUE)
+        db_fasta <- c(db_fasta, dbf)
+    }
 
     gt <- inferGenotype(db, v_call = "v_call", find_unmutated = F)
 
     # Filter out Duplicate sequences as not supported by Tigger 1.0.0
-    gt_filt <- filter(gt, !grepl("D", gene))
+    gt_filt <- filter(gt, !grepl("D|d", gene))
 
     gtseq <- genotypeFasta(gt_filt, db_fasta)
     writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
@@ -88,19 +92,24 @@ if (loci == "ig"){
     stop("Loci specified is not available, please choose from: ig, tr.")
 }
 
-# Find threshold using chosen method
 
-if (threshold_method == "density") {
-    output <- findThreshold(dist_ham$dist_nearest, method="density")
-    threshold <- output@threshold
-} else if (threshold_method == "gmm") {
-    output <- findThreshold(dist_ham$dist_nearest, method="gmm")
-    threshold <- output@threshold
+if (length(unique(na.omit(dist_ham$dist_nearest))) > 3) {
+    # Find threshold using chosen method
+    if (threshold_method == "density") {
+        output <- findThreshold(dist_ham$dist_nearest, method="density")
+        threshold <- output@threshold
+    } else if (threshold_method == "gmm") {
+        output <- findThreshold(dist_ham$dist_nearest, method="gmm")
+        threshold <- output@threshold
+    } else {
+        stop("Threshold method is not available, please choose from: density, gmm")
+    }
+    # Plot distance histogram, density estimate and optimum threshold
+    ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(output), device="pdf")
 } else {
-    stop("Threshold method is not available, please choose from: density, gmm")
+    # Workaround for a single clone returning a single distance val
+    threshold <- min(na.omit(dist_ham$dist_nearest)) - 0.001
+    ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(dist_ham$dist_nearest, dist_ham$duplicate_count), device="pdf")
 }
-
-# Plot distance histogram, density estimate and optimum threshold
-ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(output), device="pdf")
 
 write.table(threshold, file= paste(output_folder,"threshold.txt",sep="/"), quote=FALSE, sep="", row.names = FALSE, col.names = FALSE)
