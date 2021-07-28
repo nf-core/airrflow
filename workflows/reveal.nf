@@ -1,25 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                         nf-core/bcellmagic
+    VALIDATE INPUTS
 ========================================================================================
- nf-core/bcellmagic Analysis Pipeline.
- #### Homepage / Documentation
- https://github.com/nf-core/bcellmagic
-----------------------------------------------------------------------------------------
 */
-
-////////////////////////////////////////////////////
-/* --         LOCAL PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
-
-params.summary_params = [:]
-
-
-////////////////////////////////////////////////////
-/* --          VALIDATE INPUTS                 -- */
-////////////////////////////////////////////////////
-
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
@@ -91,8 +75,6 @@ include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addP
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 
 
-
-// include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
 // nf-core/modules: Modules
 include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
