@@ -1,12 +1,14 @@
 // Import generic module functions
-include { saveFiles } from './functions'
+include { saveFiles; initOptions } from './functions'
 
 params.options = [:]
+options = initOptions(params.options)
 
-/*
- * Parse software version numbers
- */
+
 process GET_SOFTWARE_VERSIONS {
+    tag 'versions'
+    label 'process_low'
+
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', publish_id:'') }
@@ -22,9 +24,9 @@ process GET_SOFTWARE_VERSIONS {
 
     input:
     path versions
-    
+
     output:
-    path "software_versions.csv"     , emit: csv
+    path "software_versions.tsv"     , emit: tsv
     path 'software_versions_mqc.yaml', emit: yaml
 
     script:

@@ -75,15 +75,15 @@ done
 cd ${TMPDIR}
 NT_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse).+\.fasta")
 for F in ${NT_FILES}; do
-	clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
-	makeblastdb -parse_seqids -dbtype nucl -in ${OUTDIR}/fasta/${F} \
+    clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
+    makeblastdb -parse_seqids -dbtype nucl -in ${OUTDIR}/fasta/${F} \
         -out ${OUTDIR}/database/${F%%.*}
 done
 
 AA_FILES=$(ls *.fasta | grep -E "imgt_aa_(human|mouse).+\.fasta")
 for F in ${AA_FILES}; do
-	clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
-	makeblastdb -parse_seqids -dbtype prot -in ${OUTDIR}/fasta/${F} \
+    clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
+    makeblastdb -parse_seqids -dbtype prot -in ${OUTDIR}/fasta/${F} \
         -out ${OUTDIR}/database/${F%%.*}
 done
 
