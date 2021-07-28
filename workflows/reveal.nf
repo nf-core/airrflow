@@ -20,25 +20,31 @@ params.summary_params = [:]
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
+
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+
+// Validate input parameters
+WorkflowBcellmagic.initialise(params, log)
+
 // Check input path parameters to see if they exist
-checkPathParamList = [ params.input ]
+def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 // Input validation
-if (params.input)  { 
-      file(params.input, checkIfExists: true) 
-} else { 
-      exit 1, "Missing mandatory input: --input." 
+if (params.input)  {
+      file(params.input, checkIfExists: true)
+} else {
+      exit 1, "Missing mandatory input: --input."
 }
- 
-if (params.miairr)  { 
-      file(params.miairr, checkIfExists: true) 
-} 
 
-// If paths to DBS are provided 
+if (params.miairr)  {
+      file(params.miairr, checkIfExists: true)
+}
+
+// If paths to DBS are provided
 if (params.igblast_base){
     Channel.fromPath("${params.igblast_base}")
     .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
@@ -68,34 +74,34 @@ def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
 
 // Local: Sub-workflows
-include { REVEAL_INPUT_CHECK } from './subworkflows/reveal_input_check'       addParams( options: [:] )
+include { REVEAL_INPUT_CHECK } from '../subworkflows/reveal_input_check'       addParams( options: [:] )
 
 // Modules: local
-include { GET_SOFTWARE_VERSIONS     } from './modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-include { IMMCANTATION  } from './modules/local/reveal/immcantation_container_version' addParams( options: [:] )
-include { CHANGEO_CONVERTDB_FASTA } from './modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
-include { FETCH_DATABASES } from './modules/local/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES_REVEAL } from './modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
-include { CHANGEO_MAKEDB } from './modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] ) 
-include { FILTER_QUALITY  } from './modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
-include { CHANGEO_PARSEDB_SPLIT } from './modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
-include { FILTER_JUNCTION_MOD3  } from './modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
-include { CHIMERIC  } from './modules/local/reveal/chimeric' addParams( options: modules['filter_quality_reveal'] )
-include { ADD_META_TO_TAB  } from './modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
-include { COLLAPSE_DUPLICATES  } from './modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
+include { GET_SOFTWARE_VERSIONS     } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
+include { IMMCANTATION  } from '../modules/local/reveal/immcantation_container_version' addParams( options: [:] )
+include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
+include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
+include { CHANGEO_ASSIGNGENES_REVEAL } from '../modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
+include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] )
+include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
+include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
+include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
+include { CHIMERIC  } from '../modules/local/reveal/chimeric' addParams( options: modules['filter_quality_reveal'] )
+include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
+include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 
 
 
 // include { CHANGEO_ASSIGNGENES } from './modules/local/changeo/changeo_assign_genes'  addParams( options: modules['changeo_assign_genes'] )
 
 // nf-core/modules: Modules
-include { MULTIQC               } from './modules/nf-core/software/multiqc/main'       addParams( options: multiqc_options )
+include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
 
 
 workflow REVEAL {
 
     ch_software_versions = Channel.empty()
-    
+
     if (params.immcantation_container ) {
         IMMCANTATION()
         ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
@@ -105,7 +111,7 @@ workflow REVEAL {
     // and emit channels for fasta and tsv files
     REVEAL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
 
-    // If reassign requested, generate fasta from the tsv files    
+    // If reassign requested, generate fasta from the tsv files
     if (params.reassign) {
         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(REVEAL_INPUT_CHECK.out.ch_tsv).fasta
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
@@ -126,14 +132,14 @@ workflow REVEAL {
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
     }
-    
+
     // Run Igblast for gene assignment
     CHANGEO_ASSIGNGENES_REVEAL (
         ch_fasta,
         ch_igblast.collect()
     )
     //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.version.first().ifEmpty(null))
-    
+
     // Parse IgBlast results
     CHANGEO_MAKEDB (
         CHANGEO_ASSIGNGENES_REVEAL.out.fasta,
@@ -184,11 +190,11 @@ workflow REVEAL {
      .map{ it -> [it[1], it[2].toList()] }
      .dump()
 
-    //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)    
-    
+    //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
+
 
     // Software versions
-    GET_SOFTWARE_VERSIONS ( 
+    GET_SOFTWARE_VERSIONS (
         ch_software_versions.map { it }.collect()
     )
 
@@ -203,7 +209,7 @@ workflow REVEAL {
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
         //ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
-        
+
         MULTIQC (
             ch_multiqc_files.collect()
         )

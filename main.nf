@@ -31,10 +31,10 @@ WorkflowMain.initialise(workflow, params, log)
 //
 workflow {
     if (params.subworkflow == "bcellmagic") {
-        include { BCELLMAGIC } from '.workflows/bcellmagic' addParams( summary_params: summary_params )
+        include { BCELLMAGIC } from './workflows/bcellmagic'
         BCELLMAGIC()
     } else if (params.subworkflow == "reveal") {
-        include { REVEAL } from './workflows/reveal' addParams( summary_params: summary_params )
+        include { REVEAL } from './workflows/reveal'
         REVEAL ()
     } else {
         exit 1
