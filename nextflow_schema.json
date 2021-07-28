@@ -14,21 +14,22 @@
                 "input"
             ],
             "properties": {
+                "subworkflow": {
+                    "type": "string",
+                    "default": "bcellmagic",
+                    "fa_icon": "fas fa-project-diagram",
+                    "hidden": true,
+                    "description": "Specify the subworkflow to be executed.",
+                    "enum": [
+                        "bcellmagic",
+                        "reveal"
+                    ]
+                },
                 "input": {
                     "type": "string",
                     "fa_icon": "fas fa-dna",
                     "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
                     "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. The file should include the following columns, separated with tabs, with exactly these header names:\n\n```bash\nID Source Treatment Extraction_time Population R1 R2 I1\nQMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sample_S8_L001_R2_001.fastq.gz sample_S8_L001_I1_001.fastq.gz\n```\n\nThis metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:\n\n* ID: sample ID.\n* Source: patient or organism code.\n* Treatment: treatment condition applied to the sample.\n* Extraction_time: time of cell extraction for the sample.\n* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).\n* R1: path to fastq file with first mates of paired-end sequencing.\n* R2: path to fastq file with second mates of paired-end sequencing.\n* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column)\n\nSpecify the path for your input file like this:\n\n```bash\n--input 'path/to/metadata/metadata_sheet.tsv'\n```"
-                },
-                "cprimers": {
-                    "type": "string",
-                    "fa_icon": "fas fa-dna",
-                    "description": "Path to a fasta file containing the C-region primer sequences."
-                },
-                "vprimers": {
-                    "type": "string",
-                    "fa_icon": "fas fa-dna",
-                    "description": "Path to a fasta file containinc the V-region primer sequences."
                 },
                 "outdir": {
                     "type": "string",
@@ -42,11 +43,6 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "multiqc_title": {
-                    "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
                 }
             }
         },
@@ -101,6 +97,16 @@
             "description": "Define the primer region start and how to deal with the primer alignment.",
             "default": "",
             "properties": {
+                "vprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containinc the V-region primer sequences."
+                },
+                "cprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containing the C-region primer sequences."
+                },
                 "protocol": {
                     "type": "string",
                     "default": "pcr_umi",
@@ -176,9 +182,6 @@
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
-            "required": [
-                "umi_length"
-            ],
             "fa_icon": "fas fa-barcode"
         },
         "presto_options": {
@@ -258,19 +261,47 @@
             "default": "",
             "properties": {
                 "skip_report": {
-                    "type": "boolean",
-                    "description": "Skip repertoire analysis and report generation."
+                    "type": "string",
+                    "description": "Skip repertoire analysis and report generation"
                 },
                 "skip_lineage": {
                     "type": "boolean",
                     "description": "Skip clonal lineage analysis and lineage tree plotting."
                 },
                 "skip_multiqc": {
-                    "type": "boolean",
-                    "description": "Skip multiqc report generation."
+                    "type": "string"
                 }
             },
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
+            "fa_icon": "fas fa-angle-double-right"
+        },
+        "software_packaging_options": {
+            "title": "Software packaging options",
+            "type": "object",
+            "description": "Options for software packaging",
+            "default": "",
+            "properties": {
+                "enable_conda": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-box",
+                    "description": "Enable conda to run pipeline with conda environment."
+                },
+                "singularity_pull_docker_container": {
+                    "type": "boolean",
+                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-toolbox",
+                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
+                },
+                "custom_container": {
+                    "type": "string",
+                    "description": "Specify an Immcantation container to be used in all pipeline processes."
+                },
+                "immcantation_container": {
+                    "type": "string"
+                }
+            },
+            "help_text": "Software packaging options",
             "fa_icon": "fas fa-angle-double-right"
         },
         "reference_genome_options": {
@@ -430,6 +461,11 @@
                     "fa_icon": "fas fa-remove-format",
                     "hidden": true
                 },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature"
+                },
                 "max_multiqc_email_size": {
                     "type": "string",
                     "description": "File size limit when attaching MultiQC reports to summary emails.",
@@ -470,19 +506,54 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                }
+            }
+        },
+        "subworkflow_reveal": {
+            "title": "Subworkflow Reveal",
+            "type": "object",
+            "description": "Arguments for this subworkflow",
+            "default": "",
+            "properties": {
+                "collapseby": {
+                    "type": "string",
+                    "default": "filename,cell_id",
+                    "description": "Name of the field used to collapse duplicated sequences"
                 },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
+                "cloneby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to identify clones"
                 },
-                "singularity_pull_docker_container": {
+                "reassign": {
                     "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
+                    "default": true,
+                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
+                },
+                "productive_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Subset to productive  sequences"
+                },
+                "remove_chimeric": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to apply the chimera removal filter"
+                },
+                "threshold": {
+                    "type": "string",
+                    "default": "auto",
+                    "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
+                },
+                "miairr": {
+                    "type": "string",
+                    "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "description": "Path to MiAIRR-BioSample mapping"
+                },
+                "immcantation_pipelines": {
+                    "type": "string",
+                    "default": "/usr/local/bin/",
+                    "description": "Path to immcantation pipelines"
                 }
             }
         }
@@ -510,6 +581,9 @@
             "$ref": "#/definitions/downstream_options"
         },
         {
+            "$ref": "#/definitions/software_packaging_options"
+        },
+        {
             "$ref": "#/definitions/reference_genome_options"
         },
         {
@@ -520,6 +594,9 @@
         },
         {
             "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/subworkflow_reveal"
         }
     ]
 }

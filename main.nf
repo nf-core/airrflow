@@ -45,7 +45,15 @@ workflow NFCORE_BCELLMAGIC {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_BCELLMAGIC ()
+    if (params.subworkflow == "bcellmagic") {
+        include { BCELLMAGIC } from './bcellmagic' addParams( summary_params: summary_params )
+        BCELLMAGIC()
+    } else if (params.subworkflow == "reveal") {
+        include { REVEAL } from './reveal' addParams( summary_params: summary_params )
+        REVEAL ()
+    } else {
+        exit 1
+    }
 }
 
 /*
