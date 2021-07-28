@@ -5,8 +5,8 @@ options = initOptions(params.options)
 
 process FETCH_DATABASES {
     tag "IMGT IGBLAST"
-    label 'immcantation'
     label 'process_low'
+    label 'immcantation'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
