@@ -12,7 +12,7 @@ library(circlize)
 library(UpSetR)
 library(gtools)
 
-theme_set(theme_bw(base_family = "ArialMT") + 
+theme_set(theme_bw(base_family = "ArialMT") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 
 datadir <- "."
@@ -60,7 +60,7 @@ lenintersects = numeric(0)
 seqsintersects = numeric(0)
 for (j in c(1:nrow(clonedf))){
 
-    inter <- intersect(df_pop_time[[which(grepl(clonedf[j,1], names(df_pop_time)))]]$CLONE, 
+    inter <- intersect(df_pop_time[[which(grepl(clonedf[j,1], names(df_pop_time)))]]$CLONE,
                         df_pop_time[[which(grepl(clonedf[j,2], names(df_pop_time)))]]$CLONE)
 
     clones_subset <- count_clones[which(count_clones$CLONE %in% as.character(inter)),]
@@ -159,11 +159,11 @@ seqdf <- combin
 lenintersects = numeric(0)
 seqsintersects = numeric(0)
 for (j in c(1:nrow(clonedf))){
-    inter <- intersect(df_pop[[which(grepl(paste0("^",clonedf[j,1]), names(df_pop)))]]$CLONE, 
+    inter <- intersect(df_pop[[which(grepl(paste0("^",clonedf[j,1]), names(df_pop)))]]$CLONE,
                         df_pop[[which(grepl(paste0("^",clonedf[j,2]), names(df_pop)))]]$CLONE)
-    
+
     clones_subset <- count_clones[which(count_clones$CLONE %in% as.character(inter)),]
-    
+
     lenintersects <- c(lenintersects, length(inter))
     seqsintersects <- c(seqsintersects, sum(clones_subset$SEQ_COUNT))
 }
@@ -181,7 +181,7 @@ seqsintersects <- numeric(0)
 for (pop in self_comb$from){
     inter <- attributes(vennplot)[["intersections"]][[pop]]
     clones_subset <- count_clones[which(count_clones$CLONE %in% as.character(inter)),]
-    
+
     lenintersects <- c(lenintersects, length(inter))
     seqsintersects <- c(seqsintersects, sum(clones_subset$SEQ_COUNT))
 }

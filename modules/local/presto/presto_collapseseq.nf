@@ -25,7 +25,7 @@ process PRESTO_COLLAPSESEQ {
     path("*_command_log.txt") , emit: logs
     path("*.log")
     path("*_table.tab")
-    
+
 
     script:
     """
