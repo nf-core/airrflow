@@ -21,21 +21,6 @@ WorkflowMain.initialise(workflow, params, log)
 
 /*
 ========================================================================================
-    NAMED WORKFLOW FOR PIPELINE
-========================================================================================
-*/
-
-include { BCELLMAGIC } from './workflows/bcellmagic'
-
-//
-// WORKFLOW: Run main nf-core/bcellmagic analysis pipeline
-//
-workflow NFCORE_BCELLMAGIC {
-    BCELLMAGIC ()
-}
-
-/*
-========================================================================================
     RUN ALL WORKFLOWS
 ========================================================================================
 */
