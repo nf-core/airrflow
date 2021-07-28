@@ -586,5 +586,10 @@
         {
             "$ref": "#/definitions/subworkflow_reveal"
         }
-    ]
+    ],
+    "properties": {
+        "immcantation_container": {
+            "type": "string"
+        }
+    }
 }

@@ -30,10 +30,10 @@ process VALIDATE_INPUT {
     output:
     path "validated_input.tsv", emit: validated_input
     path "validated_input_not-valid.tsv", emit: not_valid_input, optional: true
-    path "validated_input.html", emit: validated_input_html
 
-    script:  // This script is bundled with the pipeline, in bin/
+    script:
     """
-    reveal_validate_input.R --input "${samplesheet}" --collapseby ${collapseby} --cloneby ${cloneby} --output "validated_input" --miairr "${miairr}"
+    #reveal_validate_input.R --input "${samplesheet}" --collapseby ${collapseby} --cloneby ${cloneby} --output "validated_input" --miairr "${miairr}"
+    Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','miairr'='${miairr}','outdir'=getwd()))"
     """
 }
