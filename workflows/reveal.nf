@@ -102,10 +102,9 @@ workflow REVEAL {
 
     ch_software_versions = Channel.empty()
 
-    if (params.immcantation_container ) {
-        IMMCANTATION()
-        ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
-    }
+
+    IMMCANTATION()
+    ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files

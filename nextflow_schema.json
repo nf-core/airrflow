@@ -296,9 +296,6 @@
                 "custom_container": {
                     "type": "string",
                     "description": "Specify an Immcantation container to be used in all pipeline processes."
-                },
-                "immcantation_container": {
-                    "type": "string"
                 }
             },
             "help_text": "Software packaging options",

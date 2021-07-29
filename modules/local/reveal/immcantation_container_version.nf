@@ -4,7 +4,7 @@ include { saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 
 /*
- * Immcantation version 
+ * Immcantation version
  */
 process IMMCANTATION {
     label 'immcantation'
@@ -15,10 +15,14 @@ process IMMCANTATION {
 
     output:
     path "*.version.txt", emit: version
-       
+
     script:
     def software = getSoftwareName(task.process)
     """
-    versions report | head -n 1 > ${software}.version.txt
+    if ! [ -x "\$(versions -h)" ]; then
+        echo "immcantation: none" > ${software}.version.txt
+    else
+        versions report | head -n 1 > ${software}.version.txt
+    fi
     """
 }
