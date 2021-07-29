@@ -31,13 +31,13 @@ process CHANGEO_MAKEDB {
     if (params.loci == 'ig'){
         """
         MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/ \\
+        ${imgt_base}/${params.species}/vdj/ ${params.makedb_args} \\
         --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
         """
     } else if (params.loci == 'tr') {
         """
         MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/ \\
+        ${imgt_base}/${params.species}/vdj/ ${params.makedb_args} \\
         --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
         """
     }

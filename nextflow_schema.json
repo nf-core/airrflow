@@ -245,6 +245,21 @@
             },
             "fa_icon": "fas fa-align-center"
         },
+        "changeo_options": {
+            "title": "Change-O options",
+            "type": "object",
+            "description": "Options for the Change-O tools",
+            "default": "",
+            "properties": {
+                "makedb_args": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Specify optional arguments for Change-O MakeDB.py. For example set to `--extended` for extended output, labelling CDR and FWK regions.",
+                    "fa_icon": "fas fa-filter"
+                }
+            },
+            "fa_icon": "fas fa-align-center"
+        },
         "clustering_threshold_definition": {
             "title": "Clustering threshold definition",
             "type": "object",
