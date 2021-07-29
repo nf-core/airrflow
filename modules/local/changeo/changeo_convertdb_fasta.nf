@@ -6,6 +6,7 @@ def options    = initOptions(params.options)
 process CHANGEO_CONVERTDB_FASTA {
     tag "$meta.id"
     label 'process_low'
+    label 'immcantation'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -23,9 +24,12 @@ process CHANGEO_CONVERTDB_FASTA {
 
     output:
     tuple val(meta), path("*.fasta"), emit: fasta // sequence tsv in AIRR format
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     ConvertDb.py fasta -d $tab $options.args
+    ConvertDb.py --version | awk -F' ' '{print \$2}' > ${software}.version.txt
     """
 }
