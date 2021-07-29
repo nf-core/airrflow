@@ -28,37 +28,35 @@ if (params.miairr)  {
       file(params.miairr, checkIfExists: true)
 }
 
-// If paths to DBS are provided
-if (params.igblast_base){
+// If paths to databases are provided
+if( params.igblast_base ){
     Channel.fromPath("${params.igblast_base}")
-    .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-    .set { ch_igblast }
+            .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+            .set { ch_igblast }
 }
-if (params.imgtdb_base){
+if( params.imgtdb_base ){
     Channel.fromPath("${params.imgtdb_base}")
-    .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-    .set { ch_imgt }
+            .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+            .set { ch_imgt }
 }
 
-////////////////////////////////////////////////////
-/* --          CONFIG FILES                    -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    CONFIG FILES
+========================================================================================
+*/
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
-////////////////////////////////////////////////////
-/* --       IMPORT MODULES / SUBWORKFLOWS      -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    IMPORT LOCAL MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
-
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
-
-// Local: Sub-workflows
-include { REVEAL_INPUT_CHECK } from '../subworkflows/reveal_input_check'       addParams( options: [:] )
 
 // Modules: local
 include { GET_SOFTWARE_VERSIONS     } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
@@ -74,11 +72,31 @@ include { CHIMERIC  } from '../modules/local/reveal/chimeric' addParams( options
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 
+// Local: Sub-workflows
+include { REVEAL_INPUT_CHECK } from '../subworkflows/reveal_input_check'       addParams( options: [:] )
 
+/*
+========================================================================================
+    IMPORT NF-CORE MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
-// nf-core/modules: Modules
+def multiqc_options   = modules['multiqc']
+multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
+
+//
+// MODULE: Installed directly from nf-core/modules
+//
 include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
 
+/*
+========================================================================================
+    RUN MAIN WORKFLOW
+========================================================================================
+*/
+
+// Info required for completion email and summary
+def multiqc_report = []
 
 workflow REVEAL {
 
@@ -100,6 +118,7 @@ workflow REVEAL {
     } else {
         ch_fasta_from_tsv = Channel.empty()
     }
+
 
     // mix all fasta
     ch_fasta = REVEAL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
@@ -167,30 +186,29 @@ workflow REVEAL {
     // Collapse duplicates
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
     ch_collapsable = ch_annotated_repertoires.tab
-     .map{ it -> [ it[0].single_cell, it[0], it[1] ] }
-     .groupTuple(by: [0])
-     .map{ it -> [it[1], it[2].toList()] }
-     .dump()
+        .map{ it -> [ it[0].single_cell, it[0], it[1] ] }
+        .groupTuple(by: [0])
+        .map{ it -> [it[1], it[2].toList()] }
+        .dump()
 
     //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
-
-
     // Software versions
     GET_SOFTWARE_VERSIONS (
         ch_software_versions.map { it }.collect()
     )
 
-    // MultiQC
+    //
+    // MODULE: MultiQC
+    //
     if (!params.skip_multiqc) {
-        workflow_summary    = Workflow.paramsSummaryMultiqc(workflow, params.summary_params)
+        workflow_summary    = WorkflowBcellmagic.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
-        ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
-        //ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
             ch_multiqc_files.collect()
@@ -198,17 +216,24 @@ workflow REVEAL {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
     }
-}
 
-////////////////////////////////////////////////////
-/* --              COMPLETION EMAIL            -- */
-////////////////////////////////////////////////////
+ }
+
+/*
+========================================================================================
+    COMPLETION EMAIL AND SUMMARY
+========================================================================================
+*/
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary_params, projectDir, log, multiqc_report)
-    Completion.summary(workflow, params, log)
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+    }
+    NfcoreTemplate.summary(workflow, params, log)
 }
 
-////////////////////////////////////////////////////
-/* --                  THE END                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    THE END
+========================================================================================
+*/
