@@ -18,7 +18,7 @@ process FILTER_QUALITY {
     } else {
         container "quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"                        // Docker image
     }
-    
+
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 

@@ -11,7 +11,7 @@ include {
 workflow REVEAL_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.csv
-    miairr      
+    miairr
     collapseby
     cloneby
 
@@ -32,8 +32,7 @@ workflow REVEAL_INPUT_CHECK {
     validated_input = validated_input
 }
 
-
-// Function to map 
+// Function to map
 def get_meta (LinkedHashMap col) {
 
     def meta = [:]
