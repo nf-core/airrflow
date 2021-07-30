@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
-# 
+#
 # Merge db and input metadata by
 #
 # Arguments:
 #   --repertoire Repertoire file
 #   --input   Validated input metadata (contains input_id field)
-#   --input_id input_id value in the `--input` file that will be used to 
+#   --input_id input_id value in the `--input` file that will be used to
 #              select the row that contains the metadata for the `--repertoire`
 #              file
 #   -h  Display help.
@@ -18,16 +18,16 @@ suppressPackageStartupMessages(library("dplyr"))
 
 # Define commmandline arguments
 opt_list <- list(
-                 make_option(c("--repertoire"), dest="REPERTOIRE", default=NULL,
-                             help="Repertoire tabulated file."),
-                 make_option(c("--metadata"), dest="METADATA", default=NULL,
-                             help="Repertoire's validated metadata file."),                 
-                 make_option(c("--input_id"), dest="INPUTID", default=NULL,
-                             help="input_id value in the `--metadata` file that 
-                             will be used to select the row that contains the 
-                             metadata for the `--repertoire` file") ,
-                 make_option(c("--outname"), dest="OUTNAME", 
-                             default=NULL,help="Output name"))
+    make_option(c("--repertoire"), dest="REPERTOIRE", default=NULL,
+        help="Repertoire tabulated file."),
+    make_option(c("--metadata"), dest="METADATA", default=NULL,
+        help="Repertoire's validated metadata file."),
+    make_option(c("--input_id"), dest="INPUTID", default=NULL,
+        help="input_id value in the `--metadata` file that
+        will be used to select the row that contains the
+        metadata for the `--repertoire` file") ,
+    make_option(c("--outname"), dest="OUTNAME",
+        default=NULL,help="Output name"))
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
 opt
@@ -35,7 +35,7 @@ getwd()
 
 # Check repertoire file
 if (!("REPERTOIRE" %in% names(opt))) {
-   stop("You must provide a repertoire file with --repertoire.")
+    stop("You must provide a repertoire file with --repertoire.")
 }
 
 # Check input file
@@ -49,7 +49,7 @@ if (!("INPUTID" %in% names(opt))) {
 }
 
 # Read metadata file
-metadata <- read.csv(opt$METADATA,sep = "\t", header=TRUE, stringsAsFactors = F) 
+metadata <- read.csv(opt$METADATA,sep = "\t", header=TRUE, stringsAsFactors = F)
 
 metadata <- metadata %>%
     filter(id == opt$INPUTID)
@@ -59,19 +59,19 @@ if (nrow(metadata) != 1 ) {
 }
 
 internal_fields <-
-    c( 
-       "valid_filename",
-       "valid_species",
-       "valid_collapseby",
-       "collapseby_group",
-       "collapseby_size",
-       "valid_cloneby",
-       "cloneby_group",
-       "cloneby_size",
-       "filetype",
-       "valid_single_cell",
-       "valid_pcr_target_locus"
-    )
+    c(
+    "valid_filename",
+    "valid_species",
+    "valid_collapseby",
+    "collapseby_group",
+    "collapseby_size",
+    "valid_cloneby",
+    "cloneby_group",
+    "cloneby_size",
+    "filetype",
+    "valid_single_cell",
+    "valid_pcr_target_locus"
+)
 metadata <- metadata[,!colnames(metadata) %in% internal_fields]
 
 db <- read_airr(opt$REPERTOIRE)

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
-# 
-# Validate --input. Check: 
+#
+# Validate --input. Check:
 # - filenames are .fasta, .fa or .tsv
 # - column names are MiAIRR compliant
 #
@@ -29,15 +29,16 @@ suppressPackageStartupMessages(library("istudio"))
 
 # Define commmandline arguments
 opt_list <- list(make_option(c("--input"), dest="INPUT", default=NULL,
-                             help="Input file."),
-                 make_option(c("--collapseby"), dest="COLLAPSEBY", default='sample_id',
-                             help="Grouping fields to collapse duplicated sequences."),                    
-                 make_option(c("--cloneby"), dest="CLONEBY", default='subject_id',
-                             help="Grouping fields to identify clonally related sequences."),                 
-                 make_option(c("--output"), dest="OUTPUT", default="validate_input",
-                             help="Output name."),
-                 make_option(c("--miairr"), dest="MIAIRR", default=NULL,
-                             help="Output name."))
+        help="Input file."),
+    make_option(c("--collapseby"), dest="COLLAPSEBY", default='sample_id',
+        help="Grouping fields to collapse duplicated sequences."),
+    make_option(c("--cloneby"), dest="CLONEBY", default='subject_id',
+        help="Grouping fields to identify clonally related sequences."),
+    make_option(c("--output"), dest="OUTPUT", default="validate_input",
+        help="Output name."),
+    make_option(c("--miairr"), dest="MIAIRR", default=NULL,
+        help="Output name.")
+)
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
 

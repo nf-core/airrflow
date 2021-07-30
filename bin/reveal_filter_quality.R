@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# 
+#
 # Quality filter:
 # - locus should match v_call chain
 # - locus should match c_call (TODO)
@@ -21,8 +21,9 @@ suppressPackageStartupMessages(library("stringi"))
 
 # Define commmandline arguments
 opt_list <- list(
-         make_option(c("-r", "--repertoire"), dest="REPERTOIRE", default=NULL, help="Input repertoire .tsv file"),
-         make_option(c("-o","--outname"), dest="OUTPUT", default=NULL, help="Output name"))
+    make_option(c("-r", "--repertoire"), dest="REPERTOIRE", default=NULL, help="Input repertoire .tsv file"),
+    make_option(c("-o","--outname"), dest="OUTPUT", default=NULL, help="Output name")
+)
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
 opt
@@ -38,41 +39,41 @@ db <- read_rearrangement(opt$REPERTOIRE)
 
 # locus field and locus obtained from v_call should match
 if (packageVersion("alakazam") < "1.0.3") {
-   getLocus <- function(segment_call, first=TRUE, collapse=TRUE, 
-                        strip_d=TRUE, omit_nl=FALSE, sep=",") {
-      locus_regex <- '((IG[HLK]|TR[ABGD]))'
-      r <- getSegment(segment_call, locus_regex, first=first, collapse=collapse, 
-                      strip_d=strip_d, omit_nl=omit_nl, sep=sep)
-      
-      return(r)
-   }
+getLocus <- function(segment_call, first=TRUE, collapse=TRUE,
+                    strip_d=TRUE, omit_nl=FALSE, sep=",") {
+    locus_regex <- '((IG[HLK]|TR[ABGD]))'
+    r <- getSegment(segment_call, locus_regex, first=first, collapse=collapse,
+                    strip_d=strip_d, omit_nl=omit_nl, sep=sep)
+
+    return(r)
+}
 }
 
 # Concordant locus
 same_locus <- getLocus(db[['v_call']]) == db[['locus']]
 
-# Max 10% N 
+# Max 10% N
 low_n <- stri_count(db$sequence_alignment,fixed="N")/stri_count(db$sequence_alignment,regex="[^-.]") <= 0.10
 
 # Min length 200 nt
 long_seq <- stri_count(db$sequence_alignment,regex="[^-.N]") >= 200
-   
+
 log <- data.frame("same_locus"=same_locus,
-   "low_n"=low_n,
-   "long_seq"=long_seq, stringsAsFactors=F)
+    "low_n"=low_n,
+    "long_seq"=long_seq, stringsAsFactors=F)
 
 summary <-  log %>%
-   group_by(same_locus, low_n, long_seq) %>%
-   summarize(n=n(), .groups = "drop_last")
+    group_by(same_locus, low_n, long_seq) %>%
+    summarize(n=n(), .groups = "drop_last")
 
 # Filter and save
 filter_pass <- same_locus & low_n & long_seq
 table(filter_pass)
 
 if (!is.null(opt$OUTPUT)) {
-   output_fn <- paste0(opt$OUTPUT,"_quality-pass.tsv")
+    output_fn <- paste0(opt$OUTPUT,"_quality-pass.tsv")
 } else {
-   output_fn <- sub(".tsv$", "_quality-pass.tsv", basename(opt$REPERTOIRE))
+    output_fn <- sub(".tsv$", "_quality-pass.tsv", basename(opt$REPERTOIRE))
 }
 write_rearrangement(db[filter_pass,], file=output_fn)
 
