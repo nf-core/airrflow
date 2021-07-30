@@ -19,13 +19,13 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provi
 
 // Input validation
 if (params.input)  {
-      file(params.input, checkIfExists: true)
+    file(params.input, checkIfExists: true)
 } else {
-      exit 1, "Missing mandatory input: --input."
+    exit 1, "Missing mandatory input: --input."
 }
 
 if (params.miairr)  {
-      file(params.miairr, checkIfExists: true)
+    file(params.miairr, checkIfExists: true)
 }
 
 // If paths to databases are provided
