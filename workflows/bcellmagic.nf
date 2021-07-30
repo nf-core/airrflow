@@ -94,6 +94,7 @@ include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' 
 include { MERGE_UMI } from '../modules/local/merge_UMI'                          addParams( options: [:] )
 include { RENAME_FASTQ } from '../modules/local/rename_fastq'                    addParams( options: [:] )
 include { GUNZIP } from '../modules/local/gunzip'                                addParams( options: [:] )
+include { FASTQC_POSTASSEMBLY } from '../modules/local/fastqc_postassembly'                                addParams( options: [:] )
 
 //PRESTO
 include { PRESTO_FILTERSEQ } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
@@ -138,6 +139,7 @@ include { PARSE_LOGS } from '../modules/local/parse_logs'                       
 // Local: Sub-workflows
 include { INPUT_CHECK           } from '../subworkflows/local/input_check'       addParams( options: [:] )
 include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
+//include { FASTQC_POSTASSEMBLY       } from '../subworkflows/local/fastqc_postassembly'      addParams( options: [:] )
 
 /*
 ========================================================================================
@@ -241,6 +243,9 @@ workflow BCELLMAGIC {
             PRESTO_POSTCONSENSUS_PAIRSEQ.out.reads
         )
 
+        // Generate QC stats after reads paired and filtered but before collapsed
+        FASTQC_POSTASSEMBLY ( PRESTO_ASSEMBLEPAIRS.out.reads )
+
         // Combine UMI duplicate count
         PRESTO_PARSEHEADERS_COLLAPSE (
             PRESTO_ASSEMBLEPAIRS.out.reads
@@ -274,6 +279,9 @@ workflow BCELLMAGIC {
             ch_cprimers_fasta.collect(),
             ch_vprimers_fasta.collect()
         )
+
+        // Generate QC stats after reads paired and filtered but before collapsed
+        FASTQC_POSTASSEMBLY ( PRESTO_MASKPRIMERS_POSTASSEMBLY.out.reads )
 
         // Combine duplicate counts
         PRESTO_PARSEHEADERS_COLLAPSE (
@@ -442,6 +450,7 @@ workflow BCELLMAGIC {
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_POSTASSEMBLY.out.zip.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
             ch_multiqc_files.collect()
