@@ -122,10 +122,10 @@ workflow REVEAL {
     // mix all fasta
     ch_fasta = REVEAL_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
 
-   // FETCH DATABASES
-   // TODO: this can take a long time, and the progress shows 0%. Would be
-   // nice to have some better progress reporting.
-   // And maybe run this as 2 separate steps, one for IMGT and one for IgBLAST?
+    // FETCH DATABASES
+    // TODO: this can take a long time, and the progress shows 0%. Would be
+    // nice to have some better progress reporting.
+    // And maybe run this as 2 separate steps, one for IMGT and one for IgBLAST?
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
@@ -216,7 +216,7 @@ workflow REVEAL {
         ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
     }
 
- }
+}
 
 /*
 ========================================================================================
