@@ -93,8 +93,8 @@ if (loci == "ig"){
     stop("Loci specified is not available, please choose from: ig, tr.")
 }
 
-
-if (length(unique(na.omit(dist_ham$dist_nearest))) > 3) {
+num_dist <- length(unique(na.omit(dist_ham$dist_nearest)))
+if (num_dist > 3) {
     # Find threshold using chosen method
     if (threshold_method == "density") {
         output <- findThreshold(dist_ham$dist_nearest, method="density")
@@ -108,8 +108,11 @@ if (length(unique(na.omit(dist_ham$dist_nearest))) > 3) {
     # Plot distance histogram, density estimate and optimum threshold
     ggsave(paste(output_folder,paste0(sourceLabel, "_Hamming_distance_threshold.pdf"),sep="/"), plot(output), device="pdf")
 } else {
-    # Workaround for a single clone returning a single distance val
-    threshold <- min(na.omit(dist_ham$dist_nearest)) - 0.001
+    # Workaround for sources with too few nearest distance values to determine an effective threshold.
+    # Set threshold to 0 and print a warning
+    threshold <- 0.0
+    warning(paste("Could not determine an effective Hamming distance threshold for source:", sourceLabel,
+                  ", which has", num_dist, "unique nearest distances. Threshold defaulting to 0.",  sep=" "))
     ggsave(paste(output_folder,paste0(sourceLabel, "_Hamming_distance_threshold.pdf"),sep="/"), plot(dist_ham$dist_nearest, dist_ham$duplicate_count), device="pdf")
 }
 
