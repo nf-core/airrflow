@@ -69,10 +69,10 @@ if (loci == "ig"){
     gt <- inferGenotype(db, v_call = "v_call", find_unmutated = FALSE)
 
     gtseq <- genotypeFasta(gt, c(db_fasta_TRAV,db_fasta_TRBV,db_fasta_TRDV))
-    writeFasta(gtseq, paste(output_folder,"TRxV_genotype.fasta",sep="/"))
+    writeFasta(gtseq, paste(output_folder,paste0(sourceLabel, "_TRxV_genotype.fasta"),sep="/"))
 
     # Plot genotype
-    ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+    ggsave(paste(output_folder,paste0(sourceLabel, "_genotype.pdf"),sep="/"), plotGenotype(gt, silent=T))
 
     # Modify allele calls and output TSV file
     db_reassigned <- reassignAlleles(db, gtseq)
@@ -87,7 +87,7 @@ if (loci == "ig"){
                                 nproc=1,
                                 first = FALSE)
 
-    writeChangeoDb(db, paste(output_folder,"v_tr_genotyped.tab",sep="/"))
+    writeChangeoDb(db, paste(output_folder,paste0(sourceLabel, "_v_tr_genotyped.tab"),sep="/"))
 
 } else {
     stop("Loci specified is not available, please choose from: ig, tr.")
