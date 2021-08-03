@@ -173,7 +173,11 @@ workflow BCELLMAGIC {
         ch_cprimers_fasta,
         ch_vprimers_fasta
     )
-    ch_software_versions = ch_software_versions.mix(PRESTO_UMI.out.software)
+    ch_presto_fasta = PRESTO_UMI.out.fasta
+    ch_presto_software = PRESTO_UMI.out.software
+
+
+    ch_software_versions = ch_software_versions.mix(ch_presto_software)
 
     // FETCH DATABASES
     if (!params.igblast_base | !params.imgtdb_base) {
@@ -185,7 +189,7 @@ workflow BCELLMAGIC {
 
     // Run Igblast for gene assignment
     CHANGEO_ASSIGNGENES (
-        PRESTO_UMI.out.fasta,
+        ch_presto_fasta,
         ch_igblast.collect()
     )
     ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
