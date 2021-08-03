@@ -29,7 +29,9 @@ process PRESTO_ASSEMBLEPAIRS {
 
     script:
     """
-    AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} --coord presto --rc tail --1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
-    ParseLog.py -l ${meta.id}.log -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE
+    AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} \\
+    $options.args \\
+    --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}.log $options.args2
     """
 }
