@@ -89,31 +89,14 @@ def modules = params.modules.clone()
 
 // Local: Modules
 include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-include { MERGE_UMI } from '../modules/local/merge_UMI'                          addParams( options: [:] )
-include { RENAME_FASTQ } from '../modules/local/rename_fastq'                    addParams( options: [:] )
-include { GUNZIP } from '../modules/local/gunzip'                                addParams( options: [:] )
-
-//PRESTO
-include { PRESTO_FILTERSEQ } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
-include { PRESTO_MASKPRIMERS } from '../modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
-include { PRESTO_PAIRSEQ } from '../modules/local/presto/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
-include { PRESTO_CLUSTERSETS } from '../modules/local/presto/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
-include { PRESTO_PARSE_CLUSTER } from '../modules/local/presto/presto_parse_cluster'    addParams( options: modules['presto_parse_clusters'] )
-include { PRESTO_BUILDCONSENSUS } from '../modules/local/presto/presto_buildconsensus'  addParams( options: modules['presto_buildconsensus'] )
-include { PRESTO_POSTCONSENSUS_PAIRSEQ } from '../modules/local/presto/presto_postconsensus_pairseq'    addParams( options: modules['presto_postconsensus_pairseq'] )
-include { PRESTO_ASSEMBLEPAIRS } from '../modules/local/presto/presto_assemblepairs'    addParams( options: modules['presto_assemblepairs'] )
-include { PRESTO_PARSEHEADERS as PRESTO_PARSEHEADERS_COLLAPSE } from '../modules/local/presto/presto_parseheaders'  addParams( options: modules['presto_parseheaders_collapse'] )
-include { PRESTO_PARSEHEADERS_PRIMERS } from '../modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers'] )
-include { PRESTO_PARSEHEADERS_METADATA } from '../modules/local/presto/presto_parseheaders_metadata'    addParams( options: modules['presto_parseheaders_metadata'] )
-include { PRESTO_COLLAPSESEQ } from '../modules/local/presto/presto_collapseseq'        addParams( options: modules['presto_collapseseq'] )
-include { PRESTO_SPLITSEQ } from '../modules/local/presto/presto_splitseq'              addParams( options: modules['presto_splitseq'] )
 
 //CHANGEO
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
 include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
 include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
+include { CHANGEO_PARSEDB_SELECT as CHANGEO_PARSEDB_SELECT_IG } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select_ig'] )
+include { CHANGEO_PARSEDB_SELECT as CHANGEO_PARSEDB_SELECT_TR } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select_tr'] )
 include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
 
 //SHAZAM
@@ -129,11 +112,12 @@ include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'  
 include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
 
 //LOG PARSING
-include { PARSE_LOGS } from '../modules/local/parse_logs'                        addParams( options: modules['parse_logs'] )
+include { PARSE_LOGS } from '../modules/local/parse_logs'                           addParams( options: modules['parse_logs'] )
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from '../subworkflows/local/input_check'       addParams( options: [:] )
+include { INPUT_CHECK           } from '../subworkflows/local/input_check'          addParams( options: [:] )
 include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
+include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'           addParams( options: [:] )
 
 /*
 ========================================================================================
@@ -171,7 +155,7 @@ workflow BCELLMAGIC {
         .map{ it -> [ it[0], it[1].flatten() ] }
         .set{ ch_fastqc }
 
-    ch_merge_umi_gunzip = ch_fastqc.map{ it -> it.flatten() }
+    ch_presto = ch_fastqc.map{ it -> it.flatten() }
 
     //
     // MODULE: FastQC
@@ -181,85 +165,15 @@ workflow BCELLMAGIC {
     // Channel for software versions
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
 
-    // Merge UMI from index file to R1 if provided
-    if (params.index_file) {
-        MERGE_UMI ( ch_merge_umi_gunzip )
-        .set{ ch_gunzip }
-    } else {
-        RENAME_FASTQ ( ch_merge_umi_gunzip )
-        .set{ ch_gunzip }
-    }
-
-    // gunzip fastq.gz to fastq
-    GUNZIP ( ch_gunzip )
-    ch_software_versions = ch_software_versions.mix(GUNZIP.out.version.first().ifEmpty(null))
-
-    // Filter sequences by quality score
-    PRESTO_FILTERSEQ ( GUNZIP.out.reads )
-    ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ.out.version.first().ifEmpty(null))
-
-    // Mask primers
-    PRESTO_MASKPRIMERS (
-        PRESTO_FILTERSEQ.out.reads,
-        ch_cprimers_fasta.collect(),
-        ch_vprimers_fasta.collect()
+    //
+    // SUBWORKFLOW: pRESTO UMI
+    //
+    PRESTO_UMI (
+        ch_presto,
+        ch_cprimers_fasta,
+        ch_vprimers_fasta
     )
-
-    // Pre-consensus pair
-    PRESTO_PAIRSEQ (
-        PRESTO_MASKPRIMERS.out.reads
-    )
-
-    // Cluster sequences by similarity
-    PRESTO_CLUSTERSETS (
-        PRESTO_PAIRSEQ.out.reads
-    )
-    ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS.out.version.first().ifEmpty(null))
-
-    // Annotate cluster into barcode field
-    PRESTO_PARSE_CLUSTER (
-        PRESTO_CLUSTERSETS.out.reads
-    )
-
-    // Build consensus of sequences with same UMI barcode
-    PRESTO_BUILDCONSENSUS (
-        PRESTO_PARSE_CLUSTER.out.reads
-    )
-
-    // Post-consensus pair
-    PRESTO_POSTCONSENSUS_PAIRSEQ (
-        PRESTO_BUILDCONSENSUS.out.reads
-    )
-
-    // Assemble read pairs
-    PRESTO_ASSEMBLEPAIRS (
-        PRESTO_POSTCONSENSUS_PAIRSEQ.out.reads
-    )
-
-    // Combine UMI duplicate count
-    PRESTO_PARSEHEADERS_COLLAPSE (
-        PRESTO_ASSEMBLEPAIRS.out.reads
-    )
-
-    // Annotate primers in C_PRIMER and V_PRIMER field
-    PRESTO_PARSEHEADERS_PRIMERS (
-        PRESTO_PARSEHEADERS_COLLAPSE.out.reads
-    )
-
-    // Annotate metadata on primer headers
-    PRESTO_PARSEHEADERS_METADATA (
-        PRESTO_PARSEHEADERS_PRIMERS.out.reads
-    )
-
-    // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
-    PRESTO_COLLAPSESEQ (
-        PRESTO_PARSEHEADERS_METADATA.out.reads
-    )
-
-    // Filter out sequences with less than 2 representative duplicates with different UMIs
-    PRESTO_SPLITSEQ (
-        PRESTO_COLLAPSESEQ.out.reads
-    )
+    ch_software_versions = ch_software_versions.mix(PRESTO_UMI.out.software)
 
     // FETCH DATABASES
     if (!params.igblast_base | !params.imgtdb_base) {
@@ -271,7 +185,7 @@ workflow BCELLMAGIC {
 
     // Run Igblast for gene assignment
     CHANGEO_ASSIGNGENES (
-        PRESTO_SPLITSEQ.out.fasta,
+        PRESTO_UMI.out.fasta,
         ch_igblast.collect()
     )
     ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
@@ -289,17 +203,29 @@ workflow BCELLMAGIC {
     )
 
     // Selecting IGH for ig loci, TR for tr loci.
-    CHANGEO_PARSEDB_SELECT (
-        CHANGEO_PARSEDB_SPLIT.out.tab
-    )
+    if (params.loci == "ig") {
+        CHANGEO_PARSEDB_SELECT_IG (
+            CHANGEO_PARSEDB_SPLIT.out.tab
+        )
+        ch_changeo_parsedb_select_tab = CHANGEO_PARSEDB_SELECT_IG.out.tab
+        ch_changeo_parsedb_select_log = CHANGEO_PARSEDB_SELECT_IG.out.log
+    } else if (params.loci == "tr") {
+        CHANGEO_PARSEDB_SELECT_TR (
+            CHANGEO_PARSEDB_SPLIT.out.tab
+        )
+        ch_changeo_parsedb_select_tab = CHANGEO_PARSEDB_SELECT_TR.out.tab
+        ch_changeo_parsedb_select_log = CHANGEO_PARSEDB_SELECT_TR.out.log
+    } else {
+        exit 1, "Parameter loci has an unrecognized value, please select 'ig' or 'tr'."
+    }
 
     // Convert sequence table to fasta.
     CHANGEO_CONVERTDB_FASTA (
-        CHANGEO_PARSEDB_SELECT.out.tab
+        ch_changeo_parsedb_select_tab
     )
 
     // Subworkflow: merge tables from the same patient
-    MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
+    MERGE_TABLES_WF(ch_changeo_parsedb_select_tab)
 
     // Shazam clonal threshold and tigger genotyping
     SHAZAM_TIGGER_THRESHOLD(
@@ -339,15 +265,15 @@ workflow BCELLMAGIC {
 
     // Process logs parsing: getting sequence numbers
     PARSE_LOGS(
-        PRESTO_FILTERSEQ.out.logs.collect(),
-        PRESTO_MASKPRIMERS.out.logs.collect(),
-        PRESTO_PAIRSEQ.out.logs.collect(),
-        PRESTO_CLUSTERSETS.out.logs.collect(),
-        PRESTO_BUILDCONSENSUS.out.logs.collect(),
-        PRESTO_POSTCONSENSUS_PAIRSEQ.out.logs.collect(),
-        PRESTO_ASSEMBLEPAIRS.out.logs.collect(),
-        PRESTO_COLLAPSESEQ.out.logs.collect(),
-        PRESTO_SPLITSEQ.out.logs.collect(),
+        PRESTO_UMI.out.presto_filterseq_logs.collect(),
+        PRESTO_UMI.out.presto_maskprimers_logs.collect(),
+        PRESTO_UMI.out.presto_pairseq_logs.collect(),
+        PRESTO_UMI.out.presto_clustersets_logs.collect(),
+        PRESTO_UMI.out.presto_buildconsensus_logs.collect(),
+        PRESTO_UMI.out.presto_postconsensus_pairseq_logs.collect(),
+        PRESTO_UMI.out.presto_assemblepairs_logs.collect(),
+        PRESTO_UMI.out.presto_collapseseq_logs.collect(),
+        PRESTO_UMI.out.presto_splitseq_logs.collect(),
         CHANGEO_MAKEDB.out.logs.collect(),
         CHANGEO_DEFINECLONES.out.logs.collect(),
         CHANGEO_CREATEGERMLINES.out.logs.collect(),
