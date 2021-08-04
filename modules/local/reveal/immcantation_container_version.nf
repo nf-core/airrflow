@@ -19,7 +19,8 @@ process IMMCANTATION {
     script:
     def software = getSoftwareName(task.process)
     """
-    if ! [ -x "\$(versions -h)" ]; then
+    if ! command -v versions report &> /dev/null
+    then
         echo "immcantation: none" > ${software}.version.txt
     else
         versions report | head -n 1 > ${software}.version.txt
