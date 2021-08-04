@@ -31,7 +31,7 @@ process CHANGEO_ASSIGNGENES_REVEAL {
     script:
     def software = getSoftwareName(task.process)
     """
-    AssignGenes.py igblast -s $reads -b $igblast --organism "$meta.species" --loci "$meta.locus" --format blast --outname "$meta.id"
+    AssignGenes.py igblast -s $reads -b $igblast --organism "$meta.species" --loci "$meta.locus" --format blast --nproc $task.cpus --outname "$meta.id"
     AssignGenes.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
     igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" > igblast.version.txt
     """
