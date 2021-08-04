@@ -98,9 +98,9 @@ include { FASTQC_POSTASSEMBLY } from '../modules/local/fastqc_postassembly'     
 
 //PRESTO
 include { PRESTO_FILTERSEQ } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
-include { PRESTO_FILTERSEQ_POSTASSEMBLY } from '../modules/local/presto/presto_filterseq'            addParams( options: modules['presto_filterseq'] )
+include { PRESTO_FILTERSEQ_POSTASSEMBLY } from '../modules/local/presto/presto_filterseq_postassembly'            addParams( options: modules['presto_filterseq'] )
 include { PRESTO_MASKPRIMERS } from '../modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
-include { PRESTO_MASKPRIMERS_POSTASSEMBLY } from '../modules/local/presto/presto_maskprimers'        addParams( options: modules['presto_maskprimers'] )
+include { PRESTO_MASKPRIMERS_POSTASSEMBLY } from '../modules/local/presto/presto_maskprimers_postassembly'        addParams( options: modules['presto_maskprimers'] )
 include { PRESTO_PAIRSEQ } from '../modules/local/presto/presto_pairseq'                addParams( options: modules['presto_pairseq'] )
 include { PRESTO_CLUSTERSETS } from '../modules/local/presto/presto_clustersets'        addParams( options: modules['presto_clustersets'] )
 include { PRESTO_PARSE_CLUSTER } from '../modules/local/presto/presto_parse_cluster'    addParams( options: modules['presto_parse_clusters'] )
