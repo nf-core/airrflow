@@ -139,7 +139,6 @@ include { PARSE_LOGS } from '../modules/local/parse_logs'                       
 // Local: Sub-workflows
 include { INPUT_CHECK           } from '../subworkflows/local/input_check'       addParams( options: [:] )
 include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
-//include { FASTQC_POSTASSEMBLY       } from '../subworkflows/local/fastqc_postassembly'      addParams( options: [:] )
 
 /*
 ========================================================================================
