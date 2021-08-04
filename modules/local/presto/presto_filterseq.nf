@@ -68,7 +68,7 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     script:
     def software = getSoftwareName(task.process)
     """
-    FilterSeq.py quality -s $R1 -q ${params.filterseq_q} --outname "${meta.id}" --log "${R1.baseName}.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
+    FilterSeq.py quality -s $reads -q ${params.filterseq_q} --outname "${meta.id}" --log "${R1.baseName}.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
     ParseLog.py -l "${R1.baseName}.log" -f ID QUALITY
     FilterSeq.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
     """
