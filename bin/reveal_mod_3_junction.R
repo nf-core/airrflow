@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# 
+#
 # Junction length multiple of 3 filter:
 # Arguments:
 #   --repertoire  Tabulated data, in Change-O (TAB) or AIRR (TSV) format.
@@ -32,7 +32,7 @@ if (!("REPERTOIRE" %in% names(opt))) {
 db <- read_rearrangement(opt$REPERTOIRE)
 
 # Filter and save
-filter_pass <- db$junction_length %% 3 == 0 
+filter_pass <- db$junction_length %% 3 == 0
 table(filter_pass)
 
 if (!is.null(opt$OUTNAME)) {

@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# 
+#
 # Chimeric sequences filter:
 # sequences with >5 mismatches from the germline reference in any 10 base pair window are discarded
 # Arguments:
