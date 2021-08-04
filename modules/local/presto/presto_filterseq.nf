@@ -56,7 +56,7 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     }
 
     input:
-    tuple val(meta), path(R1)
+    tuple val(meta), path(reads)
 
     output:
     tuple val(meta), path("*quality-pass.fastq") ,  emit: reads
