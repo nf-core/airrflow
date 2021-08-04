@@ -24,6 +24,7 @@ fastas = args[4:length(args)]
 output_folder = dirname(inputtable)
 
 db <- read.table(inputtable, header=TRUE, sep="\t")
+# Add label for source species
 sourceLabel <- gsub(pattern = "\\.tsv$", "", inputtable)
 
 if (loci == "ig"){
