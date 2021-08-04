@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Log_parsing.py
+# log_parsing_no-umi.py
 # Parsing log files for each of the steps for QC analysis.
 
 import pandas as pd
