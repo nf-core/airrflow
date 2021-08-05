@@ -28,19 +28,10 @@ process PRESTO_ASSEMBLEPAIRS {
     path("*_table.tab")
 
     script:
-    def script_options = ''
-    def parse_options = ''
-    if (params.umi) {
-        script_options = '--1f CONSCOUNT PRCONS --2f CONSCOUNT PRCONS'
-        parse_options = 'ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT LENGTH OVERLAP ERROR PVALUE'
-    } else {
-        parse_options = 'ID SEQCOUNT PRIMER PRCOUNT PRFREQ LENGTH OVERLAP ERROR PVALUE'
-    }
     """
-    AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} --coord ${params.assemblepairs_coord} \
-        --rc tail --maxerror ${params.assemblepairs_maxerror} \
-        ${script_options} \
-        --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
-    ParseLog.py -l ${meta.id}.log -f ${parse_options}
+    AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} \\
+    $options.args \\
+    --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}.log $options.args2
     """
 }

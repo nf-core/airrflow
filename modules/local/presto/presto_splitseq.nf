@@ -25,11 +25,10 @@ process PRESTO_SPLITSEQ {
     path("*_command_log.txt"), emit: logs
 
     script:
-    def field_option = "-f DUPCOUNT"
-    if (params.umi) {
-        field_option = "-f CONSCOUNT"
-    }
     """
-    SplitSeq.py group -s $reads --outname ${meta.id} $options.args --fasta > "${meta.id}_command_log.txt"
+    SplitSeq.py group -s $reads \\
+    $options.args \\
+    --outname ${meta.id} \\
+    --fasta > "${meta.id}_command_log.txt"
     """
 }

@@ -5,7 +5,6 @@ def options    = initOptions(params.options)
 
 process PRESTO_COLLAPSESEQ {
     tag "$meta.id"
-    label "process_medium"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -29,14 +28,8 @@ process PRESTO_COLLAPSESEQ {
 
 
     script:
-    def script_options = ''
-    if (params.umi) {
-        script_options = '--uf PRCONS --cf CONSCOUNT --act sum'
-    }
     """
-    CollapseSeq.py -s $reads -n 20 --inner --outname ${meta.id} \
-        ${script_options} \
-        --log ${meta.id}.log > "${meta.id}_command_log.txt"
-    ParseLog.py -l "${meta.id}.log" -f HEADER DUPCOUNT
+    CollapseSeq.py -s $reads $options.args --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    ParseLog.py -l "${meta.id}.log" $options.args2
     """
 }

@@ -26,14 +26,7 @@ process CHANGEO_PARSEDB_SELECT {
     path("*_command_log.txt"), emit: logs //process logs
 
     script:
-    if (params.loci == 'ig') {
-        """
-        ParseDb.py select -d $tab $options.args \\
-        --outname ${meta.id} > "${meta.id}_command_log.txt"
-        """
-    } else if (params.loci == 'tr') {
-        """
-        ParseDb.py select -d $tab -f v_call j_call -u "TR" --regex --logic all --outname ${meta.id} > "${meta.id}_command_log.txt"
-        """
-    }
+    """
+    ParseDb.py select -d $tab $options.args --outname ${meta.id} > "${meta.id}_command_log.txt"
+    """
 }
