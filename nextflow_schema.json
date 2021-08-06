@@ -152,13 +152,6 @@
                     "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
                     "fa_icon": "fas fa-barcode"
                 },
-                "umi": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Indicate if UMIs are present in this experiment.",
-                    "help_text": "Set to `true` if UMI barcodes exist. If there are no UMI barcodes set to `false`.",
-                    "fa_icon": "fas fa-barcode"
-                },
                 "umi_position": {
                     "type": "string",
                     "default": "R1",
@@ -172,7 +165,7 @@
                 },
                 "umi_length": {
                     "type": "integer",
-                    "description": "UMI barcode length in nucleotides.",
+                    "description": "UMI barcode length in nucleotides. Set to 0 if no UMIs present.",
                     "fa_icon": "fas fa-barcode",
                     "default": 8
                 },
@@ -183,8 +176,6 @@
                 }
             },
             "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
-            "required": [
-            ],
             "fa_icon": "fas fa-barcode"
         },
         "presto_options": {
@@ -199,18 +190,6 @@
                     "description": "Quality threshold for Presto FilterSeq sequence filtering.",
                     "fa_icon": "fas fa-filter"
                 },
-                "assemblepairs_coord": {
-                    "type": "string",
-                    "default": "presto",
-                    "description": "The format of the sequence identifier which defines shared coordinate information across paired ends. Default is presto- assuming UMIs are present, this will likely be the format from upstream presto steps. If UMIs are not present, typically use `sra` or `illumina` depending on your data source.",
-                    "fa_icon": "fab fa-pagelines"
-                },
-                "assemblepairs_maxerrror": {
-                    "type": "number",
-                    "default": 0.3,
-                    "description": "Maximum allowable error rate for de novo assembly.",
-                    "fa_icon": "fas fa-exclamation-triangle"
-                },
                 "primer_mask_mode": {
                     "type": "string",
                     "default": "cut",
@@ -224,7 +203,7 @@
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-cut"
                 },
-                "maskprimer_revpr": {
+                "primer_revpr": {
                     "type": "boolean",
                     "default": "false",
                     "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",

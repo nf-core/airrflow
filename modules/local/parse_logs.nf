@@ -38,13 +38,13 @@ process PARSE_LOGS {
     path "Table_sequences_process.tsv", emit: logs
 
     script:
-    if (params.umi) {
+    if (params.umi_length == 0) {
         """
-        log_parsing.py
+        log_parsing_no-umi.py
         """
     } else {
         """
-        log_parsing_no-umi.py
+        log_parsing.py
         """
     }
 }
