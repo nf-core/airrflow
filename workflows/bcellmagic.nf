@@ -118,7 +118,7 @@ include { PARSE_LOGS } from '../modules/local/parse_logs'                       
 include { INPUT_CHECK           } from '../subworkflows/local/input_check'          addParams( options: [:] )
 include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
 include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'           addParams( options: [:] )
-//include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'           addParams( options: [:] )
+include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'           addParams( options: [:] )
 
 /*
 ========================================================================================
@@ -177,9 +177,20 @@ workflow BCELLMAGIC {
         )
         ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
         ch_presto_software = PRESTO_SANS_UMI.out.software
+        ch_fastqc_postassembly_gz = PRESTO_SANS_UMI.out.fastqc_postassembly_gz
+        ch_presto_assemblepairs_logs = PRESTO_SANS_UMI.out.presto_assemblepairs_logs
+        ch_presto_filterseq_logs = PRESTO_SANS_UMI.out.presto_filterseq_logs
+        ch_presto_maskprimers_logs = PRESTO_SANS_UMI.out.presto_maskprimers_logs
+        ch_presto_collapseseq_logs = PRESTO_SANS_UMI.out.presto_collapseseq_logs
+        ch_presto_splitseq_logs = PRESTO_SANS_UMI.out.presto_splitseq_logs
+        // These channels will be empty in the sans-UMI workflow
+        ch_presto_pairseq_logs = Channel.empty()
+        ch_presto_clustersets_logs = Channel.empty()
+        ch_presto_buildconsensus_logs = Channel.empty()
+        ch_presto_postconsensus_pairseq_logs = Channel.empty()
     } else {
         //
-        // SUBWORKFLOW: pRESTO UMI
+        // SUBWORKFLOW: pRESTO with UMIs
         //
         PRESTO_UMI (
             ch_presto,
@@ -187,8 +198,17 @@ workflow BCELLMAGIC {
             ch_vprimers_fasta
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
-        ch_fastqc_postassembly_gz = PRESTO_UMI.out.fastqc_postassembly_gz
         ch_presto_software = PRESTO_UMI.out.software
+        ch_fastqc_postassembly_gz = PRESTO_UMI.out.fastqc_postassembly_gz
+        ch_presto_filterseq_logs = PRESTO_UMI.out.presto_filterseq_logs
+        ch_presto_maskprimers_logs = PRESTO_UMI.out.presto_maskprimers_logs
+        ch_presto_pairseq_logs = PRESTO_UMI.out.presto_pairseq_logs
+        ch_presto_clustersets_logs = PRESTO_UMI.out.presto_clustersets_logs
+        ch_presto_buildconsensus_logs = PRESTO_UMI.out.presto_buildconsensus_logs
+        ch_presto_postconsensus_pairseq_logs = PRESTO_UMI.out.presto_postconsensus_pairseq_logs
+        ch_presto_assemblepairs_logs = PRESTO_UMI.out.presto_assemblepairs_logs
+        ch_presto_collapseseq_logs = PRESTO_UMI.out.presto_collapseseq_logs
+        ch_presto_splitseq_logs = PRESTO_UMI.out.presto_splitseq_logs
     }
 
     ch_software_versions = ch_software_versions.mix(ch_presto_software)
@@ -283,15 +303,15 @@ workflow BCELLMAGIC {
 
     // Process logs parsing: getting sequence numbers
     PARSE_LOGS(
-        PRESTO_UMI.out.presto_filterseq_logs.collect(),
-        PRESTO_UMI.out.presto_maskprimers_logs.collect(),
-        PRESTO_UMI.out.presto_pairseq_logs.collect(),
-        PRESTO_UMI.out.presto_clustersets_logs.collect(),
-        PRESTO_UMI.out.presto_buildconsensus_logs.collect(),
-        PRESTO_UMI.out.presto_postconsensus_pairseq_logs.collect(),
-        PRESTO_UMI.out.presto_assemblepairs_logs.collect(),
-        PRESTO_UMI.out.presto_collapseseq_logs.collect(),
-        PRESTO_UMI.out.presto_splitseq_logs.collect(),
+        ch_presto_filterseq_logs.collect(),
+        ch_presto_maskprimers_logs.collect(),
+        ch_presto_pairseq_logs.collect().ifEmpty([]),
+        ch_presto_clustersets_logs.collect().ifEmpty([]),
+        ch_presto_buildconsensus_logs.collect().ifEmpty([]),
+        ch_presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
+        ch_presto_assemblepairs_logs.collect(),
+        ch_presto_collapseseq_logs.collect(),
+        ch_presto_splitseq_logs.collect(),
         CHANGEO_MAKEDB.out.logs.collect(),
         CHANGEO_DEFINECLONES.out.logs.collect(),
         CHANGEO_CREATEGERMLINES.out.logs.collect(),
