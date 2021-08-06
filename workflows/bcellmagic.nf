@@ -46,7 +46,7 @@ if (params.protocol == "pcr_umi"){
 
 // Validate UMI position
 if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
-if (params.umi_length == 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`."}
+if (params.umi_length == null) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
 if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
 // If paths to databases are provided
@@ -118,6 +118,7 @@ include { PARSE_LOGS } from '../modules/local/parse_logs'                       
 include { INPUT_CHECK           } from '../subworkflows/local/input_check'          addParams( options: [:] )
 include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
 include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'           addParams( options: [:] )
+//include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'           addParams( options: [:] )
 
 /*
 ========================================================================================
@@ -165,17 +166,30 @@ workflow BCELLMAGIC {
     // Channel for software versions
     ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
 
-    //
-    // SUBWORKFLOW: pRESTO UMI
-    //
-    PRESTO_UMI (
-        ch_presto,
-        ch_cprimers_fasta,
-        ch_vprimers_fasta
-    )
-    ch_presto_fasta = PRESTO_UMI.out.fasta
-    ch_presto_software = PRESTO_UMI.out.software
-
+    if (params.umi_length == 0) {
+        //
+        // SUBWORKFLOW: pRESTO without UMIs
+        //
+        PRESTO_SANS_UMI (
+            ch_presto,
+            ch_cprimers_fasta,
+            ch_vprimers_fasta
+        )
+        ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
+        ch_presto_software = PRESTO_SANS_UMI.out.software
+    } else {
+        //
+        // SUBWORKFLOW: pRESTO UMI
+        //
+        PRESTO_UMI (
+            ch_presto,
+            ch_cprimers_fasta,
+            ch_vprimers_fasta
+        )
+        ch_presto_fasta = PRESTO_UMI.out.fasta
+        ch_fastqc_postassembly_gz = PRESTO_UMI.out.fastqc_postassembly_gz
+        ch_presto_software = PRESTO_UMI.out.software
+    }
 
     ch_software_versions = ch_software_versions.mix(ch_presto_software)
 
@@ -311,6 +325,7 @@ workflow BCELLMAGIC {
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_gz.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
             ch_multiqc_files.collect()
