@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0dev]
+
+### `Added`
+
+* [#130](https://github.com/nf-core/bcellmagic/pull/130): Organized presto processes in `presto_umi` subworkflow.
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## [2.0.0] - 2021-07-19 "Lumos"
 
 ### :warning: Major enhancements
@@ -34,7 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Added Bcellmagic html report.
 * [#114](https://github.com/nf-core/bcellmagic/pull/114): Improved documentation on amplicon protocol support.
 * [#115](https://github.com/nf-core/bcellmagic/pull/115): Improved output file structure and documentation.
-* [#124](https://github.com/nf-core/bcellmagic/pull/124): Template updte to nf-core tools v2.0.1
+* [#124](https://github.com/nf-core/bcellmagic/pull/124): Template update to nf-core tools v2.0.1
 
 ### `Fixed`
 

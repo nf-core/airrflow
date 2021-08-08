@@ -29,7 +29,7 @@ process PRESTO_COLLAPSESEQ {
 
     script:
     """
-    CollapseSeq.py -s $reads -n 20 --inner --uf PRCONS --cf CONSCOUNT --act sum --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
-    ParseLog.py -l "${meta.id}.log" -f HEADER DUPCOUNT
+    CollapseSeq.py -s $reads $options.args --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    ParseLog.py -l "${meta.id}.log" $options.args2
     """
 }

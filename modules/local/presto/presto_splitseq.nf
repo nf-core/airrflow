@@ -26,6 +26,9 @@ process PRESTO_SPLITSEQ {
 
     script:
     """
-    SplitSeq.py group -s $reads --outname ${meta.id} -f CONSCOUNT --num 2 --fasta > "${meta.id}_command_log.txt"
+    SplitSeq.py group -s $reads \\
+    $options.args \\
+    --outname ${meta.id} \\
+    --fasta > "${meta.id}_command_log.txt"
     """
 }
