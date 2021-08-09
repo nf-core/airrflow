@@ -112,7 +112,10 @@ workflow REVEAL {
 
     // If reassign requested, generate fasta from the tsv files
     if (params.reassign) {
-        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA(REVEAL_INPUT_CHECK.out.ch_tsv).fasta
+        CHANGEO_CONVERTDB_FASTA(
+            REVEAL_INPUT_CHECK.out.ch_tsv
+        )
+        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA.out.fasta
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
     } else {
         ch_fasta_from_tsv = Channel.empty()
