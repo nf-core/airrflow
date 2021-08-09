@@ -68,7 +68,7 @@ include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'       
 include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
-include { CHIMERIC  } from '../modules/local/reveal/chimeric' addParams( options: modules['filter_quality_reveal'] )
+include { REMOVE_CHIMERIC  } from '../modules/local/reveal/remove_chimeric' addParams( options: modules['filter_quality_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 
@@ -181,7 +181,7 @@ workflow REVEAL {
             ch_imgt.collect()
         ).tab
         // Mix with single
-        ch_chimeric_pass = ch_repertoire_by_processing.single.mix(CHIMERIC.out.tab)
+        ch_chimeric_pass = ch_repertoire_by_processing.single.mix(REMOVE_CHIMERIC.out.tab)
     } else {
         ch_chimeric_pass = ch_repertoire
     }
