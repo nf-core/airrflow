@@ -176,7 +176,7 @@ workflow REVEAL {
             bulk:   it[0].single_cell == 'false'
         }
         .set{ch_repertoire_by_processing}
-        CHIMERIC(
+        REMOVE_CHIMERIC(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
         ).tab
