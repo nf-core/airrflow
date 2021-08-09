@@ -186,7 +186,11 @@ workflow REVEAL {
         ch_chimeric_pass = ch_repertoire
     }
 
-    ch_annotated_repertoires = ADD_META_TO_TAB(ch_chimeric_pass, REVEAL_INPUT_CHECK.out.validated_input)
+    ADD_META_TO_TAB(
+        ch_chimeric_pass, 
+        REVEAL_INPUT_CHECK.out.validated_input
+    )
+    ch_annotated_repertoires = ADD_META_TO_TAB.out
 
     // Collapse duplicates
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
