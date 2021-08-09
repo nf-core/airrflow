@@ -16,10 +16,11 @@ workflow REVEAL_INPUT_CHECK {
     cloneby
 
     main:
-    validated_input = VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby).validated_input
+    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby)
+    validated_input = VALIDATE_INPUT.out.validated_input
     validated_input
-            .splitCsv(header: true, sep:'\t')
-            .map { get_meta(it) }
+        .splitCsv(header: true, sep:'\t')
+        .map { get_meta(it) }
             .branch { it ->
                 fasta: it[0].filename =~ /[fasta|fa]$/
                 tsv:   it[0].filename =~ /tsv$/
