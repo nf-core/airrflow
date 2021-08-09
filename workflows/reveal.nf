@@ -156,7 +156,10 @@ workflow REVEAL {
         CHANGEO_PARSEDB_SPLIT (
             FILTER_QUALITY.out.tab
         )
-        ch_repertoire = FILTER_JUNCTION_MOD3(CHANGEO_PARSEDB_SPLIT.out.tab).tab
+        FILTER_JUNCTION_MOD3( 
+            CHANGEO_PARSEDB_SPLIT.out.tab
+        )
+        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
     } else {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
