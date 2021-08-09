@@ -16,6 +16,7 @@ insert_final_newline = unset
 
 [*.tsv]
 insert_final_newline = unset
+trim_trailing_whitespace = false
 
 # These files are edited and tested upstream in nf-core/modules
 [/modules/nf-core/**]
