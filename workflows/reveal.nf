@@ -187,11 +187,12 @@ workflow REVEAL {
     }
 
     ADD_META_TO_TAB(
-        ch_chimeric_pass, 
+        ch_chimeric_pass,
         REVEAL_INPUT_CHECK.out.validated_input
     )
     ch_annotated_repertoires = ADD_META_TO_TAB.out
 
+    /*
     // Collapse duplicates
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
     ch_collapsable = ch_annotated_repertoires.tab
@@ -201,6 +202,8 @@ workflow REVEAL {
         .dump()
 
     //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
+    */
+
     // Software versions
     GET_SOFTWARE_VERSIONS (
         ch_software_versions.map { it }.collect()
