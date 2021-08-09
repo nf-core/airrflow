@@ -179,7 +179,7 @@ workflow REVEAL {
         REMOVE_CHIMERIC(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
-        ).tab
+        )
         // Mix with single
         ch_chimeric_pass = ch_repertoire_by_processing.single.mix(CHIMERIC.out.tab)
     } else {
