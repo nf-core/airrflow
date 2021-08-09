@@ -112,8 +112,7 @@ if (num_dist > 3) {
     # Workaround for sources with too few nearest distance values to determine an effective threshold.
     # Set threshold to 0 and print a warning
     threshold <- 0.0
-    warning(paste("Could not determine an effective Hamming distance threshold for source:", sourceLabel,
-                  ", which has", num_dist, "unique nearest distances. Threshold defaulting to 0.",  sep=" "))
+    warning(paste("Could not determine an effective Hamming distance threshold for source:", sourceLabel, ", which has", num_dist, "unique nearest distances. Threshold defaulting to 0.",  sep=" "))
     ggsave(paste(output_folder,paste0(sourceLabel, "_Hamming_distance_threshold.pdf"),sep="/"), plot(dist_ham$dist_nearest, dist_ham$duplicate_count), device="pdf")
 }
 

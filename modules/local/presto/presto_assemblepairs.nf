@@ -30,8 +30,8 @@ process PRESTO_ASSEMBLEPAIRS {
     script:
     """
     AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} \\
-      $options.args \\
-      --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
+        $options.args \\
+        --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
     ParseLog.py -l ${meta.id}.log $options.args2
     """
 }
