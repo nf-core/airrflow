@@ -186,6 +186,8 @@ workflow REVEAL {
         ch_chimeric_pass = ch_repertoire
     }
 
+    // Add metadata to the rearrangement files, to be used later
+    // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
         ch_chimeric_pass,
         REVEAL_INPUT_CHECK.out.validated_input
@@ -193,7 +195,7 @@ workflow REVEAL {
     ch_annotated_repertoires = ADD_META_TO_TAB.out
 
     /*
-    // Collapse duplicates
+    // Collapse duplicates by params.collapseby
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
     ch_collapsable = ch_annotated_repertoires.tab
         .map{ it -> [ it[0].single_cell, it[0], it[1] ] }
@@ -203,6 +205,34 @@ workflow REVEAL {
 
     //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
     */
+
+    // If params.threshold is auto,
+    // 1) use distToNearest and findThreshold to determine
+    // the threshold that will be used to identify sets of clonally
+    // related sequences. If threshold found, continue, to 2), else,
+    // stop and report a threshold could be identified.
+    // 2) create a report with plots of the distToNearest distribution
+    // and the threshold.
+
+
+    // Use the threshold to find clones, grouping by params.cloneby and
+    // create a report
+
+
+    // Create germlines. If params.cloned is true, use the flag --cloned
+
+    // Here, we have the final set of sequences. Create a report
+    // to track the number of sequences in each repertoire after
+    // each processing step.
+
+    // Compare repertoires' properties, using report Rmds from
+    // enchantr and a contrasts file provided by the user.
+    // Report: Gene usage
+    // Report: Aminoacid properties
+    // Report: Mutational load
+    // Report: SHM
+    // Report: dowser
+
 
     // Software versions
     GET_SOFTWARE_VERSIONS (
