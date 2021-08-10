@@ -27,6 +27,7 @@ process VALIDATE_INPUT {
     path miairr
     val collapseby
     val cloneby
+    val reassign
 
     output:
     path "validated_input.tsv", emit: validated_input
@@ -34,7 +35,6 @@ process VALIDATE_INPUT {
 
     script:
     """
-    #reveal_validate_input.R --input "${samplesheet}" --collapseby ${collapseby} --cloneby ${cloneby} --output "validated_input" --miairr "${miairr}"
-    Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','miairr'='${miairr}','outdir'=getwd()))"
+    Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','reassign'='${reassign}','miairr'='${miairr}','outdir'=getwd()))"
     """
 }

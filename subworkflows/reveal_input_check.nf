@@ -14,9 +14,10 @@ workflow REVEAL_INPUT_CHECK {
     miairr
     collapseby
     cloneby
+    reassign
 
     main:
-    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby)
+    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby, reassign)
     validated_input = VALIDATE_INPUT.out.validated_input
     validated_input
         .splitCsv(header: true, sep:'\t')

@@ -108,7 +108,7 @@ workflow REVEAL {
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files
-    REVEAL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby)
+    REVEAL_INPUT_CHECK (ch_input, params.miairr, params.collapseby, params.cloneby, params.reassign)
 
     // If reassign requested, generate fasta from the tsv files
     if (params.reassign) {
