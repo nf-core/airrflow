@@ -21,21 +21,6 @@ WorkflowMain.initialise(workflow, params, log)
 
 /*
 ========================================================================================
-    NAMED WORKFLOW FOR PIPELINE
-========================================================================================
-*/
-
-include { BCELLMAGIC } from './workflows/bcellmagic'
-
-//
-// WORKFLOW: Run main nf-core/bcellmagic analysis pipeline
-//
-workflow NFCORE_BCELLMAGIC {
-    BCELLMAGIC ()
-}
-
-/*
-========================================================================================
     RUN ALL WORKFLOWS
 ========================================================================================
 */
@@ -45,7 +30,15 @@ workflow NFCORE_BCELLMAGIC {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_BCELLMAGIC ()
+    if (params.subworkflow == "bcellmagic") {
+        include { BCELLMAGIC } from './workflows/bcellmagic'
+        BCELLMAGIC()
+    } else if (params.subworkflow == "reveal") {
+        include { REVEAL } from './workflows/reveal'
+        REVEAL ()
+    } else {
+        exit 1
+    }
 }
 
 /*
