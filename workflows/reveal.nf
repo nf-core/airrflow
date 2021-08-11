@@ -194,7 +194,7 @@ workflow REVEAL {
     )
     ch_annotated_repertoires = ADD_META_TO_TAB.out
 
-    /*
+
     // Collapse duplicates by params.collapseby
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
     ch_collapsable = ch_annotated_repertoires.tab
@@ -204,7 +204,8 @@ workflow REVEAL {
         .dump()
 
     //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
-    */
+
+    // single-cell specific qc (doublets,...)
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
