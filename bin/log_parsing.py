@@ -41,7 +41,7 @@ for process in processes:
             with open(logfile, "r") as f:
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "PAIRS>" in line:
                         pairs.append(line.strip().lstrip("PAIRS> "))
@@ -80,7 +80,7 @@ for process in processes:
                 for line in f:
                     if " START>" in line:
                         if c < 1:
-                            s_code.append(logfile.split("/")[1].split("_")[0])
+                            s_code.append(logfile.split("/")[1].split("_command_log")[0])
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
@@ -127,7 +127,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES1>" in line:
                         seqs1.append(line.strip().lstrip("SEQUENCES1").lstrip("> "))
@@ -162,7 +162,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "OUTPUT>" in line:
                         output_file.append(line.strip().lstrip("OUTPUT> "))
@@ -202,7 +202,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES>" in line:
                         seqs.append(line.strip().lstrip("SEQUENCES> "))
@@ -235,7 +235,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if "PASS>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         pass_blast.append(line.strip().lstrip("PASS> "))
                     elif "FAIL>" in line:
                         fail_blast.append(line.strip().lstrip("FAIL> "))
@@ -267,7 +267,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
@@ -303,7 +303,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))

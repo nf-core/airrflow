@@ -37,7 +37,7 @@ for process in processes:
             with open(logfile, "r") as f:
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "PAIRS>" in line:
                         pairs.append(line.strip().lstrip("PAIRS> "))
@@ -76,7 +76,7 @@ for process in processes:
                 for line in f:
                     if " START>" in line:
                         if c < 1:
-                            s_code.append(logfile.split("/")[1].split("_")[0])
+                            s_code.append(logfile.split("/")[1].split("_command_log")[0])
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
@@ -120,7 +120,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES1>" in line:
                         seqs1.append(line.strip().lstrip("SEQUENCES1").lstrip("> "))
@@ -141,47 +141,6 @@ for process in processes:
 
         df_process_list.append(df_process)
 
-    elif process in ["cluster_sets", "build_consensus"]:
-        s_code = []
-        output_file = []
-        seqs = []
-        pairs = []
-        pass_pairs = []
-        fail_pairs = []
-        process_name = []
-
-        for logfile in log_files:
-            with open(logfile, "r") as f:
-                # print(f.read())
-                for line in f:
-                    if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
-                        process_name.append(process)
-                    elif "OUTPUT>" in line:
-                        output_file.append(line.strip().lstrip("OUTPUT> "))
-                    elif "SEQUENCES>" in line:
-                        seqs.append(line.strip().lstrip("SEQUENCES> "))
-                    elif "SETS>" in line:
-                        pairs.append(line.strip().lstrip("SETS> "))
-                    elif "PASS>" in line:
-                        pass_pairs.append(line.strip().lstrip("PASS> "))
-                    elif "FAIL>" in line:
-                        fail_pairs.append(line.strip().lstrip("FAIL> "))
-
-        df_process = pd.DataFrame.from_dict(
-            {
-                "Sample": s_code,
-                "Output_file": output_file,
-                "start_seqs": seqs,
-                "start_sets": pairs,
-                "pass_sets": pass_pairs,
-                "fail_sets": fail_pairs,
-                "process": process_name,
-            }
-        )
-
-        df_process_list.append(df_process)
-
     elif process in ["deduplicates"]:
         s_code = []
         seqs = []
@@ -195,7 +154,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES>" in line:
                         seqs.append(line.strip().lstrip("SEQUENCES> "))
@@ -228,7 +187,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if "PASS>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         pass_blast.append(line.strip().lstrip("PASS> "))
                     elif "FAIL>" in line:
                         fail_blast.append(line.strip().lstrip("FAIL> "))
@@ -260,7 +219,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
@@ -296,7 +255,7 @@ for process in processes:
                 # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
