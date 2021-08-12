@@ -167,7 +167,7 @@
                     "type": "integer",
                     "description": "UMI barcode length in nucleotides. Set to 0 if no UMIs present.",
                     "fa_icon": "fas fa-barcode",
-                    "default": 8
+                    "default": null
                 },
                 "umi_start": {
                     "type": "integer",
