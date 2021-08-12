@@ -31,10 +31,7 @@ process PRESTO_MASKPRIMERS_POSTASSEMBLY {
 
 
     script:
-    def revpr = ''
-    if (params.primer_revpr) {
-        revpr = '--revpr'
-    }
+def revpr = params.primer_revpr ? '--revpr' : ''
     if (params.cprimer_position == "R1") {
         """
         MaskPrimers.py score --nproc ${task.cpus} -s $reads -p ${cprimers} --start ${params.cprimer_start} --maxerror ${params.primer_maxerror} \
