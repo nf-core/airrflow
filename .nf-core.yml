@@ -1,5 +1,6 @@
 files_unchanged:
   - lib/NfcoreSchema.groovy
+  - assets/multiqc_config.yaml
 actions_awsfulltest: False
 params_used: False
 files_exist:
