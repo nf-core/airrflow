@@ -73,7 +73,7 @@ include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addP
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 
 // Local: Sub-workflows
-include { REVEAL_INPUT_CHECK } from '../subworkflows/reveal_input_check'       addParams( options: [:] )
+include { REVEAL_INPUT_CHECK } from '../subworkflows/local/reveal_input_check'       addParams( options: [:] )
 
 /*
 ========================================================================================
