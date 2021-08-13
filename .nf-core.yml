@@ -1,5 +1,3 @@
 lint:
   files_unchanged:
     - assets/multiqc_config.yaml
-  - environment.yml
-  - Dockerfile
