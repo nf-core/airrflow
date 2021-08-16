@@ -45,8 +45,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 * `fastqc/`
-    * `*_fastqc.html`: FastQC report containing quality metrics.
-    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+    * `*_fastqc.html`: FastQC report containing quality metrics for the raw unmated reads.
+    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the raw unmated reads.
+    * `postassembly/`
+        * `*_ASSEMBLED_fastqc.html`: FastQC report containing quality metrics for the mated and quality filtered reads.
+        * `*_ASSEMBLED_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the mated and quality filtered reads.
 
 </details>
 
@@ -58,9 +61,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
 
-> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+> **NB:** Two sets of FastQC plots are displayed in the MultiQC report: first for the raw _untrimmed_ and unmated reads and secondly for the assembled and QC filtered reads (but before collapsing duplicates). They may contain adapter sequence and potentially regions with low quality.
 
 ## presto
+
+> **NB:** If using the sans-UMI subworkflow by specifying `umi_length=0`, the presto directory ordering numbers will differ e.g., mate pair assembly results will be output to `presto/01-assemblepairs/<sampleID>` as this will be the first presto step.
 
 ### Filter by sequence quality
 
