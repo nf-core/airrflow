@@ -176,9 +176,6 @@
                 }
             },
             "help_text": "The pipeline requires indication of UMI barcode treatment (for identifying unique transcripts). These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter. If no UMI barcodes are present, specify `--umi_length = 0` to use the sans-UMI subworkflow.",
-            "required": [
-                "umi_length"
-            ],
             "fa_icon": "fas fa-barcode"
         },
         "presto_options": {
