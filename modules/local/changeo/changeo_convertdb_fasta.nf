@@ -25,11 +25,12 @@ process CHANGEO_CONVERTDB_FASTA {
     output:
     tuple val(meta), path("*.fasta"), emit: fasta // sequence tsv in AIRR format
     path "*.version.txt" , emit: version
+    path "*_command_log.txt" , emit: logs
 
     script:
     def software = getSoftwareName(task.process)
     """
-    ConvertDb.py fasta -d $tab $options.args
+    ConvertDb.py fasta -d $tab $options.args > "${meta.id}_command_log.txt"
     ConvertDb.py --version | awk -F' ' '{print \$2}' > ${software}.version.txt
     """
 }
