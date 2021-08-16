@@ -7,7 +7,6 @@ include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_SANS_UMI } from '../../modu
 include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_SANS_UMI }  from '../../modules/local/presto/presto_assemblepairs'                         addParams( options: modules['presto_assemblepairs_sans_umi'] )
 include { PRESTO_FILTERSEQ_POSTASSEMBLY      as  PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI }      from '../../modules/local/presto/presto_filterseq_postassembly'                             addParams( options: modules['presto_filterseq_postassembly_sans_umi'] )
 include { PRESTO_MASKPRIMERS_POSTASSEMBLY    as  PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI }    from '../../modules/local/presto/presto_maskprimers_postassembly'                           addParams( options: modules['presto_maskprimers_postassembly_sans_umi'] )
-include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_COLLAPSE_SANS_UMI } from '../../modules/local/presto/presto_parseheaders'                   addParams( options: modules['presto_parseheaders_collapse_sans_umi'] )
 include { PRESTO_PARSEHEADERS_PRIMERS   as PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI }    from '../../modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers_sans_umi'] )
 include { PRESTO_PARSEHEADERS_METADATA  as PRESTO_PARSEHEADERS_METADATA_SANS_UMI }   from '../../modules/local/presto/presto_parseheaders_metadata'     addParams( options: modules['presto_parseheaders_metadata'] )
 include { PRESTO_COLLAPSESEQ    as PRESTO_COLLAPSESEQ_SANS_UMI }     from '../../modules/local/presto/presto_collapseseq'                           addParams( options: modules['presto_collapseseq_sans_umi'] )
@@ -52,14 +51,9 @@ workflow PRESTO_SANS_UMI {
         PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI.out.reads
     )
 
-    // Collapse duplicates into counts
-    PRESTO_PARSEHEADERS_COLLAPSE_SANS_UMI (
-        PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI.out.reads
-    )
-
     // Annotate primers in C_PRIMER and V_PRIMER field
     PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI (
-        PRESTO_PARSEHEADERS_COLLAPSE_SANS_UMI.out.reads
+        PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI.out.reads
     )
 
     // Annotate metadata on primer headers
@@ -67,12 +61,12 @@ workflow PRESTO_SANS_UMI {
         PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI.out.reads
     )
 
-    // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
+    // Mark and count duplicate sequences (DUPCOUNT)
     PRESTO_COLLAPSESEQ_SANS_UMI (
         PRESTO_PARSEHEADERS_METADATA_SANS_UMI.out.reads
     )
 
-    // Filter out sequences with less than 2 representative duplicates with different UMIs
+    // Filter out sequences with less than 2 representative duplicates
     PRESTO_SPLITSEQ_SANS_UMI (
         PRESTO_COLLAPSESEQ_SANS_UMI.out.reads
     )
