@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Log_parsing.py
+# log_parsing_no-umi.py
 # Parsing log files for each of the steps for QC analysis.
 
 import pandas as pd
@@ -8,13 +8,9 @@ import re
 
 # Processes
 processes = [
+    "assemble_pairs",
     "filter_by_sequence_quality",
     "mask_primers",
-    "pair_sequences",
-    "cluster_sets",
-    "build_consensus",
-    "repair_mates",
-    "assemble_pairs",
     "deduplicates",
     "igblast",
 ]
@@ -103,11 +99,8 @@ for process in processes:
             {
                 "Sample": s_code,
                 "start_R1": seqs_R1,
-                "start_R2": seqs_R2,
                 "pass_R1": pass_R1,
-                "pass_R2": pass_R2,
                 "fail_R1": fail_R1,
-                "fail_R2": fail_R2,
                 "process": process_name,
             }
         )
@@ -142,47 +135,6 @@ for process in processes:
                 "seqs_1": seqs1,
                 "seqs_2": seqs2,
                 "pass_pairs": pass_pairs,
-                "process": process_name,
-            }
-        )
-
-        df_process_list.append(df_process)
-
-    elif process in ["cluster_sets", "build_consensus"]:
-        s_code = []
-        output_file = []
-        seqs = []
-        pairs = []
-        pass_pairs = []
-        fail_pairs = []
-        process_name = []
-
-        for logfile in log_files:
-            with open(logfile, "r") as f:
-                # print(f.read())
-                for line in f:
-                    if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
-                        process_name.append(process)
-                    elif "OUTPUT>" in line:
-                        output_file.append(line.strip().lstrip("OUTPUT> "))
-                    elif "SEQUENCES>" in line:
-                        seqs.append(line.strip().lstrip("SEQUENCES> "))
-                    elif "SETS>" in line:
-                        pairs.append(line.strip().lstrip("SETS> "))
-                    elif "PASS>" in line:
-                        pass_pairs.append(line.strip().lstrip("PASS> "))
-                    elif "FAIL>" in line:
-                        fail_pairs.append(line.strip().lstrip("FAIL> "))
-
-        df_process = pd.DataFrame.from_dict(
-            {
-                "Sample": s_code,
-                "Output_file": output_file,
-                "start_seqs": seqs,
-                "start_sets": pairs,
-                "pass_sets": pass_pairs,
-                "fail_sets": fail_pairs,
                 "process": process_name,
             }
         )
@@ -324,18 +276,12 @@ for process in processes:
 
         df_process_list.append(df_process)
 
-
 colnames = [
     "Sample",
-    "Sequences_R1",
-    "Sequences_R2",
-    "Filtered_quality_R1",
-    "Filtered_quality_R2",
-    "Mask_primers_R1",
-    "Mask_primers_R2",
-    "Paired",
-    "Build_consensus",
+    "Sequences",
     "Assemble_pairs",
+    "Filtered_quality",
+    "Mask_primers",
     "Unique",
     "Representative_2",
     "Igblast",
@@ -343,55 +289,35 @@ colnames = [
 
 values = [
     df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R2"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_pairs"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
     df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
-    df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[6].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[7].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-    df_process_list[8].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[8].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+    df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
+    df_process_list[3].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist()
 ]
 
 # Tables provide extra info and help debugging
 df_process_list[0].to_csv(
-    path_or_buf="Table_all_details_filter_quality.tsv",
-    sep="\t",
-    header=True,
-    index=False,
-)
-df_process_list[1].to_csv(
-    path_or_buf="Table_all_details_mask_primers.tsv", sep="\t", header=True, index=False
-)
-df_process_list[2].to_csv(
-    path_or_buf="Table_all_details_paired.tsv", sep="\t", header=True, index=False
-)
-df_process_list[3].to_csv(
-    path_or_buf="Table_all_details_cluster_sets.tsv", sep="\t", header=True, index=False
-)
-df_process_list[4].to_csv(
-    path_or_buf="Table_all_details_build_consensus.tsv",
-    sep="\t",
-    header=True,
-    index=False,
-)
-df_process_list[5].to_csv(
-    path_or_buf="Table_all_details_repaired.tsv", sep="\t", header=True, index=False
-)
-df_process_list[6].to_csv(
     path_or_buf="Table_all_details_assemble_mates.tsv",
     sep="\t",
     header=True,
     index=False,
 )
-df_process_list[7].to_csv(
+df_process_list[1].to_csv(
+    path_or_buf="Table_all_details_filter_quality.tsv",
+    sep="\t",
+    header=True,
+    index=False,
+)
+df_process_list[2].to_csv(
+    path_or_buf="Table_all_details_mask_primers.tsv", sep="\t", header=True, index=False
+)
+df_process_list[3].to_csv(
     path_or_buf="Table_all_details_deduplicate.tsv", sep="\t", header=True, index=False
 )
-df_process_list[8].to_csv(
+df_process_list[4].to_csv(
     path_or_buf="Table_all_details_igblast.tsv", sep="\t", header=True, index=False
 )
 
