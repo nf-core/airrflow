@@ -28,19 +28,10 @@ process CHANGEO_MAKEDB {
     path("*_command_log.txt"), emit: logs //process logs
 
     script:
-    if (params.loci == 'ig'){
-        """
-        MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/ \\
-        $options.args \\
-        --outname "${meta.id}" > "${meta.id}_command_log.txt"
-        """
-    } else if (params.loci == 'tr') {
-        """
-        MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/ \\
-        $options.args \\
-        --outname "${meta.id}" > "${meta.id}_command_log.txt"
-        """
-    }
+    """
+    MakeDb.py igblast -i $igblast -s $reads -r \\
+    ${imgt_base}/${params.species}/vdj/ \\
+    $options.args \\
+    --outname "${meta.id}" > "${meta.id}_command_log.txt"
+    """
 }
