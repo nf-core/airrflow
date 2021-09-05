@@ -26,6 +26,6 @@ process PRESTO_PARSEHEADERS_METADATA {
 
     script:
     """
-    ParseHeaders.py add -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f SAMPLE_CODE SOURCE TREATMENT EXTRACT_TIME POPULATION -u ${meta.id} ${meta.source} ${meta.treatment} ${meta.time} ${meta.population}
+    ParseHeaders.py add -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f sample_id subject_id group_name pcr_target_locus -u ${meta.id} ${meta.subject} ${meta.group} ${meta.locus}
     """
 }
