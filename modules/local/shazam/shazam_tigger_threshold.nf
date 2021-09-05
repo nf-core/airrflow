@@ -31,18 +31,18 @@ process SHAZAM_TIGGER_THRESHOLD {
 
     script:
     def software = getSoftwareName(task.process)
-    if (params.loci == 'ig'){
+    if (meta.loci == 'ig'){
         """
-        TIgGER-shazam.R $tab $params.loci $params.threshold_method \
+        TIgGER-shazam.R $tab $meta.loci $params.threshold_method \
             "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta" \
             "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGKV.fasta" \
             "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGLV.fasta"
         Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
         Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
         """
-    } else if (params.loci == 'tr'){
+    } else if (meta.loci == 'tr'){
         """
-        TIgGER-shazam.R $tab $params.loci $params.threshold_method \\
+        TIgGER-shazam.R $tab $meta.loci $params.threshold_method \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\

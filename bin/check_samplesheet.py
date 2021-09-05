@@ -41,40 +41,64 @@ def check_samplesheet(file_in):
     """
     This function checks that the samplesheet follows the following structure:
 
-    ID	R1	R2	I1	Source	Treatment	Extraction_time	Population
-    Sample1	Sample1_dn_R1.fastq.gz	Sample1_dn_R2.fastq.gz	Sample1_dn_I1.fastq.gz	Patient1	DrugTreatment	baseline	dn
-    Sample2	Sample2_m_R1.fastq.gz	Sample2_m_R2.fastq.gz	Sample2_m_I1.fastq.gz	Patient1	DrugTreatment	baseline	m
+    sample_id	filename_R1	filename_R2	filename_I1	subject_id	group_name	pcr_target_locus
+    Sample1	Sample1_dn_R1.fastq.gz	Sample1_dn_R2.fastq.gz	Sample1_dn_I1.fastq.gz	Patient1	baseline_dn	ig
+    Sample2	Sample2_m_R1.fastq.gz	Sample2_m_R2.fastq.gz	Sample2_m_I1.fastq.gz	Patient1	baseline_m	ig
     """
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
 
         ## Check header
-        MIN_COLS = 7
-        HEADER = ["ID", "R1", "R2", "I1", "Source", "Treatment", "Extraction_time", "Population"]
-        HEADER_NOI1 = ["ID", "R1", "R2", "Source", "Treatment", "Extraction_time", "Population"]
+        MIN_COLS = 6
+        HEADER = [
+            "sample_id",
+            "filename_R1",
+            "filename_R2",
+            "filename_I1",
+            "subject_id",
+            "group_name",
+            "pcr_target_locus",
+        ]
+        HEADER_NOI1 = [
+            "sample_id",
+            "filename_R1",
+            "filename_R2",
+            "subject_id",
+            "group_name",
+            "pcr_target_locus",
+        ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
-        if not (header == HEADER or header == HEADER_NOI1):
-            print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
-            print("or  {} != {}".format(",".join(header), ",".join(HEADER_NOI1)))
-
-            sys.exit(1)
+        for col in HEADER_NOI1:
+            if col not in header:
+                print(
+                    "ERROR: Please check samplesheet header: {} ".format(
+                        ",".join(header)
+                    )
+                )
+                print("Header is missing column {}".format(col))
+                print("Header must contain columns {}".format("\t".join(HEADER_NOI1)))
+                sys.exit(1)
 
         ## Check sample entries
-        for line_num,line in enumerate(fin):
+        for line_num, line in enumerate(fin):
             lspl = [x.strip().strip('"') for x in line.strip().split("\t")]
 
             ## Check valid number of columns per row
             if len(lspl) < len(header):
                 print_error(
-                    "Invalid number of columns in this row (should be {})!".format(len(header)),
+                    "Invalid number of columns in this row (should be {})!".format(
+                        len(header)
+                    ),
                     "Line {}".format(line_num),
                     line,
                 )
             num_cols = len([x for x in lspl if x])
             if num_cols < MIN_COLS:
                 print_error(
-                    "Invalid number of populated columns (should be {})!".format(MIN_COLS),
+                    "Invalid number of populated columns (should be {})!".format(
+                        MIN_COLS
+                    ),
                     "Line",
                     line,
                 )

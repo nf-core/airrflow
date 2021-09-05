@@ -3,9 +3,10 @@ include { initOptions; saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process CHANGEO_MAKEDB {
+process CHANGEO_ASSIGNGENES_REVEAL {
     tag "$meta.id"
     label 'process_low'
+    label 'immcantation'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -20,18 +21,18 @@ process CHANGEO_MAKEDB {
 
     input:
     tuple val(meta), path(reads) // reads in fasta format
-    path(igblast) // igblast fasta from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect()
-    path(imgt_base)
+    path(igblast) // igblast fasta
 
     output:
-    tuple val(meta), path("*db-pass.tsv"), emit: tab //sequence table in AIRR format
-    path("*_command_log.txt"), emit: logs //process logs
+    path("*igblast.fmt7"), emit: blast
+    tuple val(meta), path("$reads"), emit: fasta
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
-    MakeDb.py igblast -i $igblast -s $reads -r \\
-    ${imgt_base}/${params.species}/vdj/ \\
-    $options.args \\
-    --outname "${meta.id}" > "${meta.id}_command_log.txt"
+    AssignGenes.py igblast -s $reads -b $igblast --organism "$meta.species" --loci "$meta.locus" --format blast --nproc $task.cpus --outname "$meta.id"
+    AssignGenes.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
+    igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" > igblast.version.txt
     """
 }
