@@ -95,8 +95,7 @@ include { FETCH_DATABASES } from '../modules/local/fetch_databases'             
 include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
 include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT as CHANGEO_PARSEDB_SELECT_IG } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select_ig'] )
-include { CHANGEO_PARSEDB_SELECT as CHANGEO_PARSEDB_SELECT_TR } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select_tr'] )
+include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
 include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
 
 //SHAZAM
@@ -241,29 +240,17 @@ workflow BCELLMAGIC {
     )
 
     // Selecting IGH for ig loci, TR for tr loci.
-    if (params.loci == "ig") {
-        CHANGEO_PARSEDB_SELECT_IG (
-            CHANGEO_PARSEDB_SPLIT.out.tab
-        )
-        ch_changeo_parsedb_select_tab = CHANGEO_PARSEDB_SELECT_IG.out.tab
-        ch_changeo_parsedb_select_log = CHANGEO_PARSEDB_SELECT_IG.out.log
-    } else if (params.loci == "tr") {
-        CHANGEO_PARSEDB_SELECT_TR (
-            CHANGEO_PARSEDB_SPLIT.out.tab
-        )
-        ch_changeo_parsedb_select_tab = CHANGEO_PARSEDB_SELECT_TR.out.tab
-        ch_changeo_parsedb_select_log = CHANGEO_PARSEDB_SELECT_TR.out.log
-    } else {
-        exit 1, "Parameter loci has an unrecognized value, please select 'ig' or 'tr'."
-    }
+    CHANGEO_PARSEDB_SELECT(
+        CHANGEO_PARSEDB_SPLIT.out.tab
+    )
 
     // Convert sequence table to fasta.
     CHANGEO_CONVERTDB_FASTA (
-        ch_changeo_parsedb_select_tab
+        CHANGEO_PARSEDB_SELECT.out.tab
     )
 
     // Subworkflow: merge tables from the same patient
-    MERGE_TABLES_WF(ch_changeo_parsedb_select_tab)
+    MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
 
     // Shazam clonal threshold and tigger genotyping
     SHAZAM_TIGGER_THRESHOLD(

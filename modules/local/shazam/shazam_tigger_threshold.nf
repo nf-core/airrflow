@@ -31,7 +31,7 @@ process SHAZAM_TIGGER_THRESHOLD {
 
     script:
     def software = getSoftwareName(task.process)
-    if (meta.loci == 'ig'){
+    if (meta.locus == 'ig'){
         """
         TIgGER-shazam.R $tab $meta.loci $params.threshold_method \
             "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta" \
@@ -40,7 +40,7 @@ process SHAZAM_TIGGER_THRESHOLD {
         Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
         Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
         """
-    } else if (meta.loci == 'tr'){
+    } else if (meta.locus == 'tr'){
         """
         TIgGER-shazam.R $tab $meta.loci $params.threshold_method \\
         "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
