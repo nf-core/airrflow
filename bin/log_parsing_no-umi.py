@@ -76,7 +76,9 @@ for process in processes:
                 for line in f:
                     if " START>" in line:
                         if c < 1:
-                            s_code.append(logfile.split("/")[1].split("_command_log")[0])
+                            s_code.append(
+                                logfile.split("/")[1].split("_command_log")[0]
+                            )
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
@@ -295,7 +297,7 @@ values = [
     df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
     df_process_list[3].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
     df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist()
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
 ]
 
 # Tables provide extra info and help debugging
@@ -329,8 +331,8 @@ df_final_table = df_final_table.sort_values(["Sample"], ascending=[1])
 
 # incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")
-metadata = metadata[["ID", "Source", "Treatment", "Extraction_time", "Population"]]
-logs_metadata = metadata.merge(df_final_table, left_on="ID", right_on="Sample")
+metadata = metadata[["sample_id", "subject_id", "group_name", "pcr_target_locus"]]
+logs_metadata = metadata.merge(df_final_table, left_on="sample_id", right_on="Sample")
 logs_metadata = logs_metadata.drop(["Sample"], axis=1)
 logs_metadata.to_csv(
     path_or_buf="Table_sequences_process.tsv", sep="\t", header=True, index=False
