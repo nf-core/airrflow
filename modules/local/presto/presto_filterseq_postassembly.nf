@@ -3,9 +3,11 @@ include { initOptions; saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process PRESTO_ASSEMBLEPAIRS {
+
+// Filter single end reads if after assembly (will be the typical case without UMIs)
+process PRESTO_FILTERSEQ_POSTASSEMBLY {
     tag "$meta.id"
-    label 'process_long_parallelized'
+    label "process_medium"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,19 +21,20 @@ process PRESTO_ASSEMBLEPAIRS {
     }
 
     input:
-    tuple val(meta), path(R1), path(R2)
+    tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_assemble-pass.fastq"), emit: reads
-    path("*_command_log.txt"), emit: logs
-    path("*.log")
-    path("*_table.tab")
+    tuple val(meta), path("*quality-pass.fastq") ,  emit: reads
+    path "*_command_log.txt" , emit: logs
+    path "*.version.txt" , emit: version
+    path "*.log"
+    path "*.tab" , emit: log_tab
 
     script:
+    def software = getSoftwareName(task.process)
     """
-    AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} \\
-        $options.args \\
-        --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
-    ParseLog.py -l ${meta.id}.log $options.args2
+    FilterSeq.py quality -s $reads -q ${params.filterseq_q} --outname "${meta.id}" --log "${reads.baseName}.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
+    ParseLog.py -l "${reads.baseName}.log" -f ID QUALITY
+    FilterSeq.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
     """
 }

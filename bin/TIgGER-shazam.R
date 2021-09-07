@@ -24,21 +24,27 @@ fastas = args[4:length(args)]
 output_folder = dirname(inputtable)
 
 db <- read.table(inputtable, header=TRUE, sep="\t")
+# Add label for source species
+sourceLabel <- gsub(pattern = "\\.tsv$", "", inputtable)
 
 if (loci == "ig"){
 
-    db_fasta <- readIgFasta(fastas, strip_down_name = TRUE)
+    db_fasta <- c()
+    for (fasta in fastas) {
+        dbf <- readIgFasta(fasta, strip_down_name = TRUE)
+        db_fasta <- c(db_fasta, dbf)
+    }
 
     gt <- inferGenotype(db, v_call = "v_call", find_unmutated = F)
 
     # Filter out Duplicate sequences as not supported by Tigger 1.0.0
-    gt_filt <- filter(gt, !grepl("D", gene))
+    gt_filt <- filter(gt, !grepl("D|d", gene))
 
     gtseq <- genotypeFasta(gt_filt, db_fasta)
-    writeFasta(gtseq, paste(output_folder,"v_genotype.fasta",sep="/"))
+    writeFasta(gtseq, paste(output_folder,paste0(sourceLabel, "_v_genotype.fasta"),sep="/"))
 
     # Plot genotype
-    ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+    ggsave(paste(output_folder,paste0(sourceLabel, "_genotype.pdf"),sep="/"), plotGenotype(gt, silent=T))
 
     # Modify allele calls and output TSV file
     db_reassigned <- reassignAlleles(db, gtseq)
@@ -52,7 +58,7 @@ if (loci == "ig"){
                                 normalize="len",
                                 nproc=1,
                                 first = FALSE)
-    writeChangeoDb(db_reassigned, paste(output_folder,"v_genotyped.tab",sep="/"))
+    writeChangeoDb(db_reassigned, paste(output_folder,paste0(sourceLabel, "_v_genotyped.tab"),sep="/"))
 
 } else if (loci == "tr") {
 
@@ -64,10 +70,10 @@ if (loci == "ig"){
     gt <- inferGenotype(db, v_call = "v_call", find_unmutated = FALSE)
 
     gtseq <- genotypeFasta(gt, c(db_fasta_TRAV,db_fasta_TRBV,db_fasta_TRDV))
-    writeFasta(gtseq, paste(output_folder,"TRxV_genotype.fasta",sep="/"))
+    writeFasta(gtseq, paste(output_folder,paste0(sourceLabel, "_TRxV_genotype.fasta"),sep="/"))
 
     # Plot genotype
-    ggsave(paste(output_folder,"genotype.pdf",sep="/"), plotGenotype(gt, silent=T))
+    ggsave(paste(output_folder,paste0(sourceLabel, "_genotype.pdf"),sep="/"), plotGenotype(gt, silent=T))
 
     # Modify allele calls and output TSV file
     db_reassigned <- reassignAlleles(db, gtseq)
@@ -82,25 +88,32 @@ if (loci == "ig"){
                                 nproc=1,
                                 first = FALSE)
 
-    writeChangeoDb(db, paste(output_folder,"v_tr_genotyped.tab",sep="/"))
+    writeChangeoDb(db, paste(output_folder,paste0(sourceLabel, "_v_tr_genotyped.tab"),sep="/"))
 
 } else {
     stop("Loci specified is not available, please choose from: ig, tr.")
 }
 
-# Find threshold using chosen method
-
-if (threshold_method == "density") {
-    output <- findThreshold(dist_ham$dist_nearest, method="density")
-    threshold <- output@threshold
-} else if (threshold_method == "gmm") {
-    output <- findThreshold(dist_ham$dist_nearest, method="gmm")
-    threshold <- output@threshold
+num_dist <- length(unique(na.omit(dist_ham$dist_nearest)))
+if (num_dist > 3) {
+    # Find threshold using chosen method
+    if (threshold_method == "density") {
+        output <- findThreshold(dist_ham$dist_nearest, method="density")
+        threshold <- output@threshold
+    } else if (threshold_method == "gmm") {
+        output <- findThreshold(dist_ham$dist_nearest, method="gmm")
+        threshold <- output@threshold
+    } else {
+        stop("Threshold method is not available, please choose from: density, gmm")
+    }
+    # Plot distance histogram, density estimate and optimum threshold
+    ggsave(paste(output_folder,paste0(sourceLabel, "_Hamming_distance_threshold.pdf"),sep="/"), plot(output), device="pdf")
 } else {
-    stop("Threshold method is not available, please choose from: density, gmm")
+    # Workaround for sources with too few nearest distance values to determine an effective threshold.
+    # Set threshold to 0 and print a warning
+    threshold <- 0.0
+    warning(paste("Could not determine an effective Hamming distance threshold for source:", sourceLabel, ", which has", num_dist, "unique nearest distances. Threshold defaulting to 0.",  sep=" "))
+    ggsave(paste(output_folder,paste0(sourceLabel, "_Hamming_distance_threshold.pdf"),sep="/"), plot(dist_ham$dist_nearest, dist_ham$duplicate_count), device="pdf")
 }
 
-# Plot distance histogram, density estimate and optimum threshold
-ggsave(paste(output_folder,"Hamming_distance_threshold.pdf",sep="/"), plot(output), device="pdf")
-
-write.table(threshold, file= paste(output_folder,"threshold.txt",sep="/"), quote=FALSE, sep="", row.names = FALSE, col.names = FALSE)
+write.table(threshold, file= paste(output_folder,paste0(sourceLabel, "_threshold.txt"),sep="/"), quote=FALSE, sep="", row.names = FALSE, col.names = FALSE)

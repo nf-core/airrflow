@@ -1,7 +1,3 @@
-files_unchanged:
-  - lib/NfcoreSchema.groovy
-actions_awsfulltest: False
-params_used: False
-files_exist:
-  - environment.yml
-  - Dockerfile
+lint:
+  files_unchanged:
+    - assets/multiqc_config.yaml
