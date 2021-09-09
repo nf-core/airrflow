@@ -158,22 +158,24 @@ workflow REVEAL {
     FILTER_QUALITY(CHANGEO_MAKEDB_REVEAL.out.tab)
     ch_file_sizes = ch_file_sizes.mix(FILTER_QUALITY.out.logs)
 
-    // TODO: quality filter should output log in the same format as the other tools.
-    /*
     // Select only productive sequences and
     // sequences with junction length multiple of 3
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT (
             FILTER_QUALITY.out.tab
         )
+        ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT.out.logs)
+
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT.out.tab
         )
+        ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
         ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
     } else {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
 
+    /*
     // For bulk datasets, remove chimeric sequences
     // if requested
     if (params.remove_chimeric) {
@@ -192,6 +194,8 @@ workflow REVEAL {
     } else {
         ch_chimeric_pass = ch_repertoire
     }
+
+    // For single cell, specific QC
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....

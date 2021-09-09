@@ -28,6 +28,6 @@ process FILTER_JUNCTION_MOD3 {
 
     script:
     """
-    reveal_mod_3_junction.R --repertoire $tab --outname ${meta.id} > "${meta.id}_${task.process}_command_log.txt"
+    reveal_mod_3_junction.R --repertoire $tab --outname ${meta.id} > "${meta.id}_jmod3_command_log.txt"
     """
 }

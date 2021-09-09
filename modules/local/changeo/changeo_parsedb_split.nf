@@ -6,6 +6,7 @@ def options    = initOptions(params.options)
 process CHANGEO_PARSEDB_SPLIT {
     tag "$meta.id"
     label 'process_low'
+    label 'immcantation'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -27,6 +28,6 @@ process CHANGEO_PARSEDB_SPLIT {
 
     script:
     """
-    ParseDb.py split -d $tab -f productive --outname ${meta.id} > "${meta.id}_command_log.txt"
+    ParseDb.py split -d $tab -f productive --outname ${meta.id} > "${meta.id}_split_command_log.txt"
     """
 }
