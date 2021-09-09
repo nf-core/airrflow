@@ -30,7 +30,7 @@ process REMOVE_CHIMERIC {
     script:
     germline_db = tab.getBaseName().toString() + '_germ-pass.tsv'
     """
-    CreateGermlines.py -d $tab -r ${imgt_base}/${meta.species}/vdj/ -g dmask --format airr > "${meta.id}_${task.process}_create-germlines_command_log.txt"
-    reveal_chimeric.R --repertoire ${germline_db} --outname ${meta.id} > "${meta.id}_${task.process}_chimeric_command_log.txt"
+    CreateGermlines.py -d $tab -r ${imgt_base}/${meta.species}/vdj/ -g dmask --format airr > "${meta.id}_create-germlines_command_log.txt"
+    reveal_chimeric.R --repertoire ${germline_db} --outname ${meta.id} > "${meta.id}_chimeric_command_log.txt"
     """
 }

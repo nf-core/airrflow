@@ -25,8 +25,8 @@ opt_list <- list(make_option(c("--repertoire"), dest="REPERTOIRE", default=NULL,
             help="Output name"))
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
-opt
-getwd()
+#opt
+#getwd()
 
 # Check input file
 if (!("REPERTOIRE" %in% names(opt))) {
@@ -54,3 +54,9 @@ write_airr(db[!is_chimeric,] %>% select(-germline_alignment_d_mask), file=output
 
 db$is_chimeric <- is_chimeric
 write_airr(db %>% select(sequence_id, is_chimeric, sequence_alignment, germline_alignment_d_mask), file=sub(".tsv",".log.txt",output_fn))
+
+write("START> RemoveChimeric", stdout())
+write(paste0("FILE> ",basename(opt$REPERTOIRE)), stdout())
+write(paste0("OUTPUT> ",basename(output_fn)), stdout())
+write(paste0("PASS> ",sum(!is_chimeric)), stdout())
+write(paste0("FAIL> ",sum(is_chimeric)), stdout())

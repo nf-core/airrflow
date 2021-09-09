@@ -175,7 +175,6 @@ workflow REVEAL {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
 
-    /*
     // For bulk datasets, remove chimeric sequences
     // if requested
     if (params.remove_chimeric) {
@@ -185,16 +184,19 @@ workflow REVEAL {
             bulk:   it[0].single_cell == 'false'
         }
         .set{ch_repertoire_by_processing}
+
         REMOVE_CHIMERIC(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
         )
+        ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
+
         // Mix with single
         ch_chimeric_pass = ch_repertoire_by_processing.single.mix(REMOVE_CHIMERIC.out.tab)
     } else {
         ch_chimeric_pass = ch_repertoire
     }
-
+    /*
     // For single cell, specific QC
 
     // Add metadata to the rearrangement files, to be used later
