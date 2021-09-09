@@ -26,11 +26,13 @@ process REMOVE_CHIMERIC {
     output:
     tuple val(meta), path("*chimera-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "*_report", emit: chimera_report
 
     script:
     germline_db = tab.getBaseName().toString() + '_germ-pass.tsv'
     """
     CreateGermlines.py -d $tab -r ${imgt_base}/${meta.species}/vdj/ -g dmask --format airr > "${meta.id}_create-germlines_command_log.txt"
-    reveal_chimeric.R --repertoire ${germline_db} --outname ${meta.id} > "${meta.id}_chimeric_command_log.txt"
+    Rscript -e "enchantr:::enchantr_report('chimera_analysis', report_params=list('input'='${germline_db}','outdir'=getwd(), 'outname'='${meta.id}', 'log'='${meta.id}_chimeric_command_log'))"
+    mv enchantr ${meta.id}_chimera_report
     """
 }
