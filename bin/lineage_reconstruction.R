@@ -56,17 +56,15 @@ save_graph <- function(df_pat, clone_num){
     print(paste0("Started processing clone:",clone_num))
     sub_db_clone <- subset(df_pat, clone_id == clone_num)
     sub_db_clone$clone_id <- sapply(sub_db_clone$clone_id, as.character)
-    sub_db_clone$sample <- sapply(sub_db_clone$sample, as.character)
-    sub_db_clone$sample_pop <- sapply(sub_db_clone$sample_pop, as.character)
+    sub_db_clone$sample_id <- sapply(sub_db_clone$sample_id, as.character)
     sub_db_clone$c_primer <- sapply(sub_db_clone$c_primer, as.character)
-    sub_db_clone$treatment <- sapply(sub_db_clone$treatment, as.character)
-    sub_db_clone$population <- sapply(sub_db_clone$population, as.character)
-    sub_db_clone$source <- sapply(sub_db_clone$source, as.character)
-    sub_db_clone$extract_time <- sapply(sub_db_clone$extract_time, as.character)
+    sub_db_clone$group_name <- sapply(sub_db_clone$group_name, as.character)
+    sub_db_clone$subject_id <- sapply(sub_db_clone$subject_id, as.character)
+
 
     # Make changeo clone
-    clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "treatment", "population", "source",
-                                                            "extract_time", "sample", "sample_pop", "clone_id"),
+    clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "subject_id",
+                                                            "sample_id", "clone_id", "group_name"),
                                             num_fields = "duplicate_count")
 
     # Build Phylip lineage
@@ -78,20 +76,14 @@ save_graph <- function(df_pat, clone_num){
     V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
 
     # Set label on the nodes
-    if ( node_text == "extract_time" ) {
+    if ( node_text == "group_name" ) {
         V(graph)$label <- V(graph)$extract_time
     } else if ( node_text == "c_primer" ) {
         V(graph)$label <- V(graph)$c_primer
-    } else if ( node_text == "treatment" ) {
-        V(graph)$label <- V(graph)$treatment
-    } else if ( node_text == "sample" ) {
-        V(graph)$label <- V(graph)$sample
-    } else if ( node_text == "sample_pop" ) {
-        V(graph)$label <- V(graph)$sample_pop
+    } else if ( node_text == "sample_id" ) {
+        V(graph)$label <- V(graph)$sample_id
     } else if ( node_text == "clone_id" ) {
         V(graph)$label <- V(graph)$clone_id
-    } else if ( node_text == "population" ) {
-        V(graph)$label <- V(graph)$population
     } else if ( node_text == "seq_id" ){
         V(graph)$label <- V(graph)$name
     } else if ( node_text == "none" ) {
