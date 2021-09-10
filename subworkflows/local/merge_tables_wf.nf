@@ -13,7 +13,7 @@ workflow MERGE_TABLES_WF {
     main:
     tables
         .dump()
-        .map{it -> [ it[0].source, it[0].id, it[1] ]}
+        .map{it -> [ it[0].subject, it[0].id, it[0].locus, it[1] ]}
         .groupTuple()
         .dump()
         .map{ get_meta_tabs(it) }
@@ -23,7 +23,7 @@ workflow MERGE_TABLES_WF {
     MERGE_TABLES( ch_merge_tables )
 
     emit:
-    MERGE_TABLES.out.tab // channel: [ val(meta), tab ]
+    tab = MERGE_TABLES.out.tab // channel: [ val(meta), tab ]
 }
 
 // Function to map
@@ -31,10 +31,11 @@ def get_meta_tabs(arr) {
     def meta = [:]
     meta.id           = arr[0]
     meta.samples      = arr[1]
+    meta.locus        = arr[2].unique().join(",")
 
     def array = []
 
-        array = [ meta, arr[2].flatten() ]
+        array = [ meta, arr[3].flatten() ]
 
     return array
 }

@@ -254,7 +254,7 @@ workflow BCELLMAGIC {
 
     // Shazam clonal threshold and tigger genotyping
     SHAZAM_TIGGER_THRESHOLD(
-        MERGE_TABLES_WF.out,
+        MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
         ch_imgt.collect()
     )
 
@@ -277,7 +277,7 @@ workflow BCELLMAGIC {
     // Lineage reconstruction alakazam
     if (!params.skip_lineage) {
         ALAKAZAM_LINEAGE(
-            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'changeo_output')
+            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'creategermlines_output')
         )
     }
 
