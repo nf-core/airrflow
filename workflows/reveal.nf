@@ -69,6 +69,7 @@ include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addPar
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
+include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
@@ -185,24 +186,27 @@ workflow REVEAL {
     // For bulk datasets, remove chimeric sequences
     // if requested
     if (params.remove_chimeric) {
-
         REMOVE_CHIMERIC(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
         )
         ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
-
-        // Mix with single
         ch_chimeric_pass = REMOVE_CHIMERIC.out.tab
     } else {
-        ch_chimeric_pass = ch_repertoire
+        ch_chimeric_pass = ch_repertoire_by_processing.bulk
     }
 
-    /*
     // For single cell, specific QC
-
+    // TODO, WIP
+    /*
+    SINGLE_CELL_QC(
+        ch_repertoire_by_processing.single
+    )
+    ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
     // Mix with single
-    ch_chimeric_pass = ch_repertoire_by_processing.single.mix(REMOVE_CHIMERIC.out.tab)
+    ch_chimeric_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
+
+
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
