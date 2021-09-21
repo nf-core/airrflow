@@ -198,11 +198,13 @@ workflow REVEAL {
 
     // For single cell, specific QC
     // TODO, WIP
-    /*
+
     SINGLE_CELL_QC(
         ch_repertoire_by_processing.single
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
+
+    /*
     // Mix with single
     ch_chimeric_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
 
