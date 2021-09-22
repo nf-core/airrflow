@@ -53,7 +53,11 @@ getLocus <- function(segment_call, first=TRUE, collapse=TRUE,
 same_locus <- getLocus(db[['v_call']]) == db[['locus']]
 
 # Max 10% N
-low_n <- stri_count(db$sequence_alignment,fixed="N")/stri_count(db$sequence_alignment,regex="[^-.]") <= 0.10
+n_count <- stri_count(db$sequence_alignment,fixed="N")
+positions_count <- stri_count(db$sequence_alignment,regex="[^-.]")
+not_0 <- n_count > 0
+n_count[not_0] <- n_count[not_0]/positions_count[not_0]
+low_n <-  n_count  <= 0.10
 
 # Min length 200 nt
 long_seq <- stri_count(db$sequence_alignment,regex="[^-.N]") >= 200
