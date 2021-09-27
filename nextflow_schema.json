@@ -77,15 +77,6 @@
                         "human",
                         "mouse"
                     ]
-                },
-                "loci": {
-                    "type": "string",
-                    "default": "ig",
-                    "enum": [
-                        "ig",
-                        "tr"
-                    ],
-                    "description": "Loci to perform Igblast. Choose from: ig (BCR / Immunoglobulins), tr (TCR)."
                 }
             },
             "help_text": "",
@@ -107,26 +98,29 @@
                     "fa_icon": "fas fa-dna",
                     "description": "Path to a fasta file containing the C-region primer sequences."
                 },
-                "protocol": {
+                "library_generation_method": {
                     "type": "string",
-                    "default": "pcr_umi",
                     "fa_icon": "fas fa-flask",
-                    "description": "Protocol used for the V(D)J amplicon sequencing.",
+                    "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
                     "enum": [
-                        "pcr_umi",
-                        "race_5p_umi"
+                        "specific_pcr_umi",
+                        "specific_pcr",
+                        "dt_5p_race",
+                        "dt_5p_race_umi"
                     ],
-                    "help_text": "Available protocols are:\n- `pcr_umi`: (default). PCR amplification with UMI barcodes. Please also provide the C-primer (`--cprimers`) and V-primer (`--vprimers`) sequences, specify the UMI barcode length (`--umi_length`) and position (`--umi_position`), the V-primer start (`--vprimer_start`), and C-primer start (`--cprimer_start`) and position (`--cprimer_position`).\n- `race_5p_umi`: 5'-RACE amplification with UMI barcodes. Please also provide the C-primer (`--cprimers`) and linker or template switch oligo sequences (`--race_linker`), specify the UMI barcode length (`--umi_length`) and position (`--umi_position`), the C-primer start (`--cprimer_start`) and position (`--cprimer_position`)."
+                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
                 },
                 "vprimer_start": {
                     "type": "integer",
                     "description": "Start position of V region primers (without counting the UMI barcode).",
-                    "fa_icon": "fas fa-dna"
+                    "fa_icon": "fas fa-dna",
+                    "default": 0
                 },
                 "cprimer_start": {
                     "type": "integer",
                     "description": "Start position of C region primers (without counting the UMI barcode).",
-                    "fa_icon": "fas fa-dna"
+                    "fa_icon": "fas fa-dna",
+                    "default": 0
                 },
                 "race_linker": {
                     "type": "string",
@@ -211,7 +205,6 @@
                 },
                 "primer_revpr": {
                     "type": "boolean",
-                    "default": "false",
                     "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
                     "fa_icon": "fas fa-barcode"
                 },
