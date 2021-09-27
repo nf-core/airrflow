@@ -3,18 +3,22 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.1.0dev]
+## [3.0dev]
 
 ### `Added`
 
 * [#130](https://github.com/nf-core/bcellmagic/pull/130): Organized presto processes in `presto_umi` subworkflow.
 * [#128](https://github.com/nf-core/bcellmagic/pull/128): Added `presto_sans_umi` subworkflow option. Added postassembly FastQC and corresponding section in MultiQC. Included refs for analysis of light chains (if present) by default.
+* Samplesheet column names were updated to follow the AIRR standard.
 
 ### `Fixed`
 
 ### `Dependencies`
 
 ### `Deprecated`
+
+* Parameter `--protocol` was updated to `--library_generation_method` to follow the AIRR standard.
+* Parameter `--loci` was converted to a column in the samplesheet (`pcr_target_locus`) to allow processing simultaneously TR and IG loci from the same sample.
 
 ## [2.0.0] - 2021-07-19 "Lumos"
 
