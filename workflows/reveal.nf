@@ -191,9 +191,9 @@ workflow REVEAL {
             ch_imgt.collect()
         )
         ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
-        ch_chimeric_pass = REMOVE_CHIMERIC.out.tab
+        ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
     } else {
-        ch_chimeric_pass = ch_repertoire_by_processing.bulk
+        ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
     }
     /*
     // For single cell, specific QC
