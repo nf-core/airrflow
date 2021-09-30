@@ -26,8 +26,8 @@ opt_list <- list(
 )
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
-opt
-getwd()
+#opt
+#getwd()
 
 # Check input file
 if (!("REPERTOIRE" %in% names(opt))) {
@@ -53,7 +53,11 @@ getLocus <- function(segment_call, first=TRUE, collapse=TRUE,
 same_locus <- getLocus(db[['v_call']]) == db[['locus']]
 
 # Max 10% N
-low_n <- stri_count(db$sequence_alignment,fixed="N")/stri_count(db$sequence_alignment,regex="[^-.]") <= 0.10
+n_count <- stri_count(db$sequence_alignment,fixed="N")
+positions_count <- stri_count(db$sequence_alignment,regex="[^-.]")
+not_0 <- n_count > 0
+n_count[not_0] <- n_count[not_0]/positions_count[not_0]
+low_n <-  n_count  <= 0.10
 
 # Min length 200 nt
 long_seq <- stri_count(db$sequence_alignment,regex="[^-.N]") >= 200
@@ -68,7 +72,6 @@ summary <-  log %>%
 
 # Filter and save
 filter_pass <- same_locus & low_n & long_seq
-table(filter_pass)
 
 if (!is.null(opt$OUTPUT)) {
     output_fn <- paste0(opt$OUTPUT,"_quality-pass.tsv")
@@ -76,5 +79,14 @@ if (!is.null(opt$OUTPUT)) {
     output_fn <- sub(".tsv$", "_quality-pass.tsv", basename(opt$REPERTOIRE))
 }
 write_rearrangement(db[filter_pass,], file=output_fn)
+
+#cat("     TOTAL_GROUPS> ", n_groups,  "\n", sep=" ", file = file.path(out_dir, log_verbose_name), append=TRUE)
+
+write("START> FilterQuality", stdout())
+write(paste0("FILE> ",basename(opt$REPERTOIRE)), stdout())
+write(paste0("OUTPUT> ",basename(output_fn)), stdout())
+write(paste0("PASS> ",sum(filter_pass)), stdout())
+write(paste0("FAIL> ",sum(!filter_pass)), stdout())
+
 
 

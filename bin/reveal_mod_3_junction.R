@@ -20,8 +20,8 @@ opt_list <- list(
 
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
-opt
-getwd()
+#opt
+#getwd()
 
 # Check input file
 if (!("REPERTOIRE" %in% names(opt))) {
@@ -33,7 +33,7 @@ db <- read_rearrangement(opt$REPERTOIRE)
 
 # Filter and save
 filter_pass <- db$junction_length %% 3 == 0
-table(filter_pass)
+#table(filter_pass)
 
 if (!is.null(opt$OUTNAME)) {
     output_fn <- paste0(opt$OUTNAME,"_junction-pass.tsv")
@@ -43,3 +43,8 @@ if (!is.null(opt$OUTNAME)) {
 
 write_rearrangement(db[filter_pass,], file=output_fn)
 
+write("START> FilterJunctionMod3", stdout())
+write(paste0("FILE> ",basename(opt$REPERTOIRE)), stdout())
+write(paste0("OUTPUT> ",basename(output_fn)), stdout())
+write(paste0("PASS> ",sum(filter_pass)), stdout())
+write(paste0("FAIL> ",sum(!filter_pass)), stdout())

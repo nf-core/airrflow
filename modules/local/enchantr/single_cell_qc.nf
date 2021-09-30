@@ -3,9 +3,10 @@ include { initOptions; saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process REMOVE_CHIMERIC {
+process SINGLE_CELL_QC {
     tag "$meta.id"
     label 'immcantation'
+    label 'enchantr'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -21,16 +22,15 @@ process REMOVE_CHIMERIC {
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
-    path(imgt_base)
 
     output:
-    tuple val(meta), path("*chimera-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "*_report", emit: chimera_report
 
     script:
-    germline_db = tab.getBaseName().toString() + '_germ-pass.tsv'
     """
-    CreateGermlines.py -d $tab -r ${imgt_base}/${meta.species}/vdj/ -g dmask --format airr > "${meta.id}_${task.process}_create-germlines_command_log.txt"
-    reveal_chimeric.R --repertoire ${germline_db} --outname ${meta.id} > "${meta.id}_${task.process}_chimeric_command_log.txt"
+    Rscript -e "enchantr:::enchantr_report('single_cell_qc', report_params=list('input'='$tab','outdir'=getwd(), 'outname'='${meta.id}', 'log'='${meta.id}_scqc_command_log'))"
+    mv enchantr ${meta.id}_scqc_report
     """
 }
