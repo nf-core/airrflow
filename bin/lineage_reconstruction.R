@@ -76,9 +76,7 @@ save_graph <- function(df_pat, clone_num){
     V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
 
     # Set label on the nodes
-    if ( node_text == "group_name" ) {
-        V(graph)$label <- V(graph)$extract_time
-    } else if ( node_text == "c_primer" ) {
+    if ( node_text == "c_primer" ) {
         V(graph)$label <- V(graph)$c_primer
     } else if ( node_text == "sample_id" ) {
         V(graph)$label <- V(graph)$sample_id

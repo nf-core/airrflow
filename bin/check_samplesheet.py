@@ -2,11 +2,11 @@
 
 # This script is based on the example at: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/design.csv
 
-
 import os
 import sys
 import errno
 import argparse
+import pandas as pd
 
 
 def parse_args(args=None):
@@ -28,9 +28,9 @@ def make_dir(path):
 
 
 def print_error(error, context="Line", context_str=""):
-    error_str = "ERROR: Please check samplesheet -> {}".format(error)
+    error_str = "ERROR: Please check input samplesheet -> {}".format(error)
     if context != "" and context_str != "":
-        error_str = "ERROR: Please check samplesheet -> {}\n{}: '{}'".format(
+        error_str = "ERROR: Please check input samplesheet -> {}\n{}: '{}'".format(
             error, context.strip(), context_str.strip()
         )
     print(error_str)
@@ -39,37 +39,31 @@ def print_error(error, context="Line", context_str=""):
 
 def check_samplesheet(file_in):
     """
-    This function checks that the samplesheet follows the following structure:
+    This function checks that the samplesheet:
 
-    sample_id	filename_R1	filename_R2	filename_I1	subject_id	group_name	pcr_target_locus
-    Sample1	Sample1_dn_R1.fastq.gz	Sample1_dn_R2.fastq.gz	Sample1_dn_I1.fastq.gz	Patient1	baseline_dn	ig
-    Sample2	Sample2_m_R1.fastq.gz	Sample2_m_R2.fastq.gz	Sample2_m_I1.fastq.gz	Patient1	baseline_m	ig
+    TODO finish checks
+    - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species
+    - sample ids are unique
+    - samples from the same subject come from the same species
+    - pcr_target_locus is "IG" or "TR"
+    - species is "human" or "mouse"
     """
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
 
-        ## Check header
+        ## Check that required columns are present
         MIN_COLS = 6
-        HEADER = [
-            "sample_id",
-            "filename_R1",
-            "filename_R2",
-            "filename_I1",
-            "subject_id",
-            "group_name",
-            "pcr_target_locus",
-        ]
-        HEADER_NOI1 = [
+        REQUIRED_COLUMNS = [
             "sample_id",
             "filename_R1",
             "filename_R2",
             "subject_id",
-            "group_name",
+            "species",
             "pcr_target_locus",
         ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
-        for col in HEADER_NOI1:
+        for col in REQUIRED_COLUMNS:
             if col not in header:
                 print(
                     "ERROR: Please check samplesheet header: {} ".format(
@@ -77,10 +71,12 @@ def check_samplesheet(file_in):
                     )
                 )
                 print("Header is missing column {}".format(col))
-                print("Header must contain columns {}".format("\t".join(HEADER_NOI1)))
+                print(
+                    "Header must contain columns {}".format("\t".join(REQUIRED_COLUMNS))
+                )
                 sys.exit(1)
 
-        ## Check sample entries
+        ## Check that rows have the same fields as header, and at least the compulsory ones are provided
         for line_num, line in enumerate(fin):
             lspl = [x.strip().strip('"') for x in line.strip().split("\t")]
 
@@ -101,6 +97,33 @@ def check_samplesheet(file_in):
                     ),
                     "Line",
                     line,
+                )
+
+        ## Check that sample ids are unique
+        tab = pd.read_csv(file_in, sep="\t", header=0)
+        if len(tab["sample_id"]) != len(set(tab["sample_id"])):
+            print_error(
+                "Sample IDs are not unique! The sample IDs in the input samplesheet should be unique for each sample."
+            )
+
+        ## Check that pcr_target_locus is IG or TR
+        for val in tab["pcr_target_locus"]:
+            if val not in ["IG", "TR"]:
+                print_error("pcr_target_locus must be one of: IG, TR.")
+
+        ## Check that species is human or mouse
+        for val in tab["species"]:
+            if val not in ["human", "mouse"]:
+                print_error(
+                    "species must be one of: human, mouse. Currently, only human or mouse reference files are supported."
+                )
+
+        ## Check that samples from the same subject are the same species
+        subj_group = tab.groupby("subject_id")
+        for i in range(len(subj_group)):
+            if len(tab.groupby("subject_id")["species"].unique()[i]) > 1:
+                print_error(
+                    "The same subject_id cannot belong to different species! Check input file columns 'subject_id' and 'species'."
                 )
 
 

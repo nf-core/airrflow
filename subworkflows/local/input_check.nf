@@ -25,8 +25,8 @@ def get_samplesheet_paths(LinkedHashMap col) {
     def meta = [:]
     meta.id           = col.sample_id
     meta.subject      = col.subject_id
-    meta.group        = col.group_name
     meta.locus        = col.pcr_target_locus
+    meta.species      = col.species
 
     def array = []
     if (!file(col.filename_R1).exists()) {

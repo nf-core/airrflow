@@ -31,29 +31,30 @@ process SHAZAM_TIGGER_THRESHOLD {
 
     script:
     def software = getSoftwareName(task.process)
-    def locus = meta.locus.join(',')
-    if ( locus.equals('ig')){
+    def locus = meta.locus
+    def species = meta.species
+    if ( locus.equals('IG')){
         """
-        TIgGER-shazam.R $tab $locus $params.threshold_method \
-            "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGHV.fasta" \
-            "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGKV.fasta" \
-            "${imgt_base}/${params.species}/vdj/imgt_${params.species}_IGLV.fasta"
+        TIgGER-shazam.R $tab ${locus.toLowerCase()} $params.threshold_method \
+            "${imgt_base}/${species}/vdj/imgt_${species}_IGHV.fasta" \
+            "${imgt_base}/${species}/vdj/imgt_${species}_IGKV.fasta" \
+            "${imgt_base}/${species}/vdj/imgt_${species}_IGLV.fasta"
         Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
         Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
         """
-    } else if ( locus.equals('tr')){
+    } else if ( locus.equals('TR')){
         """
-        TIgGER-shazam.R $tab $locus $params.threshold_method \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRAV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRBV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRDV.fasta" \\
-        "${imgt_base}/${params.species}/vdj/imgt_${params.species}_TRGV.fasta"
+        TIgGER-shazam.R $tab ${locus.toLowerCase()} $params.threshold_method \\
+        "${imgt_base}/${species}/vdj/imgt_${species}_TRAV.fasta" \\
+        "${imgt_base}/${species}/vdj/imgt_${species}_TRBV.fasta" \\
+        "${imgt_base}/${species}/vdj/imgt_${species}_TRDV.fasta" \\
+        "${imgt_base}/${species}/vdj/imgt_${species}_TRGV.fasta"
         Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
         Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
         """
     } else {
         """
-        echo "Locus not supported, or mixture of locus provided. Choose from: 'ig','tr'"
+        echo "Locus not supported, or mixture of locus provided. Choose from: 'IG','TR'"
         echo $locus
         exit 1
         """
