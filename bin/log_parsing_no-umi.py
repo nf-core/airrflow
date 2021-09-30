@@ -297,7 +297,7 @@ values = [
     df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
     df_process_list[3].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
     df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist()
 ]
 
 # Tables provide extra info and help debugging

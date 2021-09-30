@@ -258,6 +258,7 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 
 * No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
+
 ### Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:

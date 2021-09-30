@@ -83,6 +83,7 @@ for process in processes:
                             s_code.append(
                                 logfile.split("/")[1].split("_command_log")[0]
                             )
+
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
