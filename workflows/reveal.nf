@@ -64,16 +64,18 @@ include { IMMCANTATION  } from '../modules/local/reveal/immcantation_container_v
 include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
 include { CHANGEO_ASSIGNGENES_REVEAL } from '../modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
-include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb_reveal'] )
+include { CHANGEO_MAKEDB_REVEAL } from '../modules/local/reveal/changeo_makedb_reveal'                addParams( options: modules['changeo_makedb_reveal'] )
 include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
-include { REMOVE_CHIMERIC  } from '../modules/local/reveal/remove_chimeric' addParams( options: modules['filter_quality_reveal'] )
-include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
+include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
+include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
+include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
+include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
 // Local: Sub-workflows
-include { REVEAL_INPUT_CHECK } from '../subworkflows/reveal_input_check'       addParams( options: [:] )
+include { REVEAL_INPUT_CHECK } from '../subworkflows/local/reveal_input_check'       addParams( options: [:] )
 
 /*
 ========================================================================================
@@ -101,7 +103,7 @@ def multiqc_report = []
 workflow REVEAL {
 
     ch_software_versions = Channel.empty()
-
+    ch_file_sizes = Channel.empty()
 
     IMMCANTATION()
     ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
@@ -117,6 +119,7 @@ workflow REVEAL {
         )
         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA.out.fasta
         ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
+        ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA.out.logs)
     } else {
         ch_fasta_from_tsv = Channel.empty()
     }
@@ -141,17 +144,20 @@ workflow REVEAL {
         ch_fasta,
         ch_igblast.collect()
     )
+    ch_file_sizes = ch_file_sizes.mix(CHANGEO_ASSIGNGENES_REVEAL.out.logs)
     //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.version.first().ifEmpty(null))
 
     // Parse IgBlast results
-    CHANGEO_MAKEDB (
+    CHANGEO_MAKEDB_REVEAL (
         CHANGEO_ASSIGNGENES_REVEAL.out.fasta,
         CHANGEO_ASSIGNGENES_REVEAL.out.blast,
         ch_imgt.collect()
     )
+    ch_file_sizes = ch_file_sizes.mix(CHANGEO_MAKEDB_REVEAL.out.logs)
 
     // Apply quality filters
-    FILTER_QUALITY(CHANGEO_MAKEDB.out.tab)
+    FILTER_QUALITY(CHANGEO_MAKEDB_REVEAL.out.tab)
+    ch_file_sizes = ch_file_sizes.mix(FILTER_QUALITY.out.logs)
 
     // Select only productive sequences and
     // sequences with junction length multiple of 3
@@ -159,37 +165,50 @@ workflow REVEAL {
         CHANGEO_PARSEDB_SPLIT (
             FILTER_QUALITY.out.tab
         )
+        ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT.out.logs)
+
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT.out.tab
         )
+        ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
         ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
     } else {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
 
+    ch_repertoire
+    .branch { it ->
+        single: it[0].single_cell == 'true'
+        bulk:   it[0].single_cell == 'false'
+    }
+    .set{ch_repertoire_by_processing}
+
     // For bulk datasets, remove chimeric sequences
     // if requested
     if (params.remove_chimeric) {
-        ch_repertoire
-        .branch { it ->
-            single: it[0].single_cell == 'true'
-            bulk:   it[0].single_cell == 'false'
-        }
-        .set{ch_repertoire_by_processing}
         REMOVE_CHIMERIC(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
         )
-        // Mix with single
-        ch_chimeric_pass = ch_repertoire_by_processing.single.mix(REMOVE_CHIMERIC.out.tab)
+        ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
+        ch_chimeric_pass = REMOVE_CHIMERIC.out.tab
     } else {
-        ch_chimeric_pass = ch_repertoire
+        ch_chimeric_pass = ch_repertoire_by_processing.bulk
     }
+    /*
+    // For single cell, specific QC
+    SINGLE_CELL_QC(
+        ch_repertoire_by_processing.single
+    )
+    ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
+
+    // Mix chimeric and single
+    ch_repertoires_qc_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
-        ch_chimeric_pass,
+        ch_repertoires_qc_pass,
         REVEAL_INPUT_CHECK.out.validated_input
     )
     ch_annotated_repertoires = ADD_META_TO_TAB.out
@@ -202,10 +221,8 @@ workflow REVEAL {
         .groupTuple(by: [0])
         .map{ it -> [it[1], it[2].toList()] }
         .dump()
-
+    */
     //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
-
-    // single-cell specific qc (doublets,...)
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
@@ -234,6 +251,11 @@ workflow REVEAL {
     // Report: SHM
     // Report: dowser
 
+
+    // Process logs to report file sizes at each step
+    REPORT_FILE_SIZE (
+        ch_file_sizes.map { it }.collect()
+    )
 
     // Software versions
     GET_SOFTWARE_VERSIONS (

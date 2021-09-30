@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process CHANGEO_CONVERTDB_FASTA {
+process CHANGEO_MAKEDB_REVEAL {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
@@ -20,17 +20,19 @@ process CHANGEO_CONVERTDB_FASTA {
     }
 
     input:
-    tuple val(meta), path(tab) // sequence tsv in AIRR format
+    tuple val(meta), path(reads) // reads in fasta format
+    path(igblast) // igblast fasta from ch_igblast_db_for_process_igblast.mix(ch_igblast_db_for_process_igblast_mix).collect()
+    path(imgt_base)
 
     output:
-    tuple val(meta), path("*.fasta"), emit: fasta // sequence tsv in AIRR format
-    path "*.version.txt" , emit: version
-    path "*_command_log.txt" , emit: logs
+    tuple val(meta), path("*db-pass.tsv"), emit: tab //sequence table in AIRR format
+    path("*_command_log.txt"), emit: logs //process logs
 
     script:
-    def software = getSoftwareName(task.process)
     """
-    ConvertDb.py fasta -d $tab $options.args > "${meta.id}_command_log.txt"
-    ConvertDb.py --version | awk -F' ' '{print \$2}' > ${software}.version.txt
+    MakeDb.py igblast -i $igblast -s $reads -r \\
+    ${imgt_base}/${meta.species}/vdj/ \\
+    $options.args \\
+    --outname "${meta.id}" > "${meta.id}_mdb_command_log.txt"
     """
 }

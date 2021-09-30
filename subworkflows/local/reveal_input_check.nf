@@ -6,7 +6,7 @@ params.options = [:]
 
 include {
     VALIDATE_INPUT
-    } from '../modules/local/reveal/validate_input' addParams( options: params.options )
+    } from '../../modules/local/enchantr/validate_input' addParams( options: params.options )
 
 workflow REVEAL_INPUT_CHECK {
     take:
