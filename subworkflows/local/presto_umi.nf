@@ -3,6 +3,7 @@ def modules = params.modules.clone()
 include { MERGE_UMI }                               from '../../modules/local/merge_UMI'                 addParams( options: [:] )
 include { RENAME_FASTQ      as RENAME_FASTQ_UMI }   from '../../modules/local/rename_fastq'              addParams( options: [:] )
 include { GUNZIP            as GUNZIP_UMI }         from '../../modules/local/gunzip'                    addParams( options: [:] )
+include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_UMI } from '../../modules/local/fastqc_postassembly'                                addParams( options: [:] )
 
 //PRESTO
 include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI }      from '../../modules/local/presto/presto_filterseq'                             addParams( options: modules['presto_filterseq'] )
@@ -84,6 +85,11 @@ workflow PRESTO_UMI {
         PRESTO_POSTCONSENSUS_PAIRSEQ_UMI.out.reads
     )
 
+    // Generate QC stats after reads paired and filtered but before collapsed
+    FASTQC_POSTASSEMBLY_UMI (
+        PRESTO_ASSEMBLEPAIRS_UMI.out.reads
+    )
+
     // Combine UMI duplicate count
     PRESTO_PARSEHEADERS_COLLAPSE_UMI (
         PRESTO_ASSEMBLEPAIRS_UMI.out.reads
@@ -112,6 +118,7 @@ workflow PRESTO_UMI {
     emit:
     fasta = PRESTO_SPLITSEQ_UMI.out.fasta
     software = ch_software_versions
+    fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_UMI.out.zip
     presto_filterseq_logs = PRESTO_FILTERSEQ_UMI.out.logs
     presto_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs.collect()
     presto_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs.collect()

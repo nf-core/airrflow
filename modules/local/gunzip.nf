@@ -19,7 +19,7 @@ process GUNZIP {
     tuple val(meta), path(R1), path(R2)
 
     output:
-    tuple val(meta), path('*_R1.fastq'), path('*_R2.fastq')   , emit: reads
+    tuple val(meta), path("${R1.simpleName}*"), path("${R2.simpleName}*")   , emit: reads
     path "*.version.txt", emit: version
 
     script:

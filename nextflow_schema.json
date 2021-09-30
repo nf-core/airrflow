@@ -171,9 +171,9 @@
                 },
                 "umi_length": {
                     "type": "integer",
-                    "description": "UMI barcode length in nucleotides.",
+                    "description": "UMI barcode length in nucleotides. Set to 0 if no UMIs present.",
                     "fa_icon": "fas fa-barcode",
-                    "default": 8
+                    "default": -1
                 },
                 "umi_start": {
                     "type": "integer",
@@ -181,7 +181,7 @@
                     "fa_icon": "fas fa-barcode"
                 }
             },
-            "help_text": "The pipeline requires UMI barcodes for identifying unique\ntranscripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter.",
+            "help_text": "The pipeline requires indication of UMI barcode treatment (for identifying unique transcripts). These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter. If no UMI barcodes are present, specify `--umi_length = 0` to use the sans-UMI subworkflow.",
             "fa_icon": "fas fa-barcode"
         },
         "presto_options": {
@@ -208,6 +208,12 @@
                     ],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-cut"
+                },
+                "primer_revpr": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-barcode"
                 },
                 "primer_maxerror": {
                     "type": "number",

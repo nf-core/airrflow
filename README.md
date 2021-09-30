@@ -82,8 +82,10 @@ The nf-core/bcellmagic pipeline comes with documentation about the pipeline [usa
 
 nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
-<!-- We thank the following people for their extensive assistance in the development
-of this pipeline: -->
+Further contributors to the pipeline are:
+
+* [@ssnn-airr](https://github.com/ssnn-airr)
+* [@dladd](https://github.com/dladd)
 
 ## Contributions and Support
 
