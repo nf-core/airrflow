@@ -70,7 +70,7 @@ include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
 include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
-include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['filter_quality_reveal'] )
+include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
@@ -195,24 +195,20 @@ workflow REVEAL {
     } else {
         ch_chimeric_pass = ch_repertoire_by_processing.bulk
     }
-
+    /*
     // For single cell, specific QC
-    // TODO, WIP
-
     SINGLE_CELL_QC(
         ch_repertoire_by_processing.single
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
 
-    /*
-    // Mix with single
-    ch_chimeric_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
-
+    // Mix chimeric and single
+    ch_repertoires_qc_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
-        ch_chimeric_pass,
+        ch_repertoires_qc_pass,
         REVEAL_INPUT_CHECK.out.validated_input
     )
     ch_annotated_repertoires = ADD_META_TO_TAB.out
@@ -227,8 +223,6 @@ workflow REVEAL {
         .dump()
     */
     //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
-
-    // single-cell specific qc (doublets,...)
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
