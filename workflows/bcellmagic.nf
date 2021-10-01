@@ -22,7 +22,7 @@ if (!params.library_generation_method) {
 }
 
 // Validate library generation method parameter
-if (params.library_generation_method == "specific_pcr_umi"){
+if (params.library_generation_method == 'specific_pcr_umi'){
     if (params.vprimers)  {
         ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
     } else {
@@ -39,7 +39,7 @@ if (params.library_generation_method == "specific_pcr_umi"){
     if (params.umi_length < 2)  {
         exit 1, "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
     }
-} else if (params.library_generation_method == "specific_pcr") {
+} else if (params.library_generation_method == 'specific_pcr') {
     if (params.vprimers)  {
         ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
     } else {
@@ -59,7 +59,7 @@ if (params.library_generation_method == "specific_pcr_umi"){
         params.umi_length = 0
     }
 
-} else if (params.library_generation_method == "dt_5p_race_umi") {
+} else if (params.library_generation_method == 'dt_5p_race_umi') {
     if (params.vprimers) {
         exit 1, "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
     } else if (params.race_linker) {
@@ -75,7 +75,7 @@ if (params.library_generation_method == "specific_pcr_umi"){
     if (params.umi_length < 2)  {
         exit 1, "The oligo-dT 5'-RACE UMI 'dt_5p_race_umi' library generation method requires specifying the '--umi_length' to a value greater than 1."
     }
-} else if (params.library_generation_method == "dt_5p_race") {
+} else if (params.library_generation_method == 'dt_5p_race') {
     if (params.vprimers) {
         exit 1, "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
     } else if (params.race_linker) {
