@@ -406,7 +406,7 @@ df_final_table = df_final_table.sort_values(["Sample"], ascending=[1])
 
 # incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")
-metadata = metadata[["sample_id", "subject_id", "group_name", "pcr_target_locus"]]
+metadata = metadata[metadata.columns.drop(list(metadata.filter(regex="filename")))]
 logs_metadata = metadata.merge(df_final_table, left_on="sample_id", right_on="Sample")
 logs_metadata = logs_metadata.drop(["Sample"], axis=1)
 logs_metadata.to_csv(
