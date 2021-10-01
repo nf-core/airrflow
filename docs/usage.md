@@ -101,7 +101,7 @@ It is required to provide the sequences for the V-region primers as well as the 
 #### R1 read contains C primer (and UMI barcode)
 
 The `--cprimer_position` and `--umi_position` (if UMIs are used) parameters need to be set to R1 (this is the default).
-If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
+If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
 
 ![nf-core/bcellmagic](images/Primers_R1_UMI_C.png)
 
@@ -113,7 +113,6 @@ nextflow run nf-core/bcellmagic -profile docker \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R1 \
---umi_start 0 \
 --cprimer_start 0 \
 --cprimer_position R1
 ```
@@ -133,7 +132,7 @@ nextflow run nf-core/bcellmagic -profile docker \
 #### R1 read contains V primer (and UMI barcode)
 
 The `--umi_position` parameter needs to be set to R1 (if UMIs are used), and `--cprimer_position` to `R2`.
-If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero).
+If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero).
 
 ![nf-core/bcellmagic](images/Primers_R1_UMI_V.png)
 
@@ -145,7 +144,6 @@ nextflow run nf-core/bcellmagic -profile docker \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R1 \
---umi_start 0 \
 --vprimer_start 0 \
 --cprimer_position R2
 ```
@@ -162,10 +160,9 @@ nextflow run nf-core/bcellmagic -profile docker \
 --cprimer_position R2
 ```
 
-#### R2 read contains UMI barcode and C primer
+#### R2 read contains C primer (and UMI barcode)
 
 The `--umi_position` and `--cprimer_position` parameters need to be set to R2.
-If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero).
 If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero).
 
 ![nf-core/bcellmagic](images/Primers_R1_V.png)
@@ -178,9 +175,26 @@ nextflow run nf-core/bcellmagic -profile docker \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R2 \
---umi_start 0 \
 --cprimer_start 0 \
 --cprimer_position R2
+```
+
+#### UMI barcode is provided in the index file
+
+If the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+
+For example:
+
+```bash
+nextflow run nf-core/bcellmagic -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers Cprimers.fasta \
+--vprimers Vprimers.fasta \
+--cprimer_position R1 \
+--index_file \
+--umi_length 12 \
+--umi_start 6
 ```
 
 ### dT-Oligo RT and 5'RACE PCR
@@ -201,7 +215,6 @@ nextflow run nf-core/bcellmagic -profile docker \
 --race_linker linker.fasta \
 --umi_length 12 \
 --umi_position R2 \
---umi_start 0 \
 --cprimer_start 7 \
 --cprimer_position R1
 ```
@@ -220,7 +233,6 @@ nextflow run nf-core/bcellmagic -profile docker \
 --race_linker linker.fasta \
 --umi_length 12 \
 --umi_position R2 \
---umi_start 0 \
 --cprimer_start 5 \
 --cprimer_position R1
 ```

@@ -171,7 +171,7 @@
                 },
                 "umi_start": {
                     "type": "integer",
-                    "description": "UMI barcode start position.",
+                    "description": "UMI barcode start position in the index read.",
                     "fa_icon": "fas fa-barcode"
                 }
             },
