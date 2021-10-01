@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [#128](https://github.com/nf-core/bcellmagic/pull/128): Added `presto_sans_umi` subworkflow option. Added postassembly FastQC and corresponding section in MultiQC. Included refs for analysis of light chains (if present) by default.
 * Samplesheet column names were updated to follow the AIRR standard.
 
-
 ### `Fixed`
 
 ### `Dependencies`
