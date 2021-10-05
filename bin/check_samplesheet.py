@@ -41,7 +41,6 @@ def check_samplesheet(file_in):
     """
     This function checks that the samplesheet:
 
-    TODO finish checks
     - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species
     - sample ids are unique
     - samples from the same subject come from the same species
