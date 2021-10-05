@@ -35,7 +35,7 @@ workflow {
         BCELLMAGIC()
     } else if (params.subworkflow == "reveal") {
         include { REVEAL } from './workflows/reveal'
-        REVEAL ()
+        REVEAL()
     } else {
         exit 1
     }
