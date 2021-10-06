@@ -201,9 +201,11 @@ workflow REVEAL {
         ch_repertoire_by_processing.single
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
+    ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
+    */
 
-    // Mix chimeric and single
-    ch_repertoires_qc_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
+    // TODO: Mix bulk and single. Now focusing on bulk.
+    ch_repertoires_qc_pass = ch_bulk_chimeric_pass
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
@@ -213,7 +215,7 @@ workflow REVEAL {
     )
     ch_annotated_repertoires = ADD_META_TO_TAB.out
 
-
+    /*
     // Collapse duplicates by params.collapseby
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
     ch_collapsable = ch_annotated_repertoires.tab
