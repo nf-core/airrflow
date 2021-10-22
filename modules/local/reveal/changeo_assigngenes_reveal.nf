@@ -5,7 +5,7 @@ def options    = initOptions(params.options)
 
 process CHANGEO_ASSIGNGENES_REVEAL {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_high'
     label 'immcantation'
 
     publishDir "${params.outdir}",
