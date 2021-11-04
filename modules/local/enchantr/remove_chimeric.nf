@@ -32,8 +32,8 @@ process REMOVE_CHIMERIC {
     script:
     germline_db = tab.getBaseName().toString() + '_germ-pass.tsv'
     """
-    CreateGermlines.py -d $tab -r ${imgt_base}/${meta.species}/vdj/ -g dmask --format airr > "${meta.id}_create-germlines_command_log.txt"
-    Rscript -e "enchantr:::enchantr_report('chimera_analysis', report_params=list('input'='${germline_db}','outdir'=getwd(), 'outname'='${meta.id}', 'log'='${meta.id}_chimeric_command_log'))"
+    CreateGermlines.py -d "${tab}" -r ${imgt_base}/${meta.species}/vdj/ -g dmask --format airr > "${meta.id}_create-germlines_command_log.txt"
+    Rscript -e "enchantr:::enchantr_report('chimera_analysis', report_params=list('input'='${germline_db}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='${meta.id}', 'log'='${meta.id}_chimeric_command_log'))"
     mv enchantr ${meta.id}_chimera_report
     """
 }
