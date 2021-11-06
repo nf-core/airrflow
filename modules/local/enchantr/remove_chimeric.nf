@@ -7,6 +7,8 @@ process REMOVE_CHIMERIC {
     tag "$meta.id"
     label 'immcantation'
     label 'enchantr'
+    label 'process_high'
+    label 'process_long'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
