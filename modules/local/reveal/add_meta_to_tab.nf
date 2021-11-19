@@ -6,6 +6,7 @@ def options    = initOptions(params.options)
 process ADD_META_TO_TAB {
     tag "$meta.id"
     label 'immcantation'
+    label 'single_cpu'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
