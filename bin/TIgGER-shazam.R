@@ -91,7 +91,7 @@ if (loci == "ig"){
     writeChangeoDb(db, paste(output_folder,paste0(sourceLabel, "_v_tr_genotyped.tab"),sep="/"))
 
 } else {
-    stop("Loci specified is not available, please choose from: ig, tr.")
+    stop("Locus specified is not available, please choose from: ig, tr.")
 }
 
 num_dist <- length(unique(na.omit(dist_ham$dist_nearest)))
