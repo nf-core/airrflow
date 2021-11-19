@@ -29,29 +29,10 @@ process CHANGEO_CREATEGERMLINES {
 
     script:
     def software = getSoftwareName(task.process)
-    def locus = meta.locus
-    if (locus == 'IG'){
-        """
-        CreateGermlines.py -d ${tab} -g dmask --cloned -r ${geno_fasta} \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_IGHD.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_IGHJ.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_IGKJ.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_IGLJ.fasta \\
-        --log ${meta.id}.log --outname ${meta.id} > ${meta.id}_command_log.txt
-        ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
-        """
-    } else if (locus == 'TR'){
-        """
-        CreateGermlines.py -d ${tab} -g dmask --cloned -r ${geno_fasta} \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_TRAJ.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_TRBD.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_TRBJ.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_TRDD.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_TRDJ.fasta \\
-        ${imgt_base}/${meta.species}/vdj/imgt_${meta.species}_TRGJ.fasta \\
-        --log ${meta.id}.log --outname ${meta.id} > ${meta.id}_command_log.txt
-        ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
-        """
-    }
-
+    """
+    CreateGermlines.py -d ${tab} -g dmask --cloned -r ${geno_fasta} \\
+    ${imgt_base}/${meta.species}/vdj/ \\
+    --log ${meta.id}.log --outname ${meta.id} > ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
+    """
 }
