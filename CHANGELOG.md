@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * [#130](https://github.com/nf-core/bcellmagic/pull/130): Organized presto processes in `presto_umi` subworkflow.
 * [#128](https://github.com/nf-core/bcellmagic/pull/128): Added `presto_sans_umi` subworkflow option. Added postassembly FastQC and corresponding section in MultiQC. Included refs for analysis of light chains (if present) by default.
-
+* [#](): Made plots and `graphml` output for `alakazam_lineage` process optional.
+* [#](): Added `single_cpu` label to `base.config`.
 ### `Fixed`
 
 ### `Dependencies`
