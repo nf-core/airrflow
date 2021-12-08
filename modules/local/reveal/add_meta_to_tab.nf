@@ -28,10 +28,11 @@ process ADD_META_TO_TAB {
 
     output:
     tuple val(meta), path("*meta-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    path("*_command_log.txt"), emit: logs //process logs
 
     script:
     """
     # TODO: remove not relevant fields
-    reveal_add_metadata.R --repertoire "${tab}" --metadata "${validated_input}" --input_id "${meta.id}" --outname "${meta.id}" > "${meta.id}_${task.process}_command_log.txt"
+    reveal_add_metadata.R --repertoire "${tab}" --metadata "${validated_input}" --input_id "${meta.id}" --outname "${meta.id}" > "${meta.id}_add-meta_command_log.txt"
     """
 }
