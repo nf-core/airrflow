@@ -71,7 +71,7 @@ include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_
 include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'] )
 //include { CHANGEO_CREATEGERMLINES as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'], 'args':'--cloned' )
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
-include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
+// include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
 //include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
 //include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
@@ -218,7 +218,7 @@ workflow REVEAL {
     } else {
         ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
     }
-
+    /*
     // For single cell, specific QC
     // analyze all files together, looking for overlaps
     SINGLE_CELL_QC(
@@ -227,7 +227,7 @@ workflow REVEAL {
         .collect()
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
-
+    */
     // TODO: Update mix bulk and single..
     //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(ch_repertoire_by_processing.single)
     //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
