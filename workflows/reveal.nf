@@ -68,10 +68,13 @@ include { CHANGEO_MAKEDB_REVEAL } from '../modules/local/reveal/changeo_makedb_r
 include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
+include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'] )
+//include { CHANGEO_CREATEGERMLINES as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'], 'args':'--cloned' )
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
 include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
-include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
+//include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
+//include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
 // Local: Sub-workflows
@@ -176,45 +179,68 @@ workflow REVEAL {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
 
-    ch_repertoire
+    // Add metadata to the rearrangement files, to be used later
+    // for grouping, subsetting, plotting....
+    ADD_META_TO_TAB(
+        ch_repertoire,
+        REVEAL_INPUT_CHECK.out.validated_input
+    )
+    ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
+
+    ADD_META_TO_TAB.out.tab
     .branch { it ->
         single: it[0].single_cell == 'true'
+                    return it
         bulk:   it[0].single_cell == 'false'
+                    return it
     }
     .set{ch_repertoire_by_processing}
 
     // For bulk datasets, remove chimeric sequences
     // if requested
     if (params.remove_chimeric) {
-        REMOVE_CHIMERIC(
+
+        // Create germlines
+        CREATEGERMLINES(
             ch_repertoire_by_processing.bulk,
+            ch_imgt.collect()
+        )
+        ch_file_sizes = ch_file_sizes.mix(CREATEGERMLINES.out.logs)
+
+        // Remove chimera
+        REMOVE_CHIMERIC(
+            CREATEGERMLINES.out.tab,
             ch_imgt.collect()
         )
         ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
         ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
+
     } else {
         ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
     }
-    /*
+
     // For single cell, specific QC
+    // analyze all files together, looking for overlaps
     SINGLE_CELL_QC(
-        ch_repertoire_by_processing.single
+       ch_repertoire_by_processing.single
+        .map{ it -> [ it[1] ] }
+        .collect()
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
-    ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
+
+    // TODO: Update mix bulk and single..
+    //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(ch_repertoire_by_processing.single)
+    //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
+
+    /*
+    // Cross-contamination
+    ch_all_repertoires_tab = ADD_META_TO_TAB.out.tab
+        .map{ it -> [ it[1] ] }
+        .collect()
+        .dump(tag:'ch_all_repertoires')
+
+   //DETECT_CONTAMINATION(ch_all_repertoires_tab, 'input_id')
     */
-
-    // TODO: Mix bulk and single. Now focusing on bulk.
-    ch_repertoires_qc_pass = ch_bulk_chimeric_pass
-
-    // Add metadata to the rearrangement files, to be used later
-    // for grouping, subsetting, plotting....
-    ADD_META_TO_TAB(
-        ch_repertoires_qc_pass,
-        REVEAL_INPUT_CHECK.out.validated_input
-    )
-    ch_annotated_repertoires = ADD_META_TO_TAB.out
-
     /*
     // Collapse duplicates by params.collapseby
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
@@ -283,7 +309,6 @@ workflow REVEAL {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
     }
-
 }
 
 /*
