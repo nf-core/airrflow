@@ -4,12 +4,14 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process COLLAPSE_DUPLICATES {
-    tag "$ids"
+    tag "all_reps"
     label 'immcantation'
+    label 'enchantr'
+    label 'process_long'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:getMetaFromFilename(filename,'',task.process)) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
 
@@ -20,29 +22,19 @@ process COLLAPSE_DUPLICATES {
     }
 
     input:
-    tuple val(meta), path(tab) // sequence tsv in AIRR format
+    path(tabs) // tuple val(meta) // sequence tsv in AIRR format
     val(collapseby)
 
     output:
     tuple val(meta), path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "*_report", emit: chimera_report
 
     script:
-    repertoires = tab.join(',')
-    ids = meta.id.join(',')
+    meta=[]
     """
-    reveal_collapseDuplicates.R --repertoire ${repertoires} --ids ${ids} --collapseby ${collapseby} > "${ids}_${task.process}_command_log.txt"
+    echo "${tabs.join('\n')}" > tabs.txt
+    Rscript -e "enchantr::enchantr_report('collapse_duplicates', report_params=list('input'='tabs.txt','collapseby'='${collapseby}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='all_reps', 'log'='all_reps_collapse_command_log'))"
+    mv enchantr all_reps_collapse_report
     """
-}
-
-def getMetaFromFilename (fn, outname='',p='') {
-    if (fn.contains('_command_log.txt')) {
-        tail='_'+p+'_command_log.txt'
-        meta = fn.split(tail)[0]
-        meta = meta.split(",")[0]
-    } else {
-        tail=outname+'_collapse-pass.tsv'
-        meta = fn.split(tail)[0]
-    }
-    return meta
 }

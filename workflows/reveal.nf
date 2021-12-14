@@ -69,12 +69,12 @@ include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addPar
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'] )
-//include { CHANGEO_CREATEGERMLINES as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'], 'args':'--cloned' )
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
 include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
-//include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
-//include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
+include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
+include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates' addParams( options: modules['collapse_duplicates'] )
+//include { CHANGEO_CREATEGERMLINES as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'], 'args':'--cloned' )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
 // Local: Sub-workflows
@@ -219,11 +219,10 @@ workflow REVEAL {
         ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
     }
 
-
     // For single cell, specific QC
     // analyze all files together, looking for overlaps
     SINGLE_CELL_QC(
-       ch_repertoire_by_processing.single
+        ch_repertoire_by_processing.single
         .map{ it -> [ it[1] ] }
         .collect()
     )
@@ -233,26 +232,32 @@ workflow REVEAL {
     //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(ch_repertoire_by_processing.single)
     //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
 
-    /*
-    // Cross-contamination
-    ch_all_repertoires_tab = ADD_META_TO_TAB.out.tab
-        .map{ it -> [ it[1] ] }
-        .collect()
-        .dump(tag:'ch_all_repertoires')
+    // For Bulk data, detect cross-contamination
+    // This is only informative at this time
+    // TODO: add a flaw to specify remove suspicious sequences
+    // and update file size log accordingly
+    DETECT_CONTAMINATION(
+        ch_bulk_chimeric_pass
+            .map{ it -> [ it[1] ] }
+            .collect(),
+        'input_id')
 
-   //DETECT_CONTAMINATION(ch_all_repertoires_tab, 'input_id')
-    */
 
-    /*
+    // For Bulk data
     // Collapse duplicates by params.collapseby
     // https://www.nextflow.io/docs/latest/operator.html#grouptuple
-    ch_collapsable = ch_annotated_repertoires.tab
-        .map{ it -> [ it[0].single_cell, it[0], it[1] ] }
-        .groupTuple(by: [0])
-        .map{ it -> [it[1], it[2].toList()] }
-        .dump()
-    */
-    //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
+    //ch_bulk_chimeric_pass
+    //    .map{ it -> [ it[0][params.collapseby], it[0], it[1] ] }
+    //    .groupTuple(by: [0])
+    //    .map{ it -> [it[0], it[1], it[2].toList()] }
+    //    .view()
+
+    COLLAPSE_DUPLICATES(
+        ch_bulk_chimeric_pass
+            .map{ it -> [ it[1] ] }
+            .collect(),
+        params.collapseby
+    )
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine

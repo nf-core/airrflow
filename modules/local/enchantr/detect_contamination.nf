@@ -3,14 +3,14 @@ include { initOptions; saveFiles; getSoftwareName } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process SINGLE_CELL_QC {
+process DETECT_CONTAMINATION {
     tag "repertoire_all"
     label 'immcantation'
     label 'enchantr'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process),publish_id:'repertoire_all') }
 
     conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
 
@@ -21,19 +21,19 @@ process SINGLE_CELL_QC {
     }
 
     input:
-    //tuple val(meta), path(tab) // sequence tsv in AIRR format
     path tabs
+    val input_id
 
     output:
-    tuple val(meta), path("*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*cont-flag.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report", emit: chimera_report
+    path "*_report", emit: contamination_report
 
     script:
     meta=[]
     """
     echo "${tabs.join('\n')}" > tabs.txt
-    Rscript -e "enchantr::enchantr_report('single_cell_qc', report_params=list('input'='tabs.txt','outdir'=getwd(), 'outname'='all_reps', 'log'='all_reps_scqc_command_log'))"
-    mv enchantr all_reps_scqc_report
+    Rscript -e "enchantr::enchantr_report('contamination', report_params=list('input'='tabs.txt','input_id'='${input_id}','outdir'=getwd(), 'outname'='cont-flag', 'log'='all_reps_contamination_command_log'))"
+    mv enchantr al_reps_cont_report
     """
 }
