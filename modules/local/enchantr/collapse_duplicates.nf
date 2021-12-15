@@ -9,6 +9,8 @@ process COLLAPSE_DUPLICATES {
     label 'enchantr'
     label 'process_long'
 
+    cache  'lenient'
+
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
@@ -28,7 +30,7 @@ process COLLAPSE_DUPLICATES {
     output:
     tuple val(meta), path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report", emit: chimera_report
+    path "*_report", emit: duplicates_report
 
     script:
     meta=[]

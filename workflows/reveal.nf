@@ -74,7 +74,9 @@ include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addP
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
 include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates' addParams( options: modules['collapse_duplicates'] )
-//include { CHANGEO_CREATEGERMLINES as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'], 'args':'--cloned' )
+include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold' addParams( options: modules['find_threshold'] )
+include { DEFINE_CLONES  } from '../modules/local/enchantr/define_clones' addParams( options: modules['define_clones'] )
+//include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_cloned_reveal'], 'args':'--cloned' )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
 // Local: Sub-workflows
@@ -234,13 +236,13 @@ workflow REVEAL {
 
     // For Bulk data, detect cross-contamination
     // This is only informative at this time
-    // TODO: add a flaw to specify remove suspicious sequences
+    // TODO: add a flag to specify remove suspicious sequences
     // and update file size log accordingly
     DETECT_CONTAMINATION(
         ch_bulk_chimeric_pass
             .map{ it -> [ it[1] ] }
             .collect(),
-        'input_id')
+        'id')
 
 
     // For Bulk data
@@ -258,6 +260,7 @@ workflow REVEAL {
             .collect(),
         params.collapseby
     )
+    // TODO file size
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
@@ -266,12 +269,30 @@ workflow REVEAL {
     // stop and report a threshold could be identified.
     // 2) create a report with plots of the distToNearest distribution
     // and the threshold.
-
-
+    // Else
     // Use the threshold to find clones, grouping by params.cloneby and
     // create a report
 
+    if (params.threshold == "auto") {
+        FIND_THRESHOLD (
+            COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
+            .map{ it -> [ it[1] ] }
+            .collect(),
+            params.cloneby,
+            params.singlecell
+        )
 
+        clone_threshold = FIND_THRESHOLD.out.mean_threshold
+    } else {
+        clone_threshold = params.threshold
+    }
+/*
+    DEFINE_CLONES(
+        COLLAPSE_DUPLICATES.out.tab,
+        params.cloneby,
+        clone_threshold
+    )
+*/
     // Create germlines. If params.cloned is true, use the flag --cloned
 
     // Here, we have the final set of sequences. Create a report
