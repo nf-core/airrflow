@@ -178,14 +178,12 @@ include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_u
 ========================================================================================
 */
 
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
-
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                } from '../modules/nf-core/modules/fastqc/main'        addParams( options: modules['fastqc'] )
-include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
+include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
 ========================================================================================
@@ -198,17 +196,22 @@ def multiqc_report = []
 
 workflow BCELLMAGIC {
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK ( ch_input )
+
+    ch_fastqc = INPUT_CHECK
+        .out
+        .reads
         .groupTuple(by: [0])
         .map{ it -> [ it[0], it[1].flatten() ] }
-        .set{ ch_fastqc }
 
     ch_presto = ch_fastqc.map{ it -> it.flatten() }
+
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
     // MODULE: FastQC
@@ -216,7 +219,7 @@ workflow BCELLMAGIC {
     FASTQC ( ch_fastqc )
 
     // Channel for software versions
-    ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC.out.version.first().ifEmpty(null))
 
     if (params.umi_length == 0) {
         //
@@ -263,14 +266,14 @@ workflow BCELLMAGIC {
         ch_presto_splitseq_logs = PRESTO_UMI.out.presto_splitseq_logs
     }
 
-    ch_software_versions = ch_software_versions.mix(ch_presto_software)
+    ch_versions = ch_versions.mix(ch_presto_software)
 
     // FETCH DATABASES
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
-        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
     }
 
     // Run Igblast for gene assignment
@@ -278,7 +281,7 @@ workflow BCELLMAGIC {
         ch_presto_fasta,
         ch_igblast.collect()
     )
-    ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
 
     // Make IgBlast results table
     CHANGEO_MAKEDB (
@@ -311,7 +314,7 @@ workflow BCELLMAGIC {
         ch_imgt.collect()
     )
 
-    ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
@@ -334,7 +337,7 @@ workflow BCELLMAGIC {
         )
     }
 
-    ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
 
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
                                                     .map{ it -> [ it[1] ] }
@@ -368,8 +371,8 @@ workflow BCELLMAGIC {
     }
 
     // Software versions
-    GET_SOFTWARE_VERSIONS (
-        ch_software_versions.map { it }.collect()
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
@@ -391,7 +394,7 @@ workflow BCELLMAGIC {
             ch_multiqc_files.collect()
         )
         multiqc_report       = MULTIQC.out.report.toList()
-        ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+        ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
 }
 
