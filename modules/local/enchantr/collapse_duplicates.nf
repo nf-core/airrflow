@@ -30,7 +30,7 @@ process COLLAPSE_DUPLICATES {
     output:
     tuple val(meta), path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report", emit: duplicates_report
+    path "*_report" // , emit: duplicates_report
 
     script:
     meta=[]

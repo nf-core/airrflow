@@ -1,4 +1,4 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
+include { initOptions; saveFiles; getSoftwareName; asString } from '../functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
@@ -22,20 +22,24 @@ process DEFINE_CLONES {
     }
 
     input:
-    path tabs // tuple val(meta) // sequence tsv in AIRR format
+    tuple val(meta), path (tabs) // sequence tsv in AIRR format
     val cloneby
     val singlecell
+    val threshold
 
 
     output:
-    tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*clone-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
 
     script:
     meta=[]
+    def args = asString(options.args)
+    thr = file(threshold).text
+    thr = thr.trim()
     """
-    Rscript -e "enchantr::enchantr_report('define_clones', report_params=list('input'='${tabs.join(',')}','cloneby'='${cloneby}','singlecell'='${singlecell}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='all_reps', 'log'='all_reps_clone_command_log'))"
+    Rscript -e "enchantr::enchantr_report('define_clones', report_params=list('input'='${tabs.join(',')}','cloneby'='${cloneby}','threshold'=${thr},'singlecell'='${singlecell}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='all_reps', 'log'='all_reps_clone_command_log' ${args}))"
     mv enchantr all_reps_clone_report
     """
 

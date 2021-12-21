@@ -67,3 +67,15 @@ def saveFiles(Map args) {
         }
     }
 }
+
+def asString (args) {
+    s = ""
+    if (args.size()>0) {
+       if (args[0] != 'none') {
+        for (param in args.keySet().sort()){
+        s = s + ",'"+param+"'='"+args[param]+"'"
+        }
+       }
+   }
+   return s
+}

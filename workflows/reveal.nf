@@ -281,18 +281,19 @@ workflow REVEAL {
             params.cloneby,
             params.singlecell
         )
-
         clone_threshold = FIND_THRESHOLD.out.mean_threshold
     } else {
         clone_threshold = params.threshold
     }
-/*
+
+
     DEFINE_CLONES(
         COLLAPSE_DUPLICATES.out.tab,
         params.cloneby,
+        params.singlecell,
         clone_threshold
     )
-*/
+
     // Create germlines. If params.cloned is true, use the flag --cloned
 
     // Here, we have the final set of sequences. Create a report

@@ -27,7 +27,7 @@ process SINGLE_CELL_QC {
     output:
     tuple val(meta), path("*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report", emit: chimera_report
+    path "*_report" //, em`it: chimera_report
 
     script:
     meta=[]

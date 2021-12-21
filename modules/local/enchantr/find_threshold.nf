@@ -9,6 +9,8 @@ process FIND_THRESHOLD {
     label 'enchantr'
     label 'process_long'
 
+    cache 'lenient'
+
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
@@ -26,20 +28,17 @@ process FIND_THRESHOLD {
     val(cloneby)
     val(singlecell)
 
-
     output:
     tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "*_threshold-summary.tsv"
-    path "*_threshold-mean.tsv"
-    env mean_threshold, emit: mean_threshold
+    path "*_threshold-mean.tsv", emit: mean_threshold
 
     script:
     meta=[]
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', report_params=list('input'='${tab.join(',')}','cloneby'='${cloneby}','singlecell'='${singlecell}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='all_reps', 'log'='all_reps_clone_command_log'))"
-    mean_threshold="\$(cat all_reps_threshold-mean.tsv)"
     mv enchantr all_reps_dist_report
     """
 

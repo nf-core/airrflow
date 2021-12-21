@@ -29,7 +29,7 @@ process DETECT_CONTAMINATION {
     output:
     tuple val(meta), path("*cont-flag.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report", emit: contamination_report
+    path "*_report" //, emit: contamination_report
 
     script:
     meta=[]
