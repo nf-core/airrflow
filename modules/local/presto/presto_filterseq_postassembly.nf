@@ -1,10 +1,3 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
-
-
-// Filter single end reads if after assembly (will be the typical case without UMIs)
 process PRESTO_FILTERSEQ_POSTASSEMBLY {
     tag "$meta.id"
     label "process_medium"
@@ -14,11 +7,9 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::presto=0.6.2=py_0" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/presto:0.6.2--py_0"                        // Docker image
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0' :
+        'quay.io/biocontainers/presto:0.6.2--py_0' }"
 
     input:
     tuple val(meta), path(reads)

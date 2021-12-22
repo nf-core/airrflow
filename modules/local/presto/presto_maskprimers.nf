@@ -1,8 +1,3 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
-
 process PRESTO_MASKPRIMERS {
     tag "$meta.id"
     label "process_high"
@@ -12,11 +7,9 @@ process PRESTO_MASKPRIMERS {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::presto=0.6.2=py_0" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/presto:0.6.2--py_0"                        // Docker image
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0' :
+        'quay.io/biocontainers/presto:0.6.2--py_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)
