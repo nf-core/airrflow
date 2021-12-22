@@ -30,10 +30,10 @@ WorkflowMain.initialise(workflow, params, log)
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 include { REVEAL } from './workflows/reveal'
+include { BCELLMAGIC } from './workflows/bcellmagic'
 
 workflow {
     if (params.subworkflow == "bcellmagic") {
-        include { BCELLMAGIC } from './workflows/bcellmagic'
         BCELLMAGIC()
     } else if (params.subworkflow == "reveal") {
         REVEAL()
