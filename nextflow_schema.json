@@ -260,7 +260,7 @@
             "default": "",
             "properties": {
                 "skip_report": {
-                    "type": "string",
+                    "type": "boolean",
                     "description": "Skip repertoire analysis and report generation"
                 },
                 "skip_lineage": {
@@ -268,7 +268,8 @@
                     "description": "Skip clonal lineage analysis and lineage tree plotting."
                 },
                 "skip_multiqc": {
-                    "type": "string"
+                    "type": "boolean",
+                    "description": "Skip multiqc report"
                 }
             },
             "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
@@ -284,13 +285,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-box",
                     "description": "Enable conda to run pipeline with conda environment."
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 },
                 "custom_container": {
                     "type": "string",
