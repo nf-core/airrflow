@@ -219,7 +219,7 @@ workflow BCELLMAGIC {
     FASTQC ( ch_fastqc )
 
     // Channel for software versions
-    ch_versions = ch_versions.mix(FASTQC.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null)first().ifEmpty(null))
 
     if (params.umi_length == 0) {
         //
@@ -273,7 +273,7 @@ workflow BCELLMAGIC {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
-        ch_versions = ch_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
 
     // Run Igblast for gene assignment
@@ -281,7 +281,7 @@ workflow BCELLMAGIC {
         ch_presto_fasta,
         ch_igblast.collect()
     )
-    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
 
     // Make IgBlast results table
     CHANGEO_MAKEDB (
@@ -314,7 +314,7 @@ workflow BCELLMAGIC {
         ch_imgt.collect()
     )
 
-    ch_versions = ch_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.versions.ifEmpty(null)).dump()
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
@@ -337,7 +337,7 @@ workflow BCELLMAGIC {
         )
     }
 
-    ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null)).dump()
 
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
                                                     .map{ it -> [ it[1] ] }
@@ -385,8 +385,9 @@ workflow BCELLMAGIC {
         ch_multiqc_files = Channel.empty()
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_gz.collect{it[1]}.ifEmpty([]))
 
