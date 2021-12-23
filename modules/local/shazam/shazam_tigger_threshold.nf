@@ -17,7 +17,7 @@ process SHAZAM_TIGGER_THRESHOLD {
     output:
     tuple val(meta), path("*genotyped.tab"), emit: tab
     path("*threshold.txt"), emit: threshold
-    path("*.version.txt") , emit: versions
+    path("versions.yml") , emit: versions
     path("*genotype.fasta"), emit: fasta
     path("*genotype.pdf")
     path("*Hamming_distance_threshold.pdf")

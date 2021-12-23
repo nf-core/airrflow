@@ -17,7 +17,6 @@ process CHANGEO_CREATEGERMLINES {
     path("*_command_log.txt"), emit: logs
 
     script:
-    def software = getSoftwareName(task.process)
     """
     CreateGermlines.py -d ${tab} -g dmask --cloned -r ${geno_fasta} \\
     ${imgt_base}/${meta.species}/vdj/ \\

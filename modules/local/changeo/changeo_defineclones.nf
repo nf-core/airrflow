@@ -18,7 +18,6 @@ process CHANGEO_DEFINECLONES {
     path("${geno_fasta}"), emit: fasta // genotype fasta
 
     script:
-    def software = getSoftwareName(task.process)
     if (params.set_cluster_threshold) {
         thr = params.cluster_threshold
     } else {
