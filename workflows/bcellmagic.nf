@@ -15,7 +15,7 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
+if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 if (!params.library_generation_method) {
     exit 1, "Please specify a library generation method with the `--library_generation_method` option."
@@ -133,7 +133,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
-                                    "$projectDir/assets/nf-core-bcellmagic_logo.png"],
+                                    "$projectDir/assets/nf-core-bcellmagic_logo_light.png"],
                                     checkIfExists: true).dump(tag: 'report files')
 
 //CHANGEO
@@ -212,7 +212,7 @@ workflow BCELLMAGIC {
     FASTQC ( ch_fastqc )
 
     // Channel for software versions
-    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null)first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null))
 
     if (params.umi_length == 0) {
         //

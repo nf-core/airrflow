@@ -14,7 +14,9 @@ process PRESTO_PARSEHEADERS {
     tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
 
     script:
+    def subcommand = task.ext.subcommand?: ''
+    def args = task.ext.args?: ''
     """
-    ParseHeaders.py $options.subcommand -s $reads -o "${reads.baseName}_reheader-pass.fastq" $options.args
+    ParseHeaders.py $subcommand -s $reads -o "${reads.baseName}_reheader-pass.fastq" $args
     """
 }

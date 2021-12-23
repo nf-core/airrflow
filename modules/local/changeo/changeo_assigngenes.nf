@@ -14,13 +14,17 @@ process CHANGEO_ASSIGNGENES {
     output:
     path("*igblast.fmt7"), emit: blast
     tuple val(meta), path("$reads"), emit: fasta
-    path "*.version.txt" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
-    AssignGenes.py igblast -s $reads -b $igblast --organism $meta.species --loci ${meta.locus.toLowerCase()} --format blast --nproc $task.cpus --outname "$meta.id"
-    AssignGenes.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
-    igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" > igblast.version.txt
+    AssignGenes.py igblast -s $reads -b $igblast --organism $meta.species --loci ${meta.locus.toLowerCase()} $args --nproc $task.cpus --outname "$meta.id"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+        changeo: \$( AssignGenes.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }

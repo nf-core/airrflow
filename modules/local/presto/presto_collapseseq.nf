@@ -18,8 +18,10 @@ process PRESTO_COLLAPSESEQ {
 
 
     script:
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     """
-    CollapseSeq.py -s $reads $options.args --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
-    ParseLog.py -l "${meta.id}.log" $options.args2
+    CollapseSeq.py -s $reads $args --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    ParseLog.py -l "${meta.id}.log" $args2
     """
 }

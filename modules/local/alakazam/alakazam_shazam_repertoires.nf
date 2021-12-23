@@ -13,16 +13,19 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     path(repertoire_report)
 
     output:
-    path("*.version.txt"), emit: version
+    path("versions.yml"), emit: versions
     path("repertoire_comparison")
     path("Bcellmagic_report.html")
 
     script:
-    def software = getSoftwareName(task.process)
     """
-    execute_report.R repertoire_comparison.Rmd
-    Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='${software}.version.txt')"
-    Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='shazam.version.txt')"
-    echo \$(R --version 2>&1) | awk -F' '  '{print \$3}' > R.version.txt
+    execute_report.R ${repertoire_report}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        alakazam: \$(Rscript -e "library(alakazam); cat(paste(packageVersion('alakazam'), collapse='.'))")
+        shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
+        R: \$(R --version 2>&1) | awk -F' '  '{print \$3}'
+    END_VERSIONS
     """
 }

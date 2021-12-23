@@ -14,8 +14,8 @@ process CHANGEO_BUILDTREES {
     tuple val(meta), path("*_lineages.tsv")
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
-    BuildTrees.py -d ${tab} --outname ${meta.id} --log ${meta.id}.log --collapse --nproc $task.cpus --igphyml
+    BuildTrees.py -d ${tab} --outname ${meta.id} --log ${meta.id}.log --nproc $task.cpus $args
     """
 }

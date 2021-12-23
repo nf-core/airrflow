@@ -17,13 +17,13 @@ process SHAZAM_TIGGER_THRESHOLD {
     output:
     tuple val(meta), path("*genotyped.tab"), emit: tab
     path("*threshold.txt"), emit: threshold
-    path("*.version.txt") , emit: version
+    path("*.version.txt") , emit: versions
     path("*genotype.fasta"), emit: fasta
     path("*genotype.pdf")
     path("*Hamming_distance_threshold.pdf")
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     def locus = meta.locus
     def species = meta.species
     if ( locus.equals('IG')){
@@ -32,8 +32,13 @@ process SHAZAM_TIGGER_THRESHOLD {
             "${imgt_base}/${species}/vdj/imgt_${species}_IGHV.fasta" \
             "${imgt_base}/${species}/vdj/imgt_${species}_IGKV.fasta" \
             "${imgt_base}/${species}/vdj/imgt_${species}_IGLV.fasta"
-        Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
-        Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            tigger: \$(Rscript -e "library(tigger); cat(paste(packageVersion('tigger'), collapse='.'))")
+            shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
+            R: \$(echo \$(R --version 2>&1) | awk -F' '  '{print \$3}')
+        END_VERSIONS
         """
     } else if ( locus.equals('TR')){
         """
@@ -42,8 +47,13 @@ process SHAZAM_TIGGER_THRESHOLD {
         "${imgt_base}/${species}/vdj/imgt_${species}_TRBV.fasta" \\
         "${imgt_base}/${species}/vdj/imgt_${species}_TRDV.fasta" \\
         "${imgt_base}/${species}/vdj/imgt_${species}_TRGV.fasta"
-        Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
-        Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            tigger: \$(Rscript -e "library(tigger); cat(paste(packageVersion('tigger'), collapse='.'))")
+            shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
+            R: \$(echo \$(R --version 2>&1) | awk -F' '  '{print \$3}')
+        END_VERSIONS
         """
     } else {
         """

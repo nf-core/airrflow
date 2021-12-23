@@ -14,9 +14,10 @@ process PRESTO_SPLITSEQ {
     path("*_command_log.txt"), emit: logs
 
     script:
+    def args = task.ext.args ?: ''
     """
     SplitSeq.py group -s $reads \\
-    $options.args \\
+    $args \\
     --outname ${meta.id} \\
     --fasta > "${meta.id}_command_log.txt"
     """

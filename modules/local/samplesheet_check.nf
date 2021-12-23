@@ -10,7 +10,7 @@ process SAMPLESHEET_CHECK {
     path samplesheet
 
     output:
-    path '*.tsv'
+    path '*.tsv', emit: tsv
     path "versions.yml", emit: versions
 
     script:  // This script is bundled with the pipeline, in nf-core/dsltwotest/bin/

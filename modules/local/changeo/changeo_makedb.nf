@@ -18,10 +18,11 @@ process CHANGEO_MAKEDB {
     path("*_command_log.txt"), emit: logs //process logs
 
     script:
+    def args = task.ext.args ?: ''
     """
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${imgt_base}/${meta.species.toLowerCase()}/vdj/ \\
-    $options.args \\
+    $args \\
     --outname "${meta.id}" > "${meta.id}_command_log.txt"
     """
 }

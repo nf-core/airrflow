@@ -13,15 +13,18 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     output:
     tuple val(meta), path("*quality-pass.fastq") ,  emit: reads
     path "*_command_log.txt" , emit: logs
-    path "*.version.txt" , emit: version
+    path "versions.yml" , emit: versions
     path "*.log"
     path "*.tab" , emit: log_tab
 
     script:
-    def software = getSoftwareName(task.process)
     """
     FilterSeq.py quality -s $reads -q ${params.filterseq_q} --outname "${meta.id}" --log "${reads.baseName}.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
     ParseLog.py -l "${reads.baseName}.log" -f ID QUALITY
-    FilterSeq.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        presto: \$( FilterSeq.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }

@@ -12,19 +12,22 @@ process ALAKAZAM_LINEAGE {
 
     output:
     tuple val(meta), path("${tab}"), emit: tab
-    path("*.version.txt"), emit: version
+    path("versions.yml"), emit: versions
     path("*.tsv")
     path("Clone_tree_plots/*.pdf")
     path("Graphml_trees/All_graphs_patient.graphml")
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
     which dnapars > dnapars_exec.txt
-    lineage_reconstruction.R ${tab} $options.args
+    lineage_reconstruction.R ${tab} $args
     merge_graphs.sh
-    Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='${software}.version.txt')"
-    echo \$(R --version 2>&1) | awk -F' '  '{print \$3}' > R.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        alakazam: \$(Rscript -e "library(alakazam); cat(paste(packageVersion('alakazam'), collapse='.'))")
+    END_VERSIONS
     """
 
 }

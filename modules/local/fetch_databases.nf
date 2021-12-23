@@ -1,8 +1,3 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options = initOptions(params.options)
-
 process FETCH_DATABASES {
     tag "IMGT IGBLAST"
     label 'process_low'

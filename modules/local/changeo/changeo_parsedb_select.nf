@@ -15,13 +15,15 @@ process CHANGEO_PARSEDB_SELECT {
     path("*_command_log.txt"), emit: logs //process logs
 
     script:
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args ?: ''
     if (meta.locus == 'IG'){
         """
-        ParseDb.py select -d $tab $options.args --outname ${meta.id} > "${meta.id}_command_log.txt"
+        ParseDb.py select -d $tab $args --outname ${meta.id} > "${meta.id}_command_log.txt"
         """
     } else if (meta.locus == 'TR'){
         """
-        ParseDb.py select -d $tab $options.args2 --outname ${meta.id} > "${meta.id}_command_log.txt"
+        ParseDb.py select -d $tab $args2 --outname ${meta.id} > "${meta.id}_command_log.txt"
         """
     }
 }

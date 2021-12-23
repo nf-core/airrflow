@@ -13,13 +13,17 @@ process CHANGEO_CONVERTDB_FASTA {
 
     output:
     tuple val(meta), path("*.fasta"), emit: fasta // sequence tsv in AIRR format
-    path "*.version.txt" , emit: version
+    path "versions.yml" , emit: versions
     path "*_command_log.txt" , emit: logs
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
-    ConvertDb.py fasta -d $tab $options.args > "${meta.id}_command_log.txt"
-    ConvertDb.py --version | awk -F' ' '{print \$2}' > ${software}.version.txt
+    ConvertDb.py fasta -d $tab $args > "${meta.id}_command_log.txt"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        changeo: \$( ConvertDb.py --version | awk -F' ' '{print \$2}' )
+    END_VERSIONS
     """
 }

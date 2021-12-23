@@ -13,17 +13,20 @@ process PRESTO_FILTERSEQ {
     output:
     tuple val(meta), path("*R1_quality-pass.fastq"), path("*R2_quality-pass.fastq") ,  emit: reads
     path "*_command_log.txt" , emit: logs
-    path "*.version.txt" , emit: version
+    path "versions.yml" , emit: versions
     path "*_R1.log"
     path "*_R2.log"
     path "*.tab" , emit: log_tab
 
     script:
-    def software = getSoftwareName(task.process)
     """
     FilterSeq.py quality -s $R1 -q ${params.filterseq_q} --outname "${meta.id}_R1" --log "${R1.baseName}_R1.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
     FilterSeq.py quality -s $R2 -q ${params.filterseq_q} --outname "${meta.id}_R2" --log "${R2.baseName}_R2.log" --nproc ${task.cpus} >> "${meta.id}_command_log.txt"
     ParseLog.py -l "${R1.baseName}_R1.log" "${R2.baseName}_R2.log" -f ID QUALITY
-    FilterSeq.py --version | awk -F' '  '{print \$2}' > ${software}.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        presto: \$( FilterSeq.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }
