@@ -1,24 +1,23 @@
-def modules = params.modules.clone()
-
-include { MERGE_UMI }                               from '../../modules/local/merge_UMI'                 addParams( options: [:] )
-include { RENAME_FASTQ      as RENAME_FASTQ_UMI }   from '../../modules/local/rename_fastq'              addParams( options: [:] )
-include { GUNZIP            as GUNZIP_UMI }         from '../../modules/local/gunzip'                    addParams( options: [:] )
-include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_UMI } from '../../modules/local/fastqc_postassembly'                                addParams( options: [:] )
+// Include statements
+include { MERGE_UMI }                               from '../../modules/local/merge_UMI'
+include { RENAME_FASTQ      as RENAME_FASTQ_UMI }   from '../../modules/local/rename_fastq'
+include { GUNZIP            as GUNZIP_UMI }         from '../../modules/local/gunzip'
+include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_UMI } from '../../modules/local/fastqc_postassembly'
 
 //PRESTO
-include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI }      from '../../modules/local/presto/presto_filterseq'                             addParams( options: modules['presto_filterseq'] )
-include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI }    from '../../modules/local/presto/presto_maskprimers'                           addParams( options: modules['presto_maskprimers'] )
-include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI }        from '../../modules/local/presto/presto_pairseq'                               addParams( options: modules['presto_pairseq'] )
-include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI }    from '../../modules/local/presto/presto_clustersets'                           addParams( options: modules['presto_clustersets'] )
-include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI }  from '../../modules/local/presto/presto_parse_cluster'                         addParams( options: modules['presto_parse_clusters'] )
-include { PRESTO_BUILDCONSENSUS as  PRESTO_BUILDCONSENSUS_UMI } from '../../modules/local/presto/presto_buildconsensus'                        addParams( options: modules['presto_buildconsensus'] )
-include { PRESTO_POSTCONSENSUS_PAIRSEQ as PRESTO_POSTCONSENSUS_PAIRSEQ_UMI }    from '../../modules/local/presto/presto_postconsensus_pairseq'     addParams( options: modules['presto_postconsensus_pairseq'] )
-include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_UMI }  from '../../modules/local/presto/presto_assemblepairs'                         addParams( options: modules['presto_assemblepairs_umi'] )
-include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_COLLAPSE_UMI } from '../../modules/local/presto/presto_parseheaders'                   addParams( options: modules['presto_parseheaders_collapse_umi'] )
-include { PRESTO_PARSEHEADERS_PRIMERS   as PRESTO_PARSEHEADERS_PRIMERS_UMI }    from '../../modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers_umi'] )
-include { PRESTO_PARSEHEADERS_METADATA  as PRESTO_PARSEHEADERS_METADATA_UMI }   from '../../modules/local/presto/presto_parseheaders_metadata'     addParams( options: modules['presto_parseheaders_metadata'] )
-include { PRESTO_COLLAPSESEQ    as PRESTO_COLLAPSESEQ_UMI }     from '../../modules/local/presto/presto_collapseseq'                           addParams( options: modules['presto_collapseseq_umi'] )
-include { PRESTO_SPLITSEQ       as PRESTO_SPLITSEQ_UMI}         from '../../modules/local/presto/presto_splitseq'                              addParams( options: modules['presto_splitseq_umi'] )
+include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI }      from '../../modules/local/presto/presto_filterseq'
+include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI }    from '../../modules/local/presto/presto_maskprimers'
+include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI }        from '../../modules/local/presto/presto_pairseq'
+include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI }    from '../../modules/local/presto/presto_clustersets'
+include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI }  from '../../modules/local/presto/presto_parse_cluster'
+include { PRESTO_BUILDCONSENSUS as  PRESTO_BUILDCONSENSUS_UMI } from '../../modules/local/presto/presto_buildconsensus'
+include { PRESTO_POSTCONSENSUS_PAIRSEQ as PRESTO_POSTCONSENSUS_PAIRSEQ_UMI }    from '../../modules/local/presto/presto_postconsensus_pairseq'
+include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_UMI }  from '../../modules/local/presto/presto_assemblepairs'
+include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_COLLAPSE_UMI } from '../../modules/local/presto/presto_parseheaders'
+include { PRESTO_PARSEHEADERS_PRIMERS   as PRESTO_PARSEHEADERS_PRIMERS_UMI }    from '../../modules/local/presto/presto_parseheaders_primers'
+include { PRESTO_PARSEHEADERS_METADATA  as PRESTO_PARSEHEADERS_METADATA_UMI }   from '../../modules/local/presto/presto_parseheaders_metadata'
+include { PRESTO_COLLAPSESEQ    as PRESTO_COLLAPSESEQ_UMI }     from '../../modules/local/presto/presto_collapseseq'
+include { PRESTO_SPLITSEQ       as PRESTO_SPLITSEQ_UMI}         from '../../modules/local/presto/presto_splitseq'
 
 
 workflow PRESTO_UMI {
@@ -29,7 +28,7 @@ workflow PRESTO_UMI {
 
     main:
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
     // Merge UMI from index file to R1 if provided
     if (params.index_file) {
         MERGE_UMI ( ch_reads )
@@ -41,11 +40,11 @@ workflow PRESTO_UMI {
 
     // gunzip fastq.gz to fastq
     GUNZIP_UMI ( ch_gunzip )
-    ch_software_versions = ch_software_versions.mix(GUNZIP_UMI.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(GUNZIP_UMI.out.versions.ifEmpty(null))
 
     // Filter sequences by quality score
     PRESTO_FILTERSEQ_UMI ( GUNZIP_UMI.out.reads )
-    ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ_UMI.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(PRESTO_FILTERSEQ_UMI.out.versions.ifEmpty(null))
 
     // Mask primers
     PRESTO_MASKPRIMERS_UMI (
@@ -63,7 +62,7 @@ workflow PRESTO_UMI {
     PRESTO_CLUSTERSETS_UMI (
         PRESTO_PAIRSEQ_UMI.out.reads
     )
-    ch_software_versions = ch_software_versions.mix(PRESTO_CLUSTERSETS_UMI.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(PRESTO_CLUSTERSETS_UMI.out.versions.ifEmpty(null))
 
     // Annotate cluster into barcode field
     PRESTO_PARSE_CLUSTER_UMI (
@@ -117,7 +116,7 @@ workflow PRESTO_UMI {
 
     emit:
     fasta = PRESTO_SPLITSEQ_UMI.out.fasta
-    software = ch_software_versions
+    software = ch_versions
     fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_UMI.out.zip
     presto_filterseq_logs = PRESTO_FILTERSEQ_UMI.out.logs
     presto_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs.collect()
