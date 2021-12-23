@@ -58,7 +58,6 @@ if (params.library_generation_method == 'specific_pcr_umi'){
     } else {
         params.umi_length = 0
     }
-
 } else if (params.library_generation_method == 'dt_5p_race_umi') {
     if (params.vprimers) {
         exit 1, "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
@@ -121,7 +120,7 @@ if( params.imgtdb_base ){
 ========================================================================================
 */
 
-ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
@@ -131,46 +130,40 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 */
 
 // Rmarkdown report file
-ch_rmarkdown_report      = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
+ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
                                     "$projectDir/assets/nf-core-bcellmagic_logo.png"],
                                     checkIfExists: true).dump(tag: 'report files')
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-
-// Local: Modules
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-
 //CHANGEO
-include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
-include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
-include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
-include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
+include { FETCH_DATABASES } from '../modules/local/fetch_databases'
+include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'
+include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'
+include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'
+include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'
+include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'
 
 //SHAZAM
-include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'  addParams( options: modules['shazam_tigger_threshold'] )
+include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'
 
 //CHANGEO
-include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
-include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
-include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
+include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'
+include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'
+include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'
 
 //ALAKAZAM
-include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
-include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
+include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'
+include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'
 
 //LOG PARSING
-include { PARSE_LOGS } from '../modules/local/parse_logs'                           addParams( options: modules['parse_logs'] )
+include { PARSE_LOGS } from '../modules/local/parse_logs'
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from '../subworkflows/local/input_check'          addParams( options: [:] )
-include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
-include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'           addParams( options: [:] )
-include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'           addParams( options: [:] )
+include { INPUT_CHECK           } from '../subworkflows/local/input_check'
+include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'
+include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'
+include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'
 
 /*
 ========================================================================================
