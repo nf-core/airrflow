@@ -2,10 +2,6 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     tag "$meta.id"
     label "process_medium"
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
     conda (params.enable_conda ? "bioconda::presto=0.6.2=py_0" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0' :
