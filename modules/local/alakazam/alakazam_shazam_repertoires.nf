@@ -25,7 +25,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     "${task.process}":
         alakazam: \$(Rscript -e "library(alakazam); cat(paste(packageVersion('alakazam'), collapse='.'))")
         shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
-        R: \$(R --version 2>&1) | awk -F' '  '{print \$3}'
+        R: \$(echo \$(R --version 2>&1) | awk -F' '  '{print \$3}')
     END_VERSIONS
     """
 }
