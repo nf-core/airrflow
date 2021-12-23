@@ -14,7 +14,7 @@ process FASTQC_POSTASSEMBLY {
     output:
     tuple val(meta), path("*.html"), emit: html
     tuple val(meta), path("*.zip") , emit: zip
-    path  "*.version.txt"          , emit: version
+    path  "versions.yml"          , emit: versions
 
     script:
     def args = task.ext.args ?: ''
