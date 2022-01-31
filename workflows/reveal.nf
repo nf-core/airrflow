@@ -75,7 +75,8 @@ include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addP
 include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
 include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates' addParams( options: modules['collapse_duplicates'] )
 include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold' addParams( options: modules['find_threshold'] )
-include { DEFINE_CLONES  } from '../modules/local/enchantr/define_clones' addParams( options: modules['define_clones'] )
+include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones' addParams( options: modules['define_clones'] )
+include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages' addParams( options: modules['dowser_lineages'] )
 //include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_cloned_reveal'], 'args':'--cloned' )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
@@ -106,6 +107,8 @@ include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'
 def multiqc_report = []
 
 workflow REVEAL {
+
+    log.warn "\n----------\nREVEAL lifecycle stage: experimental.\n----------\n"
 
     ch_software_versions = Channel.empty()
     ch_file_sizes = Channel.empty()
@@ -202,7 +205,7 @@ workflow REVEAL {
     // if requested
     if (params.remove_chimeric) {
 
-        // Create germlines
+        // Create germlines (not --cloned)
         CREATEGERMLINES(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
@@ -221,19 +224,6 @@ workflow REVEAL {
         ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
     }
 
-    // For single cell, specific QC
-    // analyze all files together, looking for overlaps
-    SINGLE_CELL_QC(
-        ch_repertoire_by_processing.single
-        .map{ it -> [ it[1] ] }
-        .collect()
-    )
-    ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
-
-    // TODO: Update mix bulk and single..
-    //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(ch_repertoire_by_processing.single)
-    //ch_repertoires_qc_pass = ch_bulk_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
-
     // For Bulk data, detect cross-contamination
     // This is only informative at this time
     // TODO: add a flag to specify remove suspicious sequences
@@ -243,16 +233,7 @@ workflow REVEAL {
             .map{ it -> [ it[1] ] }
             .collect(),
         'id')
-
-
-    // For Bulk data
-    // Collapse duplicates by params.collapseby
-    // https://www.nextflow.io/docs/latest/operator.html#grouptuple
-    //ch_bulk_chimeric_pass
-    //    .map{ it -> [ it[0][params.collapseby], it[0], it[1] ] }
-    //    .groupTuple(by: [0])
-    //    .map{ it -> [it[0], it[1], it[2].toList()] }
-    //    .view()
+    // TODO file size
 
     COLLAPSE_DUPLICATES(
         ch_bulk_chimeric_pass
@@ -261,6 +242,17 @@ workflow REVEAL {
         params.collapseby
     )
     // TODO file size
+    // TODO channel by params.cloneby
+
+
+    // For single cell, specific QC
+    // analyze all files together, looking for overlaps
+    SINGLE_CELL_QC(
+        ch_repertoire_by_processing.single
+        .map{ it -> [ it[1] ] }
+        .collect()
+    )
+    ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
@@ -275,6 +267,7 @@ workflow REVEAL {
 
     if (params.threshold == "auto") {
         FIND_THRESHOLD (
+            // TODO: Add cross threshold. Needs all samples!
             COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
             .map{ it -> [ it[1] ] }
             .collect(),
@@ -282,33 +275,32 @@ workflow REVEAL {
             params.singlecell
         )
         clone_threshold = FIND_THRESHOLD.out.mean_threshold
+        if (clone_threshold == 'NA') {
+            log.error "clone_threshold is NA"
+            exit 1, "clone_threshold is NA"
+        }
     } else {
         clone_threshold = params.threshold
     }
 
-
     DEFINE_CLONES(
-        COLLAPSE_DUPLICATES.out.tab,
+        SINGLE_CELL_QC.out.tab.mix(COLLAPSE_DUPLICATES.out.tab)
+        .map{ it -> [ it[1] ] }
+        .collect(),
         params.cloneby,
         params.singlecell,
-        clone_threshold
+        clone_threshold,
+        ch_imgt.collect()
     )
 
-    // Create germlines. If params.cloned is true, use the flag --cloned
 
-    // Here, we have the final set of sequences. Create a report
-    // to track the number of sequences in each repertoire after
-    // each processing step.
+    DOWSER_LINEAGES(
+        DEFINE_CLONES.out.tab
+        .map{ it -> [ it[1] ] }
+        .flatten()
+    )
 
-    // Compare repertoires' properties, using report Rmds from
-    // enchantr and a contrasts file provided by the user.
-    // Report: Gene usage
-    // Report: Aminoacid properties
-    // Report: Mutational load
-    // Report: SHM
-    // Report: dowser
-
-
+    // TODO fix file sizes
     // Process logs to report file sizes at each step
     REPORT_FILE_SIZE (
         ch_file_sizes.map { it }.collect()

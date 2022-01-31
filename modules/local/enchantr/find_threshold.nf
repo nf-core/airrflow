@@ -29,7 +29,7 @@ process FIND_THRESHOLD {
     val(singlecell)
 
     output:
-    tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "*_threshold-summary.tsv"
