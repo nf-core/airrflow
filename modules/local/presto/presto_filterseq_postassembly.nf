@@ -2,10 +2,10 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     tag "$meta.id"
     label "process_medium"
 
-    conda (params.enable_conda ? "bioconda::presto=0.6.2=py_0" : null)              // Conda package
+    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0' :
-        'quay.io/biocontainers/presto:0.6.2--py_0' }"
+        'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
+        'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
