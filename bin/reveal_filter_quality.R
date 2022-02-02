@@ -40,7 +40,7 @@ db <- read_rearrangement(opt$REPERTOIRE)
 # locus field and locus obtained from v_call should match
 if (packageVersion("alakazam") < "1.0.3") {
     getLocus <- function(segment_call, first = TRUE, collapse = TRUE,
-                         strip_d = TRUE, omit_nl = FALSE, sep = ",") {
+                        strip_d = TRUE, omit_nl = FALSE, sep = ",") {
         locus_regex <- "((IG[HLK]|TR[ABGD]))"
         r <- getSegment(segment_call, locus_regex,
             first = first, collapse = collapse,
