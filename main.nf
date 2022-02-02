@@ -29,20 +29,25 @@ WorkflowMain.initialise(workflow, params, log)
 // WORKFLOW: Execute a single named workflow for the pipeline
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
-if ( params.subworkflow == 'bcellmagic' ) {
+
+if (params.subworkflow == 'bcellmagic') {
     include { BCELLMAGIC } from './workflows/bcellmagic'
-} else if ( params.subworkflow == 'reveal' ) {
+} else if (params.subworkflow == 'reveal') {
     include { REVEAL } from './workflows/reveal'
 }
 
-workflow {
-    if (params.subworkflow == 'bcellmagic') {
+workflow NFCORE_AIRRFLOW {
+    if (params.subworkflow == "bcellmagic") {
         BCELLMAGIC()
-    } else if (params.subworkflow == 'reveal') {
-        REVEAL ()
+    } else if (params.subworkflow == "reveal") {
+        REVEAL()
     } else {
         exit 1
     }
+}
+
+workflow {
+    NFCORE_AIRRFLOW()
 }
 
 /*
