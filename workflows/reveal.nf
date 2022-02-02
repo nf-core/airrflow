@@ -68,10 +68,16 @@ include { CHANGEO_MAKEDB_REVEAL } from '../modules/local/reveal/changeo_makedb_r
 include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
+include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'] )
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
 include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
-include { COLLAPSE_DUPLICATES  } from '../modules/local/reveal/collapse_duplicates' addParams( options: modules['filter_quality_reveal'] )
+include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
+include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates' addParams( options: modules['collapse_duplicates'] )
+include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold' addParams( options: modules['find_threshold'] )
+include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones' addParams( options: modules['define_clones'] )
+include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages' addParams( options: modules['dowser_lineages'] )
+//include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_cloned_reveal'], 'args':'--cloned' )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 
 // Local: Sub-workflows
@@ -101,6 +107,8 @@ include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'
 def multiqc_report = []
 
 workflow REVEAL {
+
+    log.warn "\n----------\nREVEAL lifecycle stage: experimental.\n----------\n"
 
     ch_software_versions = Channel.empty()
     ch_file_sizes = Channel.empty()
@@ -176,53 +184,75 @@ workflow REVEAL {
         ch_repertoire = FILTER_QUALITY.out.tab
     }
 
-    ch_repertoire
+    // Add metadata to the rearrangement files, to be used later
+    // for grouping, subsetting, plotting....
+    ADD_META_TO_TAB(
+        ch_repertoire,
+        REVEAL_INPUT_CHECK.out.validated_input
+    )
+    ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
+
+    ADD_META_TO_TAB.out.tab
     .branch { it ->
         single: it[0].single_cell == 'true'
+                    return it
         bulk:   it[0].single_cell == 'false'
+                    return it
     }
     .set{ch_repertoire_by_processing}
 
     // For bulk datasets, remove chimeric sequences
     // if requested
     if (params.remove_chimeric) {
-        REMOVE_CHIMERIC(
+
+        // Create germlines (not --cloned)
+        CREATEGERMLINES(
             ch_repertoire_by_processing.bulk,
             ch_imgt.collect()
         )
+        ch_file_sizes = ch_file_sizes.mix(CREATEGERMLINES.out.logs)
+
+        // Remove chimera
+        REMOVE_CHIMERIC(
+            CREATEGERMLINES.out.tab,
+            ch_imgt.collect()
+        )
         ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
-        ch_chimeric_pass = REMOVE_CHIMERIC.out.tab
+        ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
+
     } else {
-        ch_chimeric_pass = ch_repertoire_by_processing.bulk
+        ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
     }
-    /*
+
+    // For Bulk data, detect cross-contamination
+    // This is only informative at this time
+    // TODO: add a flag to specify remove suspicious sequences
+    // and update file size log accordingly
+    DETECT_CONTAMINATION(
+        ch_bulk_chimeric_pass
+            .map{ it -> [ it[1] ] }
+            .collect(),
+        'id')
+    // TODO file size
+
+    COLLAPSE_DUPLICATES(
+        ch_bulk_chimeric_pass
+            .map{ it -> [ it[1] ] }
+            .collect(),
+        params.collapseby
+    )
+    // TODO file size
+    // TODO channel by params.cloneby
+
+
     // For single cell, specific QC
+    // analyze all files together, looking for overlaps
     SINGLE_CELL_QC(
         ch_repertoire_by_processing.single
+        .map{ it -> [ it[1] ] }
+        .collect()
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
-
-    // Mix chimeric and single
-    ch_repertoires_qc_pass = ch_chimeric_pass.mix(SINGLE_CELL_QC.out.tab)
-
-    // Add metadata to the rearrangement files, to be used later
-    // for grouping, subsetting, plotting....
-    ADD_META_TO_TAB(
-        ch_repertoires_qc_pass,
-        REVEAL_INPUT_CHECK.out.validated_input
-    )
-    ch_annotated_repertoires = ADD_META_TO_TAB.out
-
-
-    // Collapse duplicates by params.collapseby
-    // https://www.nextflow.io/docs/latest/operator.html#grouptuple
-    ch_collapsable = ch_annotated_repertoires.tab
-        .map{ it -> [ it[0].single_cell, it[0], it[1] ] }
-        .groupTuple(by: [0])
-        .map{ it -> [it[1], it[2].toList()] }
-        .dump()
-    */
-    //COLLAPSE_DUPLICATES(ch_collapsable,params.collapseby)
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
@@ -231,27 +261,46 @@ workflow REVEAL {
     // stop and report a threshold could be identified.
     // 2) create a report with plots of the distToNearest distribution
     // and the threshold.
-
-
+    // Else
     // Use the threshold to find clones, grouping by params.cloneby and
     // create a report
 
+    if (params.threshold == "auto") {
+        FIND_THRESHOLD (
+            // TODO: Add cross threshold. Needs all samples!
+            COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
+            .map{ it -> [ it[1] ] }
+            .collect(),
+            params.cloneby,
+            params.singlecell
+        )
+        clone_threshold = FIND_THRESHOLD.out.mean_threshold
+        if (clone_threshold == 'NA') {
+            log.error "clone_threshold is NA"
+            exit 1, "clone_threshold is NA"
+        }
+    } else {
+        clone_threshold = params.threshold
+    }
 
-    // Create germlines. If params.cloned is true, use the flag --cloned
-
-    // Here, we have the final set of sequences. Create a report
-    // to track the number of sequences in each repertoire after
-    // each processing step.
-
-    // Compare repertoires' properties, using report Rmds from
-    // enchantr and a contrasts file provided by the user.
-    // Report: Gene usage
-    // Report: Aminoacid properties
-    // Report: Mutational load
-    // Report: SHM
-    // Report: dowser
+    DEFINE_CLONES(
+        SINGLE_CELL_QC.out.tab.mix(COLLAPSE_DUPLICATES.out.tab)
+        .map{ it -> [ it[1] ] }
+        .collect(),
+        params.cloneby,
+        params.singlecell,
+        clone_threshold,
+        ch_imgt.collect()
+    )
 
 
+    DOWSER_LINEAGES(
+        DEFINE_CLONES.out.tab
+        .map{ it -> [ it[1] ] }
+        .flatten()
+    )
+
+    // TODO fix file sizes
     // Process logs to report file sizes at each step
     REPORT_FILE_SIZE (
         ch_file_sizes.map { it }.collect()
@@ -281,7 +330,6 @@ workflow REVEAL {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
     }
-
 }
 
 /*

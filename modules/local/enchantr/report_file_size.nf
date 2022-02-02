@@ -10,6 +10,7 @@ process REPORT_FILE_SIZE {
     tag "file_size"
     label 'immcantation'
     label 'enchantr'
+    label 'single_cpu'
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -26,10 +27,12 @@ process REPORT_FILE_SIZE {
     path logs
 
     output:
-    path "enchantr", emit: file_size
+    path "*_report", emit: file_size
 
     script:
     """
-    Rscript -e "enchantr::enchantr_report('file_size', report_params=list('input'='${logs}','outdir'=getwd()))"
+    echo "${logs.join('\n')}" > logs.txt
+    Rscript -e "enchantr::enchantr_report('file_size', report_params=list('input'='logs.txt','outdir'=getwd()))"
+    mv enchantr file_size_report
     """
 }
