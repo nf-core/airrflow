@@ -59,7 +59,6 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 def modules = params.modules.clone()
 
 // Modules: local
-include { CUSTOM_DUMPSOFTWAREVERSIONS  } from '../modules/local/custom_dumpsoftwareversions'  addParams( options: [publish_files : ['csv':'']] )
 include { IMMCANTATION  } from '../modules/local/reveal/immcantation_container_version' addParams( options: [:] )
 include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
@@ -88,6 +87,7 @@ include { REVEAL_INPUT_CHECK } from '../subworkflows/local/reveal_input_check'  
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
+include { CUSTOM_DUMPSOFTWAREVERSIONS  } from '../modules/nf-core/modules/custom/dumpsoftwareversions'  addParams( options: [publish_files : ['csv':'']] )
 
 def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
