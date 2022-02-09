@@ -69,14 +69,14 @@ include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addPar
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
 include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
 include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'] )
-include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric' addParams( options: modules['remove_chimeric_reveal'] )
+include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric'
 include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
-include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination' addParams( options: modules['detect_contamination_reveal'] )
-include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates' addParams( options: modules['collapse_duplicates'] )
-include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold' addParams( options: modules['find_threshold'] )
-include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones' addParams( options: modules['define_clones'] )
-include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages' addParams( options: modules['dowser_lineages'] )
+include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination'
+include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates'
+include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold'
+include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones'
+include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages'
 //include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_cloned_reveal'], 'args':'--cloned' )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
 

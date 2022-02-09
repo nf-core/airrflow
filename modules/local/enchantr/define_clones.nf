@@ -1,7 +1,14 @@
-include { initOptions; saveFiles; getSoftwareName; asString } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
+def asString (args) {
+    s = ""
+    if (args.size()>0) {
+        if (args[0] != 'none') {
+            for (param in args.keySet().sort()){
+                s = s + ",'"+param+"'='"+args[param]+"'"
+            }
+        }
+    }
+    return s
+}
 
 process DEFINE_CLONES {
     tag 'all_reps'
@@ -9,17 +16,8 @@ process DEFINE_CLONES {
     label 'enchantr'
     label 'process_long'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
-    conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
-
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"                        // Docker image
-    }
+    // TODO: update container
+    container "immcantation/suite:devel"
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format
@@ -40,7 +38,7 @@ process DEFINE_CLONES {
     thr = file(threshold).text
     thr = thr.trim()
     def outname = ''
-    if (options.args.containsKey('outname')) { outname = options.args['outname'] }
+    if (ext.args.containsKey('outname')) { outname = ext.args['outname'] }
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
