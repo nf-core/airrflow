@@ -59,7 +59,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 def modules = params.modules.clone()
 
 // Modules: local
-include { GET_SOFTWARE_VERSIONS     } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
+include { CUSTOM_DUMPSOFTWAREVERSIONS  } from '../modules/local/custom_dumpsoftwareversions'  addParams( options: [publish_files : ['csv':'']] )
 include { IMMCANTATION  } from '../modules/local/reveal/immcantation_container_version' addParams( options: [:] )
 include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
@@ -307,8 +307,11 @@ workflow REVEAL {
     )
 
     // Software versions
-    GET_SOFTWARE_VERSIONS (
-        ch_software_versions.map { it }.collect()
+    //GET_SOFTWARE_VERSIONS (
+    //    ch_software_versions.map { it }.collect()
+    //)
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
