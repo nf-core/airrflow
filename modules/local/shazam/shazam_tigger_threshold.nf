@@ -1,8 +1,3 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process SHAZAM_TIGGER_THRESHOLD {
     tag "$meta.id"
 
@@ -10,12 +5,10 @@ process SHAZAM_TIGGER_THRESHOLD {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "conda-forge::r-base=4.0.3 conda-forge::r-shazam=1.0.2 conda-forge::r-tigger=1.0.0" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-02abbf3250c7d008f9d739d7e72ff16a64ae95fc:a440898f307c775f85c44c2812cb28afd74f011d-0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/mulled-v2-02abbf3250c7d008f9d739d7e72ff16a64ae95fc:a440898f307c775f85c44c2812cb28afd74f011d-0"                        // Docker image
-    }
+    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-shazam=1.1.0 conda-forge::r-tigger=1.0.0" : null)              // Conda package
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-db80433cc6df75bc43a5fd7bfa7529a7df8cfe15:f0e1329252bbc0f36a8656cfa655cf205da30e5b-0' :
+        'quay.io/biocontainers/mulled-v2-db80433cc6df75bc43a5fd7bfa7529a7df8cfe15:f0e1329252bbc0f36a8656cfa655cf205da30e5b-0' }"
 
     input:
     tuple val(meta), path(tab) // tsv tab in AIRR format
@@ -24,13 +17,13 @@ process SHAZAM_TIGGER_THRESHOLD {
     output:
     tuple val(meta), path("*genotyped.tab"), emit: tab
     path("*threshold.txt"), emit: threshold
-    path("*.version.txt") , emit: version
+    path("versions.yml") , emit: versions
     path("*genotype.fasta"), emit: fasta
     path("*genotype.pdf")
     path("*Hamming_distance_threshold.pdf")
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     def locus = meta.locus
     def species = meta.species
     if ( locus.equals('IG')){
@@ -39,8 +32,13 @@ process SHAZAM_TIGGER_THRESHOLD {
             "${imgt_base}/${species}/vdj/imgt_${species}_IGHV.fasta" \
             "${imgt_base}/${species}/vdj/imgt_${species}_IGKV.fasta" \
             "${imgt_base}/${species}/vdj/imgt_${species}_IGLV.fasta"
-        Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
-        Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            tigger: \$(Rscript -e "library(tigger); cat(paste(packageVersion('tigger'), collapse='.'))")
+            shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
+            R: \$(echo \$(R --version 2>&1) | awk -F' '  '{print \$3}')
+        END_VERSIONS
         """
     } else if ( locus.equals('TR')){
         """
@@ -49,8 +47,13 @@ process SHAZAM_TIGGER_THRESHOLD {
         "${imgt_base}/${species}/vdj/imgt_${species}_TRBV.fasta" \\
         "${imgt_base}/${species}/vdj/imgt_${species}_TRDV.fasta" \\
         "${imgt_base}/${species}/vdj/imgt_${species}_TRGV.fasta"
-        Rscript -e "library(shazam); write(x=as.character(packageVersion('shazam')), file='${software}.version.txt')"
-        Rscript -e "library(tigger); write(x=as.character(packageVersion('tigger')), file='tigger.version.txt')"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            tigger: \$(Rscript -e "library(tigger); cat(paste(packageVersion('tigger'), collapse='.'))")
+            shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
+            R: \$(echo \$(R --version 2>&1) | awk -F' '  '{print \$3}')
+        END_VERSIONS
         """
     } else {
         """

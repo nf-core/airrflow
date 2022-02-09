@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0dev]
+## v2.1.0dev - [date]
 
 ### `Added`
 
@@ -12,10 +12,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * updated docs for `--library_generation_method` parameter.
 * Samplesheet column names were updated to follow the AIRR standard.
 * Fixed docs on `--umi_start` parameter, this parameter should only be used when UMIs are provided in the index reads.
+* [#143](https://github.com/nf-core/airrflow/pull/128) Template update to nf-core tools v2.2
 
 ### `Fixed`
 
 ### `Dependencies`
+
+| Dependency   | Old version | New version |
+|--------------|-------------|-------------|
+
+| igblast      | 1.15.0      | 1.17.1      |
+| presto       | 0.6.2       | 0.7.0       |
+| changeo      | 1.0.2       | 1.2.0       |
+| r-base       | 4.0.3       | 4.1.2       |
+| r-alakazam   | 1.0.2       | 1.2.0       |
+| r-shazam     | 0.1.11      | 1.1.0       |
+| r-tigger     | 0.3.1       | 1.0.0       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.
+> **NB:** Dependency has been __added__ if just the new version information is present.
+> **NB:** Dependency has been __removed__ if new version information isn't present.
 
 ### `Deprecated`
 

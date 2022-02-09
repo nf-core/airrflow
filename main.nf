@@ -36,7 +36,6 @@ if (params.subworkflow == 'bcellmagic') {
     include { REVEAL } from './workflows/reveal'
 }
 
-
 workflow NFCORE_AIRRFLOW {
     if (params.subworkflow == "bcellmagic") {
         BCELLMAGIC()

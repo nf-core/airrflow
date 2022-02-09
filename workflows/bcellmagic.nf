@@ -15,7 +15,7 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
+if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 if (!params.library_generation_method) {
     exit 1, "Please specify a library generation method with the `--library_generation_method` option."
@@ -58,7 +58,6 @@ if (params.library_generation_method == 'specific_pcr_umi'){
     } else {
         params.umi_length = 0
     }
-
 } else if (params.library_generation_method == 'dt_5p_race_umi') {
     if (params.vprimers) {
         exit 1, "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
@@ -121,7 +120,7 @@ if( params.imgtdb_base ){
 ========================================================================================
 */
 
-ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
@@ -131,46 +130,40 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 */
 
 // Rmarkdown report file
-ch_rmarkdown_report      = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
+ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
-                                    "$projectDir/assets/nf-core-bcellmagic_logo.png"],
+                                    "$projectDir/assets/nf-core-bcellmagic_logo_light.png"],
                                     checkIfExists: true).dump(tag: 'report files')
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-
-// Local: Modules
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-
 //CHANGEO
-include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
-include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
-include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select'] )
-include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
+include { FETCH_DATABASES } from '../modules/local/fetch_databases'
+include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'
+include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'
+include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'
+include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'
+include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'
 
 //SHAZAM
-include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'  addParams( options: modules['shazam_tigger_threshold'] )
+include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'
 
 //CHANGEO
-include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
-include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
-include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
+include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'
+include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'
+include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'
 
 //ALAKAZAM
-include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
-include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
+include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'
+include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'
 
 //LOG PARSING
-include { PARSE_LOGS } from '../modules/local/parse_logs'                           addParams( options: modules['parse_logs'] )
+include { PARSE_LOGS } from '../modules/local/parse_logs'
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from '../subworkflows/local/input_check'          addParams( options: [:] )
-include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
-include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'           addParams( options: [:] )
-include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'           addParams( options: [:] )
+include { INPUT_CHECK           } from '../subworkflows/local/input_check'
+include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'
+include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'
+include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'
 
 /*
 ========================================================================================
@@ -178,14 +171,12 @@ include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_u
 ========================================================================================
 */
 
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
-
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                } from '../modules/nf-core/modules/fastqc/main'        addParams( options: modules['fastqc'] )
-include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
+include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
 ========================================================================================
@@ -198,17 +189,22 @@ def multiqc_report = []
 
 workflow BCELLMAGIC {
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK ( ch_input )
+
+    ch_fastqc = INPUT_CHECK
+        .out
+        .reads
         .groupTuple(by: [0])
         .map{ it -> [ it[0], it[1].flatten() ] }
-        .set{ ch_fastqc }
 
     ch_presto = ch_fastqc.map{ it -> it.flatten() }
+
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
     // MODULE: FastQC
@@ -216,7 +212,7 @@ workflow BCELLMAGIC {
     FASTQC ( ch_fastqc )
 
     // Channel for software versions
-    ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null))
 
     if (params.umi_length == 0) {
         //
@@ -263,14 +259,14 @@ workflow BCELLMAGIC {
         ch_presto_splitseq_logs = PRESTO_UMI.out.presto_splitseq_logs
     }
 
-    ch_software_versions = ch_software_versions.mix(ch_presto_software)
+    ch_versions = ch_versions.mix(ch_presto_software)
 
     // FETCH DATABASES
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
-        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
 
     // Run Igblast for gene assignment
@@ -278,7 +274,7 @@ workflow BCELLMAGIC {
         ch_presto_fasta,
         ch_igblast.collect()
     )
-    ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
 
     // Make IgBlast results table
     CHANGEO_MAKEDB (
@@ -311,7 +307,7 @@ workflow BCELLMAGIC {
         ch_imgt.collect()
     )
 
-    ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.versions.ifEmpty(null)).dump()
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
@@ -334,7 +330,7 @@ workflow BCELLMAGIC {
         )
     }
 
-    ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null)).dump()
 
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
                                                     .map{ it -> [ it[1] ] }
@@ -368,8 +364,8 @@ workflow BCELLMAGIC {
     }
 
     // Software versions
-    GET_SOFTWARE_VERSIONS (
-        ch_software_versions.map { it }.collect()
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
@@ -382,8 +378,9 @@ workflow BCELLMAGIC {
         ch_multiqc_files = Channel.empty()
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_gz.collect{it[1]}.ifEmpty([]))
 
@@ -391,7 +388,7 @@ workflow BCELLMAGIC {
             ch_multiqc_files.collect()
         )
         multiqc_report       = MULTIQC.out.report.toList()
-        ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+        ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
 }
 

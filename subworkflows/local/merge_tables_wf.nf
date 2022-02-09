@@ -2,9 +2,7 @@
  * Get tables and group together the ones from the same subject
  */
 
-params.options = [:]
-
-include { MERGE_TABLES } from '../../modules/local/merge_tables' addParams( options: params.options )
+include { MERGE_TABLES } from '../../modules/local/merge_tables'
 
 workflow MERGE_TABLES_WF {
     take:

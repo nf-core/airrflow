@@ -2,9 +2,7 @@
  * Check input samplesheet and get read channels
  */
 
-params.options = [:]
-
-include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check' addParams( options: params.options )
+include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 
 workflow INPUT_CHECK {
     take:
@@ -12,16 +10,18 @@ workflow INPUT_CHECK {
 
     main:
     SAMPLESHEET_CHECK ( samplesheet )
+        .tsv
         .splitCsv ( header:true, sep:'\t' )
-        .map { get_samplesheet_paths(it) }
+        .map { create_fastq_channels(it) }
         .set { reads }
 
     emit:
-    reads // channel: [ val(meta), [ reads ] ]
+    reads                                     // channel: [ val(meta), [ reads ] ]
+    versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
 }
 
 // Function to map
-def get_samplesheet_paths(LinkedHashMap col) {
+def create_fastq_channels(LinkedHashMap col) {
     def meta = [:]
     meta.id           = col.sample_id
     meta.subject      = col.subject_id
