@@ -1,18 +1,9 @@
-// Import generic module functions
-include { saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-
 /*
  * Immcantation version
  */
 process IMMCANTATION {
     label 'immcantation'
     label 'single_cpu'
-
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'immcantation_version', publish_id:'') }
 
     output:
     path "*.version.txt", emit: version
