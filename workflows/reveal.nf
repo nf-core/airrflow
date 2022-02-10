@@ -15,14 +15,7 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
-
-// Input validation
-if (params.input)  {
-    file(params.input, checkIfExists: true)
-} else {
-    exit 1, "Missing mandatory input: --input."
-}
+if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 if (params.miairr)  {
     file(params.miairr, checkIfExists: true)
@@ -46,7 +39,7 @@ if( params.imgtdb_base ){
 ========================================================================================
 */
 
-ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
@@ -120,7 +113,7 @@ workflow REVEAL {
             REVEAL_INPUT_CHECK.out.ch_tsv
         )
         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-        ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.version.first().ifEmpty(null))
+        //ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.version.first().ifEmpty(null))
         ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
     } else {
         ch_fasta_from_tsv = Channel.empty()
@@ -304,9 +297,9 @@ workflow REVEAL {
     //GET_SOFTWARE_VERSIONS (
     //    ch_software_versions.map { it }.collect()
     //)
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    //CUSTOM_DUMPSOFTWAREVERSIONS (
+    //    ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
+    //)
 
     //
     // MODULE: MultiQC
@@ -319,7 +312,7 @@ workflow REVEAL {
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+    //   ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.yaml.collect())
 
         MULTIQC (
             ch_multiqc_files.collect()
