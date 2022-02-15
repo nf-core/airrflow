@@ -34,7 +34,6 @@ process DEFINE_CLONES {
 
     script:
     meta=[]
-    def args = asString(options.args)
     thr = file(threshold).text
     thr = thr.trim()
     def outname = ''

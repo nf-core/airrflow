@@ -3,10 +3,6 @@ process SINGLE_CELL_QC {
     label 'immcantation'
     label 'enchantr'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
     // TODO: update container
     container "immcantation/suite:devel"
 

@@ -97,11 +97,11 @@ workflow REVEAL {
 
     log.warn "\n----------\nREVEAL lifecycle stage: experimental.\n----------\n"
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
     ch_file_sizes = Channel.empty()
 
     IMMCANTATION()
-    ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(IMMCANTATION.out.version)
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files
@@ -129,7 +129,7 @@ workflow REVEAL {
     // And maybe run this as 2 separate steps, one for IMGT and one for IgBLAST?
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
-        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
     }
@@ -140,7 +140,7 @@ workflow REVEAL {
         ch_igblast.collect()
     )
     ch_file_sizes = ch_file_sizes.mix(CHANGEO_ASSIGNGENES_REVEAL.out.logs)
-    //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.versions.ifEmpty(null))
 
     // Parse IgBlast results
     CHANGEO_MAKEDB_REVEAL (
@@ -293,13 +293,9 @@ workflow REVEAL {
         ch_file_sizes.map { it }.collect()
     )
 
-    // Software versions
-    //GET_SOFTWARE_VERSIONS (
-    //    ch_software_versions.map { it }.collect()
-    //)
-    //CUSTOM_DUMPSOFTWAREVERSIONS (
-    //    ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
-    //)
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 
     //
     // MODULE: MultiQC
@@ -311,14 +307,17 @@ workflow REVEAL {
         ch_multiqc_files = Channel.empty()
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+
     //   ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.yaml.collect())
 
         MULTIQC (
             ch_multiqc_files.collect()
         )
         multiqc_report       = MULTIQC.out.report.toList()
-        ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+        ch_versions = ch_versions.mix(MULTIQC.out.versions)
     }
 }
 
