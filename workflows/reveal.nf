@@ -101,7 +101,7 @@ workflow REVEAL {
     ch_file_sizes = Channel.empty()
 
     IMMCANTATION()
-    ch_versions = ch_versions.mix(IMMCANTATION.out.version)
+    ch_versions = ch_versions.mix(IMMCANTATION.out.versions)
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files

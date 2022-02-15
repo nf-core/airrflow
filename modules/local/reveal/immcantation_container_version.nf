@@ -6,15 +6,13 @@ process IMMCANTATION {
     label 'single_cpu'
 
     output:
-    path "*.version.txt", emit: version
+    path "versions.yml", emit: versions
 
     script:
     """
-    if ! command -v versions report &> /dev/null
-    then
-        echo "immcantation: none" > immcantation_container.version.txt
-    else
-        versions report | head -n 1 > immcantation_container.version.txt
-    fi
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}_CONTAINER":
+        \$(echo \$(versions report) | head -n 1 )
+    END_VERSIONS
     """
 }
