@@ -29,7 +29,7 @@ process DOWSER_LINEAGES {
 
     script:
     meta=[]
-    def args = asString(options.args)
+    def args = asString(ext.args)
     def id_name = "$tabs".replaceFirst('__.*','')
     // TODO use nice outname, not tabs
     """
