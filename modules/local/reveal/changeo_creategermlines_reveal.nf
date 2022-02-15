@@ -18,7 +18,7 @@ process CHANGEO_CREATEGERMLINES_REVEAL {
     """
     CreateGermlines.py -d ${tab} -g dmask \\
     -r ${imgt_base}/${meta.species}/vdj/ --format airr --outdir . \\
-    --log ${meta.id}.log --outname ${meta.id} $options.args > "${meta.id}_create-germlines_command_log.txt"
+    --log ${meta.id}.log --outname ${meta.id} $task.ext.args > "${meta.id}_create-germlines_command_log.txt"
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
     """
 }

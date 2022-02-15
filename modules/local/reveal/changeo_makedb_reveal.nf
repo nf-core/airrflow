@@ -19,7 +19,7 @@ process CHANGEO_MAKEDB_REVEAL {
     """
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${imgt_base}/${meta.species}/vdj/ \\
-    $options.args \\
+    $task.ext.args \\
     --outname "${meta.id}" > "${meta.id}_mdb_command_log.txt"
     """
 }
