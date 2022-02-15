@@ -9,13 +9,12 @@ process IMMCANTATION {
     path "*.version.txt", emit: version
 
     script:
-    def software = getSoftwareName(task.process)
     """
     if ! command -v versions report &> /dev/null
     then
-        echo "immcantation: none" > ${software}.version.txt
+        echo "immcantation: none" > immcantation_container.version.txt
     else
-        versions report | head -n 1 > ${software}.version.txt
+        versions report | head -n 1 > immcantation_container.version.txt
     fi
     """
 }
