@@ -9,10 +9,11 @@ process IMMCANTATION {
     path "versions.yml", emit: versions
 
     script:
+    //TODO: dev version is hardcoded now
     """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}_CONTAINER":
-        \$(echo \$(versions report) | head -n 1 )
+        immcantation: dev
     END_VERSIONS
     """
 }
