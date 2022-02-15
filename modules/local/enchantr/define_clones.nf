@@ -37,7 +37,7 @@ process DEFINE_CLONES {
     thr = file(threshold).text
     thr = thr.trim()
     def outname = ''
-    if (ext.args.containsKey('outname')) { outname = ext.args['outname'] }
+    if (task.ext.args.containsKey('outname')) { outname = task.ext.args['outname'] }
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
