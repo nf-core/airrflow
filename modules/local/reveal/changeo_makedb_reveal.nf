@@ -14,6 +14,7 @@ process CHANGEO_MAKEDB_REVEAL {
     output:
     tuple val(meta), path("*db-pass.tsv"), emit: tab //sequence table in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -21,5 +22,9 @@ process CHANGEO_MAKEDB_REVEAL {
     ${imgt_base}/${meta.species}/vdj/ \\
     $task.ext.args \\
     --outname "${meta.id}" > "${meta.id}_mdb_command_log.txt"
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        changeo: \$( MakeDb.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }
