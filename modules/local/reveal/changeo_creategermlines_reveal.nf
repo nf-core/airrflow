@@ -13,6 +13,7 @@ process CHANGEO_CREATEGERMLINES_REVEAL {
     output:
     tuple val(meta), path("*germ-pass.tsv"), emit: tab
     path("*_command_log.txt"), emit: logs
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -21,6 +22,12 @@ process CHANGEO_CREATEGERMLINES_REVEAL {
     -r ${imgt_base}/${meta.species}/vdj/ --format airr --outdir . \\
     --log ${meta.id}.log --outname ${meta.id} $args > "${meta.id}_create-germlines_command_log.txt"
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        changeo: \$( CreateGermlines.py --version | awk -F' '  '{print \$2}' )
+        presto: \$( ParseLog.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }
 
