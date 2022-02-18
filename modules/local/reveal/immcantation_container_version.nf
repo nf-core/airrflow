@@ -9,11 +9,16 @@ process IMMCANTATION {
     path "versions.yml", emit: versions
 
     script:
-    //TODO: dev version is hardcoded now
     """
+    if ! command -v versions report &> /dev/null
+    then
     cat <<-END_VERSIONS > versions.yml
     "${task.process}_CONTAINER":
-        immcantation: dev
+        immcantation: none
     END_VERSIONS
+    else
+    echo "${task.process}_CONTAINER:" > versions.yml && \
+    cat /Version.yaml | grep "^ " | grep -v "date:" | sed s/version/immcantation/g >> versions.yml
+    fi
     """
 }
