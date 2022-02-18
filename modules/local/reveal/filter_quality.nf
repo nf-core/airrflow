@@ -14,6 +14,7 @@ process FILTER_QUALITY {
     path("*_command_log.txt"), emit: logs //process logs
 
     script:
+    // TODO: add to enchantr
     """
     reveal_filter_quality.R --repertoire $tab --outname ${meta.id} > "${meta.id}_fq_command_log.txt"
     """
