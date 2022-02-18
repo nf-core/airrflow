@@ -66,7 +66,6 @@ include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplic
 include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold'
 include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones'
 include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages'
-//include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_cloned_reveal'], 'args':'--cloned' )
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'
 
 // Local: Sub-workflows
