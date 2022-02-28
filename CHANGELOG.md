@@ -29,9 +29,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | r-shazam     | 0.1.11      | 1.1.0       |
 | r-tigger     | 0.3.1       | 1.0.0       |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if new version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if new version information isn't present.
 
 ### `Deprecated`
 
@@ -114,9 +114,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | igphyml      |             | 1.1.3       |
 | wget         |             | 1.20.1      |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ### `Deprecated`
 

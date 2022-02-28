@@ -1,8 +1,3 @@
-// Import generic module functions
-include { saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-
 /*
  * Immcantation version
  */
@@ -10,21 +5,20 @@ process IMMCANTATION {
     label 'immcantation'
     label 'single_cpu'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'immcantation_version', publish_id:'') }
-
     output:
-    path "*.version.txt", emit: version
+    path "versions.yml", emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     """
     if ! command -v versions report &> /dev/null
     then
-        echo "immcantation: none" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}_CONTAINER":
+        immcantation: none
+    END_VERSIONS
     else
-        versions report | head -n 1 > ${software}.version.txt
+    echo "${task.process}_CONTAINER:" > versions.yml && \
+    cat /Version.yaml | grep "^ " | grep -v "date:" | sed s/version/immcantation/g >> versions.yml
     fi
     """
 }

@@ -517,6 +517,10 @@
                     "type": "string",
                     "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping"
+                },
+                "singlecell": {
+                    "type": "string",
+                    "default": "single_cell"
                 }
             }
         }
