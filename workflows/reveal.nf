@@ -112,7 +112,7 @@ workflow REVEAL {
             REVEAL_INPUT_CHECK.out.ch_tsv
         )
         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-        //ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
         ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
     } else {
         ch_fasta_from_tsv = Channel.empty()
@@ -148,8 +148,10 @@ workflow REVEAL {
         ch_imgt.collect()
     )
     ch_file_sizes = ch_file_sizes.mix(CHANGEO_MAKEDB_REVEAL.out.logs)
+    ch_versions = ch_versions.mix(CHANGEO_MAKEDB_REVEAL.out.versions.ifEmpty(null))
 
     // Apply quality filters
+    // TODO: mv to enchantr and emit versions
     FILTER_QUALITY(CHANGEO_MAKEDB_REVEAL.out.tab)
     ch_file_sizes = ch_file_sizes.mix(FILTER_QUALITY.out.logs)
 
@@ -160,7 +162,9 @@ workflow REVEAL {
             FILTER_QUALITY.out.tab
         )
         ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.versions.ifEmpty(null))
 
+        // TODO: Add to enchantr and emit versions?
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT_REVEAL.out.tab
         )
@@ -197,6 +201,7 @@ workflow REVEAL {
             ch_imgt.collect()
         )
         ch_file_sizes = ch_file_sizes.mix(CREATEGERMLINES.out.logs)
+        ch_versions = ch_versions.mix(CREATEGERMLINES.out.versions.ifEmpty(null))
 
         // Remove chimera
         REMOVE_CHIMERIC(
@@ -205,6 +210,7 @@ workflow REVEAL {
         )
         ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
         ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
+        ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions.ifEmpty(null))
 
     } else {
         ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
@@ -220,6 +226,7 @@ workflow REVEAL {
             .collect(),
         'id')
     // TODO file size
+    ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
 
     COLLAPSE_DUPLICATES(
         ch_bulk_chimeric_pass
@@ -227,6 +234,7 @@ workflow REVEAL {
             .collect(),
         params.collapseby
     )
+    ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
     // TODO file size
     // TODO channel by params.cloneby
 
@@ -239,6 +247,7 @@ workflow REVEAL {
         .collect()
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
+    ch_versions = ch_versions.mix(SINGLE_CELL_QC.out.versions.ifEmpty(null))
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
@@ -253,7 +262,6 @@ workflow REVEAL {
 
     if (params.threshold == "auto") {
         FIND_THRESHOLD (
-            // TODO: Add cross threshold. Needs all samples!
             COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
             .map{ it -> [ it[1] ] }
             .collect(),
