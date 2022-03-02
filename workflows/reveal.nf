@@ -63,7 +63,7 @@ include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc'
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab'
 include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination'
 include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates'
-include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold'
+include { FIND_THRESHOLD } from '../modules/local/enchantr/find_threshold'
 include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones'
 include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages'
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'
@@ -182,14 +182,16 @@ workflow REVEAL {
     )
     ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
 
-    ADD_META_TO_TAB.out.tab
-    .branch { it ->
-        single: it[0].single_cell == 'true'
-                    return it
-        bulk:   it[0].single_cell == 'false'
-                    return it
-    }
-    .set{ch_repertoire_by_processing}
+    ch_repertoire_by_processing = ADD_META_TO_TAB.out.tab
+        .branch { it ->
+            single: it[0].single_cell == 'true'
+                        return it
+            bulk:   it[0].single_cell == 'false'
+                        return it
+        }
+
+    ch_repertoire_by_processing.single.dump()
+    ch_repertoire_by_processing.bulk.dump()
 
     // For bulk datasets, remove chimeric sequences
     // if requested
@@ -269,10 +271,18 @@ workflow REVEAL {
             params.singlecell
         )
         clone_threshold = FIND_THRESHOLD.out.mean_threshold
-        if (clone_threshold == 'NA') {
-            log.error "clone_threshold is NA"
-            exit 1, "clone_threshold is NA"
+
+        thr = clone_threshold
+            .splitText( by:1, limit:1, keepHeader: false)  { it.trim().toString() }
+            .dump(tag: "threshold")
+
+        if ( thr == "NA" ) {
+            log.error "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."
+            exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."
+        } else {
+            log.warn "Threshold is ${thr}"
         }
+
     } else {
         clone_threshold = params.threshold
     }
