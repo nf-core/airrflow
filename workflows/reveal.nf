@@ -190,8 +190,6 @@ workflow REVEAL {
                         return it
         }
 
-    ch_repertoire_by_processing.single.dump()
-    ch_repertoire_by_processing.bulk.dump()
 
     // For bulk datasets, remove chimeric sequences
     // if requested
@@ -272,18 +270,16 @@ workflow REVEAL {
         )
         clone_threshold = FIND_THRESHOLD.out.mean_threshold
 
-        thr = clone_threshold
-            .splitText( by:1, limit:1, keepHeader: false)  { it.trim().toString() }
+        clone_threshold
+            .splitText( limit:1 ) { it.trim().toString() }
+            .dump(tag: 'clone_threshold')
+            .filter { it != 'NA'}
             .dump(tag: "threshold")
-
-        if ( thr == "NA" ) {
-            log.error "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."
-            exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."
-        } else {
-            log.warn "Threshold is ${thr}"
-        }
+            .ifEmpty { exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."}
 
     } else {
+        // TODO: currently define clones expects threshold in a file
+        // update to match changeo_defineclones.nf
         clone_threshold = params.threshold
     }
 
