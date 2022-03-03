@@ -268,9 +268,9 @@ workflow REVEAL {
             params.cloneby,
             params.singlecell
         )
-        clone_threshold = FIND_THRESHOLD.out.mean_threshold
+        ch_threshold = FIND_THRESHOLD.out.mean_threshold
 
-        clone_threshold
+        clone_threshold = ch_threshold
             .splitText( limit:1 ) { it.trim().toString() }
             .dump(tag: 'clone_threshold')
             .filter { it != 'NA'}
@@ -278,8 +278,7 @@ workflow REVEAL {
             .ifEmpty { exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."}
 
     } else {
-        // TODO: currently define clones expects threshold in a file
-        // update to match changeo_defineclones.nf
+        // TODO: Fix * --threshold: expected type: String, found: Integer (1)
         clone_threshold = params.threshold
     }
 
