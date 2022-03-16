@@ -157,6 +157,7 @@ workflow REVEAL {
 
     // Select only productive sequences and
     // sequences with junction length multiple of 3
+    ch_repertoire = Channel.empty()
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT_REVEAL (
             FILTER_QUALITY.out.tab
@@ -169,20 +170,24 @@ workflow REVEAL {
             CHANGEO_PARSEDB_SPLIT_REVEAL.out.tab
         )
         ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
-        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
+        ch_repertoire = ch_repertoire.mix(FILTER_JUNCTION_MOD3.out.tab)
     } else {
-        ch_repertoire = FILTER_QUALITY.out.tab
+        ch_repertoire = ch_repertoire.mix(FILTER_QUALITY.out.tab)
     }
+    ch_repertoire
+    .dump(tag: 'ch_repertoire')
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
-        ch_repertoire,
+        ch_repertoire
+        .dump(tag: 'add_meta_to_tab_input'),
         REVEAL_INPUT_CHECK.out.validated_input
     )
     ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
-
+/*
     ch_repertoire_by_processing = ADD_META_TO_TAB.out.tab
+        .dump(tag: 'meta_to_tab_out')
         .branch { it ->
             single: it[0].single_cell == 'true'
                         return it
@@ -190,6 +195,11 @@ workflow REVEAL {
                         return it
         }
 
+    ch_repertoire_by_processing.bulk
+    .dump(tag: 'bulk')
+
+    ch_repertoire_by_processing.single
+    .dump(tag: 'single')
 
     // For bulk datasets, remove chimeric sequences
     // if requested
@@ -248,7 +258,7 @@ workflow REVEAL {
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
     ch_versions = ch_versions.mix(SINGLE_CELL_QC.out.versions.ifEmpty(null))
-
+*/
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
     // the threshold that will be used to identify sets of clonally
@@ -259,7 +269,7 @@ workflow REVEAL {
     // Else
     // Use the threshold to find clones, grouping by params.cloneby and
     // create a report
-
+/*
     if (params.threshold == "auto") {
         FIND_THRESHOLD (
             COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
@@ -304,7 +314,7 @@ workflow REVEAL {
     REPORT_FILE_SIZE (
         ch_file_sizes.map { it }.collect()
     )
-
+*/
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
