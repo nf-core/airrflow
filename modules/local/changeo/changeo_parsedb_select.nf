@@ -16,7 +16,7 @@ process CHANGEO_PARSEDB_SELECT {
 
     script:
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     if (meta.locus == 'IG'){
         """
         ParseDb.py select -d $tab $args --outname ${meta.id} > "${meta.id}_command_log.txt"
