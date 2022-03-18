@@ -9,7 +9,6 @@ process CHANGEO_CREATEGERMLINES {
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
-    path(geno_fasta) // igblast fasta
     path(imgt_base) // imgt db
 
     output:
@@ -18,8 +17,9 @@ process CHANGEO_CREATEGERMLINES {
 
     script:
     """
-    CreateGermlines.py -d ${tab} -g dmask --cloned -r ${geno_fasta} \\
-    ${imgt_base}/${meta.species}/vdj/ \\
+    CreateGermlines.py -d ${tab} -g dmask --cloned \\
+    -r ${imgt_base}/${meta.species}/vdj/ \\
+    --format airr \\
     --log ${meta.id}.log --outname ${meta.id} > ${meta.id}_command_log.txt
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
     """

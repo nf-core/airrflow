@@ -145,7 +145,7 @@ include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsed
 include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'
 
 //SHAZAM
-include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'
+include { SHAZAM_THRESHOLD } from '../modules/local/shazam/shazam_threshold'
 
 //CHANGEO
 include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'
@@ -302,24 +302,22 @@ workflow BCELLMAGIC {
     MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
 
     // Shazam clonal threshold and tigger genotyping
-    SHAZAM_TIGGER_THRESHOLD(
+    SHAZAM_THRESHOLD(
         MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
         ch_imgt.collect()
     )
 
-    ch_versions = ch_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.versions.ifEmpty(null)).dump()
+    ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
-        SHAZAM_TIGGER_THRESHOLD.out.tab,
-        SHAZAM_TIGGER_THRESHOLD.out.threshold,
-        SHAZAM_TIGGER_THRESHOLD.out.fasta
+        SHAZAM_THRESHOLD.out.tab,
+        SHAZAM_THRESHOLD.out.threshold,
     )
 
     // Identify germline sequences
     CHANGEO_CREATEGERMLINES(
         CHANGEO_DEFINECLONES.out.tab,
-        CHANGEO_DEFINECLONES.out.fasta,
         ch_imgt.collect()
     )
 
