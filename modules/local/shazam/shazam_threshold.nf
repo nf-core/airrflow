@@ -1,11 +1,7 @@
 process SHAZAM_THRESHOLD {
     tag "$meta.id"
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
-    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-shazam=1.1.0 conda-forge::r-tigger=1.0.0" : null)              // Conda package
+    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-shazam=1.1.0" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-db80433cc6df75bc43a5fd7bfa7529a7df8cfe15:f0e1329252bbc0f36a8656cfa655cf205da30e5b-0' :
         'quay.io/biocontainers/mulled-v2-db80433cc6df75bc43a5fd7bfa7529a7df8cfe15:f0e1329252bbc0f36a8656cfa655cf205da30e5b-0' }"

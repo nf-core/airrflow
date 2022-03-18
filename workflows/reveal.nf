@@ -15,14 +15,7 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
-
-// Input validation
-if (params.input)  {
-    file(params.input, checkIfExists: true)
-} else {
-    exit 1, "Missing mandatory input: --input."
-}
+if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 if (params.miairr)  {
     file(params.miairr, checkIfExists: true)
@@ -46,7 +39,7 @@ if( params.imgtdb_base ){
 ========================================================================================
 */
 
-ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
@@ -55,47 +48,40 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ========================================================================================
 */
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-
 // Modules: local
-include { IMMCANTATION  } from '../modules/local/reveal/immcantation_container_version' addParams( options: [:] )
-include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta_from_airr'] )
-include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES_REVEAL } from '../modules/local/reveal/changeo_assigngenes_reveal'      addParams( options: modules['changeo_assigngenes_reveal'] )
-include { CHANGEO_MAKEDB_REVEAL } from '../modules/local/reveal/changeo_makedb_reveal'                addParams( options: modules['changeo_makedb_reveal'] )
-include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality' addParams( options: modules['filter_quality_reveal'] )
-include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split_reveal'] )
-include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3' addParams( options: modules['filter_quality_reveal'] )
-include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_reveal'] )
+include { IMMCANTATION  } from '../modules/local/reveal/immcantation_container_version'
+include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '../modules/local/changeo/changeo_convertdb_fasta'
+include { FETCH_DATABASES } from '../modules/local/fetch_databases'
+include { CHANGEO_ASSIGNGENES_REVEAL } from '../modules/local/reveal/changeo_assigngenes_reveal'
+include { CHANGEO_MAKEDB_REVEAL } from '../modules/local/reveal/changeo_makedb_reveal'
+include { FILTER_QUALITY  } from '../modules/local/reveal/filter_quality'
+include { CHANGEO_PARSEDB_SPLIT as CHANGEO_PARSEDB_SPLIT_REVEAL} from '../modules/local/changeo/changeo_parsedb_split'
+include { FILTER_JUNCTION_MOD3  } from '../modules/local/reveal/filter_junction_mod3'
+include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES } from '../modules/local/reveal/changeo_creategermlines_reveal'
 include { REMOVE_CHIMERIC  } from '../modules/local/enchantr/remove_chimeric'
-include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc' addParams( options: modules['single_cell_qc_reveal'] )
-include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab' addParams( options: modules['add_metadata_reveal'] )
+include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc'
+include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab'
 include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination'
 include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates'
 include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold'
 include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones'
 include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages'
-//include { CHANGEO_CREATEGERMLINES_REVEAL as CREATEGERMLINES_CLONED } from '../modules/local/reveal/changeo_creategermlines_reveal'  addParams( options: modules['changeo_creategermlines_cloned_reveal'], 'args':'--cloned' )
-include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'  addParams( options: [:] )
+include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'
 
 // Local: Sub-workflows
-include { REVEAL_INPUT_CHECK } from '../subworkflows/local/reveal_input_check'       addParams( options: [:] )
+include { REVEAL_INPUT_CHECK } from '../subworkflows/local/reveal_input_check'
 
 /*
 ========================================================================================
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-include { CUSTOM_DUMPSOFTWAREVERSIONS  } from '../modules/nf-core/modules/custom/dumpsoftwareversions'  addParams( options: [publish_files : ['csv':'']] )
-
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
+include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
 ========================================================================================
@@ -110,11 +96,11 @@ workflow REVEAL {
 
     log.warn "\n----------\nREVEAL lifecycle stage: experimental.\n----------\n"
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
     ch_file_sizes = Channel.empty()
 
     IMMCANTATION()
-    ch_software_versions = ch_software_versions.mix(IMMCANTATION.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(IMMCANTATION.out.versions)
 
     // SUBWORKFLOW: Read in samplesheet, validate
     // and emit channels for fasta and tsv files
@@ -122,12 +108,12 @@ workflow REVEAL {
 
     // If reassign requested, generate fasta from the tsv files
     if (params.reassign) {
-        CHANGEO_CONVERTDB_FASTA(
+        CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
             REVEAL_INPUT_CHECK.out.ch_tsv
         )
-        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA.out.fasta
-        ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA.out.version.first().ifEmpty(null))
-        ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA.out.logs)
+        ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
+        //ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.version.first().ifEmpty(null))
+        ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
     } else {
         ch_fasta_from_tsv = Channel.empty()
     }
@@ -142,7 +128,7 @@ workflow REVEAL {
     // And maybe run this as 2 separate steps, one for IMGT and one for IgBLAST?
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
-        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
     }
@@ -153,7 +139,7 @@ workflow REVEAL {
         ch_igblast.collect()
     )
     ch_file_sizes = ch_file_sizes.mix(CHANGEO_ASSIGNGENES_REVEAL.out.logs)
-    //ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES_REVEAL.out.versions.ifEmpty(null))
 
     // Parse IgBlast results
     CHANGEO_MAKEDB_REVEAL (
@@ -170,13 +156,13 @@ workflow REVEAL {
     // Select only productive sequences and
     // sequences with junction length multiple of 3
     if (params.productive_only) {
-        CHANGEO_PARSEDB_SPLIT (
+        CHANGEO_PARSEDB_SPLIT_REVEAL (
             FILTER_QUALITY.out.tab
         )
-        ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT.out.logs)
+        ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.logs)
 
         FILTER_JUNCTION_MOD3(
-            CHANGEO_PARSEDB_SPLIT.out.tab
+            CHANGEO_PARSEDB_SPLIT_REVEAL.out.tab
         )
         ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
         ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
@@ -306,12 +292,8 @@ workflow REVEAL {
         ch_file_sizes.map { it }.collect()
     )
 
-    // Software versions
-    //GET_SOFTWARE_VERSIONS (
-    //    ch_software_versions.map { it }.collect()
-    //)
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
@@ -324,14 +306,17 @@ workflow REVEAL {
         ch_multiqc_files = Channel.empty()
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+
+    //   ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.yaml.collect())
 
         MULTIQC (
             ch_multiqc_files.collect()
         )
         multiqc_report       = MULTIQC.out.report.toList()
-        ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+        ch_versions = ch_versions.mix(MULTIQC.out.versions)
     }
 }
 

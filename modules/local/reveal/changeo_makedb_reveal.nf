@@ -1,23 +1,10 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
-
 process CHANGEO_MAKEDB_REVEAL {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
-    conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"                        // Docker image
-    }
+    // TODO: update container
+    container "immcantation/suite:devel"
 
     input:
     tuple val(meta), path(reads) // reads in fasta format
@@ -27,12 +14,17 @@ process CHANGEO_MAKEDB_REVEAL {
     output:
     tuple val(meta), path("*db-pass.tsv"), emit: tab //sequence table in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "versions.yml" , emit: versions
 
     script:
     """
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${imgt_base}/${meta.species}/vdj/ \\
-    $options.args \\
+    $task.ext.args \\
     --outname "${meta.id}" > "${meta.id}_mdb_command_log.txt"
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        changeo: \$( MakeDb.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }

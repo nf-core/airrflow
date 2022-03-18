@@ -14,9 +14,14 @@ process CHANGEO_PARSEDB_SPLIT {
     output:
     tuple val(meta), path("*productive-T.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "versions.yml" , emit: versions
 
     script:
     """
     ParseDb.py split -d $tab -f productive --outname ${meta.id} > "${meta.id}_split_command_log.txt"
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        changeo: \$( ParseDb.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }
