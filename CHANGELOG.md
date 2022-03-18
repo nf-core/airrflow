@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Parameter `--protocol` was updated to `--library_generation_method` to follow the AIRR standard.
 * Parameter `--loci` and `--species` were converted to a column in the samplesheet (`pcr_target_locus` and `species`) to allow processing simultaneously TR and IG loci from the same sample, also allow processing different species in one samplesheet.
+* Removed genotyping step
 
 ## [2.0.0] - 2021-07-19 "Lumos"
 
