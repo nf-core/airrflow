@@ -22,8 +22,6 @@ process SHAZAM_THRESHOLD {
 
     script:
     def args = task.ext.args ?: ''
-    def locus = meta.locus
-    def species = meta.species
     """
     shazam_threshold.R $tab $params.threshold_method
 
