@@ -10,12 +10,10 @@ process CHANGEO_DEFINECLONES {
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
     val(threshold) // threshold file
-    path(geno_fasta) // igblast fasta
 
     output:
     tuple val(meta), path("*clone-pass.tsv"), emit: tab // sequence tsv table in AIRR format
     path "*_command_log.txt" , emit: logs
-    path("${geno_fasta}"), emit: fasta // genotype fasta
 
     script:
     if (params.set_cluster_threshold) {
