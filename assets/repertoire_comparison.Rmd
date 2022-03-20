@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 ***
 
-# Bcellmagic analysis pipeline
+# Airrflow analysis pipeline
 
 ## Pipeline overview
 
@@ -495,7 +495,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence
 
 # Citations
 
-If you use nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
+If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
 Please also cite the `nf-core` publication [@ewels2020].
 

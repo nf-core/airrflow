@@ -133,7 +133,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
-                                    "$projectDir/assets/nf-core-bcellmagic_logo_light.png"],
+                                    "$projectDir/assets/nf-core-airrflow_logo_light.png"],
                                     checkIfExists: true).dump(tag: 'report files')
 
 //CHANGEO
