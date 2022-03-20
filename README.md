@@ -36,7 +36,7 @@ By default, the pipeline currently performs the following steps:
     * Removing and annotating read duplicates with different UMI barcodes.
     * Filtering out sequences that do not have at least 2 duplicates.
 * Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
-* Determining the BCR / TCR genotype of the sample and finding the threshold for clone definition (`TIgGER`, `SHazaM`).
+* Finding the Hamming distance threshold for clone definition (`SHazaM`).
 * Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
 * Reconstructing gene calls of germline sequences (`Change-O`).
 * Generating clonal trees (`Alakazam`).

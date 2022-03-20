@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                        nf-core/bcellmagic
+                        nf-core/airrflow
 ========================================================================================
-    GitHub  : https://github.com/nf-core/bcellmagic
-    Website : https://nf-co.re/bcellmagic
-    Slack   : https://nfcore.slack.com/channels/bcellmagic
+    GitHub  : https://github.com/nf-core/airrflow
+    Website : https://nf-co.re/airrflow
+    Slack   : https://nfcore.slack.com/channels/airrflow
 ----------------------------------------------------------------------------------------
 */
 
@@ -24,11 +24,6 @@ WorkflowMain.initialise(workflow, params, log)
     RUN ALL WORKFLOWS
 ========================================================================================
 */
-
-//
-// WORKFLOW: Execute a single named workflow for the pipeline
-// See: https://github.com/nf-core/rnaseq/issues/619
-//
 
 if (params.subworkflow == 'bcellmagic') {
     include { BCELLMAGIC } from './workflows/bcellmagic'

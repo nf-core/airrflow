@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/bcellmagic/master/nextflow_schema.json",
-    "title": "nf-core/bcellmagic pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/nf-core/airrflow/master/nextflow_schema.json",
+    "title": "nf-core/airrflow pipeline parameters",
     "description": "B and T cell repertoire analysis pipeline with the Immcantation framework.",
     "type": "object",
     "definitions": {
