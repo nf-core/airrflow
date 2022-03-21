@@ -10,7 +10,7 @@ import pandas as pd
 
 
 def parse_args(args=None):
-    Description = "Read nf-core/bcellmagic samplesheet file and check its contents."
+    Description = "Read nf-core/airrflow samplesheet file and check its contents."
     Epilog = "Example usage: python check_samplesheet.py <FILE_IN>"
 
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)

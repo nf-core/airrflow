@@ -1,4 +1,4 @@
-# nf-core/bcellmagic: Output
+# nf-core/airrflow: Output
 
 ## Introduction
 

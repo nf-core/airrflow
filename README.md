@@ -1,24 +1,24 @@
-# ![nf-core/bcellmagic](docs/images/nf-core-bcellmagic_logo_light.png#gh-light-mode-only) ![nf-core/bcellmagic](docs/images/nf-core-bcellmagic_logo_dark.png#gh-dark-mode-only)
+# ![nf-core/airrflow](docs/images/nf-core-airrflow_logo_light.png#gh-light-mode-only) ![nf-core/airrflow](docs/images/nf-core-airrflow_logo_dark.png#gh-dark-mode-only)
 
-[![GitHub Actions CI Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/bcellmagic/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/nf-core/bcellmagic/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/bcellmagic/actions?query=workflow%3A%22nf-core+linting%22)
-[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/bcellmagic/results)
+[![GitHub Actions CI Status](https://github.com/nf-core/airrflow/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting Status](https://github.com/nf-core/airrflow/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+linting%22)
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23bcellmagic-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/bcellmagic)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23airrflow-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/airrflow)
 [![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-The nf-core/bcellmagic pipeline is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
+The nf-core/airrflow pipeline is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/bcellmagic/results).
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/airrflow/results).
 
 ## Pipeline summary
 
@@ -36,7 +36,7 @@ By default, the pipeline currently performs the following steps:
     * Removing and annotating read duplicates with different UMI barcodes.
     * Filtering out sequences that do not have at least 2 duplicates.
 * Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
-* Determining the BCR / TCR genotype of the sample and finding the threshold for clone definition (`TIgGER`, `SHazaM`).
+* Finding the Hamming distance threshold for clone definition (`SHazaM`).
 * Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
 * Reconstructing gene calls of germline sequences (`Change-O`).
 * Generating clonal trees (`Alakazam`).
@@ -52,7 +52,7 @@ By default, the pipeline currently performs the following steps:
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
     ```console
-    nextflow run nf-core/bcellmagic -profile test,YOURPROFILE
+    nextflow run nf-core/airrflow -profile test,YOURPROFILE
     ```
 
     Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
@@ -65,7 +65,7 @@ By default, the pipeline currently performs the following steps:
 4. Start running your own analysis!
 
     ```bash
-    nextflow run nf-core/bcellmagic \
+    nextflow run nf-core/airrflow \
     -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
     --input samplesheet.tsv \
     --protocol pcr_umi \
@@ -75,15 +75,15 @@ By default, the pipeline currently performs the following steps:
     --loci "ig"
     ```
 
-See [usage docs](https://nf-co.re/bcellmagic/usage) for all of the available options when running the pipeline.
+See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
 
 ## Documentation
 
-The nf-core/bcellmagic pipeline comes with documentation about the pipeline [usage](https://nf-co.re/bcellmagic/usage), [parameters](https://nf-co.re/bcellmagic/parameters) and [output](https://nf-co.re/bcellmagic/output).
+The nf-core/airrflow pipeline comes with documentation about the pipeline [usage](https://nf-co.re/airrflow/usage), [parameters](https://nf-co.re/airrflow/parameters) and [output](https://nf-co.re/airrflow/output).
 
 ## Credits
 
-nf-core/bcellmagic was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
+nf-core/airrflow was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
 
 Further contributors to the pipeline are:
 
@@ -94,11 +94,11 @@ Further contributors to the pipeline are:
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#bcellmagic` channel](https://nfcore.slack.com/channels/bcellmagic) (you can join with [this invite](https://nf-co.re/join/slack)).
+For further information or help, don't hesitate to get in touch on the [Slack `#airrflow` channel](https://nfcore.slack.com/channels/airrflow) (you can join with [this invite](https://nf-co.re/join/slack)).
 
 ## Citations
 
-If you use nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
+If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

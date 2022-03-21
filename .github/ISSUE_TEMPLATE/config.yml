@@ -2,6 +2,6 @@ contact_links:
   - name: Join nf-core
     url: https://nf-co.re/join
     about: Please join the nf-core community here
-  - name: "Slack #bcellmagic channel"
-    url: https://nfcore.slack.com/channels/bcellmagic
-    about: Discussion about the nf-core/bcellmagic pipeline
+  - name: "Slack #airrflow channel"
+    url: https://nfcore.slack.com/channels/airrflow
+    about: Discussion about the nf-core/airrflow pipeline

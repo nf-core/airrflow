@@ -1,19 +1,19 @@
-# nf-core/bcellmagic: Usage
+# nf-core/airrflow: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/bcellmagic/usage](https://nf-co.re/bcellmagic/usage)
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/airrflow/usage](https://nf-co.re/airrflow/usage)
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
 ## Introduction
 
-The Bcellmagic pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+The airrflow pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/bcellmagic \
+nextflow run nf-core/airrflow \
 -profile docker \
 --input samplesheet.tsv \
 --protocol pcr_umi \
@@ -24,7 +24,7 @@ nextflow run nf-core/bcellmagic \
 --max_cpus 8
 ```
 
-For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/bcellmagic/parameters).
+For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -103,10 +103,10 @@ It is required to provide the sequences for the V-region primers as well as the 
 The `--cprimer_position` and `--umi_position` (if UMIs are used) parameters need to be set to R1 (this is the default).
 If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
 
-![nf-core/bcellmagic](images/Primers_R1_UMI_C.png)
+![nf-core/airrflow](images/Primers_R1_UMI_C.png)
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
@@ -120,7 +120,7 @@ nextflow run nf-core/bcellmagic -profile docker \
 If UMIs are not used:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method specific_pcr \
 --cprimers CPrimers.fasta \
@@ -134,10 +134,10 @@ nextflow run nf-core/bcellmagic -profile docker \
 The `--umi_position` parameter needs to be set to R1 (if UMIs are used), and `--cprimer_position` to `R2`.
 If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero).
 
-![nf-core/bcellmagic](images/Primers_R1_UMI_V.png)
+![nf-core/airrflow](images/Primers_R1_UMI_V.png)
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
@@ -151,7 +151,7 @@ nextflow run nf-core/bcellmagic -profile docker \
 If UMIs are not used:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method specific_pcr \
 --cprimers CPrimers.fasta \
@@ -165,10 +165,10 @@ nextflow run nf-core/bcellmagic -profile docker \
 The `--umi_position` and `--cprimer_position` parameters need to be set to R2.
 If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero).
 
-![nf-core/bcellmagic](images/Primers_R1_V.png)
+![nf-core/airrflow](images/Primers_R1_V.png)
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
@@ -186,7 +186,7 @@ If the UMI barcodes are provided in an additional index file, set the `--index_f
 For example:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method specific_pcr_umi \
 --cprimers Cprimers.fasta \
@@ -199,16 +199,16 @@ nextflow run nf-core/bcellmagic -profile docker \
 
 ### dT-Oligo RT and 5'RACE PCR
 
-This sequencing type requires setting `--library_generation_method race_5p_umi` or `--library_generation_method race_5p_umi` if UMIs are not being employed, and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run Bcellmagic to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
+This sequencing type requires setting `--library_generation_method race_5p_umi` or `--library_generation_method race_5p_umi` if UMIs are not being employed, and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run airrflow to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
 
 #### Takara Bio SMARTer Human BCR
 
 The read configuration when sequenicng with the TAKARA Bio SMARTer Human BCR protocol is the following:
 
-![nf-core/bcellmagic](images/TAKARA_RACE_BCR.png)
+![nf-core/airrflow](images/TAKARA_RACE_BCR.png)
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method dt_5p_race_umi \
 --cprimers CPrimers.fasta \
@@ -223,10 +223,10 @@ nextflow run nf-core/bcellmagic -profile docker \
 
 The read configuration when sequencing with the Takara Bio SMARTer Human TCR v2 protocol is the following:
 
-![nf-core/bcellmagic](images/TAKARA_RACE_TCR.png)
+![nf-core/airrflow](images/TAKARA_RACE_TCR.png)
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
 --library_generation_method dt_5p_race_umi \
 --cprimers CPrimers.fasta \
@@ -275,14 +275,14 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```console
-nextflow pull nf-core/bcellmagic
+nextflow pull nf-core/airrflow
 ```
 
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/bcellmagic releases page](https://github.com/nf-core/bcellmagic/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+First, go to the [nf-core/airrflow releases page](https://github.com/nf-core/airrflow/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
