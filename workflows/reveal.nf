@@ -190,9 +190,7 @@ workflow REVEAL {
         .dump(tag: 'meta_to_tab_out')
         .branch { it ->
             single: it[0].single_cell == 'true'
-                        return it
             bulk:   it[0].single_cell == 'false'
-                        return it
         }
 
     ch_repertoire_by_processing.bulk
