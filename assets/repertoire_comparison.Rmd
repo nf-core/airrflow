@@ -301,7 +301,7 @@ ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"),
 # ```{r clonal_diversity_pop, echo = FALSE}
 # sample_div_pop <- alphaDiversity(abund_pop, group="sample_pop", min_q=0, max_q=4, step_q=0.05,
 #                                 ci=0.95, nboot=nboot)
-# sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
+# sample_main_pop <- paste0("Sample diversity (N=", sample_div_pop@n[1], ")")
 
 # sample_div_pop@diversity$treatment <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
 # sample_div_pop@diversity$time_point <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])

@@ -46,6 +46,31 @@
                 }
             }
         },
+        "protocol": {
+            "title": "Protocol",
+            "type": "object",
+            "description": "Experimental protocol used to generate the data",
+            "default": "",
+            "properties": {
+                "library_generation_method": {
+                    "type": "string",
+                    "fa_icon": "fas fa-flask",
+                    "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
+                    "enum": [
+                        "specific_pcr_umi",
+                        "specific_pcr",
+                        "dt_5p_race",
+                        "dt_5p_race_umi"
+                    ],
+                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
+                },
+                "race_linker": {
+                    "type": "string",
+                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
+                    "fa_icon": "fas fa-dna"
+                }
+            }
+        },
         "databases_cache": {
             "title": "Databases cache",
             "type": "object",
@@ -98,18 +123,6 @@
                     "fa_icon": "fas fa-dna",
                     "description": "Path to a fasta file containing the C-region primer sequences."
                 },
-                "library_generation_method": {
-                    "type": "string",
-                    "fa_icon": "fas fa-flask",
-                    "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": [
-                        "specific_pcr_umi",
-                        "specific_pcr",
-                        "dt_5p_race",
-                        "dt_5p_race_umi"
-                    ],
-                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
-                },
                 "vprimer_start": {
                     "type": "integer",
                     "description": "Start position of V region primers (without counting the UMI barcode).",
@@ -122,11 +135,6 @@
                     "fa_icon": "fas fa-dna",
                     "default": 0
                 },
-                "race_linker": {
-                    "type": "string",
-                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
-                    "fa_icon": "fas fa-dna"
-                },
                 "cprimer_position": {
                     "type": "string",
                     "default": "R1",
@@ -136,6 +144,11 @@
                         "R1",
                         "R2"
                     ]
+                },
+                "primer_revpr": {
+                    "type": "boolean",
+                    "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-barcode"
                 }
             },
             "fa_icon": "fas fa-dna"
@@ -190,10 +203,22 @@
                     "description": "Quality threshold for Presto FilterSeq sequence filtering.",
                     "fa_icon": "fas fa-filter"
                 },
+                "primer_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Maximum primer scoring error in the Presto MaskPrimer step for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-align-center"
+                },
+                "primer_consensus": {
+                    "type": "number",
+                    "default": 0.6,
+                    "description": "Maximum error for building the primer consensus in the Presto Buildconsensus step.",
+                    "fa_icon": "fas fa-align-center"
+                },
                 "primer_mask_mode": {
                     "type": "string",
                     "default": "cut",
-                    "description": "Masking mode for the Presto MaskPrimer process. Available: cut, mask, trim, tag.",
+                    "description": "Masking mode for the Presto MaskPrimer step. Available: cut, mask, trim, tag.",
                     "enum": [
                         "cut",
                         "mask",
@@ -201,24 +226,19 @@
                         "tag"
                     ],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
-                    "fa_icon": "fas fa-cut"
+                    "fa_icon": "fas fa-mask"
                 },
-                "primer_revpr": {
-                    "type": "boolean",
-                    "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-barcode"
-                },
-                "primer_maxerror": {
+                "buildconsensus_maxerror": {
                     "type": "number",
-                    "default": 0.2,
-                    "description": "Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-exclamation-triangle"
+                    "default": 0.1,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum error for building the sequence consensus in the Presto BuildConsensus step."
                 },
-                "primer_consensus": {
+                "buildconsensus_maxgap": {
                     "type": "number",
-                    "default": 0.6,
-                    "description": "Maximum error for building the primer consensus.",
-                    "fa_icon": "fas fa-align-center"
+                    "default": 0.5,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum gap for building the sequence consensus in the Presto BuildConsensus step."
                 }
             },
             "fa_icon": "fas fa-align-center"
@@ -528,6 +548,9 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/protocol"
         },
         {
             "$ref": "#/definitions/databases_cache"
