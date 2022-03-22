@@ -14,7 +14,7 @@ process SHAZAM_THRESHOLD {
     tuple val(meta), path("${tab}"), emit: tab
     path("*threshold.txt"), emit: threshold
     path("versions.yml") , emit: versions
-    path("*Hamming_distance_threshold.pdf")
+    path("*Hamming_distance_threshold.pdf") optional true
 
     script:
     def args = task.ext.args ?: ''
