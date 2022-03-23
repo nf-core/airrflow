@@ -1,5 +1,1 @@
-lint:
-  files_unchanged:
-    - assets/multiqc_config.yaml
-    - .github/workflows/linting.yml
 repository_type: pipeline

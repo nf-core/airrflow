@@ -44,5 +44,5 @@ def create_fastq_channels(LinkedHashMap col) {
 
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     }
-    return array
+    return fastq_meta
 }
