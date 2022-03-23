@@ -12,9 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * updated docs for `--library_generation_method` parameter.
 * Samplesheet column names were updated to follow the AIRR standard.
 * Fixed docs on `--umi_start` parameter, this parameter should only be used when UMIs are provided in the index reads.
-* [#143](https://github.com/nf-core/airrflow/pull/128) Template update to nf-core tools v2.2
+* [#143](https://github.com/nf-core/airrflow/pull/128) Template update to nf-core tools v2.2.
+* [#150](https://github.com/nf-core/airrflow/pull/150) Added option to search for reverse primers.
 
 ### `Fixed`
+
+* [#150](https://github.com/nf-core/airrflow/pull/150): Fixed cprimer start position, when cprimer in R2 reads.
+* Remove need for a plot when Hamming threshold cannot be generated.
 
 ### `Dependencies`
 
