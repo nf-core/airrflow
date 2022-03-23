@@ -1,5 +1,5 @@
 process DETECT_CONTAMINATION {
-    tag "repertoire_all"
+    tag "multi_repertoire"
     label 'immcantation'
     label 'enchantr'
 
