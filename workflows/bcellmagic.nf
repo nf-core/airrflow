@@ -333,9 +333,8 @@ workflow BCELLMAGIC {
         ALAKAZAM_LINEAGE(
             CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'creategermlines_output')
         )
+        ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null)).dump()
     }
-
-    ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null)).dump()
 
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
                                                     .map{ it -> [ it[1] ] }
