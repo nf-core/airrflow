@@ -1,4 +1,4 @@
-# nf-core/bcellmagic: Changelog
+# nf-core/airrflow: Changelog
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * [#150](https://github.com/nf-core/airrflow/pull/150): Fixed cprimer start position, when cprimer in R2 reads.
 * Remove need for a plot when Hamming threshold cannot be generated.
+* The shazam threshold process is not executed when the hamming threshold is provided.
 
 ### `Dependencies`
 

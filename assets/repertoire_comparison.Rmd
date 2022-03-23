@@ -385,7 +385,7 @@ The V gene usage (in percentage) in each of the samples is represented below. Al
 
 Gene family usage is normalized by the number of clones.
 
-```{r, echo=F, fig.width=10, fig.asp=1, fig.align='center'}
+```{r, echo=F, fig.width=12, fig.asp=1, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family", clone="clone_id")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -447,7 +447,7 @@ All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ### By clones {-}
 
-```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
+```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene", clone = "clone_id")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -471,7 +471,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_da
 
 ### By sequences {-}
 
-```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
+```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])

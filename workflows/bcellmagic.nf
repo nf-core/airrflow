@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -115,18 +115,18 @@ if( params.imgtdb_base ){
 
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 // Rmarkdown report file
@@ -166,9 +166,9 @@ include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'
 include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 //
@@ -179,9 +179,9 @@ include { MULTIQC                     } from '../modules/nf-core/modules/multiqc
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 // Info required for completion email and summary
@@ -301,18 +301,25 @@ workflow BCELLMAGIC {
     // Subworkflow: merge tables from the same patient
     MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
 
-    // Shazam clonal threshold and tigger genotyping
-    SHAZAM_THRESHOLD(
-        MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
-        ch_imgt.collect()
-    )
-
-    ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
+    // Shazam clonal threshold
+    // Only if threshold is not manually set
+    if (!params.set_cluster_threshold){
+        SHAZAM_THRESHOLD(
+            MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
+            ch_imgt.collect()
+        )
+        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_threshold = SHAZAM_THRESHOLD.out.threshold
+        ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
+    } else {
+        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_threshold = file('EMPTY')
+    }
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
-        SHAZAM_THRESHOLD.out.tab,
-        SHAZAM_THRESHOLD.out.threshold,
+        ch_tab_for_changeo_defineclones,
+        ch_threshold,
     )
 
     // Identify germline sequences
@@ -391,9 +398,9 @@ workflow BCELLMAGIC {
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow.onComplete {
@@ -404,7 +411,7 @@ workflow.onComplete {
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
