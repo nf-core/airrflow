@@ -301,18 +301,25 @@ workflow BCELLMAGIC {
     // Subworkflow: merge tables from the same patient
     MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
 
-    // Shazam clonal threshold and tigger genotyping
-    SHAZAM_THRESHOLD(
-        MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
-        ch_imgt.collect()
-    )
-
-    ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
+    // Shazam clonal threshold
+    // Only if threshold is not manually set
+    if (!params.set_cluster_threshold){
+        SHAZAM_THRESHOLD(
+            MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
+            ch_imgt.collect()
+        )
+        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab
+        ch_threshold = SHAZAM_THRESHOLD.out.threshold
+        ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
+    } else {
+        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab
+        ch_threshold = Channel.empty()
+    }
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
-        SHAZAM_THRESHOLD.out.tab,
-        SHAZAM_THRESHOLD.out.threshold,
+        ch_tab_for_changeo_defineclones,
+        ch_threshold,
     )
 
     // Identify germline sequences
