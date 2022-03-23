@@ -26,15 +26,15 @@ By default, the pipeline currently performs the following steps:
 
 - Raw read quality control (`FastQC`)
 - Pre-processing (`pRESTO`)
-    - Filtering sequences by sequencing quality.
-    - Masking amplicon primers.
-    - Pairing read mates.
-    - Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough.
-    - Building consensus of sequences with the same UMI barcode.
-    - Re-pairing read mates.
-    - Assembling R1 and R2 read mates.
-    - Removing and annotating read duplicates with different UMI barcodes.
-    - Filtering out sequences that do not have at least 2 duplicates.
+  - Filtering sequences by sequencing quality.
+  - Masking amplicon primers.
+  - Pairing read mates.
+  - Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough.
+  - Building consensus of sequences with the same UMI barcode.
+  - Re-pairing read mates.
+  - Assembling R1 and R2 read mates.
+  - Removing and annotating read duplicates with different UMI barcodes.
+  - Filtering out sequences that do not have at least 2 duplicates.
 - Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
 - Finding the Hamming distance threshold for clone definition (`SHazaM`).
 - Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
@@ -51,9 +51,9 @@ By default, the pipeline currently performs the following steps:
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
-    ```console
-    nextflow run nf-core/airrflow -profile test,YOURPROFILE --outdir <OUTDIR>
-    ```
+   ```console
+   nextflow run nf-core/airrflow -profile test,YOURPROFILE --outdir <OUTDIR>
+   ```
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
 
@@ -64,17 +64,17 @@ By default, the pipeline currently performs the following steps:
 
 4. Start running your own analysis!
 
-    ```bash
-    nextflow run nf-core/airrflow \
-    -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
-    --input samplesheet.tsv \
-    --outdir ./results
-    --protocol pcr_umi \
-    --cprimers CPrimers.fasta \
-    --vprimers VPrimers.fasta \
-    --umi_length 12 \
-    --loci "ig"
-    ```
+   ```bash
+   nextflow run nf-core/airrflow \
+   -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+   --input samplesheet.tsv \
+   --outdir ./results
+   --protocol pcr_umi \
+   --cprimers CPrimers.fasta \
+   --vprimers VPrimers.fasta \
+   --umi_length 12 \
+   --loci "ig"
+   ```
 
 See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
 
@@ -88,8 +88,8 @@ nf-core/airrflow was originally written by Gisela Gabernet, Simon Heumos, Alexan
 
 Further contributors to the pipeline are:
 
-* [@ssnn-airr](https://github.com/ssnn-airr)
-* [@dladd](https://github.com/dladd)
+- [@ssnn-airr](https://github.com/ssnn-airr)
+- [@dladd](https://github.com/dladd)
 
 ## Contributions and Support
 

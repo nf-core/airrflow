@@ -12,26 +12,26 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [FastQC](#fastqc) - read quality control
 - [pRESTO](#presto) - read pre-processing
-    - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by quality
-    - [Mask primers](#mask-primers) - Masking primers
-    - [Pair mates](#pair-mates) - Pairing sequence mates.
-    - [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
-    - [Build consensus](#build-UMI-consensus) - Build consensus of sequences with the same UMI barcode.
-    - [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
-    - [Assemble mates](#assemble-mates) - Assemble sequence mates.
-    - [Remove duplicates](#remove-duplicates) - Remove and annotate read duplicates.
-    - [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 duplicates.
+  - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by quality
+  - [Mask primers](#mask-primers) - Masking primers
+  - [Pair mates](#pair-mates) - Pairing sequence mates.
+  - [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
+  - [Build consensus](#build-UMI-consensus) - Build consensus of sequences with the same UMI barcode.
+  - [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
+  - [Assemble mates](#assemble-mates) - Assemble sequence mates.
+  - [Remove duplicates](#remove-duplicates) - Remove and annotate read duplicates.
+  - [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 duplicates.
 - [Change-O](#change-o) - Assign genes and clonotyping
-    - [Assign genes with Igblast](#assign-genes-with-igblast)
-    - [Make database from assigned genes](#make-database-from-assigned-genes)
-    - [Removal of non-productive sequences](#removal-of-non-productive-sequences)
-    - [Selection of IGH / TR sequences](#selection-of-IGH-/-TR-sequences)
-    - [Convert database to fasta](#convert-database-to-fasta)
+  - [Assign genes with Igblast](#assign-genes-with-igblast)
+  - [Make database from assigned genes](#make-database-from-assigned-genes)
+  - [Removal of non-productive sequences](#removal-of-non-productive-sequences)
+  - [Selection of IGH / TR sequences](#selection-of-IGH-/-TR-sequences)
+  - [Convert database to fasta](#convert-database-to-fasta)
 - [Shazam](#shazam) - Genotyping and Clonal threshold
-    - [Genotyping and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
+  - [Genotyping and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
 - [Change-O define clones](#change-o-define-clones)
-    - [Define clones](#define-clones) - Defining clonal B-cell or T-cell groups
-    - [Reconstruct germlines](#reconstruct-germlines) - Reconstruct gene calls of germline sequences
+  - [Define clones](#define-clones) - Defining clonal B-cell or T-cell groups
+  - [Reconstruct germlines](#reconstruct-germlines) - Reconstruct gene calls of germline sequences
 - [Lineage reconstruction](#lineage-reconstruction) - Clonal lineage reconstruction.
 - [Repertoire analysis](#repertoire-analysis) - Repertoire analysis and comparison.
 - [Log parsing](#log-parsing) - Log parsing.
@@ -45,11 +45,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `fastqc/`
-    - `*_fastqc.html`: FastQC report containing quality metrics for the raw unmated reads.
-    - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the raw unmated reads.
-    - `postassembly/`
-        - `*_ASSEMBLED_fastqc.html`: FastQC report containing quality metrics for the mated and quality filtered reads.
-        - `*_ASSEMBLED_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the mated and quality filtered reads.
+  - `*_fastqc.html`: FastQC report containing quality metrics for the raw unmated reads.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the raw unmated reads.
+  - `postassembly/`
+    - `*_ASSEMBLED_fastqc.html`: FastQC report containing quality metrics for the mated and quality filtered reads.
+    - `*_ASSEMBLED_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the mated and quality filtered reads.
 
 </details>
 
@@ -73,8 +73,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `presto/01-filterseq/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
-    - `tabs`: Table containing read ID and quality for each of the read files.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `tabs`: Table containing read ID and quality for each of the read files.
 
 </details>
 
@@ -86,8 +86,8 @@ Filters reads that are below a quality threshold by using the tool [FilterSeq](h
 <summary>Output files</summary>
 
 - `presto/02-maskprimers/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
-    - `tabs`: Table containing a read ID, the identified matched primer and the error for primer alignment.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `tabs`: Table containing a read ID, the identified matched primer and the error for primer alignment.
 
 </details>
 
@@ -99,7 +99,7 @@ Masks primers that are provided in the C-primers and V-primers input files. It u
 <summary>Output files</summary>
 
 - `presto/03-pairseq/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
 
 </details>
 
@@ -111,8 +111,8 @@ Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/
 <summary>Output files</summary>
 
 - `presto/04-cluster_sets/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
-    - `tabs`: Table containing a read ID, the identified barcode, the cluster id and the number of sequences in the cluster.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `tabs`: Table containing a read ID, the identified barcode, the cluster id and the number of sequences in the cluster.
 
 </details>
 
@@ -124,7 +124,7 @@ Cluster sequences according to similarity, using [ClusterSets set](https://prest
 <summary>Output files</summary>
 
 - `presto/05-parse_clusters/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
 
 </details>
 
@@ -136,8 +136,8 @@ Annotate cluster ID as part of the barcode, using [Parseheaders copy](https://pr
 <summary>Output files</summary>
 
 - `presto/06-build_consensus/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
-    - `tabs`: Table containing the sequence barcode, number of sequences used to build the consensus (SEQCOUNT), the identified primer (PRIMER), the number of sequences for each primer (PRCOUNT), the primer consensus (PRCONS), the primer frequency (PRFREQ) and the number of sequences used to build the consensus (CONSCOUNT).
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `tabs`: Table containing the sequence barcode, number of sequences used to build the consensus (SEQCOUNT), the identified primer (PRIMER), the number of sequences for each primer (PRCOUNT), the primer consensus (PRCONS), the primer frequency (PRFREQ) and the number of sequences used to build the consensus (CONSCOUNT).
 
 </details>
 
@@ -149,7 +149,7 @@ Build sequence consensus from all sequences that were annotated to have the same
 <summary>Output files</summary>
 
 - `presto/07-pairseq_postconsensus/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
 
 </details>
 
@@ -161,8 +161,8 @@ Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.
 <summary>Output files</summary>
 
 - `presto/08-assemblepairs/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
-    - `tabs`: Parsed log contaning the sequence barcodes and sequence length, bases of the overlap, error of the overlap and p-value.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `tabs`: Parsed log contaning the sequence barcodes and sequence length, bases of the overlap, error of the overlap and p-value.
 
 </details>
 
@@ -174,8 +174,8 @@ Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/versi
 <summary>Output files</summary>
 
 - `presto/09-collapseseq/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
-    - `tabs`: Parsed log containing the sequence barcodes, header information and deduplicate count.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `tabs`: Parsed log containing the sequence barcodes, header information and deduplicate count.
 
 </details>
 
@@ -187,7 +187,7 @@ Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0
 <summary>Output files</summary>
 
 - `presto/10-splitseq/<sampleID>`
-    - `logs`: Raw command logs of the process that will be parsed to generate a report.
+  - `logs`: Raw command logs of the process that will be parsed to generate a report.
 
 </details>
 
@@ -201,7 +201,7 @@ Remove sequences which do not have 2 representative using [SplitSeq](https://pre
 <summary>Output files</summary>
 
 - `changeo/01-assigngenes/<sampleID>`
-    - `fasta/*.fasta`: Igblast results converted to fasta format with genotype V-call annotated in the header.
+  - `fasta/*.fasta`: Igblast results converted to fasta format with genotype V-call annotated in the header.
 
 </details>
 
@@ -213,8 +213,8 @@ Assign genes with Igblast, using the IMGT database is performed by the [AssignGe
 <summary>Output files</summary>
 
 - `changeo/02-makedb/<sampleID>`
-    - `logs`: Log of the process that will be parsed to generate a report.
-    - `tab`: Table in AIRR format containing the assigned gene information and metadata provided in the starting metadata sheet.
+  - `logs`: Log of the process that will be parsed to generate a report.
+  - `tab`: Table in AIRR format containing the assigned gene information and metadata provided in the starting metadata sheet.
 
 </details>
 
@@ -226,8 +226,8 @@ A table is generated with [MakeDB](https://changeo.readthedocs.io/en/version-0.4
 <summary>Output files</summary>
 
 - `changeo/03-parsedb_split/<sampleID>`
-    - `logs`: Log of the process that will be parsed to generate a report.
-    - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and metadata provided in the starting metadata sheet.
+  - `logs`: Log of the process that will be parsed to generate a report.
+  - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and metadata provided in the starting metadata sheet.
 
 </details>
 
@@ -239,8 +239,8 @@ Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.
 <summary>Output files</summary>
 
 - `changeo/04-parsedb_select/<sampleID>`
-    - `logs`: Log of the process that will be parsed to generate a report.
-    - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and IGH/TR sequences, and metadata provided in the starting metadata sheet.
+  - `logs`: Log of the process that will be parsed to generate a report.
+  - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and IGH/TR sequences, and metadata provided in the starting metadata sheet.
 
 </details>
 
@@ -252,7 +252,7 @@ Heavy chain sequences (IGH) are selected if 'ig' locus is selected, TR sequences
 <summary>Output files</summary>
 
 - `changeo/05-convertdb-fasta/<sampleID>`
-    - `fasta`: Fasta file containing the processed sequences with the barcode ID and allele annotation in the header.
+  - `fasta`: Fasta file containing the processed sequences with the barcode ID and allele annotation in the header.
 
 </details>
 
@@ -266,7 +266,7 @@ Sequences in are additionally converted to a fasta file with the [ConvertDb](htt
 <summary>Output files</summary>
 
 - `shazam/01-merged-tables/<subjectID>`
-    - `tab`: Table in AIRR format containing the assigned gene information.
+  - `tab`: Table in AIRR format containing the assigned gene information.
 
 </details>
 
@@ -278,11 +278,11 @@ AIRR tables for each subject are merged to be able to determine the subject geno
 <summary>Output files</summary>
 
 - `shazam/02-genotyping/<subjectID>`
-    - `threshold`: Hamming distance threshold of the Junction regions as determined by Shazam.
-    - `plots`: Plot of the Hamming distance distribution between junction regions displaying the threshold for clonal assignment as determined by Shazam.
-    - `genotype`:
-        - `genotype.pdf`: Plot representing the patient genotype assessed by TigGER.
-        - `v_genotype.fasta`: Fasta sequences of the personalized patient genotype.
+  - `threshold`: Hamming distance threshold of the Junction regions as determined by Shazam.
+  - `plots`: Plot of the Hamming distance distribution between junction regions displaying the threshold for clonal assignment as determined by Shazam.
+  - `genotype`:
+    - `genotype.pdf`: Plot representing the patient genotype assessed by TigGER.
+    - `v_genotype.fasta`: Fasta sequences of the personalized patient genotype.
 
 </details>
 
@@ -296,7 +296,7 @@ Determining genotype and the hamming distance threshold of the junction regions 
 <summary>Output files</summary>
 
 - `shazam/06-define_clones/<subjectID>`
-    - `tab`: Table in AIRR format containing the assigned gene information and an additional field with the clone id.
+  - `tab`: Table in AIRR format containing the assigned gene information and an additional field with the clone id.
 
 </details>
 
@@ -308,7 +308,7 @@ Assigning clones to the sequences obtained from IgBlast with the [DefineClones](
 <summary>Output files</summary>
 
 - `shazam/07-create_germlines/<subjectID>`
-    - `tab`: Table in AIRR format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
+  - `tab`: Table in AIRR format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
 
 </details>
 
@@ -320,12 +320,12 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 <summary>Output files</summary>
 
 - `lineage_reconstruction/`
-    - `tab`
-        - `Clones_table_patient.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone.
-        - `Clones_table_patient_filtered_between_3_and_1000.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone, filtered by clones of size between 3 and 1000, for which the lineages were reconstructed and the trees plotted.
-        - `xxx_germ-pass.tsv`: AIRR format table with all the sequences from a patient after the germline annotation step.
-    - `Clone_tree_plots`: Contains a rooted graphical representation of each of the clones, saved in pdf format.
-    - `Graphml_trees`: All lineage trees for the patient exported in a GraphML format: `All_graphs_patient.graphml`.
+  - `tab`
+    - `Clones_table_patient.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone.
+    - `Clones_table_patient_filtered_between_3_and_1000.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone, filtered by clones of size between 3 and 1000, for which the lineages were reconstructed and the trees plotted.
+    - `xxx_germ-pass.tsv`: AIRR format table with all the sequences from a patient after the germline annotation step.
+  - `Clone_tree_plots`: Contains a rooted graphical representation of each of the clones, saved in pdf format.
+  - `Graphml_trees`: All lineage trees for the patient exported in a GraphML format: `All_graphs_patient.graphml`.
 
 </details>
 
@@ -337,11 +337,11 @@ Reconstructing clonal linage with the [Alakazam R package](https://alakazam.read
 <summary>Output files</summary>
 
 - `repertoire_comparison/`
-    - `all_data.tsv`: AIRR format table containing the processed sequence information for all subjects.
-    - `Abundance`: contains clonal abundance calculation plots and tables.
-    - `Diversity`: contains diversity calculation plots and tables.
-    - `V_family`: contains V gene and family distribution calculation plots and tables.
-- `Bcellmagic_report.html`:  Contains the repertoire comparison results in an html report form: Abundance, Diversity, V gene usage tables and plots. Comparison between treatments and subjects.
+  - `all_data.tsv`: AIRR format table containing the processed sequence information for all subjects.
+  - `Abundance`: contains clonal abundance calculation plots and tables.
+  - `Diversity`: contains diversity calculation plots and tables.
+  - `V_family`: contains V gene and family distribution calculation plots and tables.
+- `Bcellmagic_report.html`: Contains the repertoire comparison results in an html report form: Abundance, Diversity, V gene usage tables and plots. Comparison between treatments and subjects.
 
 </details>
 
@@ -352,8 +352,8 @@ Calculation of several repertoire characteristics (diversity, abundance, V gene 
 <details markdown="1">
 <summary>Output files</summary>
 
-* `parsed_logs/`
-    * `sequences_table`: table summarizing of the number of sequences after the most important pipeline steps.
+- `parsed_logs/`
+  - `sequences_table`: table summarizing of the number of sequences after the most important pipeline steps.
 
 </details>
 

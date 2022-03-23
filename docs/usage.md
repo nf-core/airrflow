@@ -43,10 +43,10 @@ work            # Directory containing the nextflow working files
 nf-core/airrflow offers full support for the AIRR metadata fields. The minimum metadata fields that are needed by the pipeline are listed in the table below. Other metadata fields can be provided in the input samplesheet, which will be available for reporting and introducing comparisons among repertoires.
 
 | AIRR field                | Type               | Name                          | Description                                           |
-|---------------------------|--------------------|-------------------------------|-------------------------------------------------------|
+| ------------------------- | ------------------ | ----------------------------- | ----------------------------------------------------- |
 | sample_id                 | Samplesheet column | sample_id                     | Sample ID assigned by submitter, unique within study  |
 | subject_id                | Samplesheet column | subject_id                    | Subject ID assigned by submitter, unique within study |
-| species                   | Samplesheet column          | species                   | Subject species                                       |
+| species                   | Samplesheet column | species                       | Subject species                                       |
 | pcr_target_locus          | Samplesheet column | pcr_target_locus              | Designation of the target locus (IG or TR)            |
 | library_generation_method | Parameter          | `--library_generation_method` | Generic type of library generation                    |
 
@@ -55,7 +55,7 @@ nf-core/airrflow offers full support for the AIRR metadata fields. The minimum m
 The required input file is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species` and `pcr_target_locus` are required. An example samplesheet is:
 
 | sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | intervention   | collection_time_point_relative | cell_subset  |
-|-----------|---------------------------------|---------------------------------|---------------------------------|------------|---------|------------------|----------------|--------------------------------|--------------|
+| --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | -------------- | ------------------------------ | ------------ |
 | sample01  | sample1_S8_L001_R1_001.fastq.gz | sample1_S8_L001_R2_001.fastq.gz | sample1_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | Drug_treatment | Baseline                       | plasmablasts |
 | sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | TR               | Drug_treatment | Baseline                       | plasmablasts |
 
@@ -79,18 +79,18 @@ The metadata specified in the input file will then be automatically annotated in
 
 ## Supported library generation methods (protocols)
 
-| Library generation methods  (AIRR) | Description                                                                                | Name in pipeline | Commercial protocols                      |
-|------------------------------------|--------------------------------------------------------------------------------------------|------------------|-------------------------------------------|
-| RT(RHP)+PCR                        | RT-PCR using random hexamer primers                                                        | Not supported    |                                           |
-| RT(oligo-dT)+PCR                   | RT-PCR using oligo-dT primers                                                              | Not supported    |                                           |
-| RT(oligo-dT)+TS+PCR                | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |                                           |
-| RT(oligo-dT)+TS(UMI)+PCR           | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   | TAKARA SMARTer TCR v2, TAKARA SMARTer BCR |
-| RT(specific)+PCR                   | RT-PCR using transcript-specific primers                                                   | specific_pcr     |                                           |
-| RT(specific)+TS+PCR                | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |                                           |
-| RT(specific)+TS(UMI)+PCR           | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |                                           |
-| RT(specific+UMI)+PCR               | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |                                           |
-| RT(specific+UMI)+TS+PCR            | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |                                           |
-| RT(specific)+TS                    | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |                                           |
+| Library generation methods (AIRR) | Description                                                                                | Name in pipeline | Commercial protocols                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- | ----------------------------------------- |
+| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |                                           |
+| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |                                           |
+| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |                                           |
+| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   | TAKARA SMARTer TCR v2, TAKARA SMARTer BCR |
+| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |                                           |
+| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |                                           |
+| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |                                           |
+| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |                                           |
+| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |                                           |
+| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |                                           |
 
 ### Multiplex specific PCR (with or without UMI)
 
