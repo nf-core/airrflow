@@ -14,7 +14,7 @@ module_order:
   - fastqc:
       name: 'FastQC (post-assembly)'
       info: 'This section of the report shows FastQC results after paired reads
-      are assembled and QC filtered but before collapsing duplicates.'
+        are assembled and QC filtered but before collapsing duplicates.'
       path_filters:
         - './*_ASSEMBLED_fastqc.zip'
 
