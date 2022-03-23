@@ -157,7 +157,6 @@ workflow REVEAL {
 
     // Select only productive sequences and
     // sequences with junction length multiple of 3
-    ch_repertoire = Channel.empty()
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT_REVEAL (
             FILTER_QUALITY.out.tab
@@ -170,22 +169,19 @@ workflow REVEAL {
             CHANGEO_PARSEDB_SPLIT_REVEAL.out.tab
         )
         ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
-        ch_repertoire = ch_repertoire.mix(FILTER_JUNCTION_MOD3.out.tab)
+        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab.ifEmpty(null)
     } else {
-        ch_repertoire = ch_repertoire.mix(FILTER_QUALITY.out.tab)
+        ch_repertoire = FILTER_QUALITY.out.tab.ifEmpty(null)
     }
-    ch_repertoire
-    .dump(tag: 'ch_repertoire')
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
-        ch_repertoire
-        .dump(tag: 'add_meta_to_tab_input'),
-        REVEAL_INPUT_CHECK.out.validated_input
+        ch_repertoire,
+        REVEAL_INPUT_CHECK.out.validated_input.collect()
     )
     ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
-/*
+
     ch_repertoire_by_processing = ADD_META_TO_TAB.out.tab
         .dump(tag: 'meta_to_tab_out')
         .branch { it ->
@@ -256,7 +252,7 @@ workflow REVEAL {
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
     ch_versions = ch_versions.mix(SINGLE_CELL_QC.out.versions.ifEmpty(null))
-*/
+
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
     // the threshold that will be used to identify sets of clonally
@@ -267,7 +263,7 @@ workflow REVEAL {
     // Else
     // Use the threshold to find clones, grouping by params.cloneby and
     // create a report
-/*
+
     if (params.threshold == "auto") {
         FIND_THRESHOLD (
             COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
@@ -300,7 +296,6 @@ workflow REVEAL {
         ch_imgt.collect()
     )
 
-
     DOWSER_LINEAGES(
         DEFINE_CLONES.out.tab
         .map{ it -> [ it[1] ] }
@@ -312,7 +307,7 @@ workflow REVEAL {
     REPORT_FILE_SIZE (
         ch_file_sizes.map { it }.collect()
     )
-*/
+
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
@@ -339,6 +334,7 @@ workflow REVEAL {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_versions = ch_versions.mix(MULTIQC.out.versions)
     }
+
 }
 
 /*
