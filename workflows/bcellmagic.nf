@@ -308,12 +308,12 @@ workflow BCELLMAGIC {
             MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
             ch_imgt.collect()
         )
-        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab
+        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab.dump(tag:'changeo_defineclones_threshold')
         ch_threshold = SHAZAM_THRESHOLD.out.threshold
         ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
     } else {
-        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab
-        ch_threshold = Channel.empty()
+        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_threshold = file('EMPTY')
     }
 
     // Define B-cell clones
