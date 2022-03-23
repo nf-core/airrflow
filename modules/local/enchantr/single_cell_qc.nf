@@ -1,5 +1,5 @@
 process SINGLE_CELL_QC {
-    tag "repertoire_all"
+    tag "multi_repertoire"
     label 'immcantation'
     label 'enchantr'
 
@@ -13,8 +13,8 @@ process SINGLE_CELL_QC {
     output:
     tuple val(meta), path("*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report" //, em`it: chimera_report
-    path "versions.yml" , emit: versions
+    path("*_report"), emit: report
+    path("versions.yml"), emit: versions
 
     script:
     meta=[]

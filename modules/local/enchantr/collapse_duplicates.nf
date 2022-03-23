@@ -1,5 +1,5 @@
 process COLLAPSE_DUPLICATES {
-    tag "all_reps"
+    tag "all_bulk_reps"
     label 'immcantation'
     label 'enchantr'
     label 'process_long'

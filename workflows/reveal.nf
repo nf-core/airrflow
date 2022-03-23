@@ -63,7 +63,7 @@ include { SINGLE_CELL_QC  } from '../modules/local/enchantr/single_cell_qc'
 include { ADD_META_TO_TAB  } from '../modules/local/reveal/add_meta_to_tab'
 include { DETECT_CONTAMINATION  } from '../modules/local/enchantr/detect_contamination'
 include { COLLAPSE_DUPLICATES  } from '../modules/local/enchantr/collapse_duplicates'
-include { FIND_THRESHOLD  } from '../modules/local/enchantr/find_threshold'
+include { FIND_THRESHOLD } from '../modules/local/enchantr/find_threshold'
 include { DEFINE_CLONES } from '../modules/local/enchantr/define_clones'
 include { DOWSER_LINEAGES } from '../modules/local/enchantr/dowser_lineages'
 include { REPORT_FILE_SIZE     } from '../modules/local/enchantr/report_file_size'
@@ -112,7 +112,7 @@ workflow REVEAL {
             REVEAL_INPUT_CHECK.out.ch_tsv
         )
         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-        //ch_software_versions = ch_software_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
         ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
     } else {
         ch_fasta_from_tsv = Channel.empty()
@@ -148,8 +148,10 @@ workflow REVEAL {
         ch_imgt.collect()
     )
     ch_file_sizes = ch_file_sizes.mix(CHANGEO_MAKEDB_REVEAL.out.logs)
+    ch_versions = ch_versions.mix(CHANGEO_MAKEDB_REVEAL.out.versions.ifEmpty(null))
 
     // Apply quality filters
+    // TODO: mv to enchantr and emit versions
     FILTER_QUALITY(CHANGEO_MAKEDB_REVEAL.out.tab)
     ch_file_sizes = ch_file_sizes.mix(FILTER_QUALITY.out.logs)
 
@@ -160,32 +162,38 @@ workflow REVEAL {
             FILTER_QUALITY.out.tab
         )
         ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.versions.ifEmpty(null))
 
+        // TODO: Add to enchantr and emit versions?
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT_REVEAL.out.tab
         )
         ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
-        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
+        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab.ifEmpty(null)
     } else {
-        ch_repertoire = FILTER_QUALITY.out.tab
+        ch_repertoire = FILTER_QUALITY.out.tab.ifEmpty(null)
     }
 
     // Add metadata to the rearrangement files, to be used later
     // for grouping, subsetting, plotting....
     ADD_META_TO_TAB(
         ch_repertoire,
-        REVEAL_INPUT_CHECK.out.validated_input
+        REVEAL_INPUT_CHECK.out.validated_input.collect()
     )
     ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
 
-    ADD_META_TO_TAB.out.tab
-    .branch { it ->
-        single: it[0].single_cell == 'true'
-                    return it
-        bulk:   it[0].single_cell == 'false'
-                    return it
-    }
-    .set{ch_repertoire_by_processing}
+    ch_repertoire_by_processing = ADD_META_TO_TAB.out.tab
+        .dump(tag: 'meta_to_tab_out')
+        .branch { it ->
+            single: it[0].single_cell == 'true'
+            bulk:   it[0].single_cell == 'false'
+        }
+
+    ch_repertoire_by_processing.bulk
+    .dump(tag: 'bulk')
+
+    ch_repertoire_by_processing.single
+    .dump(tag: 'single')
 
     // For bulk datasets, remove chimeric sequences
     // if requested
@@ -197,6 +205,7 @@ workflow REVEAL {
             ch_imgt.collect()
         )
         ch_file_sizes = ch_file_sizes.mix(CREATEGERMLINES.out.logs)
+        ch_versions = ch_versions.mix(CREATEGERMLINES.out.versions.ifEmpty(null))
 
         // Remove chimera
         REMOVE_CHIMERIC(
@@ -205,6 +214,7 @@ workflow REVEAL {
         )
         ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
         ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
+        ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions.ifEmpty(null))
 
     } else {
         ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
@@ -220,6 +230,7 @@ workflow REVEAL {
             .collect(),
         'id')
     // TODO file size
+    ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
 
     COLLAPSE_DUPLICATES(
         ch_bulk_chimeric_pass
@@ -227,6 +238,7 @@ workflow REVEAL {
             .collect(),
         params.collapseby
     )
+    ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
     // TODO file size
     // TODO channel by params.cloneby
 
@@ -239,6 +251,7 @@ workflow REVEAL {
         .collect()
     )
     ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
+    ch_versions = ch_versions.mix(SINGLE_CELL_QC.out.versions.ifEmpty(null))
 
     // If params.threshold is auto,
     // 1) use distToNearest and findThreshold to determine
@@ -253,19 +266,23 @@ workflow REVEAL {
 
     if (params.threshold == "auto") {
         FIND_THRESHOLD (
-            // TODO: Add cross threshold. Needs all samples!
             COLLAPSE_DUPLICATES.out.tab.mix(SINGLE_CELL_QC.out.tab)
             .map{ it -> [ it[1] ] }
             .collect(),
             params.cloneby,
             params.singlecell
         )
-        clone_threshold = FIND_THRESHOLD.out.mean_threshold
-        if (clone_threshold == 'NA') {
-            log.error "clone_threshold is NA"
-            exit 1, "clone_threshold is NA"
-        }
+        ch_threshold = FIND_THRESHOLD.out.mean_threshold
+
+        clone_threshold = ch_threshold
+            .splitText( limit:1 ) { it.trim().toString() }
+            .dump(tag: 'clone_threshold')
+            .filter { it != 'NA'}
+            .dump(tag: "threshold")
+            .ifEmpty { exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."}
+
     } else {
+        // TODO: Fix * --threshold: expected type: String, found: Integer (1)
         clone_threshold = params.threshold
     }
 
@@ -278,7 +295,6 @@ workflow REVEAL {
         clone_threshold,
         ch_imgt.collect()
     )
-
 
     DOWSER_LINEAGES(
         DEFINE_CLONES.out.tab
@@ -318,6 +334,7 @@ workflow REVEAL {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_versions = ch_versions.mix(MULTIQC.out.versions)
     }
+
 }
 
 /*

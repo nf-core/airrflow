@@ -34,15 +34,13 @@ process DEFINE_CLONES {
 
     script:
     meta=[]
-    thr = file(threshold).text
-    thr = thr.trim()
     def outname = ''
     if (task.ext.args.containsKey('outname')) { outname = task.ext.args['outname'] }
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
-                                        'cloneby'='${cloneby}','threshold'=${thr}, \\
+                                        'cloneby'='${cloneby}','threshold'=${threshold}, \\
                                         'outputby'='id', \\
                                         'outname'='${outname}', \\
                                         'singlecell'='${singlecell}','outdir'=getwd(), \\

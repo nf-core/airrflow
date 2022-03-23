@@ -529,7 +529,10 @@
                     "description": "Whether to apply the chimera removal filter"
                 },
                 "threshold": {
-                    "type": "string",
+                    "type": [
+                        "string",
+                        "number"
+                    ],
                     "default": "auto",
                     "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
                 },
