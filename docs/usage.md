@@ -16,7 +16,7 @@ The typical command for running the pipeline is as follows:
 nextflow run nf-core/airrflow \
 -profile docker \
 --input samplesheet.tsv \
---protocol pcr_umi \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
