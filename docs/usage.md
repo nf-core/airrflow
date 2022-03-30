@@ -176,7 +176,8 @@ nextflow run nf-core/airrflow -profile docker \
 --umi_length 12 \
 --umi_position R2 \
 --cprimer_start 0 \
---cprimer_position R2
+--cprimer_position R2 \
+--outdir ./results
 ```
 
 #### UMI barcode is provided in the index file
