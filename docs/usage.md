@@ -21,7 +21,8 @@ nextflow run nf-core/airrflow \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --max_memory 8.GB \
---max_cpus 8
+--max_cpus 8 \
+--outdir ./results
 ```
 
 For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
