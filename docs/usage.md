@@ -148,7 +148,8 @@ nextflow run nf-core/airrflow -profile docker \
 --umi_length 12 \
 --umi_position R1 \
 --vprimer_start 0 \
---cprimer_position R2
+--cprimer_position R2 \
+--outdir ./results
 ```
 
 If UMIs are not used:
