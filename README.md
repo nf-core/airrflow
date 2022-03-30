@@ -73,7 +73,6 @@ By default, the pipeline currently performs the following steps:
    --cprimers CPrimers.fasta \
    --vprimers VPrimers.fasta \
    --umi_length 12 \
-   --loci "ig"
    ```
 
 See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
