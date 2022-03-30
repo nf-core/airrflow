@@ -237,7 +237,8 @@ nextflow run nf-core/airrflow -profile docker \
 --umi_length 12 \
 --umi_position R2 \
 --cprimer_start 5 \
---cprimer_position R1
+--cprimer_position R1 \
+--outdir ./results
 ```
 
 For this protocol, the takara linkers are:
