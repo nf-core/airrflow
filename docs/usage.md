@@ -128,7 +128,8 @@ nextflow run nf-core/airrflow -profile docker \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --cprimer_start 0 \
---cprimer_position R1
+--cprimer_position R1 \
+--outdir ./results
 ```
 
 #### R1 read contains V primer (and UMI barcode)
