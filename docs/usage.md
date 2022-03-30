@@ -195,7 +195,8 @@ nextflow run nf-core/airrflow -profile docker \
 --cprimer_position R1 \
 --index_file \
 --umi_length 12 \
---umi_start 6
+--umi_start 6 \
+--outdir ./results
 ```
 
 ### dT-Oligo RT and 5'RACE PCR
