@@ -1,22 +1,11 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
-
 process PRESTO_MASKPRIMERS_POSTASSEMBLY {
     tag "$meta.id"
     label "process_high"
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
-    conda (params.enable_conda ? "bioconda::presto=0.6.2=py_0" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/presto:0.6.2--py_0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/presto:0.6.2--py_0"                        // Docker image
-    }
+    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)              // Conda package
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
+        'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -31,7 +20,7 @@ process PRESTO_MASKPRIMERS_POSTASSEMBLY {
 
 
     script:
-def revpr = params.primer_revpr ? '--revpr' : ''
+    def revpr = params.primer_revpr ? '--revpr' : ''
     if (params.cprimer_position == "R1") {
         """
         MaskPrimers.py score --nproc ${task.cpus} -s $reads -p ${cprimers} --start ${params.cprimer_start} --maxerror ${params.primer_maxerror} \

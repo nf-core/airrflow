@@ -1,167 +1,249 @@
-# nf-core/bcellmagic: Usage
+# nf-core/airrflow: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/bcellmagic/usage](https://nf-co.re/bcellmagic/usage)
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/airrflow/usage](https://nf-co.re/airrflow/usage)
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
 ## Introduction
 
-The Bcellmagic pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+The airrflow pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
 
 ## Running the pipeline
 
-The typical command for running the pipeline to analyse BCR repertoires is as follows:
+The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/bcellmagic \
+nextflow run nf-core/airrflow \
 -profile docker \
 --input samplesheet.tsv \
---protocol pcr_umi \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
---loci ig \
 --max_memory 8.GB \
---max_cpus 8
+--max_cpus 8 \
+--outdir ./results
 ```
 
-To analyze TCR repertoires, just provide `--loci tr` instead and adapt the rest of the parameters as needed.
-
-For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/bcellmagic/parameters).
+For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
 ```console
 work            # Directory containing the nextflow working files
-results         # Finished results (configurable, see below)
+<OUTDIR>         # Finished results (configurable, see below)
 .nextflow_log   # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-### Input samplesheet
+## AIRR fields support
 
-The required input file is a sample sheet in TSV format (tab separated) containing the following columns, including the exact same headers:
+### Supported AIRR fields
+
+nf-core/airrflow offers full support for the AIRR metadata fields. The minimum metadata fields that are needed by the pipeline are listed in the table below. Other metadata fields can be provided in the input samplesheet, which will be available for reporting and introducing comparisons among repertoires.
+
+| AIRR field                | Type               | Name                          | Description                                           |
+| ------------------------- | ------------------ | ----------------------------- | ----------------------------------------------------- |
+| sample_id                 | Samplesheet column | sample_id                     | Sample ID assigned by submitter, unique within study  |
+| subject_id                | Samplesheet column | subject_id                    | Subject ID assigned by submitter, unique within study |
+| species                   | Samplesheet column | species                       | Subject species                                       |
+| pcr_target_locus          | Samplesheet column | pcr_target_locus              | Designation of the target locus (IG or TR)            |
+| library_generation_method | Parameter          | `--library_generation_method` | Generic type of library generation                    |
+
+### Fastq input samplesheet
+
+The required input file is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species` and `pcr_target_locus` are required. An example samplesheet is:
+
+| sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | intervention   | collection_time_point_relative | cell_subset  |
+| --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | -------------- | ------------------------------ | ------------ |
+| sample01  | sample1_S8_L001_R1_001.fastq.gz | sample1_S8_L001_R2_001.fastq.gz | sample1_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | Drug_treatment | Baseline                       | plasmablasts |
+| sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | TR               | Drug_treatment | Baseline                       | plasmablasts |
+
+- sample_id: Sample ID assigned by submitter, unique within study.
+- filename_R1: path to fastq file with first mates of paired-end sequencing.
+- filename_R2: path to fastq file with second mates of paired-end sequencing.
+- filename_I1 (optional): path to fastq with illumina index and UMI (unique molecular identifier) barcode.
+- subject_id: Subject ID assigned by submitter, unique within study.
+- species: species from which the sample was taken. Supported species are `human` and `mouse`.
+- pcr_target_locus: Designation of the target locus (`IG` or `TR`).
+
+Other optional columns can be added. These columns will be available when building the contrasts for the repertoire comparison report. It is recommended that these columns also follow the AIRR nomenclature. Examples are:
+
+- intervention: Description of intervention.
+- disease_diagnosis: Diagnosis of subject.
+- collection_time_point_relative: Time point at which sample was taken, relative to `collection_time_point_reference` (e.g. 14d, 6 months, baseline).
+- collection_time_point_reference: Event in the study schedule to which `Sample collection time` relates to (e.g. primary vaccination, intervention start).
+- cell_subset: Commonly-used designation of isolated cell population.
+
+The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables generated by the pipeline.
+
+## Supported library generation methods (protocols)
+
+| Library generation methods (AIRR) | Description                                                                                | Name in pipeline | Commercial protocols                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- | ----------------------------------------- |
+| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |                                           |
+| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |                                           |
+| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |                                           |
+| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   | TAKARA SMARTer TCR v2, TAKARA SMARTer BCR |
+| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |                                           |
+| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |                                           |
+| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |                                           |
+| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |                                           |
+| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |                                           |
+| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |                                           |
+
+### Multiplex specific PCR (with or without UMI)
+
+This sequencing type requires setting `--library_generation_method specific_pcr_umi` if a UMI barcode was used, or `--library_generation_method specific_pcr` if no UMI barcodes were used (sans-umi). If the option without UMI barcodes is selected, the UMI length will be set automatically to 0.
+
+It is required to provide the sequences for the V-region primers as well as the C-region primers used in the specific PCR amplification. Some examples of UMI and barcode configurations are provided. Depending on the position of the C-region primer, V-region primers and UMI barcodes, there are several possibilities detailed in the following subsections.
+
+#### R1 read contains C primer (and UMI barcode)
+
+The `--cprimer_position` and `--umi_position` (if UMIs are used) parameters need to be set to R1 (this is the default).
+If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
+
+![nf-core/airrflow](images/Primers_R1_UMI_C.png)
 
 ```bash
-ID  R1  R2  I1  Source  Treatment Extraction_time Population
-QMKMK072AD  sample_S8_L001_R1_001.fastq.gz  sample_S8_L001_R2_001.fastq.gz  sample_S8_L001_I1_001.fastq.gz  Patient_2 Drug_treatment  baseline  p
-```
-
-The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables generated by the pipeline. Where:
-
-* ID: sample ID, should be unique for each sample.
-* R1: path to fastq file with first mates of paired-end sequencing.
-* R2: path to fastq file with second mates of paired-end sequencing.
-* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column).
-* Source: subject or organism code.
-* Treatment: treatment condition applied to the sample.
-* Extraction_time: time of cell extraction for the sample.
-* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).
-
-## Supported sequencing protocols
-
-### Protocol: UMI barcoded multiplex PCR
-
-This sequencing type requires setting `--protocol pcr_umi` and providing sequences for the V-region primers as well as the C-region primers. Some examples of UMI and barcode configurations are provided.
-
-#### R1 read contains UMI barcode and C primer
-
-The `--cprimer_position` and `--umi_position` parameters need to be set to R1 (this is the default).
-If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
-
-```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
---protocol pcr_umi \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R1 \
---umi_start 0 \
 --cprimer_start 0 \
---cprimer_position R1
+--cprimer_position R1 \
+--outdir ./results
 ```
 
-![nf-core/bcellmagic](images/Primers_R1_UMI_C.png)
-
-#### R1 read contains UMI barcode and V primer
-
-The `--umi_position` parameter needs to be set to R1.
-If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero). If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero). Set `--cprimer_position R2`.
+If UMIs are not used:
 
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
---protocol pcr_umi \
+--library_generation_method specific_pcr \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--cprimer_start 0 \
+--cprimer_position R1 \
+--outdir ./results
+```
+
+#### R1 read contains V primer (and UMI barcode)
+
+The `--umi_position` parameter needs to be set to R1 (if UMIs are used), and `--cprimer_position` to `R2`.
+If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero).
+
+![nf-core/airrflow](images/Primers_R1_UMI_V.png)
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R1 \
---umi_start 0 \
 --vprimer_start 0 \
---cprimer_position R2
+--cprimer_position R2 \
+--outdir ./results
 ```
 
-![nf-core/bcellmagic](images/Primers_R1_UMI_V.png)
+If UMIs are not used:
 
-#### R2 read contains UMI barcode and C primer
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--vprimer_start 0 \
+--cprimer_position R2 \
+--outdir results
+```
+
+#### R2 read contains C primer (and UMI barcode)
 
 The `--umi_position` and `--cprimer_position` parameters need to be set to R2.
-If there are extra bases before the UMI barcode, specify the number of bases with the `--umi_start` parameter (default zero).
 If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero).
 
+![nf-core/airrflow](images/Primers_R1_V.png)
+
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
---protocol pcr_umi \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R2 \
---umi_start 0 \
 --cprimer_start 0 \
---cprimer_position R2
+--cprimer_position R2 \
+--outdir ./results
 ```
 
-![nf-core/bcellmagic](images/Primers_R1_V.png)
+#### UMI barcode is provided in the index file
 
-### Protocol: UMI barcoded 5'RACE PCR
+If the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
 
-This sequencing type requires setting `--protocol race_5p_umi` and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run Bcellmagic to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
+For example:
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers Cprimers.fasta \
+--vprimers Vprimers.fasta \
+--cprimer_position R1 \
+--index_file \
+--umi_length 12 \
+--umi_start 6 \
+--outdir ./results
+```
+
+### dT-Oligo RT and 5'RACE PCR
+
+This sequencing type requires setting `--library_generation_method race_5p_umi` or `--library_generation_method race_5p_umi` if UMIs are not being employed, and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run airrflow to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
 
 #### Takara Bio SMARTer Human BCR
 
+The read configuration when sequenicng with the TAKARA Bio SMARTer Human BCR protocol is the following:
+
+![nf-core/airrflow](images/TAKARA_RACE_BCR.png)
+
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
---protocol race_5p_umi \
+--library_generation_method dt_5p_race_umi \
 --cprimers CPrimers.fasta \
 --race_linker linker.fasta \
---loci tr \
 --umi_length 12 \
 --umi_position R2 \
---umi_start 0 \
 --cprimer_start 7 \
---cprimer_position R1
+--cprimer_position R1 \
+--outdir ./results
 ```
-
-![nf-core/bcellmagic](images/TAKARA_RACE_BCR.png)
 
 #### Takara Bio SMARTer Human TCR v2
 
+The read configuration when sequencing with the Takara Bio SMARTer Human TCR v2 protocol is the following:
+
+![nf-core/airrflow](images/TAKARA_RACE_TCR.png)
+
 ```bash
-nextflow run nf-core/bcellmagic -profile docker \
+nextflow run nf-core/airrflow -profile docker \
 --input samplesheet.tsv \
---protocol race_5p_umi \
+--library_generation_method dt_5p_race_umi \
 --cprimers CPrimers.fasta \
 --race_linker linker.fasta \
---loci tr \
 --umi_length 12 \
 --umi_position R2 \
---umi_start 0 \
 --cprimer_start 5 \
---cprimer_position R1
+--cprimer_position R1 \
+--outdir ./results
 ```
 
 For this protocol, the takara linkers are:
@@ -184,8 +266,6 @@ GTTTGGTATGAGGCTGACTTCN
 CATCTGCATCAAGTTGTTTATC
 ```
 
-![nf-core/bcellmagic](images/TAKARA_RACE_TCR.png)
-
 ## UMI barcode handling
 
 Unique Molecular Identifiers (UMIs) enable the quantification of BCR or TCR abundance in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
@@ -193,25 +273,25 @@ The UMI indices are random nucleotide sequences of a pre-determined length that 
 
 The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
 
-* UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+- UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
 
-* UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
+- UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
 
-* No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length=0` to use the sans-UMI subworkflow.
+- No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
 ### Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```console
-nextflow pull nf-core/bcellmagic
+nextflow pull nf-core/airrflow
 ```
 
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/bcellmagic releases page](https://github.com/nf-core/bcellmagic/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+First, go to the [nf-core/airrflow releases page](https://github.com/nf-core/airrflow/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -234,25 +314,25 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
 
-* `docker`
-    * A generic configuration profile to be used with [Docker](https://docker.com/)
-* `singularity`
-    * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-* `podman`
-    * A generic configuration profile to be used with [Podman](https://podman.io/)
-* `shifter`
-    * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-* `charliecloud`
-    * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-* `conda`
-    * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
-* `test`
-    * A profile with a complete configuration for automated testing
-    * Includes links to test data so needs no other parameters
+- `docker`
+  - A generic configuration profile to be used with [Docker](https://docker.com/)
+- `singularity`
+  - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
+- `podman`
+  - A generic configuration profile to be used with [Podman](https://podman.io/)
+- `shifter`
+  - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
+- `charliecloud`
+  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+- `conda`
+  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
+- `test`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
 ### `-resume`
 
-Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. For input to be considered the same, not only the names must be identical but the files' contents as well. For more info about this parameter, see [this blog post](https://www.nextflow.io/blog/2019/demystifying-nextflow-resume.html).
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
@@ -269,11 +349,11 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
 ```console
-[62/149eb0] NOTE: Process `RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
-Error executing process > 'RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
+[62/149eb0] NOTE: Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
+Error executing process > 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
 Caused by:
-    Process `RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
+    Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
 
 Command executed:
     STAR \
@@ -297,53 +377,25 @@ Work dir:
 Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
 ```
 
-To bypass this error you would need to find exactly which resources are set by the `STAR_ALIGN` process. The quickest way is to search for `process STAR_ALIGN` in the [nf-core/rnaseq Github repo](https://github.com/nf-core/rnaseq/search?q=process+STAR_ALIGN). We have standardised the structure of Nextflow DSL2 pipelines such that all module files will be present in the `modules/` directory and so based on the search results the file we want is `modules/nf-core/software/star/align/main.nf`. If you click on the link to that file you will notice that there is a `label` directive at the top of the module that is set to [`label process_high`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/modules/nf-core/software/star/align/main.nf#L9). The [Nextflow `label`](https://www.nextflow.io/docs/latest/process.html#label) directive allows us to organise workflow processes in separate groups which can be referenced in a configuration file to select and configure subset of processes having similar computing requirements. The default values for the `process_high` label are set in the pipeline's [`base.config`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L33-L37) which in this case is defined as 72GB. Providing you haven't set any other standard nf-core parameters to __cap__ the [maximum resources](https://nf-co.re/usage/configuration#max-resources) used by the pipeline then we can try and bypass the `STAR_ALIGN` process failure by creating a custom config file that sets at least 72GB of memory, in this case increased to 100GB. The custom config below can then be provided to the pipeline via the [`-c`](#-c) parameter as highlighted in previous sections.
+To bypass this error you would need to find exactly which resources are set by the `STAR_ALIGN` process. The quickest way is to search for `process STAR_ALIGN` in the [nf-core/rnaseq Github repo](https://github.com/nf-core/rnaseq/search?q=process+STAR_ALIGN).
+We have standardised the structure of Nextflow DSL2 pipelines such that all module files will be present in the `modules/` directory and so, based on the search results, the file we want is `modules/nf-core/software/star/align/main.nf`.
+If you click on the link to that file you will notice that there is a `label` directive at the top of the module that is set to [`label process_high`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/modules/nf-core/software/star/align/main.nf#L9).
+The [Nextflow `label`](https://www.nextflow.io/docs/latest/process.html#label) directive allows us to organise workflow processes in separate groups which can be referenced in a configuration file to select and configure subset of processes having similar computing requirements.
+The default values for the `process_high` label are set in the pipeline's [`base.config`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L33-L37) which in this case is defined as 72GB.
+Providing you haven't set any other standard nf-core parameters to **cap** the [maximum resources](https://nf-co.re/usage/configuration#max-resources) used by the pipeline then we can try and bypass the `STAR_ALIGN` process failure by creating a custom config file that sets at least 72GB of memory, in this case increased to 100GB.
+The custom config below can then be provided to the pipeline via the [`-c`](#-c) parameter as highlighted in previous sections.
 
 ```nextflow
 process {
-    withName: STAR_ALIGN {
+    withName: 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN' {
         memory = 100.GB
     }
 }
 ```
 
-> **NB:** We specify just the process name i.e. `STAR_ALIGN` in the config file and not the full task name string that is printed to screen in the error message or on the terminal whilst the pipeline is running i.e. `RNASEQ:ALIGN_STAR:STAR_ALIGN`. You may get a warning suggesting that the process selector isn't recognised but you can ignore that if the process name has been specified correctly. This is something that needs to be fixed upstream in core Nextflow.
-
-### Tool-specific options
-
-For the ultimate flexibility, we have implemented and are using Nextflow DSL2 modules in a way where it is possible for both developers and users to change tool-specific command-line arguments (e.g. providing an additional command-line argument to the `STAR_ALIGN` process) as well as publishing options (e.g. saving files produced by the `STAR_ALIGN` process that aren't saved by default by the pipeline). In the majority of instances, as a user you won't have to change the default options set by the pipeline developer(s), however, there may be edge cases where creating a simple custom config file can improve the behaviour of the pipeline if for example it is failing due to a weird error that requires setting a tool-specific parameter to deal with smaller / larger genomes.
-
-The command-line arguments passed to STAR in the `STAR_ALIGN` module are a combination of:
-
-* Mandatory arguments or those that need to be evaluated within the scope of the module, as supplied in the [`script`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/modules/nf-core/software/star/align/main.nf#L49-L55) section of the module file.
-
-* An [`options.args`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/modules/nf-core/software/star/align/main.nf#L56) string of non-mandatory parameters that is set to be empty by default in the module but can be overwritten when including the module in the sub-workflow / workflow context via the `addParams` Nextflow option.
-
-The nf-core/rnaseq pipeline has a sub-workflow (see [terminology](https://github.com/nf-core/modules#terminology)) specifically to align reads with STAR and to sort, index and generate some basic stats on the resulting BAM files using SAMtools. At the top of this file we import the `STAR_ALIGN` module via the Nextflow [`include`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/subworkflows/nf-core/align_star.nf#L10) keyword and by default the options passed to the module via the `addParams` option are set as an empty Groovy map [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/subworkflows/nf-core/align_star.nf#L5); this in turn means `options.args` will be set to empty by default in the module file too. This is an intentional design choice and allows us to implement well-written sub-workflows composed of a chain of tools that by default run with the bare minimum parameter set for any given tool in order to make it much easier to share across pipelines and to provide the flexibility for users and developers to customise any non-mandatory arguments.
-
-When including the sub-workflow above in the main pipeline workflow we use the same `include` statement, however, we now have the ability to overwrite options for each of the tools in the sub-workflow including the [`align_options`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/workflows/rnaseq.nf#L225) variable that will be used specifically to overwrite the optional arguments passed to the `STAR_ALIGN` module. In this case, the options to be provided to `STAR_ALIGN` have been assigned sensible defaults by the developer(s) in the pipeline's [`modules.config`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/modules.config#L70-L74) and can be accessed and customised in the [workflow context](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/workflows/rnaseq.nf#L201-L204) too before eventually passing them to the sub-workflow as a Groovy map called `star_align_options`. These options will then be propagated from `workflow -> sub-workflow -> module`.
-
-As mentioned at the beginning of this section it may also be necessary for users to overwrite the options passed to modules to be able to customise specific aspects of the way in which a particular tool is executed by the pipeline. Given that all of the default module options are stored in the pipeline's `modules.config` as a [`params` variable](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/modules.config#L24-L25) it is also possible to overwrite any of these options via a custom config file.
-
-Say for example we want to append an additional, non-mandatory parameter (i.e. `--outFilterMismatchNmax 16`) to the arguments passed to the `STAR_ALIGN` module. Firstly, we need to copy across the default `args` specified in the [`modules.config`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/modules.config#L71) and create a custom config file that is a composite of the default `args` as well as the additional options you would like to provide. This is very important because Nextflow will overwrite the default value of `args` that you provide via the custom config.
-
-As you will see in the example below, we have:
-
-* appended `--outFilterMismatchNmax 16` to the default `args` used by the module.
-* changed the default `publish_dir` value to where the files will eventually be published in the main results directory.
-* appended `'bam':''` to the default value of `publish_files` so that the BAM files generated by the process will also be saved in the top-level results directory for the module. Note: `'out':'log'` means any file/directory ending in `out` will now be saved in a separate directory called `my_star_directory/log/`.
-
-```nextflow
-params {
-    modules {
-        'star_align' {
-            args          = "--quantMode TranscriptomeSAM --twopassMode Basic --outSAMtype BAM Unsorted --readFilesCommand zcat --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMattributes NH HI AS NM MD --quantTranscriptomeBan Singleend --outFilterMismatchNmax 16"
-            publish_dir   = "my_star_directory"
-            publish_files = ['out':'log', 'tab':'log', 'bam':'']
-        }
-    }
-}
-```
+> **NB:** We specify the full process name i.e. `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+>
+> If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
 ### Updating containers
 
@@ -353,35 +405,35 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 2. Find the latest version of the Biocontainer available on [Quay.io](https://quay.io/repository/biocontainers/pangolin?tag=latest&tab=tags)
 3. Create the custom config accordingly:
 
-    * For Docker:
+   - For Docker:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
+         }
+     }
+     ```
 
-    * For Singularity:
+   - For Singularity:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
+         }
+     }
+     ```
 
-    * For Conda:
+   - For Conda:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                conda = 'bioconda::pangolin=3.0.5'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             conda = 'bioconda::pangolin=3.0.5'
+         }
+     }
+     ```
 
 > **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
 

@@ -73,6 +73,17 @@ do
         #echo $URL
         wget $URL -O $TMP_FILE -q
         awk '/<pre>/{i++}/<\/pre>/{j++}{if(j==2){exit}}{if(i==2 && j==1 && $0!~"^<pre>"){print}}' $TMP_FILE > $FILE_NAME
+
+        # Checking once that file exists and is not empty (checks IMGT server is online)
+        read file
+        if [ -s "$FILE_NAME" ]
+        then
+            echo "IMGT Fasta file exists and is not empty"
+        else
+            echo "IMGT Fasta file does not exist, or is empty. Is the IMGT server online?"
+            exit 1
+        fi
+
         # Make sed command work also for mac, see: https://stackoverflow.com/a/44864004
         sed -i.bak "$REPLACE_VALUE" $FILE_NAME && rm $FILE_NAME.bak
         rm $TMP_FILE

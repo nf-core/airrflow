@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -15,33 +15,85 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
+if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
-// Validate primer protocol
-if (params.protocol == "pcr_umi"){
+if (!params.library_generation_method) {
+    exit 1, "Please specify a library generation method with the `--library_generation_method` option."
+}
+
+// Validate library generation method parameter
+if (params.library_generation_method == 'specific_pcr_umi'){
     if (params.vprimers)  {
         ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
     } else {
-        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option, or specify a 5'RACE protocol with the '--protocol' option."
+        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr_umi' library generation method."
     }
     if (params.cprimers)  {
         ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
     } else {
-        exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option."
+        exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr_umi' library generation method."
     }
-} else if (params.protocol == "race_5p_umi") {
+    if (params.race_linker)  {
+        exit 1, "Please do not set '--race_linker' when using the 'specific_pcr_umi' library generation method."
+    }
+    if (params.umi_length < 2)  {
+        exit 1, "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
+    }
+} else if (params.library_generation_method == 'specific_pcr') {
+    if (params.vprimers)  {
+        ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
+    } else {
+        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr' library generation method."
+    }
+    if (params.cprimers)  {
+        ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+    } else {
+        exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr' library generation method."
+    }
+    if (params.race_linker)  {
+        exit 1, "Please do not set '--race_linker' when using the 'specific_pcr' library generation method."
+    }
+    if (params.umi_length > 0)  {
+        exit 1, "Please do not set a UMI length with the library preparation method 'specific_pcr'. Please specify instead a method that suports umi."
+    } else {
+        params.umi_length = 0
+    }
+} else if (params.library_generation_method == 'dt_5p_race_umi') {
     if (params.vprimers) {
-        exit 1, "The 5' RACE protocol does not accept V-region primers, please remove the option '--vprimers' or provide another protocol."
+        exit 1, "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
     } else if (params.race_linker) {
         ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
     } else {
-        exit 1, "The 5' RACE protocol requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
+        exit 1, "The oligo-dT 5'-RACE UMI library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
     }
     if (params.cprimers)  {
         ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
     } else {
-        exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option."
+        exit 1, "The oligo-dT 5'-RACE UMI library generation method requires the C-region primer sequences, please provide a fasta file with the '--cprimers' option."
     }
+    if (params.umi_length < 2)  {
+        exit 1, "The oligo-dT 5'-RACE UMI 'dt_5p_race_umi' library generation method requires specifying the '--umi_length' to a value greater than 1."
+    }
+} else if (params.library_generation_method == 'dt_5p_race') {
+    if (params.vprimers) {
+        exit 1, "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
+    } else if (params.race_linker) {
+        ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+    } else {
+        exit 1, "The oligo-dT 5'-RACE library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
+    }
+    if (params.cprimers)  {
+        ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+    } else {
+        exit 1, "The oligo-dT 5'-RACE library generation method requires the C-region primer sequences, please provide a fasta file with the '--cprimers' option."
+    }
+    if (params.umi_length > 0)  {
+        exit 1, "Please do not set a UMI length with the library preparation method oligo-dT 5'-RACE 'dt_5p_race'. Please specify instead a method that suports umi (e.g. 'dt_5p_race_umi')."
+    } else {
+        params.umi_length = 0
+    }
+} else {
+    exit 1, "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."
 }
 
 // Validate UMI position
@@ -63,82 +115,73 @@ if( params.imgtdb_base ){
 
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 // Rmarkdown report file
-ch_rmarkdown_report      = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
+ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
-                                    "$projectDir/assets/nf-core-bcellmagic_logo.png"],
+                                    "$projectDir/assets/nf-core-airrflow_logo_light.png"],
                                     checkIfExists: true).dump(tag: 'report files')
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-
-// Local: Modules
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['csv':'']] )
-
 //CHANGEO
-include { FETCH_DATABASES } from '../modules/local/fetch_databases'              addParams( options: [:] )
-include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'      addParams( options: modules['changeo_assigngenes'] )
-include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'                addParams( options: modules['changeo_makedb'] )
-include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'  addParams( options: modules['changeo_parsedb_split'] )
-include { CHANGEO_PARSEDB_SELECT as CHANGEO_PARSEDB_SELECT_IG } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select_ig'] )
-include { CHANGEO_PARSEDB_SELECT as CHANGEO_PARSEDB_SELECT_TR } from '../modules/local/changeo/changeo_parsedb_select'    addParams( options: modules['changeo_parsedb_select_tr'] )
-include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'  addParams( options: modules['changeo_convertdb_fasta'] )
+include { FETCH_DATABASES } from '../modules/local/fetch_databases'
+include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'
+include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'
+include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'
+include { CHANGEO_PARSEDB_SELECT } from '../modules/local/changeo/changeo_parsedb_select'
+include { CHANGEO_CONVERTDB_FASTA } from '../modules/local/changeo/changeo_convertdb_fasta'
 
 //SHAZAM
-include { SHAZAM_TIGGER_THRESHOLD } from '../modules/local/shazam/shazam_tigger_threshold'  addParams( options: modules['shazam_tigger_threshold'] )
+include { SHAZAM_THRESHOLD } from '../modules/local/shazam/shazam_threshold'
 
 //CHANGEO
-include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'        addParams( options: modules['changeo_defineclones'] )
-include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'  addParams( options: modules['changeo_creategermlines'] )
-include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'        addParams( options: modules['changeo_buildtrees'] )
+include { CHANGEO_DEFINECLONES } from '../modules/local/changeo/changeo_defineclones'
+include { CHANGEO_CREATEGERMLINES } from '../modules/local/changeo/changeo_creategermlines'
+include { CHANGEO_BUILDTREES } from '../modules/local/changeo/changeo_buildtrees'
 
 //ALAKAZAM
-include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'            addParams( options: modules['alakazam_lineage'] )
-include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'   addParams ( options: modules['alakazam_shazam_repertoires'] )
+include { ALAKAZAM_LINEAGE } from '../modules/local/alakazam/alakazam_lineage'
+include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../modules/local/alakazam/alakazam_shazam_repertoires'
 
 //LOG PARSING
-include { PARSE_LOGS } from '../modules/local/parse_logs'                           addParams( options: modules['parse_logs'] )
+include { PARSE_LOGS } from '../modules/local/parse_logs'
 
 // Local: Sub-workflows
-include { INPUT_CHECK           } from '../subworkflows/local/input_check'          addParams( options: [:] )
-include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'      addParams( options: modules['merge_tables'] )
-include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'           addParams( options: [:] )
-include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'           addParams( options: [:] )
+include { INPUT_CHECK           } from '../subworkflows/local/input_check'
+include { MERGE_TABLES_WF       } from '../subworkflows/local/merge_tables_wf'
+include { PRESTO_UMI            } from '../subworkflows/local/presto_umi'
+include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_umi'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                } from '../modules/nf-core/modules/fastqc/main'        addParams( options: modules['fastqc'] )
-include { MULTIQC               } from '../modules/nf-core/modules/multiqc/main'       addParams( options: multiqc_options )
+include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 // Info required for completion email and summary
@@ -146,17 +189,22 @@ def multiqc_report = []
 
 workflow BCELLMAGIC {
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK ( ch_input )
+
+    ch_fastqc = INPUT_CHECK
+        .out
+        .reads
         .groupTuple(by: [0])
         .map{ it -> [ it[0], it[1].flatten() ] }
-        .set{ ch_fastqc }
 
     ch_presto = ch_fastqc.map{ it -> it.flatten() }
+
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
     // MODULE: FastQC
@@ -164,7 +212,7 @@ workflow BCELLMAGIC {
     FASTQC ( ch_fastqc )
 
     // Channel for software versions
-    ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null))
 
     if (params.umi_length == 0) {
         //
@@ -211,14 +259,14 @@ workflow BCELLMAGIC {
         ch_presto_splitseq_logs = PRESTO_UMI.out.presto_splitseq_logs
     }
 
-    ch_software_versions = ch_software_versions.mix(ch_presto_software)
+    ch_versions = ch_versions.mix(ch_presto_software)
 
     // FETCH DATABASES
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
-        ch_software_versions = ch_software_versions.mix(FETCH_DATABASES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
 
     // Run Igblast for gene assignment
@@ -226,7 +274,7 @@ workflow BCELLMAGIC {
         ch_presto_fasta,
         ch_igblast.collect()
     )
-    ch_software_versions = ch_software_versions.mix(CHANGEO_ASSIGNGENES.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
 
     // Make IgBlast results table
     CHANGEO_MAKEDB (
@@ -241,60 +289,52 @@ workflow BCELLMAGIC {
     )
 
     // Selecting IGH for ig loci, TR for tr loci.
-    if (params.loci == "ig") {
-        CHANGEO_PARSEDB_SELECT_IG (
-            CHANGEO_PARSEDB_SPLIT.out.tab
-        )
-        ch_changeo_parsedb_select_tab = CHANGEO_PARSEDB_SELECT_IG.out.tab
-        ch_changeo_parsedb_select_log = CHANGEO_PARSEDB_SELECT_IG.out.log
-    } else if (params.loci == "tr") {
-        CHANGEO_PARSEDB_SELECT_TR (
-            CHANGEO_PARSEDB_SPLIT.out.tab
-        )
-        ch_changeo_parsedb_select_tab = CHANGEO_PARSEDB_SELECT_TR.out.tab
-        ch_changeo_parsedb_select_log = CHANGEO_PARSEDB_SELECT_TR.out.log
-    } else {
-        exit 1, "Parameter loci has an unrecognized value, please select 'ig' or 'tr'."
-    }
+    CHANGEO_PARSEDB_SELECT(
+        CHANGEO_PARSEDB_SPLIT.out.tab
+    )
 
     // Convert sequence table to fasta.
     CHANGEO_CONVERTDB_FASTA (
-        ch_changeo_parsedb_select_tab
+        CHANGEO_PARSEDB_SELECT.out.tab
     )
 
     // Subworkflow: merge tables from the same patient
-    MERGE_TABLES_WF(ch_changeo_parsedb_select_tab)
+    MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
 
-    // Shazam clonal threshold and tigger genotyping
-    SHAZAM_TIGGER_THRESHOLD(
-        MERGE_TABLES_WF.out,
-        ch_imgt.collect()
-    )
-
-    ch_software_versions = ch_software_versions.mix(SHAZAM_TIGGER_THRESHOLD.out.version.first().ifEmpty(null)).dump()
+    // Shazam clonal threshold
+    // Only if threshold is not manually set
+    if (!params.set_cluster_threshold){
+        SHAZAM_THRESHOLD(
+            MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
+            ch_imgt.collect()
+        )
+        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_threshold = SHAZAM_THRESHOLD.out.threshold
+        ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
+    } else {
+        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_threshold = file('EMPTY')
+    }
 
     // Define B-cell clones
     CHANGEO_DEFINECLONES(
-        SHAZAM_TIGGER_THRESHOLD.out.tab,
-        SHAZAM_TIGGER_THRESHOLD.out.threshold,
-        SHAZAM_TIGGER_THRESHOLD.out.fasta
+        ch_tab_for_changeo_defineclones,
+        ch_threshold,
     )
 
     // Identify germline sequences
     CHANGEO_CREATEGERMLINES(
         CHANGEO_DEFINECLONES.out.tab,
-        CHANGEO_DEFINECLONES.out.fasta,
         ch_imgt.collect()
     )
 
     // Lineage reconstruction alakazam
     if (!params.skip_lineage) {
         ALAKAZAM_LINEAGE(
-            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'changeo_output')
+            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'creategermlines_output')
         )
+        ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null)).dump()
     }
-
-    ch_software_versions = ch_software_versions.mix(ALAKAZAM_LINEAGE.out.version.first().ifEmpty(null)).dump()
 
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
                                                     .map{ it -> [ it[1] ] }
@@ -328,8 +368,8 @@ workflow BCELLMAGIC {
     }
 
     // Software versions
-    GET_SOFTWARE_VERSIONS (
-        ch_software_versions.map { it }.collect()
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
@@ -342,8 +382,9 @@ workflow BCELLMAGIC {
         ch_multiqc_files = Channel.empty()
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
         ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_gz.collect{it[1]}.ifEmpty([]))
 
@@ -351,14 +392,14 @@ workflow BCELLMAGIC {
             ch_multiqc_files.collect()
         )
         multiqc_report       = MULTIQC.out.report.toList()
-        ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+        ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow.onComplete {
@@ -369,7 +410,7 @@ workflow.onComplete {
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */

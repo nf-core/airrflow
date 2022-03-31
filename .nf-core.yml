@@ -1,3 +1,1 @@
-lint:
-  files_unchanged:
-    - assets/multiqc_config.yaml
+repository_type: pipeline

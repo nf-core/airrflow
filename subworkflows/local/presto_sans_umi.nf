@@ -1,16 +1,16 @@
-def modules = params.modules.clone()
+// Include statements
 
-include { GUNZIP            as GUNZIP_SANS_UMI }         from '../../modules/local/gunzip'                    addParams( options: [:] )
-include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_SANS_UMI } from '../../modules/local/fastqc_postassembly'                                addParams( options: [:] )
+include { GUNZIP            as GUNZIP_SANS_UMI }         from '../../modules/local/gunzip'
+include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_SANS_UMI } from '../../modules/local/fastqc_postassembly'
 
 //PRESTO
-include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_SANS_UMI }  from '../../modules/local/presto/presto_assemblepairs'                         addParams( options: modules['presto_assemblepairs_sans_umi'] )
-include { PRESTO_FILTERSEQ_POSTASSEMBLY      as  PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI }      from '../../modules/local/presto/presto_filterseq_postassembly'                             addParams( options: modules['presto_filterseq_postassembly_sans_umi'] )
-include { PRESTO_MASKPRIMERS_POSTASSEMBLY    as  PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI }    from '../../modules/local/presto/presto_maskprimers_postassembly'                           addParams( options: modules['presto_maskprimers_postassembly_sans_umi'] )
-include { PRESTO_PARSEHEADERS_PRIMERS   as PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI }    from '../../modules/local/presto/presto_parseheaders_primers'      addParams( options: modules['presto_parseheaders_primers_sans_umi'] )
-include { PRESTO_PARSEHEADERS_METADATA  as PRESTO_PARSEHEADERS_METADATA_SANS_UMI }   from '../../modules/local/presto/presto_parseheaders_metadata'     addParams( options: modules['presto_parseheaders_metadata'] )
-include { PRESTO_COLLAPSESEQ    as PRESTO_COLLAPSESEQ_SANS_UMI }     from '../../modules/local/presto/presto_collapseseq'                           addParams( options: modules['presto_collapseseq_sans_umi'] )
-include { PRESTO_SPLITSEQ       as PRESTO_SPLITSEQ_SANS_UMI}         from '../../modules/local/presto/presto_splitseq'                              addParams( options: modules['presto_splitseq_sans_umi'] )
+include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_SANS_UMI }  from '../../modules/local/presto/presto_assemblepairs'
+include { PRESTO_FILTERSEQ_POSTASSEMBLY      as  PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI }      from '../../modules/local/presto/presto_filterseq_postassembly'
+include { PRESTO_MASKPRIMERS_POSTASSEMBLY    as  PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI }    from '../../modules/local/presto/presto_maskprimers_postassembly'
+include { PRESTO_PARSEHEADERS_PRIMERS   as PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI }    from '../../modules/local/presto/presto_parseheaders_primers'
+include { PRESTO_PARSEHEADERS_METADATA  as PRESTO_PARSEHEADERS_METADATA_SANS_UMI }   from '../../modules/local/presto/presto_parseheaders_metadata'
+include { PRESTO_COLLAPSESEQ    as PRESTO_COLLAPSESEQ_SANS_UMI }     from '../../modules/local/presto/presto_collapseseq'
+include { PRESTO_SPLITSEQ       as PRESTO_SPLITSEQ_SANS_UMI}         from '../../modules/local/presto/presto_splitseq'
 
 
 workflow PRESTO_SANS_UMI {
@@ -21,12 +21,12 @@ workflow PRESTO_SANS_UMI {
 
     main:
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
     ch_gunzip = ch_reads
 
     // gunzip fastq.gz to fastq
     GUNZIP_SANS_UMI ( ch_gunzip )
-    ch_software_versions = ch_software_versions.mix(GUNZIP_SANS_UMI.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(GUNZIP_SANS_UMI.out.versions.ifEmpty(null))
 
     // Assemble read pairs
     PRESTO_ASSEMBLEPAIRS_SANS_UMI (
@@ -37,7 +37,7 @@ workflow PRESTO_SANS_UMI {
     PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI (
         PRESTO_ASSEMBLEPAIRS_SANS_UMI.out.reads
     )
-    ch_software_versions = ch_software_versions.mix(PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI.out.versions.ifEmpty(null))
 
     // Mask primers
     PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI (
@@ -73,7 +73,7 @@ workflow PRESTO_SANS_UMI {
 
     emit:
     fasta = PRESTO_SPLITSEQ_SANS_UMI.out.fasta
-    software = ch_software_versions
+    software = ch_versions
     fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_SANS_UMI.out.zip
     presto_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_SANS_UMI.out.logs.collect()
     presto_filterseq_logs = PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI.out.logs

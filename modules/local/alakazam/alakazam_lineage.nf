@@ -1,41 +1,33 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
-
 process ALAKAZAM_LINEAGE {
     tag "$meta.id"
     label 'process_high'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-
-    conda (params.enable_conda ? "conda-forge::r-base=4.0.3 conda-forge::r-alakazam=1.0.2 bioconda::changeo=1.0.2 bioconda::phylip=3.697" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-afe1e5f3879e265b14ec08dd3a1875df9c23630d:ec93fe5ff5457014204d1537f8b85458056510bb-0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/mulled-v2-afe1e5f3879e265b14ec08dd3a1875df9c23630d:ec93fe5ff5457014204d1537f8b85458056510bb-0"                        // Docker image
-    }
+    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-alakazam=1.2.0 bioconda::changeo=1.2.0 bioconda::phylip=3.697" : null)              // Conda package
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-afe1e5f3879e265b14ec08dd3a1875df9c23630d:d6b54b0fae81ec8e55d41b5ea9cc8f39d75cf2d7-0' :
+        'quay.io/biocontainers/mulled-v2-afe1e5f3879e265b14ec08dd3a1875df9c23630d:d6b54b0fae81ec8e55d41b5ea9cc8f39d75cf2d7-0' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
 
     output:
     tuple val(meta), path("${tab}"), emit: tab
-    path("*.version.txt"), emit: version
+    path("versions.yml"), emit: versions
     path("*.tsv")
     path("Clone_tree_plots/*.pdf")
     path("Graphml_trees/All_graphs_patient.graphml")
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
     which dnapars > dnapars_exec.txt
-    lineage_reconstruction.R ${tab} $options.args
+    lineage_reconstruction.R ${tab} $args
     merge_graphs.sh
-    Rscript -e "library(alakazam); write(x=as.character(packageVersion('alakazam')), file='${software}.version.txt')"
-    echo \$(R --version 2>&1) | awk -F' '  '{print \$3}' > R.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        alakazam: \$(Rscript -e "library(alakazam); cat(paste(packageVersion('alakazam'), collapse='.'))")
+    END_VERSIONS
     """
 
 }

@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 ***
 
-# Bcellmagic analysis pipeline
+# Airrflow analysis pipeline
 
 ## Pipeline overview
 
@@ -88,14 +88,15 @@ for (file in all_files){
 write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
 
 # Remove underscores in these columns
-df_all$treatment <- sapply(df_all$treatment, function(x) str_replace(as.character(x), "_", ""))
-df_all$source <- sapply(df_all$source, function(x) str_replace(as.character(x), "_", ""))
-df_all$extract_time <- sapply(df_all$extract_time, function(x) str_replace(as.character(x), "_", ""))
-df_all$population <- sapply(df_all$population, function(x) str_replace(as.character(x), "_", ""))
+#df_all$treatment <- sapply(df_all$treatment, function(x) str_replace(as.character(x), "_", ""))
+df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
+df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.character(x), "_", ""))
+#df_all$extract_time <- sapply(df_all$extract_time, function(x) str_replace(as.character(x), "_", ""))
+#df_all$population <- sapply(df_all$population, function(x) str_replace(as.character(x), "_", ""))
 
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
-df_all$sample <- as.factor(paste(df_all$treatment, df_all$extract_time, df_all$source, sep="_"))
-df_all$sample_pop <- as.factor(paste(df_all$treatment, df_all$extract_time, df_all$source, df_all$population, sep="_"))
+df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
+#df_all$sample_pop <- as.factor(paste(df_all$treatment, df_all$extract_time, df_all$source, df_all$population, sep="_"))
 
 # Set number of bootrstraps
 nboot = 200
@@ -116,25 +117,27 @@ All clonal abundance plots and tables with abundance values can be found under `
 
 ## Clonal abundance per subject
 ```{r clonal_abundance, echo=FALSE}
-abund <- estimateAbundance(df_all, group = "sample", ci=0.95, nboot=nboot)
-abund@abundance$treatment <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
-abund@abundance$time_point <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
-abund@abundance$patient <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
+abund <- estimateAbundance(df_all, group = "subj_locus", ci=0.95, nboot=nboot)
+#abund@abundance$treatment <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
+#abund@abundance$time_point <- sapply(abund@abundance$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund@abundance$sample_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
+abund@abundance$subject_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
+abund@abundance$locus <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
+
 
 abund_main <- paste0("Clonal abundance (N=", abund@n[1], ")")
 
-p_ca <- ggplot(abund@abundance, aes(x = rank, y = p,
-                                    group = sample)) +
+p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
     geom_ribbon(aes(ymin = lower,
-                    ymax = upper, fill = time_point), alpha = 0.4) +
-    geom_line(aes(color = time_point)) +
+                    ymax = upper, fill = sample_id), alpha = 0.4) +
+    geom_line(aes(color = sample_id)) +
     ggtitle(abund_main) +
     xlab("Rank") + ylab("Abundance") +
     scale_x_log10(limits = NULL,
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x))) +
     scale_y_continuous(labels = scales::percent) +
-    facet_grid(cols = vars(patient), rows = vars(treatment), scales="free", drop = T)
+    facet_grid(cols = vars(locus), rows = vars(subject_id), scales="free", drop = T)
 p_ca
 ```
 
@@ -143,41 +146,41 @@ ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
 write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
 ```
+<!--
+# ## Clonal abundance per cell population
 
-## Clonal abundance per cell population
+# If different types of B-cell or T-cell populations are provided, here
+# the clonal abundance is plotted for each patient and B / T-cell population.
 
-If different types of B-cell or T-cell populations are provided, here
-the clonal abundance is plotted for each patient and B / T-cell population.
+# ```{r clonal_abundance_pop, echo=FALSE}
+# abund_pop <- estimateAbundance(df_all, clone="clone_id", group = "sample_pop", ci=0.95, nboot=nboot)
+# abund_pop@abundance$treatment <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
+# abund_pop@abundance$time_point <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
+# abund_pop@abundance$patient <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
+# abund_pop@abundance$population <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
 
-```{r clonal_abundance_pop, echo=FALSE}
-abund_pop <- estimateAbundance(df_all, clone="clone_id", group = "sample_pop", ci=0.95, nboot=nboot)
-abund_pop@abundance$treatment <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
-abund_pop@abundance$time_point <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
-abund_pop@abundance$patient <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
-abund_pop@abundance$population <- sapply(abund_pop@abundance$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
-
-abund_main <- paste0("Clonal abundance (N=", abund_pop@n[1], ")")
-pop_ca <- ggplot(abund_pop@abundance, aes(x = rank, y = p,
-                                group = sample_pop)) +
-    geom_ribbon(aes(ymin = lower,
-                    ymax = upper, fill = time_point), alpha = 0.4) +
-    geom_line(aes(color = time_point)) +
-    ggtitle(abund_main) +
-    xlab("Rank") + ylab("Abundance") +
-    scale_x_log10(limits = NULL,
-                    breaks = scales::trans_breaks("log10", function(x) 10^x),
-                    labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-    scale_y_continuous(labels = scales::percent) +
-    facet_grid(cols=vars(patient), rows=vars(population), scales="free", drop = T)
-pop_ca
-```
-```{r include=FALSE}
-ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_population.pdf"), device="pdf",
-        width = 30, height = 20, units="cm")
-    ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_population.png"), device="png",
-        width = 30, height = 20, units="cm")
-```
-
+# abund_main <- paste0("Clonal abundance (N=", abund_pop@n[1], ")")
+# pop_ca <- ggplot(abund_pop@abundance, aes(x = rank, y = p,
+#                                 group = sample_pop)) +
+#     geom_ribbon(aes(ymin = lower,
+#                     ymax = upper, fill = time_point), alpha = 0.4) +
+#     geom_line(aes(color = time_point)) +
+#     ggtitle(abund_main) +
+#     xlab("Rank") + ylab("Abundance") +
+#     scale_x_log10(limits = NULL,
+#                     breaks = scales::trans_breaks("log10", function(x) 10^x),
+#                     labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+#     scale_y_continuous(labels = scales::percent) +
+#     facet_grid(cols=vars(patient), rows=vars(population), scales="free", drop = T)
+# pop_ca
+# ```
+# ```{r include=FALSE}
+# ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_population.pdf"), device="pdf",
+#         width = 30, height = 20, units="cm")
+#     ggsave(plot=pop_ca, filename = paste0(abundance_dir,"/Clonal_abundance_patient_population.png"), device="png",
+#         width = 30, height = 20, units="cm")
+# ```
+-->
 # Clonal diversity
 
 The clonal diversity $D$ of the repertoire was calculated according to the general formula of Hill Diversity
@@ -219,186 +222,185 @@ range of the bootstrap samples.
 
 ## Clonal diversity per subject
 ```{r clonal_diversity, echo = FALSE}
-sample_div <- alphaDiversity(abund, group="sample", min_q=0, max_q=4, step_q=0.05,
+sample_div <- alphaDiversity(abund, group="subj_locus", min_q=0, max_q=4, step_q=0.05,
                             ci=0.95, nboot=nboot)
 sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
 
-sample_div@diversity$treatment <- sapply(sample_div@diversity$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
-sample_div@diversity$time_point <- sapply(sample_div@diversity$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
-sample_div@diversity$patient <- sapply(sample_div@diversity$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
+sample_div@diversity$sample_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
+sample_div@diversity$subject_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
+sample_div@diversity$locus <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-div_p <- ggplot(sample_div@diversity, aes(x = q, y = d,
-                                        group = sample)) +
+div_p <- ggplot(sample_div@diversity, aes(x = q, y = d)) +
     geom_ribbon(aes(ymin = d_lower,
                     ymax = d_upper,
-                    fill = time_point), alpha = 0.4) +
-    geom_line(aes(color = time_point)) +
+                    fill = sample_id), alpha = 0.4) +
+    geom_line(aes(color = sample_id)) +
     xlab("q") + ylab(expression(""^q * D)) +
     ggtitle(sample_main) +
-    facet_grid(cols=vars(patient))
+    facet_grid(cols=vars(locus), rows=vars(subject_id))
 div_p
 ```
 ```{r include = FALSE}
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
 ```
+<!--
+# ### Clonal diversity at specific q values {.tabset .tabset-fade .tabset-pills}
 
-### Clonal diversity at specific q values {.tabset .tabset-fade .tabset-pills}
+# #### q=1 {-}
 
-#### q=1 {-}
+# ```{r clonal_diversity_q1, echo = FALSE}
+# sample_div_q1 <- sample_div@diversity[which(sample_div@diversity$q == 1),]
 
-```{r clonal_diversity_q1, echo = FALSE}
-sample_div_q1 <- sample_div@diversity[which(sample_div@diversity$q == 1),]
+# sample_main <- paste0("Sample diversity at q=1 (N=", sample_div@n[1], ")")
 
-sample_main <- paste0("Sample diversity at q=1 (N=", sample_div@n[1], ")")
+# dodge <- position_dodge(width = 0.9)
+# dq1 <- ggplot(sample_div_q1, aes(y=d, x=time_point)) +
+#     geom_point(position=dodge, stat="identity", size = 3) +
+#     geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+#     xlab("") + ylab("Diversity (q=1)") +
+#     ggtitle(sample_main) +
+#     facet_grid(cols=vars(patient), drop=T, space="free", scales = "free") +
+#     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# dq1
+# ```
+# ```{r, include = FALSE}
+# ggsave(plot = dq1, filename = paste0(diversity_dir,"/Diversity_q1_test_subject.png"), device="png",
+#         width = 20, height = 10, units="cm")
+#     ggsave(plot = dq1, filename = paste0(diversity_dir,"/Diversity_q1_test_subject.pdf"), device="pdf",
+#         width = 20, height = 10, units="cm")
+# ```
 
-dodge <- position_dodge(width = 0.9)
-dq1 <- ggplot(sample_div_q1, aes(y=d, x=time_point)) +
-    geom_point(position=dodge, stat="identity", size = 3) +
-    geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
-    xlab("") + ylab("Diversity (q=1)") +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(patient), drop=T, space="free", scales = "free") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-dq1
-```
-```{r, include = FALSE}
-ggsave(plot = dq1, filename = paste0(diversity_dir,"/Diversity_q1_test_subject.png"), device="png",
-        width = 20, height = 10, units="cm")
-    ggsave(plot = dq1, filename = paste0(diversity_dir,"/Diversity_q1_test_subject.pdf"), device="pdf",
-        width = 20, height = 10, units="cm")
-```
+# #### q=0 {-}
 
-#### q=0 {-}
+# ```{r clonal_diversity_q0, echo = FALSE}
+# sample_div_q0 <- sample_div@diversity[which(sample_div@diversity$q == 0),]
 
-```{r clonal_diversity_q0, echo = FALSE}
-sample_div_q0 <- sample_div@diversity[which(sample_div@diversity$q == 0),]
+# sample_main <- paste0("Sample diversity at q=0 (N=", sample_div@n[1], ")")
 
-sample_main <- paste0("Sample diversity at q=0 (N=", sample_div@n[1], ")")
+# dodge <- position_dodge(width = 0.9)
+# dq0 <- ggplot(sample_div_q0, aes(y=d, x=time_point)) +
+#     geom_point(position=dodge, stat="identity", size = 3) +
+#     geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+#     xlab("") + ylab("Diversity (q=0)") +
+#     ggtitle(sample_main) +
+#     facet_grid(cols=vars(patient), drop=T, scales = "free") +
+#     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# dq0
+# ```
 
-dodge <- position_dodge(width = 0.9)
-dq0 <- ggplot(sample_div_q0, aes(y=d, x=time_point)) +
-    geom_point(position=dodge, stat="identity", size = 3) +
-    geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
-    xlab("") + ylab("Diversity (q=0)") +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(patient), drop=T, scales = "free") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-dq0
-```
+# ```{r, include = FALSE}
+# ggsave(plot = dq0, filename = paste0(diversity_dir,"/Diversity_q0_test_subject.png"), device="png",
+#         width = 20, height = 10, units="cm")
+# ggsave(plot = dq0, filename = paste0(diversity_dir,"/Diversity_q0_test_subject.pdf"), device="pdf",
+#         width = 20, height = 10, units="cm")
+# ```
 
-```{r, include = FALSE}
-ggsave(plot = dq0, filename = paste0(diversity_dir,"/Diversity_q0_test_subject.png"), device="png",
-        width = 20, height = 10, units="cm")
-ggsave(plot = dq0, filename = paste0(diversity_dir,"/Diversity_q0_test_subject.pdf"), device="pdf",
-        width = 20, height = 10, units="cm")
-```
+# ## Clonal diversity per cell population
 
-## Clonal diversity per cell population
+# ```{r clonal_diversity_pop, echo = FALSE}
+# sample_div_pop <- alphaDiversity(abund_pop, group="sample_pop", min_q=0, max_q=4, step_q=0.05,
+#                                 ci=0.95, nboot=nboot)
+# sample_main_pop <- paste0("Sample diversity (N=", sample_div_pop@n[1], ")")
 
-```{r clonal_diversity_pop, echo = FALSE}
-sample_div_pop <- alphaDiversity(abund_pop, group="sample_pop", min_q=0, max_q=4, step_q=0.05,
-                                ci=0.95, nboot=nboot)
-sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
+# sample_div_pop@diversity$treatment <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
+# sample_div_pop@diversity$time_point <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
+# sample_div_pop@diversity$patient <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
+# sample_div_pop@diversity$population <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
 
-sample_div_pop@diversity$treatment <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
-sample_div_pop@diversity$time_point <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
-sample_div_pop@diversity$patient <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
-sample_div_pop@diversity$population <- sapply(sample_div_pop@diversity$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
+# div_pop <- ggplot(sample_div_pop@diversity, aes(x = q, y = d, group = sample_pop)) +
+#     geom_ribbon(aes(ymin = d_lower,
+#                     ymax = d_upper, fill = time_point), alpha = 0.4) +
+#     geom_line(aes(color = time_point)) +
+#     xlab("q") + ylab(expression(""^q * D)) +
+#     ggtitle(sample_main) +
+#     facet_grid(cols=vars(patient), rows=vars(population), scales="free", drop = T)
+# div_pop
+# ```
 
-div_pop <- ggplot(sample_div_pop@diversity, aes(x = q, y = d, group = sample_pop)) +
-    geom_ribbon(aes(ymin = d_lower,
-                    ymax = d_upper, fill = time_point), alpha = 0.4) +
-    geom_line(aes(color = time_point)) +
-    xlab("q") + ylab(expression(""^q * D)) +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(patient), rows=vars(population), scales="free", drop = T)
-div_pop
-```
+# ```{r, include=FALSE}
+# ggsave(plot = div_pop, filename = paste0(diversity_dir,"/Diversity_subject_population.svg"), device="svg",
+#         width = 25, height = 20, units="cm")
+# ggsave(plot = div_pop, filename = paste0(diversity_dir,"/Diversity_subject_population.pdf"), device="pdf",
+#         width = 25, height = 20, units="cm")
+# ```
 
-```{r, include=FALSE}
-ggsave(plot = div_pop, filename = paste0(diversity_dir,"/Diversity_subject_population.svg"), device="svg",
-        width = 25, height = 20, units="cm")
-ggsave(plot = div_pop, filename = paste0(diversity_dir,"/Diversity_subject_population.pdf"), device="pdf",
-        width = 25, height = 20, units="cm")
-```
+# ### Clonal diversity per population at specific q values {.tabset .tabset-fade .tabset-pills}
 
-### Clonal diversity per population at specific q values {.tabset .tabset-fade .tabset-pills}
+# #### q=1 {-}
 
-#### q=1 {-}
+# ```{r clonal_diversity_q1_pop, echo = FALSE}
+# sample_div_q1 <- sample_div_pop@diversity[which(sample_div_pop@diversity$q == 1),]
 
-```{r clonal_diversity_q1_pop, echo = FALSE}
-sample_div_q1 <- sample_div_pop@diversity[which(sample_div_pop@diversity$q == 1),]
+# sample_main <- paste0("Sample diversity at q=1 (N=", sample_div_pop@n[1], ")")
 
-sample_main <- paste0("Sample diversity at q=1 (N=", sample_div_pop@n[1], ")")
+# dodge <- position_dodge(width = 0.9)
+# dq1_pop <- ggplot(sample_div_q1, aes(y=d, x=time_point)) +
+#     geom_point(position=dodge, stat="identity", size = 3) +
+#     geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+#     xlab("") + ylab("Diversity (q=1)") +
+#     ggtitle(sample_main) +
+#     facet_grid(cols=vars(patient), rows=vars(population), drop=T, scales = "free") +
+#     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# dq1_pop
+# ```
+# ```{r, include = FALSE}
+# ggsave(plot = dq1_pop, filename = paste0(diversity_dir,"/Diversity_q1_test_population.png"), device="png",
+#         width = 20, height = 10, units="cm")
+# ggsave(plot = dq1_pop, filename = paste0(diversity_dir,"/Diversity_q1_test_population.pdf"), device="pdf",
+#         width = 20, height = 10, units="cm")
+# ```
 
-dodge <- position_dodge(width = 0.9)
-dq1_pop <- ggplot(sample_div_q1, aes(y=d, x=time_point)) +
-    geom_point(position=dodge, stat="identity", size = 3) +
-    geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
-    xlab("") + ylab("Diversity (q=1)") +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(patient), rows=vars(population), drop=T, scales = "free") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-dq1_pop
-```
-```{r, include = FALSE}
-ggsave(plot = dq1_pop, filename = paste0(diversity_dir,"/Diversity_q1_test_population.png"), device="png",
-        width = 20, height = 10, units="cm")
-ggsave(plot = dq1_pop, filename = paste0(diversity_dir,"/Diversity_q1_test_population.pdf"), device="pdf",
-        width = 20, height = 10, units="cm")
-```
+# #### q=0 {-}
 
-#### q=0 {-}
+# ```{r clonal_diversity_q0_pop, echo = FALSE}
+# sample_div_q0 <- sample_div_pop@diversity[which(sample_div_pop@diversity$q == 0),]
 
-```{r clonal_diversity_q0_pop, echo = FALSE}
-sample_div_q0 <- sample_div_pop@diversity[which(sample_div_pop@diversity$q == 0),]
+# sample_main <- paste0("Sample diversity at q=0 (N=", sample_div_pop@n[1], ")")
 
-sample_main <- paste0("Sample diversity at q=0 (N=", sample_div_pop@n[1], ")")
+# dodge <- position_dodge(width = 0.9)
+# dq0_pop <- ggplot(sample_div_q0, aes(y=d, x=time_point)) +
+#     geom_point(position=dodge, stat="identity", size = 3) +
+#     geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
+#     xlab("") + ylab("Diversity (q=0)") +
+#     ggtitle(sample_main) +
+#     facet_grid(cols=vars(patient), rows=vars(population), drop=T, scales = "free") +
+#     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# dq0_pop
+# ```
 
-dodge <- position_dodge(width = 0.9)
-dq0_pop <- ggplot(sample_div_q0, aes(y=d, x=time_point)) +
-    geom_point(position=dodge, stat="identity", size = 3) +
-    geom_errorbar(aes(ymin=d-d_sd, ymax=d+d_sd), width = .2, position=dodge) +
-    xlab("") + ylab("Diversity (q=0)") +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(patient), rows=vars(population), drop=T, scales = "free") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-dq0_pop
-```
-
-```{r, include = FALSE}
-ggsave(plot = dq0_pop, filename = paste0(diversity_dir,"/Diversity_q0_test_population.png"), device="png",
-        width = 20, height = 10, units="cm")
-ggsave(plot = dq0_pop, filename = paste0(diversity_dir,"/Diversity_q0_test_population.pdf"), device="pdf",
-        width = 20, height = 10, units="cm")
-```
+# ```{r, include = FALSE}
+# ggsave(plot = dq0_pop, filename = paste0(diversity_dir,"/Diversity_q0_test_population.png"), device="png",
+#         width = 20, height = 10, units="cm")
+# ggsave(plot = dq0_pop, filename = paste0(diversity_dir,"/Diversity_q0_test_population.pdf"), device="pdf",
+#         width = 20, height = 10, units="cm")
+# ```
+-->
 
 # V gene usage
 
-## V gene family usage {.tabset .tabset-fade .tabset-pills}
+## V gene family usage
 
 The V gene usage (in percentage) in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 Gene family usage is normalized by the number of clones.
 
-### By patient {-}
+```{r, echo=F, fig.width=12, fig.asp=1, fig.align='center'}
+family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family", clone="clone_id")
+family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
+family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
+family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
-family <- countGenes(df_all, gene="v_call", groups="sample", mode="family", clone="clone_id")
-family$treatment <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$time_point <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$patient <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
+g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
-    facet_wrap(vars(treatment,patient), scales="free_x", ncol = 1) +
-    theme(legend.position = "none")
+    facet_grid(cols=vars(locus), rows=vars(subject_id)) +
+    #facet_wrap(vars(locus,subject_id), scales="free_x", ncol = 1) +
+    theme(legend.position = "right")
 g2
 
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.svg"), plot = g2, width = 18, height = 15, units = "cm")
@@ -406,36 +408,37 @@ ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plo
 
 write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"), sep = "\t", quote = F, row.names = F)
 ```
+<!--
+# ### By Population {-}
 
-### By Population {-}
+# ```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
+# family <- countGenes(df_all, gene="v_call", groups="sample_pop",
+#                     mode="family", clone = "clone_id")
+# family$treatment <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
+# family$time_point <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
+# family$patient <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
+# family$population <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
 
-```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
-family <- countGenes(df_all, gene="v_call", groups="sample_pop",
-                    mode="family", clone = "clone_id")
-family$treatment <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$time_point <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$patient <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[3])
-family$population <- sapply(family$sample_pop, function(x) unlist(strsplit(as.character(x), "_"))[4])
+# g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
+#     scale_color_brewer(palette="Set1") +
+#     geom_bar(position = "dodge", stat="identity") +
+#     ggtitle("V gene Family Usage") +
+#     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
+#     ylab("Frequency") +
+#     xlab("") +
+#     facet_grid(cols=vars(treatment), rows=vars(patient,population)) +
+#     theme(legend.position = "none")
+# g2
 
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
-    scale_color_brewer(palette="Set1") +
-    geom_bar(position = "dodge", stat="identity") +
-    ggtitle("V gene Family Usage") +
-    theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
-    ylab("Frequency") +
-    xlab("") +
-    facet_grid(cols=vars(treatment), rows=vars(patient,population)) +
-    theme(legend.position = "none")
-g2
+# ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.svg"), plot = g2,
+#     width = 30, height = 20, units = "cm")
+# ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.png"), plot = g2,
+#     width = 30, height = 20, units = "cm")
 
-ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.svg"), plot = g2,
-    width = 30, height = 20, units = "cm")
-ggsave(filename = paste0(vfamily_dir,"/V_Family_distribution_patient_population.png"), plot = g2,
-    width = 30, height = 20, units = "cm")
-
-write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data_population.tsv"), sep = "\t",
-    quote = F, row.names = F)
-```
+# write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data_population.tsv"), sep = "\t",
+#     quote = F, row.names = F)
+# ```
+-->
 
 ## V gene usage {.tabset .tabset-fade .tabset-pills}
 
@@ -444,11 +447,11 @@ All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ### By clones {-}
 
-```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
-family <- countGenes(df_all, gene="v_call", groups="sample", mode="gene", clone = "clone_id")
-family$treatment <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$time_point <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$patient <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
+```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
+family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene", clone = "clone_id")
+family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
+family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
+family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
 g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
     scale_color_brewer(palette="Set1") +
@@ -457,7 +460,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
-    facet_wrap(vars(treatment,patient), scales="free_x", ncol = 1) +
+    facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
     theme(legend.position = "none")
 g2
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.svg"), plot = g2, width = 20, height = 40, units = "cm")
@@ -468,11 +471,11 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_da
 
 ### By sequences {-}
 
-```{r, echo=F, fig.width=10, fig.asp=0.8, fig.align='center'}
-family <- countGenes(df_all, gene="v_call", groups="sample", mode="gene")
-family$treatment <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$time_point <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$patient <- sapply(family$sample, function(x) unlist(strsplit(as.character(x), "_"))[3])
+```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
+family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
+family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
+family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
+family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=gene)) +
     scale_color_brewer(palette="Set1") +
@@ -481,7 +484,7 @@ g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=gene)) +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
-    facet_wrap(vars(treatment,patient), scales="free_x", ncol = 1) +
+    facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
     theme(legend.position = "none")
 g2
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.svg"), plot = g2, width = 20, height = 40, units = "cm")
@@ -492,7 +495,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence
 
 # Citations
 
-If you use nf-core/bcellmagic for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
+If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
 
 Please also cite the `nf-core` publication [@ewels2020].
 
