@@ -58,7 +58,7 @@ workflow PRESTO_UMI {
         PRESTO_MASKPRIMERS_UMI.out.reads
     )
 
-    if params.cluster_sets {
+    if (params.cluster_sets) {
 
         // Cluster sequences by similarity
         PRESTO_CLUSTERSETS_UMI (
@@ -71,14 +71,16 @@ workflow PRESTO_UMI {
             PRESTO_CLUSTERSETS_UMI.out.reads
         )
         ch_for_buildconsensus = PRESTO_PARSE_CLUSTER_UMI.out.reads
+        ch_clustersets_logs = PRESTO_PARSE_CLUSTER_UMI.out.logs.collect()
 
     } else {
         ch_for_buildconsensus = PRESTO_PAIRSEQ_UMI.out.reads
+        ch_clustersets_logs = Channel.empty()
     }
 
     // Build consensus of sequences with same UMI barcode
     PRESTO_BUILDCONSENSUS_UMI (
-        PRESTO_PARSE_CLUSTER_UMI.out.reads
+        ch_for_buildconsensus
     )
 
     // Post-consensus pair
@@ -128,7 +130,7 @@ workflow PRESTO_UMI {
     presto_filterseq_logs = PRESTO_FILTERSEQ_UMI.out.logs
     presto_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs.collect()
     presto_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs.collect()
-    presto_clustersets_logs = PRESTO_CLUSTERSETS_UMI.out.logs.collect()
+    presto_clustersets_logs = ch_clustersets_logs
     presto_buildconsensus_logs = PRESTO_BUILDCONSENSUS_UMI.out.logs.collect()
     presto_postconsensus_pairseq_logs = PRESTO_POSTCONSENSUS_PAIRSEQ_UMI.out.logs.collect()
     presto_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_UMI.out.logs.collect()
