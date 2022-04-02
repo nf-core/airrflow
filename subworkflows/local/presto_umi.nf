@@ -58,16 +58,23 @@ workflow PRESTO_UMI {
         PRESTO_MASKPRIMERS_UMI.out.reads
     )
 
-    // Cluster sequences by similarity
-    PRESTO_CLUSTERSETS_UMI (
-        PRESTO_PAIRSEQ_UMI.out.reads
-    )
-    ch_versions = ch_versions.mix(PRESTO_CLUSTERSETS_UMI.out.versions.ifEmpty(null))
+    if params.cluster_sets {
 
-    // Annotate cluster into barcode field
-    PRESTO_PARSE_CLUSTER_UMI (
-        PRESTO_CLUSTERSETS_UMI.out.reads
-    )
+        // Cluster sequences by similarity
+        PRESTO_CLUSTERSETS_UMI (
+            PRESTO_PAIRSEQ_UMI.out.reads
+        )
+        ch_versions = ch_versions.mix(PRESTO_CLUSTERSETS_UMI.out.versions.ifEmpty(null))
+
+        // Annotate cluster into barcode field
+        PRESTO_PARSE_CLUSTER_UMI (
+            PRESTO_CLUSTERSETS_UMI.out.reads
+        )
+        ch_for_buildconsensus = PRESTO_PARSE_CLUSTER_UMI.out.reads
+
+    } else {
+        ch_for_buildconsensus = PRESTO_PAIRSEQ_UMI.out.reads
+    }
 
     // Build consensus of sequences with same UMI barcode
     PRESTO_BUILDCONSENSUS_UMI (
