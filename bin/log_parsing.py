@@ -5,19 +5,39 @@
 import pandas as pd
 import subprocess
 import re
+import argparse
+
+
+parser = argparse.ArgumentParser(description='Parse logs to identify the number of sequences passing through every step.')
+parser.add_argument('-c','--cluster_sets',
+                    help='Including the cluster_sets process',
+                    action = 'store_true')
+args = parser.parse_args()
 
 # Processes
-processes = [
-    "filter_by_sequence_quality",
-    "mask_primers",
-    "pair_sequences",
-    "cluster_sets",
-    "build_consensus",
-    "repair_mates",
-    "assemble_pairs",
-    "deduplicates",
-    "igblast",
-]
+if args.cluster_sets:
+    processes = [
+        "filter_by_sequence_quality",
+        "mask_primers",
+        "pair_sequences",
+        "build_consensus",
+        "repair_mates",
+        "assemble_pairs",
+        "deduplicates",
+        "igblast",
+        "cluster_sets",
+    ]
+else:
+    processes = [
+        "filter_by_sequence_quality",
+        "mask_primers",
+        "pair_sequences",
+        "build_consensus",
+        "repair_mates",
+        "assemble_pairs",
+        "deduplicates",
+        "igblast",
+    ]
 
 # Path of logs will be:
 # process_name/sample_name_command_log.txt
@@ -327,6 +347,7 @@ for process in processes:
 
         df_process_list.append(df_process)
 
+# Getting table colnames
 
 colnames = [
     "Sample",
@@ -344,21 +365,23 @@ colnames = [
     "Igblast",
 ]
 
+
 values = [
-    df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R2"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
-    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
-    df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[6].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[7].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-    df_process_list[8].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[8].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+        df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
+        df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R1"].tolist(),
+        df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R2"].tolist(),
+        df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
+        df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
+        df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
+        df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
+        df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+        df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+        df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+        df_process_list[6].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
+        df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
+        df_process_list[7].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
 ]
+
 
 # Tables provide extra info and help debugging
 df_process_list[0].to_csv(
@@ -374,29 +397,31 @@ df_process_list[2].to_csv(
     path_or_buf="Table_all_details_paired.tsv", sep="\t", header=True, index=False
 )
 df_process_list[3].to_csv(
-    path_or_buf="Table_all_details_cluster_sets.tsv", sep="\t", header=True, index=False
-)
-df_process_list[4].to_csv(
     path_or_buf="Table_all_details_build_consensus.tsv",
     sep="\t",
     header=True,
     index=False,
 )
-df_process_list[5].to_csv(
+df_process_list[4].to_csv(
     path_or_buf="Table_all_details_repaired.tsv", sep="\t", header=True, index=False
 )
-df_process_list[6].to_csv(
+df_process_list[5].to_csv(
     path_or_buf="Table_all_details_assemble_mates.tsv",
     sep="\t",
     header=True,
     index=False,
 )
-df_process_list[7].to_csv(
+df_process_list[6].to_csv(
     path_or_buf="Table_all_details_deduplicate.tsv", sep="\t", header=True, index=False
 )
-df_process_list[8].to_csv(
+df_process_list[7].to_csv(
     path_or_buf="Table_all_details_igblast.tsv", sep="\t", header=True, index=False
 )
+
+if args.cluster_sets:
+    df_process_list[8].to_csv(
+        path_or_buf="Table_all_details_cluster_sets.tsv", sep="\t", header=True, index=False
+    )
 
 final_table = dict(zip(colnames, values))
 print(final_table)
