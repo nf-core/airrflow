@@ -25,6 +25,7 @@ process PARSE_LOGS {
 
     output:
     path "Table_sequences_process.tsv", emit: logs
+    path "Table*.tsv", emit:tables
 
     script:
     if (params.umi_length == 0) {
