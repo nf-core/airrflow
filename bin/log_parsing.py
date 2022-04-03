@@ -96,7 +96,6 @@ for process in processes:
         for logfile in log_files:
             c = 0
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         if c < 1:
@@ -147,7 +146,6 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
@@ -182,7 +180,6 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])

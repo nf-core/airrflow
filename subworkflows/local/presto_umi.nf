@@ -71,7 +71,7 @@ workflow PRESTO_UMI {
             PRESTO_CLUSTERSETS_UMI.out.reads
         )
         ch_for_buildconsensus = PRESTO_PARSE_CLUSTER_UMI.out.reads
-        ch_clustersets_logs = PRESTO_PARSE_CLUSTER_UMI.out.logs.collect()
+        ch_clustersets_logs = PRESTO_CLUSTERSETS_UMI.out.logs.collect()
 
     } else {
         ch_for_buildconsensus = PRESTO_PAIRSEQ_UMI.out.reads
