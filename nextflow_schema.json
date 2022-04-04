@@ -215,6 +215,12 @@
                     "default": 0.5,
                     "fa_icon": "fas fa-align-center",
                     "description": "Maximum gap for building the sequence consensus in the Presto BuildConsensus step."
+                },
+                "cluster_sets": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-layer-group",
+                    "description": "Cluster sequences by similarity regardless of any annotation with Presto ClusterSets and annotate the cluster ID additionally to the UMI barcode."
                 }
             },
             "fa_icon": "fas fa-align-center"

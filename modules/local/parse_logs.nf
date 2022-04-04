@@ -25,6 +25,7 @@ process PARSE_LOGS {
 
     output:
     path "Table_sequences_process.tsv", emit: logs
+    path "Table*.tsv", emit:tables
 
     script:
     if (params.umi_length == 0) {
@@ -32,8 +33,9 @@ process PARSE_LOGS {
         log_parsing_no-umi.py
         """
     } else {
+        def clustersets = params.cluster_sets? "--cluster_sets":""
         """
-        log_parsing.py
+        log_parsing.py $clustersets
         """
     }
 }

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#143](https://github.com/nf-core/airrflow/pull/128) Template update to nf-core tools v2.2.
 - [#150](https://github.com/nf-core/airrflow/pull/150) Added option to search for reverse primers.
 - [#159](https://github.com/nf-core/airrflow/pull/159) Template update to nf-core tools v2.3.1, v2.3.1
+- [#161](https://github.com/nf-core/airrflow/pull/161) Add option to skip clustering sequences in the UMI workflow
 
 ### `Fixed`
 
