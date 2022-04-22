@@ -15,6 +15,7 @@ process PRESTO_ASSEMBLEPAIRS {
     path("*_command_log.txt"), emit: logs
     path("*.log")
     path("*_table.tab")
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -24,5 +25,10 @@ process PRESTO_ASSEMBLEPAIRS {
         $args \\
         --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
     ParseLog.py -l "${meta.id}.log" $args2
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        presto: \$( AssemblePairs.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }

@@ -23,7 +23,8 @@ process CHANGEO_CONVERTDB_FASTA {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        changeo: \$( ConvertDb.py --version | awk -F' ' '{print \$2}' )
+        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+        changeo: \$( ConvertDb.py --version | awk -F' '  '{print \$2}' )
     END_VERSIONS
     """
 }

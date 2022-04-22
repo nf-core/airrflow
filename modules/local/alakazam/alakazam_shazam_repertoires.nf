@@ -13,7 +13,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     path(repertoire_report)
 
     output:
-    path("versions.yml"), emit: versions
+    path "versions.yml" , emit: versions
     path("repertoire_comparison")
     path("Bcellmagic_report.html")
 
@@ -25,6 +25,11 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     "${task.process}":
         alakazam: \$(Rscript -e "library(alakazam); cat(paste(packageVersion('alakazam'), collapse='.'))")
         shazam: \$(Rscript -e "library(shazam); cat(paste(packageVersion('shazam'), collapse='.'))")
+        stringr: \$(Rscript -e "library(stringr); cat(paste(packageVersion('stringr'), collapse='.'))")
+        kableextra: \$(Rscript -e "library(kableextra); cat(paste(packageVersion('kableextra'), collapse='.'))")
+        stringr: \$(Rscript -e "library(stringr); cat(paste(packageVersion('stringr'), collapse='.'))")
+        dplyr: \$(Rscript -e "library(dplyr); cat(paste(packageVersion('dplyr'), collapse='.'))")
+        knitr: \$(Rscript -e "library(knitr); cat(paste(packageVersion('knitr'), collapse='.'))")
         R: \$(echo \$(R --version 2>&1) | awk -F' '  '{print \$3}')
     END_VERSIONS
     """

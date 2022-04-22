@@ -13,6 +13,7 @@ process CHANGEO_PARSEDB_SELECT {
     output:
     tuple val(meta), path("*parse-select.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -20,10 +21,22 @@ process CHANGEO_PARSEDB_SELECT {
     if (meta.locus == 'IG'){
         """
         ParseDb.py select -d $tab $args --outname ${meta.id} > "${meta.id}_command_log.txt"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+            changeo: \$( ParseDb.py --version | awk -F' '  '{print \$2}' )
+        END_VERSIONS
         """
     } else if (meta.locus == 'TR'){
         """
         ParseDb.py select -d $tab $args2 --outname ${meta.id} > "${meta.id}_command_log.txt"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+            changeo: \$( ParseDb.py --version | awk -F' '  '{print \$2}' )
+        END_VERSIONS
         """
     }
 }

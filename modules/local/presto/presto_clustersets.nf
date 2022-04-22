@@ -25,6 +25,7 @@ process PRESTO_CLUSTERSETS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
+        presto: \$( ClusterSets.py --version | awk -F' '  '{print \$2}' )
         vsearch: \$( vsearch --version &> vsearch.txt; cat vsearch.txt | head -n 1 | grep -o 'v[0-9\\.]\\+' )
     END_VERSIONS
     """

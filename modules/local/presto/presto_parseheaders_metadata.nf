@@ -12,10 +12,16 @@ process PRESTO_PARSEHEADERS_METADATA {
 
     output:
     tuple val(meta), path("*_reheader-pass.fastq"), emit: reads
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
     ParseHeaders.py add -s $reads -o "${reads.baseName}_reheader-pass.fastq" $args -u ${meta.id} ${meta.subject} ${meta.species} ${meta.locus}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        presto: \$( ParseHeaders.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }

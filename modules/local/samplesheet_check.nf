@@ -20,7 +20,8 @@ process SAMPLESHEET_CHECK {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
+        python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+        pandas: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)"))
     END_VERSIONS
     """
 }

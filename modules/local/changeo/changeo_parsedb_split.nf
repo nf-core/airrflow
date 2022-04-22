@@ -19,6 +19,7 @@ process CHANGEO_PARSEDB_SPLIT {
     script:
     """
     ParseDb.py split -d $tab -f productive --outname ${meta.id} > "${meta.id}_split_command_log.txt"
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         changeo: \$( ParseDb.py --version | awk -F' '  '{print \$2}' )
