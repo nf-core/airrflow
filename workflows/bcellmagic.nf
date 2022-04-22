@@ -134,7 +134,7 @@ ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparis
                                     "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
                                     "$projectDir/assets/nf-core-airrflow_logo_light.png"],
-                                    checkIfExists: true).dump(tag: 'report files')
+                                    checkIfExists: true)
 
 //CHANGEO
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'
@@ -309,14 +309,14 @@ workflow BCELLMAGIC {
     // Only if threshold is not manually set
     if (!params.set_cluster_threshold){
         SHAZAM_THRESHOLD(
-            MERGE_TABLES_WF.out.tab.dump(tag: 'merge tables output'),
+            MERGE_TABLES_WF.out.tab,
             ch_imgt.collect()
         )
-        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab
         ch_threshold = SHAZAM_THRESHOLD.out.threshold
-        ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null)).dump()
+        ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null))
     } else {
-        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab.dump(tag:'changeo_defineclones_threshold')
+        ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab
         ch_threshold = file('EMPTY')
     }
 
@@ -338,7 +338,7 @@ workflow BCELLMAGIC {
     // Lineage reconstruction alakazam
     if (!params.skip_lineage) {
         ALAKAZAM_LINEAGE(
-            CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'creategermlines_output')
+            CHANGEO_CREATEGERMLINES.out.tab
         )
         ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null))
     }
@@ -346,7 +346,6 @@ workflow BCELLMAGIC {
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
                                                     .map{ it -> [ it[1] ] }
                                                     .collect()
-                                                    .dump(tag:'repertoire_all')
 
     // Process logs parsing: getting sequence numbers
     PARSE_LOGS(
@@ -376,6 +375,11 @@ workflow BCELLMAGIC {
         ch_versions = ch_versions.mix(ALAKAZAM_SHAZAM_REPERTOIRES.out.versions.ifEmpty(null))
     }
 
+    // Software versions
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
+
     //
     // MODULE: MultiQC
     //
@@ -398,11 +402,6 @@ workflow BCELLMAGIC {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
-
-    // Software versions
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
 }
 
 /*
