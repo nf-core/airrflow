@@ -282,21 +282,25 @@ workflow BCELLMAGIC {
         CHANGEO_ASSIGNGENES.out.blast,
         ch_imgt.collect()
     )
+    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
 
     // Select only productive sequences.
     CHANGEO_PARSEDB_SPLIT (
         CHANGEO_MAKEDB.out.tab
     )
+    ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions.ifEmpty(null))
 
     // Selecting IGH for ig loci, TR for tr loci.
     CHANGEO_PARSEDB_SELECT(
         CHANGEO_PARSEDB_SPLIT.out.tab
     )
+    ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SELECT.out.versions.ifEmpty(null))
 
     // Convert sequence table to fasta.
     CHANGEO_CONVERTDB_FASTA (
         CHANGEO_PARSEDB_SELECT.out.tab
     )
+    ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA.out.versions.ifEmpty(null))
 
     // Subworkflow: merge tables from the same patient
     MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
@@ -321,19 +325,22 @@ workflow BCELLMAGIC {
         ch_tab_for_changeo_defineclones,
         ch_threshold,
     )
+    ch_versions = ch_versions.mix(CHANGEO_DEFINECLONES.out.versions.ifEmpty(null))
+
 
     // Identify germline sequences
     CHANGEO_CREATEGERMLINES(
         CHANGEO_DEFINECLONES.out.tab,
         ch_imgt.collect()
     )
+    ch_versions = ch_versions.mix(CHANGEO_CREATEGERMLINES.out.versions.ifEmpty(null))
 
     // Lineage reconstruction alakazam
     if (!params.skip_lineage) {
         ALAKAZAM_LINEAGE(
             CHANGEO_CREATEGERMLINES.out.tab.dump(tag:'creategermlines_output')
         )
-        ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null)).dump()
+        ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null))
     }
 
     ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
@@ -357,6 +364,7 @@ workflow BCELLMAGIC {
         CHANGEO_CREATEGERMLINES.out.logs.collect(),
         ch_input
     )
+    ch_versions = ch_versions.mix(PARSE_LOGS.out.versions.ifEmpty(null))
 
     // Alakazam shazam repertoire comparison report
     if (!params.skip_report){
@@ -365,12 +373,8 @@ workflow BCELLMAGIC {
             PARSE_LOGS.out.logs.collect(),
             ch_rmarkdown_report.collect()
         )
+        ch_versions = ch_versions.mix(ALAKAZAM_SHAZAM_REPERTOIRES.out.versions.ifEmpty(null))
     }
-
-    // Software versions
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
 
     //
     // MODULE: MultiQC
@@ -394,6 +398,11 @@ workflow BCELLMAGIC {
         multiqc_report       = MULTIQC.out.report.toList()
         ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
+
+    // Software versions
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 }
 
 /*

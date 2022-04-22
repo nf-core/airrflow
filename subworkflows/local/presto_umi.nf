@@ -32,10 +32,11 @@ workflow PRESTO_UMI {
     // Merge UMI from index file to R1 if provided
     if (params.index_file) {
         MERGE_UMI ( ch_reads )
-        .set{ ch_gunzip }
+        ch_gunzip = MERGE_UMI.out.reads
+        ch_versions = ch_versions.mix(MERGE_UMI.out.versions.ifEmpty(null))
     } else {
         RENAME_FASTQ_UMI ( ch_reads )
-        .set{ ch_gunzip }
+        ch_gunzip = RENAME_FASTQ_UMI.out.reads
     }
 
     // gunzip fastq.gz to fastq
@@ -52,11 +53,13 @@ workflow PRESTO_UMI {
         ch_cprimers.collect(),
         ch_vprimers.collect()
     )
+    ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_UMI.out.versions.ifEmpty(null))
 
     // Pre-consensus pair
     PRESTO_PAIRSEQ_UMI (
         PRESTO_MASKPRIMERS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_PAIRSEQ_UMI.out.versions.ifEmpty(null))
 
     if (params.cluster_sets) {
 
@@ -70,6 +73,7 @@ workflow PRESTO_UMI {
         PRESTO_PARSE_CLUSTER_UMI (
             PRESTO_CLUSTERSETS_UMI.out.reads
         )
+        ch_versions = ch_versions.mix(PRESTO_PARSE_CLUSTER_UMI.out.versions.ifEmpty(null))
         ch_for_buildconsensus = PRESTO_PARSE_CLUSTER_UMI.out.reads
         ch_clustersets_logs = PRESTO_CLUSTERSETS_UMI.out.logs.collect()
 
@@ -82,46 +86,55 @@ workflow PRESTO_UMI {
     PRESTO_BUILDCONSENSUS_UMI (
         ch_for_buildconsensus
     )
+    ch_versions = ch_versions.mix(PRESTO_BUILDCONSENSUS_UMI.out.versions.ifEmpty(null))
 
     // Post-consensus pair
     PRESTO_POSTCONSENSUS_PAIRSEQ_UMI (
         PRESTO_BUILDCONSENSUS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_POSTCONSENSUS_PAIRSEQ_UMI.out.versions.ifEmpty(null))
 
     // Assemble read pairs
     PRESTO_ASSEMBLEPAIRS_UMI (
         PRESTO_POSTCONSENSUS_PAIRSEQ_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_UMI.out.versions.ifEmpty(null))
 
     // Generate QC stats after reads paired and filtered but before collapsed
     FASTQC_POSTASSEMBLY_UMI (
         PRESTO_ASSEMBLEPAIRS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(FASTQC_POSTASSEMBLY_UMI.out.versions.ifEmpty(null))
 
     // Combine UMI duplicate count
     PRESTO_PARSEHEADERS_COLLAPSE_UMI (
         PRESTO_ASSEMBLEPAIRS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_PARSEHEADERS_COLLAPSE_UMI.out.versions.ifEmpty(null))
 
     // Annotate primers in C_PRIMER and V_PRIMER field
     PRESTO_PARSEHEADERS_PRIMERS_UMI (
         PRESTO_PARSEHEADERS_COLLAPSE_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_PARSEHEADERS_PRIMERS_UMI.out.versions.ifEmpty(null))
 
     // Annotate metadata on primer headers
     PRESTO_PARSEHEADERS_METADATA_UMI (
         PRESTO_PARSEHEADERS_PRIMERS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_PARSEHEADERS_METADATA_UMI.out.versions.ifEmpty(null))
 
     // Mark and count duplicate sequences with different UMI barcodes (DUPCOUNT)
     PRESTO_COLLAPSESEQ_UMI (
         PRESTO_PARSEHEADERS_METADATA_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_COLLAPSESEQ_UMI.out.versions.ifEmpty(null))
 
     // Filter out sequences with less than 2 representative duplicates with different UMIs
     PRESTO_SPLITSEQ_UMI (
         PRESTO_COLLAPSESEQ_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_SPLITSEQ_UMI.out.versions.ifEmpty(null))
 
     emit:
     fasta = PRESTO_SPLITSEQ_UMI.out.fasta
