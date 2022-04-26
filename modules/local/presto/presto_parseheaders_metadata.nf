@@ -2,7 +2,7 @@ process PRESTO_PARSEHEADERS_METADATA {
     tag "$meta.id"
     label "process_low"
 
-    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)              // Conda package
+    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
         'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
