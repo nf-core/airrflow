@@ -279,7 +279,28 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 
 - No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
-### Updating the pipeline
+## Experimental features
+
+We are working on a new subworkflow (`reveal`) to analyze bulk and single cell processed reads. The workflow takes as input assembled reads (`.fasta`) or repertoire `.tsv` (example: 10x `airr.tsv`) files and runs quality controls, and generates reports of clonal analysis and lineage trees. The subworkflow (`--subworkflow reveal`) is under active development, and therefore it is not recommended to use in production. Suggestions and feedback are welcome.
+
+This subworkflow can be tested with this command:
+
+```console
+ nextflow run nf-core/airrflow -profile docker,test_reveal
+```
+
+An example command to run an analysis:
+
+```
+nextflow run nf-core/airrflow --subworkflow reveal \
+--input input_samplesheet.tsv \
+--outdir results \
+--reassign --productive_only --remove_chimeric \
+--collapseby filename \
+--cloneby subject_id
+```
+
+## Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
@@ -287,7 +308,7 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 nextflow pull nf-core/airrflow
 ```
 
-### Reproducibility
+## Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
