@@ -10,7 +10,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     input:
     path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
-    path(repertoire_report)
+    tuple path(repertoire_report), path(references), path(css), path(logo)
 
     output:
     path("versions.yml"), emit: versions
