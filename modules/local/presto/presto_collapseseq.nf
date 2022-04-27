@@ -2,7 +2,7 @@ process PRESTO_COLLAPSESEQ {
     tag "$meta.id"
     label "process_medium"
 
-    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)              // Conda package
+    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
         'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
@@ -15,6 +15,8 @@ process PRESTO_COLLAPSESEQ {
     path("*_command_log.txt") , emit: logs
     path("*.log")
     path("*_table.tab")
+    path("versions.yml"), emit: versions
+
 
 
     script:
@@ -23,5 +25,10 @@ process PRESTO_COLLAPSESEQ {
     """
     CollapseSeq.py -s $reads $args --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
     ParseLog.py -l "${meta.id}.log" $args2
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        presto: \$( CollapseSeq.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
     """
 }

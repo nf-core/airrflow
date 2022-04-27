@@ -20,6 +20,8 @@ process FETCH_DATABASES {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         IMGT download date: \$( echo \$(date "+%F") )
+        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+        changeo: \$( AssignGenes.py --version | awk -F' '  '{print \$2}' )
     END_VERSIONS
     """
 }

@@ -13,11 +13,18 @@ process MERGE_UMI {
 
     output:
     tuple val(meta), path('*_R1.fastq.gz'), path('*_R2.fastq.gz')   , emit: reads
+    path "versions.yml" , emit: versions
 
     script:
     """
     merge_R1_umi.py -R1 "${R1}" -I1 "${I1}" -o UMI_R1.fastq.gz --umi_start $params.umi_start --umi_length $params.umi_length
     mv "UMI_R1.fastq.gz" "${meta.id}_UMI_R1.fastq.gz"
     mv "${R2}" "${meta.id}_R2.fastq.gz"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+        biopython: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('biopython').version)"))
+    END_VERSIONS
     """
 }
