@@ -19,7 +19,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
 
     script:
     """
-    execute_report.R ${repertoire_report}
+    execute_report.R --report_file ${repertoire_report}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
