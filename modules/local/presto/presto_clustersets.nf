@@ -2,7 +2,7 @@ process PRESTO_CLUSTERSETS {
     tag "$meta.id"
     label "process_long_parallelized"
 
-    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)              // Conda package
+    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
         'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
@@ -25,6 +25,7 @@ process PRESTO_CLUSTERSETS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
+        presto: \$( ClusterSets.py --version | awk -F' '  '{print \$2}' )
         vsearch: \$( vsearch --version &> vsearch.txt; cat vsearch.txt | head -n 1 | grep -o 'v[0-9\\.]\\+' )
     END_VERSIONS
     """

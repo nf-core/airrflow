@@ -32,6 +32,7 @@ workflow PRESTO_SANS_UMI {
     PRESTO_ASSEMBLEPAIRS_SANS_UMI (
         GUNZIP_SANS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_SANS_UMI.out.versions.ifEmpty(null))
 
     // Filter sequences by quality score
     PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI (
@@ -45,31 +46,37 @@ workflow PRESTO_SANS_UMI {
         ch_cprimers.collect(),
         ch_vprimers.collect()
     )
+    ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI.out.versions.ifEmpty(null))
 
     // Generate QC stats after reads paired and filtered but before collapsed
     FASTQC_POSTASSEMBLY_SANS_UMI (
         PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(FASTQC_POSTASSEMBLY_SANS_UMI.out.versions.ifEmpty(null))
 
     // Annotate primers in C_PRIMER and V_PRIMER field
     PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI (
         PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI.out.versions.ifEmpty(null))
 
     // Annotate metadata on primer headers
     PRESTO_PARSEHEADERS_METADATA_SANS_UMI (
         PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_PARSEHEADERS_METADATA_SANS_UMI.out.versions.ifEmpty(null))
 
     // Mark and count duplicate sequences (DUPCOUNT)
     PRESTO_COLLAPSESEQ_SANS_UMI (
         PRESTO_PARSEHEADERS_METADATA_SANS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_COLLAPSESEQ_SANS_UMI.out.versions.ifEmpty(null))
 
     // Filter out sequences with less than 2 representative duplicates
     PRESTO_SPLITSEQ_SANS_UMI (
         PRESTO_COLLAPSESEQ_SANS_UMI.out.reads
     )
+    ch_versions = ch_versions.mix(PRESTO_SPLITSEQ_SANS_UMI.out.versions.ifEmpty(null))
 
     emit:
     fasta = PRESTO_SPLITSEQ_SANS_UMI.out.fasta

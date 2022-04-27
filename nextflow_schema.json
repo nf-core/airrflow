@@ -531,7 +531,8 @@
                 },
                 "singlecell": {
                     "type": "string",
-                    "default": "single_cell"
+                    "default": "single_cell",
+                    "description": "Whether input samples include single cell sequencing samples"
                 }
             }
         }

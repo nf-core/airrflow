@@ -26,16 +26,29 @@ process PARSE_LOGS {
     output:
     path "Table_sequences_process.tsv", emit: logs
     path "Table*.tsv", emit:tables
+    path "versions.yml" , emit: versions
 
     script:
     if (params.umi_length == 0) {
         """
         log_parsing_no-umi.py
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+            pandas: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)"))
+        END_VERSIONS
         """
     } else {
         def clustersets = params.cluster_sets? "--cluster_sets":""
         """
         log_parsing.py $clustersets
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+            pandas: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)"))
+        END_VERSIONS
         """
     }
 }

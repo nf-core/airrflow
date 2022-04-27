@@ -1,5 +1,6 @@
 process SAMPLESHEET_CHECK {
     tag "$samplesheet"
+    label 'single_cpu'
 
     conda (params.enable_conda ? "conda-forge::pandas=1.1.5" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -20,7 +21,8 @@ process SAMPLESHEET_CHECK {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
+        python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+        pandas: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)"))
     END_VERSIONS
     """
 }
