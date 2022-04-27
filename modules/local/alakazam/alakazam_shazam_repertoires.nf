@@ -10,7 +10,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     input:
     path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
-    tuple path(repertoire_report), path(references), path(css), path(logo)
+    tuple path(repertoire_report), path(css), path(logo)
 
     output:
     path("versions.yml"), emit: versions
@@ -19,7 +19,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
 
     script:
     """
-    execute_report.R --report_file ${repertoire_report} --references ${references}
+    execute_report.R --report_file ${repertoire_report}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
