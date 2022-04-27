@@ -131,7 +131,6 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 
 // Rmarkdown report file
 ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
-                                    "$projectDir/assets/references.bibtex",
                                     "$projectDir/assets/nf-core_style.css",
                                     "$projectDir/assets/nf-core-airrflow_logo_light.png"],
                                     checkIfExists: true)
