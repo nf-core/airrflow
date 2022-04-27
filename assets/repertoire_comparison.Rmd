@@ -16,6 +16,7 @@ params:
   path_css: ""
   path_logo: ""
   path_bibliography: ""
+bibliography: '`r params$path_bibliography`'
 ---
 
 
@@ -24,7 +25,6 @@ title: "Repertoire analysis"
 subtitle: "Clonal abundance, diversity and V-family gene usage"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
-bibliography: '`r params$path_bibliography`'
 ---
 
 
