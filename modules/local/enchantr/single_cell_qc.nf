@@ -7,7 +7,6 @@ process SINGLE_CELL_QC {
     container "immcantation/suite:devel"
 
     input:
-    //tuple val(meta), path(tab) // sequence tsv in AIRR format
     path tabs
 
     output:
