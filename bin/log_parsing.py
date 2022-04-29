@@ -8,10 +8,15 @@ import re
 import argparse
 
 
-parser = argparse.ArgumentParser(description='Parse logs to identify the number of sequences passing through every step.')
-parser.add_argument('-c','--cluster_sets',
-                    help='Including the cluster_sets process',
-                    action = 'store_true')
+parser = argparse.ArgumentParser(
+    description="Parse logs to identify the number of sequences passing through every step."
+)
+parser.add_argument(
+    "-c",
+    "--cluster_sets",
+    help="Including the cluster_sets process",
+    action="store_true",
+)
 args = parser.parse_args()
 
 # Processes
@@ -219,7 +224,6 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
@@ -252,7 +256,6 @@ for process in processes:
         fail_blast = []
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if "PASS>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
@@ -284,7 +287,6 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
@@ -320,7 +322,6 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
@@ -364,19 +365,19 @@ colnames = [
 
 
 values = [
-        df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
-        df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R1"].tolist(),
-        df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R2"].tolist(),
-        df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-        df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
-        df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-        df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
-        df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-        df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-        df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-        df_process_list[6].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-        df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-        df_process_list[7].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R1"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R2"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
+    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
+    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
+    df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+    df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+    df_process_list[6].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
+    df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
+    df_process_list[7].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
 ]
 
 
@@ -417,7 +418,10 @@ df_process_list[7].to_csv(
 
 if args.cluster_sets:
     df_process_list[8].to_csv(
-        path_or_buf="Table_all_details_cluster_sets.tsv", sep="\t", header=True, index=False
+        path_or_buf="Table_all_details_cluster_sets.tsv",
+        sep="\t",
+        header=True,
+        index=False,
     )
 
 final_table = dict(zip(colnames, values))
