@@ -36,8 +36,6 @@ dir.create(patdir_lineage_graphml)
 
 # Read patient table
 df_pat <- read.csv(inputtable, sep="\t")
-#df_pat$sample <- as.factor(paste(df_pat$treatment, df_pat$extract_time, df_pat$source, sep="_"))
-#df_pat$sample_pop <- as.factor(paste(df_pat$treatment, df_pat$extract_time, df_pat$source, df_pat$population, sep="_"))
 
 # save clonal table
 countclones <- countClones(df_pat, clone="clone_id", copy="duplicate_count")
@@ -75,16 +73,10 @@ save_graph <- function(df_pat, clone_num){
     V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
 
     # Set label on the nodes
-    if ( node_text == "c_primer" ) {
-        V(graph)$label <- V(graph)$c_primer
-    } else if ( node_text == "sample_id" ) {
-        V(graph)$label <- V(graph)$sample_id
-    } else if ( node_text == "clone_id" ) {
-        V(graph)$label <- V(graph)$clone_id
-    } else if ( node_text == "seq_id" ){
-        V(graph)$label <- V(graph)$name
-    } else if ( node_text == "none" ) {
+    if ( node_text == "none" ) {
         V(graph)$label <- ""
+    } else {
+        V(graph)$label <- V(graph)[,node_text]
     }
 
 
