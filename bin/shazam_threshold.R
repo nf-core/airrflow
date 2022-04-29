@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
-library(ggplot2)
-library(stringi)
-library(alakazam)
-library(shazam)
-library(dplyr)
+invisible(lapply(c("ggplot2",
+                    "stringi",
+                    "alakazam",
+                    "shazam",
+                    "dplyr")))
 
 # Set random seed for reproducibility
 set.seed(12345)
