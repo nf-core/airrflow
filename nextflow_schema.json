@@ -287,10 +287,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-box",
                     "description": "Enable conda to run pipeline with conda environment."
-                },
-                "custom_container": {
-                    "type": "string",
-                    "description": "Specify an Immcantation container to be used in all pipeline processes."
                 }
             },
             "help_text": "Software packaging options",
