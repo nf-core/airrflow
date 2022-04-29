@@ -226,7 +226,6 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id))
     ylab("Frequency") +
     xlab("") +
     facet_grid(cols=vars(locus), rows=vars(subject_id)) +
-    #facet_wrap(vars(locus,subject_id), scales="free_x", ncol = 1) +
     theme(legend.position = "right")
 g2
 
