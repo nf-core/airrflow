@@ -72,7 +72,7 @@ By default, the pipeline currently performs the following steps:
    --protocol pcr_umi \
    --cprimers CPrimers.fasta \
    --vprimers VPrimers.fasta \
-   --umi_length 12 \
+   --umi_length 12
    ```
 
 See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
