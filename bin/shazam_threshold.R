@@ -3,7 +3,7 @@ invisible(lapply(c("ggplot2",
                     "stringi",
                     "alakazam",
                     "shazam",
-                    "dplyr")))
+                    "dplyr"), library))
 
 # Set random seed for reproducibility
 set.seed(12345)
