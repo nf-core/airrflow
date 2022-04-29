@@ -68,7 +68,7 @@ By default, the pipeline currently performs the following steps:
    nextflow run nf-core/airrflow \
    -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
    --input samplesheet.tsv \
-   --outdir ./results
+   --outdir ./results \
    --protocol pcr_umi \
    --cprimers CPrimers.fasta \
    --vprimers VPrimers.fasta \
