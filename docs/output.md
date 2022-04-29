@@ -28,7 +28,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Selection of IGH / TR sequences](#selection-of-IGH-/-TR-sequences)
   - [Convert database to fasta](#convert-database-to-fasta)
 - [Shazam](#shazam) - Genotyping and Clonal threshold
-  - [Genotyping and hamming distance threshold](#determining-genotype-and-hamming-distance-threshold)
+  - [Genotyping and hamming distance threshold](#determining-hamming-distance-threshold)
 - [Change-O define clones](#change-o-define-clones)
   - [Define clones](#define-clones) - Defining clonal B-cell or T-cell groups
   - [Reconstruct germlines](#reconstruct-germlines) - Reconstruct gene calls of germline sequences
@@ -272,21 +272,18 @@ Sequences in are additionally converted to a fasta file with the [ConvertDb](htt
 
 AIRR tables for each subject are merged to be able to determine the subject genotype and full clonal analysis.
 
-### Determining genotype and hamming distance threshold
+### Determining hamming distance threshold
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/02-genotyping/<subjectID>`
+- `shazam/02-clonal-threshold/<subjectID>`
   - `threshold`: Hamming distance threshold of the Junction regions as determined by Shazam.
   - `plots`: Plot of the Hamming distance distribution between junction regions displaying the threshold for clonal assignment as determined by Shazam.
-  - `genotype`:
-    - `genotype.pdf`: Plot representing the patient genotype assessed by TigGER.
-    - `v_genotype.fasta`: Fasta sequences of the personalized patient genotype.
 
 </details>
 
-Determining genotype and the hamming distance threshold of the junction regions for clonal determination using the [tigGER](https://tigger.readthedocs.io/en/0.3.1/) and [Shazam](https://shazam.readthedocs.io/en/version-0.1.11_a/).
+Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io/en/version-0.1.11_a/).
 
 ## Change-O define clones
 
@@ -295,7 +292,7 @@ Determining genotype and the hamming distance threshold of the junction regions 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/06-define_clones/<subjectID>`
+- `changeo/06-define_clones/<subjectID>`
   - `tab`: Table in AIRR format containing the assigned gene information and an additional field with the clone id.
 
 </details>
@@ -307,7 +304,7 @@ Assigning clones to the sequences obtained from IgBlast with the [DefineClones](
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/07-create_germlines/<subjectID>`
+- `changeo/07-create_germlines/<subjectID>`
   - `tab`: Table in AIRR format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
 
 </details>
