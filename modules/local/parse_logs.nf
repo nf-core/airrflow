@@ -1,23 +1,12 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options = initOptions(params.options)
-
 process PARSE_LOGS {
     tag "logs"
     label 'process_low'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"logs") }
-
     conda (params.enable_conda ? "bioconda::pandas=1.1.5" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pandas:1.1.5"
-    } else {
-        container "quay.io/biocontainers/pandas:1.1.5"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/pandas:1.1.5' :
+        'quay.io/biocontainers/pandas:1.1.5' }"
 
     input:
     path('filter_by_sequence_quality/*') //PRESTO_FILTERSEQ logs
@@ -36,9 +25,30 @@ process PARSE_LOGS {
 
     output:
     path "Table_sequences_process.tsv", emit: logs
+    path "Table*.tsv", emit:tables
+    path "versions.yml" , emit: versions
 
     script:
-    """
-    log_parsing.py
-    """
+    if (params.umi_length == 0) {
+        """
+        log_parsing_no-umi.py
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+            pandas: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)"))
+        END_VERSIONS
+        """
+    } else {
+        def clustersets = params.cluster_sets? "--cluster_sets":""
+        """
+        log_parsing.py $clustersets
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            python: \$( echo \$(python --version | grep -o "[0-9\\. ]\\+") )
+            pandas: \$(echo \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)"))
+        END_VERSIONS
+        """
+    }
 }

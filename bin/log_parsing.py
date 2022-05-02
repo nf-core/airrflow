@@ -5,19 +5,44 @@
 import pandas as pd
 import subprocess
 import re
+import argparse
+
+
+parser = argparse.ArgumentParser(
+    description="Parse logs to identify the number of sequences passing through every step."
+)
+parser.add_argument(
+    "-c",
+    "--cluster_sets",
+    help="Including the cluster_sets process",
+    action="store_true",
+)
+args = parser.parse_args()
 
 # Processes
-processes = [
-    "filter_by_sequence_quality",
-    "mask_primers",
-    "pair_sequences",
-    "cluster_sets",
-    "build_consensus",
-    "repair_mates",
-    "assemble_pairs",
-    "deduplicates",
-    "igblast",
-]
+if args.cluster_sets:
+    processes = [
+        "filter_by_sequence_quality",
+        "mask_primers",
+        "pair_sequences",
+        "build_consensus",
+        "repair_mates",
+        "assemble_pairs",
+        "deduplicates",
+        "igblast",
+        "cluster_sets",
+    ]
+else:
+    processes = [
+        "filter_by_sequence_quality",
+        "mask_primers",
+        "pair_sequences",
+        "build_consensus",
+        "repair_mates",
+        "assemble_pairs",
+        "deduplicates",
+        "igblast",
+    ]
 
 # Path of logs will be:
 # process_name/sample_name_command_log.txt
@@ -41,7 +66,7 @@ for process in processes:
             with open(logfile, "r") as f:
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "PAIRS>" in line:
                         pairs.append(line.strip().lstrip("PAIRS> "))
@@ -76,11 +101,13 @@ for process in processes:
         for logfile in log_files:
             c = 0
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
                         if c < 1:
-                            s_code.append(logfile.split("/")[1].split("_")[0])
+                            s_code.append(
+                                logfile.split("/")[1].split("_command_log")[0]
+                            )
+
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
@@ -124,10 +151,9 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES1>" in line:
                         seqs1.append(line.strip().lstrip("SEQUENCES1").lstrip("> "))
@@ -159,10 +185,9 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "OUTPUT>" in line:
                         output_file.append(line.strip().lstrip("OUTPUT> "))
@@ -199,10 +224,9 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES>" in line:
                         seqs.append(line.strip().lstrip("SEQUENCES> "))
@@ -232,10 +256,9 @@ for process in processes:
         fail_blast = []
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if "PASS>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         pass_blast.append(line.strip().lstrip("PASS> "))
                     elif "FAIL>" in line:
                         fail_blast.append(line.strip().lstrip("FAIL> "))
@@ -264,10 +287,9 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
@@ -300,10 +322,9 @@ for process in processes:
 
         for logfile in log_files:
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        s_code.append(logfile.split("/")[1].split("_")[0])
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
                         seqs.append(line.strip().lstrip("RECORDS> "))
@@ -324,6 +345,7 @@ for process in processes:
 
         df_process_list.append(df_process)
 
+# Getting table colnames
 
 colnames = [
     "Sample",
@@ -341,6 +363,7 @@ colnames = [
     "Igblast",
 ]
 
+
 values = [
     df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
     df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_R1"].tolist(),
@@ -350,12 +373,13 @@ values = [
     df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
     df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R2"].tolist(),
     df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
     df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[6].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[7].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-    df_process_list[8].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[8].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+    df_process_list[6].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
+    df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
+    df_process_list[7].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
 ]
+
 
 # Tables provide extra info and help debugging
 df_process_list[0].to_csv(
@@ -371,29 +395,34 @@ df_process_list[2].to_csv(
     path_or_buf="Table_all_details_paired.tsv", sep="\t", header=True, index=False
 )
 df_process_list[3].to_csv(
-    path_or_buf="Table_all_details_cluster_sets.tsv", sep="\t", header=True, index=False
-)
-df_process_list[4].to_csv(
     path_or_buf="Table_all_details_build_consensus.tsv",
     sep="\t",
     header=True,
     index=False,
 )
-df_process_list[5].to_csv(
+df_process_list[4].to_csv(
     path_or_buf="Table_all_details_repaired.tsv", sep="\t", header=True, index=False
 )
-df_process_list[6].to_csv(
+df_process_list[5].to_csv(
     path_or_buf="Table_all_details_assemble_mates.tsv",
     sep="\t",
     header=True,
     index=False,
 )
-df_process_list[7].to_csv(
+df_process_list[6].to_csv(
     path_or_buf="Table_all_details_deduplicate.tsv", sep="\t", header=True, index=False
 )
-df_process_list[8].to_csv(
+df_process_list[7].to_csv(
     path_or_buf="Table_all_details_igblast.tsv", sep="\t", header=True, index=False
 )
+
+if args.cluster_sets:
+    df_process_list[8].to_csv(
+        path_or_buf="Table_all_details_cluster_sets.tsv",
+        sep="\t",
+        header=True,
+        index=False,
+    )
 
 final_table = dict(zip(colnames, values))
 print(final_table)
@@ -403,8 +432,8 @@ df_final_table = df_final_table.sort_values(["Sample"], ascending=[1])
 
 # incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")
-metadata = metadata[["ID", "Source", "Treatment", "Extraction_time", "Population"]]
-logs_metadata = metadata.merge(df_final_table, left_on="ID", right_on="Sample")
+metadata = metadata[metadata.columns.drop(list(metadata.filter(regex="filename")))]
+logs_metadata = metadata.merge(df_final_table, left_on="sample_id", right_on="Sample")
 logs_metadata = logs_metadata.drop(["Sample"], axis=1)
 logs_metadata.to_csv(
     path_or_buf="Table_sequences_process.tsv", sep="\t", header=True, index=False

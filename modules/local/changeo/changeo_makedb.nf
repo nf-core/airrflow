@@ -1,22 +1,12 @@
-include { initOptions; saveFiles; getSoftwareName } from '../functions'
-
-params.options = [:]
-def options    = initOptions(params.options)
-
 process CHANGEO_MAKEDB {
     tag "$meta.id"
     label 'process_low'
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+    conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:f479475bceae84156e57e303cfe804ab5629d62b-0' :
+        'quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:f479475bceae84156e57e303cfe804ab5629d62b-0' }"
 
-    conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"  // Singularity image
-    } else {
-        container "quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:09e1470e7d75ed23a083425eb01ce0418c9e8827-0"                        // Docker image
-    }
 
     input:
     tuple val(meta), path(reads) // reads in fasta format
@@ -26,19 +16,20 @@ process CHANGEO_MAKEDB {
     output:
     tuple val(meta), path("*db-pass.tsv"), emit: tab //sequence table in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
+    path "versions.yml" , emit: versions
 
     script:
-    if (params.loci == 'ig'){
-        """
-        MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/ \\
-        --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
-        """
-    } else if (params.loci == 'tr') {
-        """
-        MakeDb.py igblast -i $igblast -s $reads -r \\
-        ${imgt_base}/${params.species}/vdj/ \\
-        --regions default --format airr --outname "${meta.id}" > "${meta.id}_command_log.txt"
-        """
-    }
+    def args = task.ext.args ?: ''
+    """
+    MakeDb.py igblast -i $igblast -s $reads -r \\
+    ${imgt_base}/${meta.species.toLowerCase()}/vdj/ \\
+    $args \\
+    --outname "${meta.id}" > "${meta.id}_command_log.txt"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+        changeo: \$( MakeDb.py --version | awk -F' '  '{print \$2}' )
+    END_VERSIONS
+    """
 }
