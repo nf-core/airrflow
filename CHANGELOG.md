@@ -3,7 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## v2.1.0dev - [date]
+## [2.1.0] - 2022-05-02
+
+### Main new features
+
+- Added possibility of processing BCR / TCR amplicon data without UMI barcodes.
+- Sample sheet now follows the [AIRR standard](https://docs.airr-community.org/en/stable/datarep/metadata.html).
+- Added option to skip clustering sequences according to similarity (pRESTO ClusterSets).
 
 ### `Added`
 
@@ -47,7 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Parameter `--protocol` was updated to `--library_generation_method` to follow the AIRR standard.
 - Parameter `--loci` and `--species` were converted to a column in the samplesheet (`pcr_target_locus` and `species`) to allow processing simultaneously TR and IG loci from the same sample, also allow processing different species in one samplesheet.
-- Removed genotyping step
+- Removed genotyping step with tiGGer.
 
 ## [2.0.0] - 2021-07-19 "Lumos"
 
