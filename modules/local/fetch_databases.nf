@@ -12,6 +12,12 @@ process FETCH_DATABASES {
     path("igblast_base"), emit: igblast
     path("imgtdb_base"), emit: imgt
     path "versions.yml" , emit: versions
+    path("igblast_base/database/imgt_human_ig_v.ndb"), emit: igblast_human_ig_v
+    path("igblast_base/database/imgt_human_ig_d.ndb"), emit: igblast_human_ig_d
+    path("igblast_base/database/imgt_human_ig_j.ndb"), emit: igblast_human_ig_j
+    path("igblast_base/database/imgt_human_tr_v.ndb"), emit: igblast_human_tr_v
+    path("igblast_base/database/imgt_human_tr_d.ndb"), emit: igblast_human_tr_d
+    path("igblast_base/database/imgt_human_tr_j.ndb"), emit: igblast_human_tr_j
 
     script:
     """
