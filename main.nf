@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/bcellmagic
+    nf-core/airrflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/bcellmagic
-    Website: https://nf-co.re/bcellmagic
-    Slack  : https://nfcore.slack.com/channels/bcellmagic
+    Github : https://github.com/nf-core/airrflow
+    Website: https://nf-co.re/airrflow
+    Slack  : https://nfcore.slack.com/channels/airrflow
 ----------------------------------------------------------------------------------------
 */
 
@@ -33,13 +33,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { BCELLMAGIC } from './workflows/bcellmagic'
+include { AIRRFLOW } from './workflows/airrflow'
 
 //
-// WORKFLOW: Run main nf-core/bcellmagic analysis pipeline
+// WORKFLOW: Run main nf-core/airrflow analysis pipeline
 //
-workflow NFCORE_BCELLMAGIC {
-    BCELLMAGIC ()
+workflow NFCORE_AIRRFLOW {
+    AIRRFLOW ()
 }
 
 /*
@@ -53,7 +53,7 @@ workflow NFCORE_BCELLMAGIC {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_BCELLMAGIC ()
+    NFCORE_AIRRFLOW ()
 }
 
 /*

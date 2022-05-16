@@ -1,8 +1,8 @@
 //
-// This file holds several functions specific to the workflow/bcellmagic.nf in the nf-core/bcellmagic pipeline
+// This file holds several functions specific to the workflow/airrflow.nf in the nf-core/airrflow pipeline
 //
 
-class WorkflowBcellmagic {
+class WorkflowAirrflow {
 
     //
     // Check and validate parameters

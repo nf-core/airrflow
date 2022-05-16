@@ -1,6 +1,6 @@
 {
-    "name": "nf-core/bcellmagic",
-    "homePage": "https://github.com/nf-core/bcellmagic",
+    "name": "nf-core/airrflow",
+    "homePage": "https://github.com/nf-core/airrflow",
     "repos": {
         "nf-core/modules": {
             "custom/dumpsoftwareversions": {

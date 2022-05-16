@@ -8,7 +8,7 @@ body:
         Before you post this issue, please check the documentation:
 
         - [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
-        - [nf-core/bcellmagic pipeline documentation](https://nf-co.re/bcellmagic/usage)
+        - [nf-core/airrflow pipeline documentation](https://nf-co.re/airrflow/usage)
 
   - type: textarea
     id: description
@@ -47,4 +47,4 @@ body:
         * Executor _(eg. slurm, local, awsbatch)_
         * Container engine: _(e.g. Docker, Singularity, Conda, Podman, Shifter or Charliecloud)_
         * OS _(eg. CentOS Linux, macOS, Linux Mint)_
-        * Version of nf-core/bcellmagic _(eg. 1.1, 1.5, 1.8.2)_
+        * Version of nf-core/airrflow _(eg. 1.1, 1.5, 1.8.2)_
