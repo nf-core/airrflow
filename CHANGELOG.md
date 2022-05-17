@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
-- Updated container of `Fetch databases` process to `Changeo=1.2.0` and `Igblast=1.17.1`.
+- Updated container of `Fetch databases` and `Changeo_assigngenes` process to `Changeo=1.2.0` and `Igblast=1.17.1`and extended biocontainers base to have internet access.
 
 ### `Dependencies`
 
