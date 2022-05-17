@@ -3,10 +3,10 @@ process FETCH_DATABASES {
     label 'process_low'
     label 'immcantation'
 
-    conda (params.enable_conda ? "bioconda::changeo=1.0.2 bioconda::igblast=1.15.0" : null)              // Conda package
+    conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1 conda-forge::wget=1.20.1" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e5bd866a6803c301bf10b82e697c5dd2e49810a1-1' :
-        'quay.io/biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e5bd866a6803c301bf10b82e697c5dd2e49810a1-1' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e7f88c6f7da46a5407f261ca406c050d5bd12dea-0' :
+        'quay.io/biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e7f88c6f7da46a5407f261ca406c050d5bd12dea-0' }"
 
     output:
     path("igblast_base"), emit: igblast
