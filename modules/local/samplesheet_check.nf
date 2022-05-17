@@ -14,7 +14,7 @@ process SAMPLESHEET_CHECK {
     path '*.tsv', emit: tsv
     path "versions.yml", emit: versions
 
-    script:  // This script is bundled with the pipeline, in nf-core/dsltwotest/bin/
+    script: // This script is bundled with the pipeline, in nf-core/airrflow/bin/
     """
     check_samplesheet.py $samplesheet
     cp $samplesheet samplesheet.valid.tsv
