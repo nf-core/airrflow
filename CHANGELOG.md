@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Pulling IMGT database cache from aws for CI tests.
 - Added test to pull database from IMGT and build it with igblast.
-- Template update to nf-core tools v2.4.1
+- Template update to nf-core tools v2.4.1.
+- Added zipped DB cache to nf-core/test-datasets.
 
 ### `Fixed`
 
