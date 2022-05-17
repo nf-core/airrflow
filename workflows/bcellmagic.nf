@@ -101,17 +101,6 @@ if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set
 if (params.umi_length < 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
 if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
-// If paths to databases are provided
-if( params.igblast_base ){
-    Channel.fromPath("${params.igblast_base}")
-            .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-            .set { ch_igblast }
-}
-if( params.imgtdb_base ){
-    Channel.fromPath("${params.imgtdb_base}")
-            .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-            .set { ch_imgt }
-}
 
 
 /*
@@ -137,6 +126,8 @@ ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparis
 
 //CHANGEO
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'
+include { UNZIP_DB as UNZIP_IGBLAST } from '../modules/local/unzip_db'
+include { UNZIP_DB as UNZIP_IMGT } from '../modules/local/unzip_db'
 include { CHANGEO_ASSIGNGENES } from '../modules/local/changeo/changeo_assigngenes'
 include { CHANGEO_MAKEDB } from '../modules/local/changeo/changeo_makedb'
 include { CHANGEO_PARSEDB_SPLIT } from '../modules/local/changeo/changeo_parsedb_split'
@@ -261,6 +252,38 @@ workflow BCELLMAGIC {
     ch_versions = ch_versions.mix(ch_presto_software)
 
     // FETCH DATABASES
+    // If paths to databases are provided
+    if( params.igblast_base ){
+
+        if (params.igblast_base.endsWith(".zip")) {
+            Channel.fromPath("${params.igblast_base}")
+                    .ifEmpty{ exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+                    .set { ch_igblast_zipped }
+            UNZIP_IGBLAST( ch_igblast_zipped.collect() )
+            ch_igblast = UNZIP_IGBLAST.out.unzipped
+            ch_versions = ch_versions.mix(UNZIP_IGBLAST.out.versions.ifEmpty(null))
+        } else {
+            Channel.fromPath("${params.igblast_base}")
+                .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+                .set { ch_igblast }
+        }
+    }
+    if( params.imgtdb_base ){
+
+        if (params.imgtdb_base.endsWith(".zip")) {
+            Channel.fromPath("${params.imgtdb_base}")
+                    .ifEmpty{ exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+                    .set { ch_imgt_zipped }
+            UNZIP_IMGT( ch_imgt_zipped.collect() )
+            ch_imgt = UNZIP_IMGT.out.unzipped
+            ch_versions = ch_versions.mix(UNZIP_IMGT.out.versions.ifEmpty(null))
+        } else {
+            Channel.fromPath("${params.imgtdb_base}")
+                .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+                .set { ch_imgt }
+        }
+    }
+
     if (!params.igblast_base | !params.imgtdb_base) {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
