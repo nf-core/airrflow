@@ -3,13 +3,24 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0dev] - date
+
+### `Added`
+
+- Pulling IMGT database cache from aws for CI tests.
+- Added test to pull database from IMGT and build it with igblast.
+- Template update to nf-core tools v2.4.1.
+- Added zipped DB cache to nf-core/test-datasets.
+
+### `Fixed`
+
+- Updated container of `Fetch databases` and `Changeo_assigngenes` process to `Changeo=1.2.0` and `Igblast=1.17.1`and extended biocontainers base to have internet access.
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## [2.1.0] - 2022-05-02
-
-### Main new features
-
-- Added possibility of processing BCR / TCR amplicon data without UMI barcodes.
-- Sample sheet now follows the [AIRR standard](https://docs.airr-community.org/en/stable/datarep/metadata.html).
-- Added option to skip clustering sequences according to similarity (pRESTO ClusterSets).
 
 ### `Added`
 

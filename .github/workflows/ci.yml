@@ -57,7 +57,7 @@ jobs:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ["21.10.3", ""]
-        profile: ["test_tcr", "test_no_umi", "test_reveal", "test_tcr_thr", "test_nocluster"]
+        profile: ["test_tcr", "test_no_umi", "test_reveal", "test_tcr_thr", "test_nocluster", "test_fetchimgt"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
