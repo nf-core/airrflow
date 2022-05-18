@@ -64,16 +64,16 @@ By default, the pipeline currently performs the following steps:
 
 4. Start running your own analysis!
 
-   ```bash
-   nextflow run nf-core/airrflow \
-   -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
-   --input samplesheet.tsv \
-   --outdir ./results \
-   --protocol pcr_umi \
-   --cprimers CPrimers.fasta \
-   --vprimers VPrimers.fasta \
-   --umi_length 12
-   ```
+```bash
+nextflow run nf-core/airrflow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--input samplesheet.tsv \
+--outdir ./results \
+--protocol pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12
+```
 
 See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
 

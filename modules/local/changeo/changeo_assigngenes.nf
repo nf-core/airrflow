@@ -2,10 +2,10 @@ process CHANGEO_ASSIGNGENES {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1" : null)
+    conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1 conda-forge::wget=1.20.1" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:f479475bceae84156e57e303cfe804ab5629d62b-0' :
-        'quay.io/biocontainers/mulled-v2-2665a8a48fa054ad1fcccf53e711669939b3eac1:f479475bceae84156e57e303cfe804ab5629d62b-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e7f88c6f7da46a5407f261ca406c050d5bd12dea-0' :
+        'quay.io/biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:e7f88c6f7da46a5407f261ca406c050d5bd12dea-0' }"
 
     input:
     tuple val(meta), path(reads) // reads in fasta format
