@@ -381,8 +381,6 @@ workflow BCELLMAGIC {
         ch_presto_collapseseq_logs.collect(),
         ch_presto_splitseq_logs.collect(),
         CHANGEO_MAKEDB.out.logs.collect(),
-        CHANGEO_DEFINECLONES.out.logs.collect(),
-        CHANGEO_CREATEGERMLINES.out.logs.collect(),
         ch_input
     )
     ch_versions = ch_versions.mix(PARSE_LOGS.out.versions.ifEmpty(null))
