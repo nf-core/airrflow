@@ -19,8 +19,6 @@ process PARSE_LOGS {
     path('deduplicates/*') //PRESTO_COLLAPSESEQ logs
     path('filter_representative_2/*') //PRESTO_SPLITSEQ logs
     path('igblast/*') //CHANGEO_PARSEDB_SELECT logs
-    path('define_clones/*') //CHANGEO_DEFINECLONES logs
-    path('create_germlines/*') //CHANGEO_CREATEGERMLINES logs
     path('metadata.tsv') //METADATA
 
     output:
