@@ -83,12 +83,6 @@
                     "type": "boolean",
                     "description": "Save databases so you can use the cache in future runs.",
                     "fa_icon": "fas fa-file-download"
-                },
-                "species": {
-                    "type": "string",
-                    "default": "human",
-                    "description": "Species to perform Igblast. Choose from: human, mouse.",
-                    "enum": ["human", "mouse"]
                 }
             },
             "help_text": "",
