@@ -30,7 +30,7 @@ print(paste0("Node text request: ", node_text))
 
 avail_text = colnames(df_pat)
 
-if (node_text %in% append(avail_text,"none"))) {
+if (node_text %in% append(avail_text,"none")) {
     print(paste0("Node string set to: ",node_text))
 } else {
     print("Available fields: ")
