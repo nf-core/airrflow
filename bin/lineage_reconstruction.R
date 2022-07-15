@@ -33,7 +33,10 @@ avail_text = colnames(df_pat)
 if (node_text %in% append(avail_text,"none"))) {
     print(paste0("Node string set to: ",node_text))
 } else {
-    stop(paste0("Node string must be one of: ", avail_text))
+    print("Available fields: ")
+    print(avail_text)
+    print("or 'none'.")
+    stop("Node string must be one of the above fields.")
 }
 
 # save clonal table
