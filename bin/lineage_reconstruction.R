@@ -59,6 +59,7 @@ save_graph <- function(df_pat, clone_num){
     sub_db_clone <- subset(df_pat, clone_id == clone_num)
     sub_db_clone <- data.frame(lapply(sub_db_clone, as.character), stringsAsFactors=FALSE)
     sub_db_clone$duplicate_count <- sapply(sub_db_clone$duplicate_count, as.numeric)
+    sub_db_clone$junc_len <- sapply(sub_db_clone$junc_len, as.numeric)
 
     # Make changeo clone and Build Phylip Lineage
     if ( node_text == "none" ) {
