@@ -30,8 +30,10 @@ print(paste0("Node text request: ", node_text))
 
 avail_text = colnames(df_pat)
 
-if (node_text %in% append(avail_text,"none")) {
+if (node_text %in% append(avail_text)) {
     print(paste0("Node string set to: ",node_text))
+} else if (node_text == "none") {
+    print("Node string set to: none.")
 } else {
     print("Available fields: ")
     print(avail_text)
@@ -55,32 +57,28 @@ dnapars_exec <- as.character(dnapars_exec_tab[1,1])
 save_graph <- function(df_pat, clone_num){
     print(paste0("Started processing clone:",clone_num))
     sub_db_clone <- subset(df_pat, clone_id == clone_num)
-    sub_db_clone$clone_id <- sapply(sub_db_clone$clone_id, as.character)
-    sub_db_clone$sample_id <- sapply(sub_db_clone$sample_id, as.character)
-    sub_db_clone$c_primer <- sapply(sub_db_clone$c_primer, as.character)
-    sub_db_clone$subject_id <- sapply(sub_db_clone$subject_id, as.character)
+    sub_db_clone <- data.frame(lapply(sub_db_clone, as.character), stringsAsFactors=FALSE)
+    sub_db_clone$duplicate_count <- sapply(sub_db_clone$duplicate_count, as.numeric)
 
-
-    # Make changeo clone
-    clone <- makeChangeoClone(sub_db_clone, text_fields = append(c("c_primer", "subject_id",
+    # Make changeo clone and Build Phylip Lineage
+    if ( node_text == "none" ) {
+        clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "subject_id",
+                                                        "sample_id", "clone_id"),
+                                        num_fields = "duplicate_count")
+        graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
+        V(graph)$label <- ""
+    } else {
+        sub_db_clone <- sapply(sub_db_clone[,node_text], as.character)
+        clone <- makeChangeoClone(sub_db_clone, text_fields = append(c("c_primer", "subject_id",
                                                             "sample_id", "clone_id"), node_text),
                                             num_fields = "duplicate_count")
-
-    # Build Phylip lineage
-    graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
+        V(graph)$label <- V(graph)[,node_text]
+    }
 
     #Modify graph and plot attributes
     V(graph)$color <- "steelblue"
     V(graph)$color[V(graph)$name == "Germline"] <- "black"
     V(graph)$color[grepl("Inferred", V(graph)$name)] <- "white"
-
-    # Set label on the nodes
-    if ( node_text == "none" ) {
-        V(graph)$label <- ""
-    } else {
-        V(graph)$label <- V(graph)[,node_text]
-    }
-
 
     # Remove large default margins
     par(mar=c(0, 0, 0, 0) + 0.1)
