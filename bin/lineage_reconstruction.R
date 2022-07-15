@@ -30,7 +30,7 @@ print(paste0("Node text request: ", node_text))
 
 avail_text = colnames(df_pat)
 
-if (node_text %in% avail_text) {
+if (node_text %in% append(avail_text,"none"))) {
     print(paste0("Node string set to: ",node_text))
 } else {
     stop(paste0("Node string must be one of: ", avail_text))
