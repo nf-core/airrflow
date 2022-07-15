@@ -17,17 +17,6 @@ if (length(args)<1) {
 inputtable = args[1]
 node_text = args[2]
 
-print(paste0("Node text: ", node_text))
-
-avail_text = c("c_primer", "subject_id",
-                "sample_id", "sample_pop", "clone_id", "seq_id", "none")
-
-if (node_text %in% avail_text) {
-    print(paste0("Node string set to: ",node_text))
-} else {
-    stop(paste0("Node string must be one of: ", avail_text))
-}
-
 # Set output directories
 patdir_lineage_trees <- "Clone_tree_plots"
 dir.create(patdir_lineage_trees)
@@ -36,6 +25,16 @@ dir.create(patdir_lineage_graphml)
 
 # Read patient table
 df_pat <- read.csv(inputtable, sep="\t")
+
+print(paste0("Node text request: ", node_text))
+
+avail_text = colnames(df_pat)
+
+if (node_text %in% avail_text) {
+    print(paste0("Node string set to: ",node_text))
+} else {
+    stop(paste0("Node string must be one of: ", avail_text))
+}
 
 # save clonal table
 countclones <- countClones(df_pat, clone="clone_id", copy="duplicate_count")
@@ -60,8 +59,8 @@ save_graph <- function(df_pat, clone_num){
 
 
     # Make changeo clone
-    clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "subject_id",
-                                                            "sample_id", "clone_id"),
+    clone <- makeChangeoClone(sub_db_clone, text_fields = append(c("c_primer", "subject_id",
+                                                            "sample_id", "clone_id"), node_text),
                                             num_fields = "duplicate_count")
 
     # Build Phylip lineage
