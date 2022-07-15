@@ -57,7 +57,7 @@ dnapars_exec <- as.character(dnapars_exec_tab[1,1])
 save_graph <- function(df_pat, clone_num){
     print(paste0("Started processing clone:",clone_num))
     sub_db_clone = dplyr::filter(df_pat, clone_id == clone_num) %>%
-                            dplyr::mutate(across(everything()),as.character) %>%
+                            dplyr::mutate(across(everything(),as.character)) %>%
                             dplyr::mutate(across(c(junc_len,duplicate_count), as.numeric))
 
     # Make changeo clone and Build Phylip Lineage
