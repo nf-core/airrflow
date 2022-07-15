@@ -3,6 +3,20 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - dev
+
+### `Added`
+
+- Added possibility to add any property in the AIRR sequence table as label on the lineage tree nodes.
+
+### `Fixed`
+
+- Repertoire analysis report now also saves diversity table.
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## [2.2.0] - 2022-06-02 "Reparo"
 
 ### `Added`
