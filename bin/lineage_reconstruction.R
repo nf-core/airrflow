@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
-library(alakazam)
-library(igraph)
-library(dplyr)
+suppressPackageStartupMessages(library(alakazam))
+suppressPackageStartupMessages(library(igraph))
+suppressPackageStartupMessages(library(dplyr))
 
 theme_set(theme_bw(base_family = "ArialMT") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
