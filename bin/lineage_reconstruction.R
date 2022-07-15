@@ -57,7 +57,7 @@ dnapars_exec <- as.character(dnapars_exec_tab[1,1])
 save_graph <- function(df_pat, clone_num){
     print(paste0("Started processing clone:",clone_num))
     sub_db_clone <- subset(df_pat, clone_id == clone_num)
-    sub_db_clone <- data.frame(lapply(sub_db_clone, as.character), stringsAsFactors=FALSE)
+    sub_db_clone <- data.frame(sapply(sub_db_clone, as.character), stringsAsFactors=FALSE)
     sub_db_clone$duplicate_count <- sapply(sub_db_clone$duplicate_count, as.numeric)
     sub_db_clone$junc_len <- sapply(sub_db_clone$junc_len, as.numeric)
 
