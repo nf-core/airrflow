@@ -337,9 +337,9 @@ workflow REVEAL {
 
     // TODO fix file sizes
     // Process logs to report file sizes at each step
-    REPORT_FILE_SIZE (
-        ch_file_sizes.map { it }.collect()
-    )
+    //REPORT_FILE_SIZE (
+    //    ch_file_sizes.map { it }.collect()
+    //)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
