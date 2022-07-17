@@ -20,10 +20,11 @@ opt_list <- list(
                 help="Samplesheet providing extra metadata"),
     make_option(c("--outname"), default=NULL)
 )
+opt <- parse_args(OptionParser(option_list=opt_list))
 
 # Read repertoire
 repertoire <- read.csv(opt$repertoire, sep="\t", header=TRUE, stringsAsFactors = F)
-samplesheet <- read.cssv(opt$samplesheet, sep="\t", header=TRUE, stringsAsFactors = F)
+samplesheet <- read.csv(opt$samplesheet, sep="\t", header=TRUE, stringsAsFactors = F)
 
 parsed_fields <-
     c(
