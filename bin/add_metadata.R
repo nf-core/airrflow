@@ -21,9 +21,6 @@ opt_list <- list(
     make_option(c("--outname"), default=NULL)
 )
 
-theme_set(theme_bw(base_family = "ArialMT") +
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
-
 # Read repertoire
 repertoire <- read.csv(opt$repertoire, sep="\t", header=TRUE, stringsAsFactors = F)
 samplesheet <- read.cssv(opt$samplesheet, sep="\t", header=TRUE, stringsAsFactors = F)
