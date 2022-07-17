@@ -9,9 +9,8 @@
 # Example: ./lineage_reconstruction.R --repertoire igblast_germ-pass.tsv --nodelabel population
 
 # Libraries
-suppressPackageStartupMessages(library(alakazam))
-suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(argparse))
 
 # Define commmandline arguments
 opt_list <- list(
