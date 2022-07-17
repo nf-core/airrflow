@@ -11,6 +11,7 @@
 suppressPackageStartupMessages(library(alakazam))
 suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(optparse))
 
 # Define commmandline arguments
 opt_list <- list(
