@@ -10,7 +10,7 @@
 
 # Libraries
 suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(argparse))
+suppressPackageStartupMessages(library(optparse))
 
 # Define commmandline arguments
 opt_list <- list(
