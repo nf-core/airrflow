@@ -35,7 +35,7 @@ parsed_fields <-
         "filename_R2",
         "filename_I1"
     )
-metadata <- metadata[, !colnames(metadata) %in% parsed_fields]
+samplesheet <- samplesheet[, !colnames(samplesheet) %in% parsed_fields]
 
 # save repertoire table with metadata fields
 anno_repertoire <- merge(x=repertoire, y=samplesheet, by.x = sample_id, by.y = sample_id, all.x=T)
