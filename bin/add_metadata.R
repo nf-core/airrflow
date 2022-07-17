@@ -33,7 +33,10 @@ parsed_fields <-
     c(
         "subject_id",
         "species",
-        "pcr_target_locus"
+        "pcr_target_locus",
+        "filename_R1",
+        "filename_R2",
+        "filename_I1"
     )
 metadata <- metadata[, !colnames(metadata) %in% parsed_fields]
 
