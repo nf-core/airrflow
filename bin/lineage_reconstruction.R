@@ -1,21 +1,27 @@
 #!/usr/bin/env Rscript
+#
+# Create lineage trees:
+# Arguments:
+#   --repertoire  Tabulated data in AIRR (TSV) format with clonal assignments and germline assignments.
+#   --node-label Names of the metadata column to be used as node label on the tree plots
+#   -h  Display help.
+# Example: ./lineage_reconstruction.R --repertoire igblast_germ-pass.tsv --nodelabel population
 
+# Libraries
 suppressPackageStartupMessages(library(alakazam))
 suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(dplyr))
 
+# Define commmandline arguments
+opt_list <- list(
+    make_option(c("--repertoire"), default=NULL,
+                help="Input repertoire .tsv file after clone definition and germline definition."),
+    make_option(c("--node-label"), dest="node_text", default=c("filename"),
+                help="Text to be used as node label. Provide 'none' if no label is desired.")
+)
+
 theme_set(theme_bw(base_family = "ArialMT") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
-
-args = commandArgs(trailingOnly=TRUE)
-
-if (length(args)<1) {
-    stop("Input file argument must be supplied.\n", call.=FALSE)
-}
-
-# Get input table from args
-inputtable = args[1]
-node_text = args[2]
 
 # Set output directories
 patdir_lineage_trees <- "Clone_tree_plots"
@@ -24,15 +30,15 @@ patdir_lineage_graphml <- "Graphml_trees"
 dir.create(patdir_lineage_graphml)
 
 # Read patient table
-df_pat <- read.csv(inputtable, sep="\t")
+df_pat <- read.csv(opt$repertoire, sep="\t")
 
-print(paste0("Node text request: ", node_text))
+print(paste0("Node text request: ", opt$node_text))
 
 avail_text = colnames(df_pat)
 
-if (node_text %in% avail_text) {
-    print(paste0("Node string set to: ",node_text))
-} else if (node_text == "none") {
+if (opt$node_text %in% avail_text) {
+    print(paste0("Node string set to: ",opt$node_text))
+} else if (opt$node_text == "none") {
     print("Node string set to: none.")
 } else {
     print("Available fields: ")
@@ -61,18 +67,18 @@ save_graph <- function(df_pat, clone_num){
                             dplyr::mutate(across(c(junction_length,duplicate_count), as.numeric))
 
     # Make changeo clone and Build Phylip Lineage
-    if ( node_text == "none" ) {
+    if ( opt$node_text == "none" ) {
         clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "subject_id",
                                                         "sample_id", "clone_id"),
                                         num_fields = "duplicate_count")
         graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
         V(graph)$label <- ""
     } else {
-        sub_db_clone <- sapply(sub_db_clone[,node_text], as.character)
+        sub_db_clone <- sapply(sub_db_clone[,opt$node_text], as.character)
         clone <- makeChangeoClone(sub_db_clone, text_fields = append(c("c_primer", "subject_id",
-                                                            "sample_id", "clone_id"), node_text),
+                                                            "sample_id", "clone_id"), opt$node_text),
                                             num_fields = "duplicate_count")
-        V(graph)$label <- V(graph)[,node_text]
+        V(graph)$label <- V(graph)[,opt$node_text]
     }
 
     #Modify graph and plot attributes

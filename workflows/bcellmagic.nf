@@ -325,7 +325,10 @@ workflow BCELLMAGIC {
     ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA.out.versions.ifEmpty(null))
 
     // Subworkflow: merge tables from the same patient
-    MERGE_TABLES_WF(CHANGEO_PARSEDB_SELECT.out.tab)
+    MERGE_TABLES_WF(
+        CHANGEO_PARSEDB_SELECT.out.tab,
+        ch_input
+    )
 
     // Shazam clonal threshold
     // Only if threshold is not manually set

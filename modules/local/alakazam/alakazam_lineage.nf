@@ -21,7 +21,7 @@ process ALAKAZAM_LINEAGE {
     def args = task.ext.args ?: ''
     """
     which dnapars > dnapars_exec.txt
-    lineage_reconstruction.R ${tab} $args
+    lineage_reconstruction.R --repertoire ${tab} $args
     merge_graphs.sh
 
     cat <<-END_VERSIONS > versions.yml
