@@ -25,6 +25,6 @@ process MERGE_TABLES {
     tail -n +2 ${tab} >> ${meta.id}_preannotation.tsv
     sed -i '/==>/d' ${meta.id}_preannotation.tsv
 
-    add_metadata.R --tab ${meta.id}_preannotation.tsv --samplesheet ${samplesheet} --outname "${meta.id}.tsv"
+    add_metadata.R --repertoire ${meta.id}_preannotation.tsv --samplesheet ${samplesheet} --outname "${meta.id}.tsv"
     """
 }
