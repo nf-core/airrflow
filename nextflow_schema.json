@@ -22,6 +22,7 @@
                 },
                 "input": {
                     "type": "string",
+                    "mimetype": "text/tsv",
                     "fa_icon": "fas fa-dna",
                     "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
                     "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. The file should include the following columns, separated with tabs, with exactly these header names:\n\n```bash\nID Source Treatment Extraction_time Population R1 R2 I1\nQMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sample_S8_L001_R2_001.fastq.gz sample_S8_L001_I1_001.fastq.gz\n```\n\nThis metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:\n\n* ID: sample ID.\n* Source: patient or organism code.\n* Treatment: treatment condition applied to the sample.\n* Extraction_time: time of cell extraction for the sample.\n* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).\n* R1: path to fastq file with first mates of paired-end sequencing.\n* R2: path to fastq file with second mates of paired-end sequencing.\n* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column)\n\nSpecify the path for your input file like this:\n\n```bash\n--input 'path/to/metadata/metadata_sheet.tsv'\n```"
