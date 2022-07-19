@@ -12,6 +12,7 @@ suppressPackageStartupMessages(library(alakazam))
 suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(optparse))
+options(error = function() traceback(3))
 
 # Define commmandline arguments
 opt_list <- list(
@@ -81,8 +82,8 @@ save_graph <- function(df_pat, clone_num){
                                                             "sample_id", "clone_id"), opt$node_text),
                                             num_fields = "duplicate_count")
         graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
-        colnames(V(graph))
-        V(graph)$label <- V(graph)[,opt$node_text]
+        varname <- opt$node_text
+        V(graph)$label <- igraph::vertex_attr(graph, varname)
     }
 
     #Modify graph and plot attributes
