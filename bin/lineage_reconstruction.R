@@ -21,6 +21,8 @@ opt_list <- list(
                 help="Text to be used as node label. Provide 'none' if no label is desired.")
 )
 
+opt <- parse_args(OptionParser(option_list=opt_list))
+
 theme_set(theme_bw(base_family = "ArialMT") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 
