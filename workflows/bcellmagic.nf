@@ -327,7 +327,7 @@ workflow BCELLMAGIC {
     // Subworkflow: merge tables from the same patient
     MERGE_TABLES_WF(
         CHANGEO_PARSEDB_SELECT.out.tab,
-        ch_input
+        ch_input.collect()
     )
 
     // Shazam clonal threshold

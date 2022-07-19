@@ -21,7 +21,7 @@ workflow MERGE_TABLES_WF {
 
     MERGE_TABLES(
         ch_merge_tables,
-        ch_samplesheet
+        ch_samplesheet.collect()
     )
 
     emit:
