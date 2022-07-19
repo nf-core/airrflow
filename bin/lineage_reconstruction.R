@@ -54,6 +54,10 @@ if (opt$node_text %in% avail_text) {
 countclones <- countClones(df_pat, clone="clone_id", copy="duplicate_count")
 write.table(countclones, paste("Clones_table_patient_", df_pat$subject_id[1],"_",df_pat$pcr_target_locus[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
 
+clones <- filter(countclones, seq_count > 2 & seq_count < 1000)
+write.table(clones, paste("Clones_table_patient_filtered_between_3_and_1000_", df_pat$subject_id[1],"_",df_pat$pcr_target_locus[1],".tsv", sep=""), quote=F, sep="\t", row.names = F)
+
+
 # Get dnapars exec path
 dnapars_exec_tab <- read.csv("dnapars_exec.txt", header=F)
 dnapars_exec <- as.character(dnapars_exec_tab[1,1])
