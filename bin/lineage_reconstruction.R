@@ -69,6 +69,8 @@ save_graph <- function(df_pat, clone_num){
                             dplyr::mutate(across(everything(),as.character)) %>%
                             dplyr::mutate(across(c(junction_length,duplicate_count), as.numeric))
 
+    print(colnames(sub_db_clone))
+
     # Make changeo clone and Build Phylip Lineage
     if ( opt$node_text == "none" ) {
         clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "subject_id",
