@@ -17,7 +17,7 @@ suppressPackageStartupMessages(library(optparse))
 opt_list <- list(
     make_option(c("--repertoire"), default=NULL,
                 help="Input repertoire .tsv file after clone definition and germline definition."),
-    make_option(c("--node-label"), dest="node_text", default=c("filename"),
+    make_option(c("--node-label"), dest="node_text",
                 help="Text to be used as node label. Provide 'none' if no label is desired.")
 )
 
