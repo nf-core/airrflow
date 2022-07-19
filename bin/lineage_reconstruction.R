@@ -81,6 +81,7 @@ save_graph <- function(df_pat, clone_num){
                                                             "sample_id", "clone_id"), opt$node_text),
                                             num_fields = "duplicate_count")
         graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
+        colnames(V(graph))
         V(graph)$label <- V(graph)[,opt$node_text]
     }
 
