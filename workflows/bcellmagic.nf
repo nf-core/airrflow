@@ -101,7 +101,10 @@ if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set
 if (params.umi_length < 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
 if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
-
+// Rmarkdown report file
+ch_report_rmd = Channel.fromPath(params.report_rmd, checkIfExists: true)
+ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
+ch_report_logo = Channel.fromPath(params.report_logo, checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,12 +120,6 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Rmarkdown report file
-ch_rmarkdown_report = Channel.fromPath( ["$projectDir/assets/repertoire_comparison.Rmd",
-                                    "$projectDir/assets/nf-core_style.css",
-                                    "$projectDir/assets/nf-core-airrflow_logo_light.png"],
-                                    checkIfExists: true)
 
 //CHANGEO
 include { FETCH_DATABASES } from '../modules/local/fetch_databases'
@@ -352,7 +349,6 @@ workflow BCELLMAGIC {
     )
     ch_versions = ch_versions.mix(CHANGEO_DEFINECLONES.out.versions.ifEmpty(null))
 
-
     // Identify germline sequences
     CHANGEO_CREATEGERMLINES(
         CHANGEO_DEFINECLONES.out.tab,
@@ -393,7 +389,9 @@ workflow BCELLMAGIC {
         ALAKAZAM_SHAZAM_REPERTOIRES(
             ch_all_tabs_repertoire,
             PARSE_LOGS.out.logs.collect(),
-            ch_rmarkdown_report.collect()
+            ch_report_rmd.collect(),
+            ch_report_css.collect(),
+            ch_report_logo.collect()
         )
         ch_versions = ch_versions.mix(ALAKAZAM_SHAZAM_REPERTOIRES.out.versions.ifEmpty(null))
     }

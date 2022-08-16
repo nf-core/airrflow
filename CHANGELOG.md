@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to add any property in the AIRR sequence table as label on the lineage tree nodes.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added metadata annotation to final repertoire table.
+- [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to provide custom Rmarkdown report.
 
 ### `Fixed`
 
