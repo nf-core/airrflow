@@ -38,5 +38,5 @@ parsed_fields <-
 samplesheet <- samplesheet[, !colnames(samplesheet) %in% parsed_fields]
 
 # save repertoire table with metadata fields
-anno_repertoire <- merge(x=repertoire, y=samplesheet, by.x = "sample_id", by.y = "sample_id", all.x=T)
+anno_repertoire <- base::merge(x=repertoire, y=samplesheet, by.x = "sample_id", by.y = "sample_id", all.x=T)
 write.table(anno_repertoire, opt$outname, quote=F, sep="\t", row.names = F)
