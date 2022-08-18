@@ -35,8 +35,20 @@ parsed_fields <-
         "filename_R2",
         "filename_I1"
     )
-samplesheet <- samplesheet[, !colnames(samplesheet) %in% parsed_fields]
+
+samplesheet_colnames <- colnames(samplesheet)
+
+# merge tables only in case the samplesheet contains more co    lumns than the required ones
+print( samplesheet_colnames[!(samplesheet_colnames %in% parsed_fields)])
+
+if (length(samplesheet_colnames[!(samplesheet_colnames %in% parsed_fields)]) > 1 ) {
+    print("None in parsed fields")
+    samplesheet <- samplesheet[, !colnames(samplesheet) %in% parsed_fields]
+    anno_repertoire <- base::merge(x=repertoire, y=samplesheet, by.x = "sample_id", by.y = "sample_id", all.x=T)
+} else {
+    print("Some in parsed fields")
+    anno_repertoire <- repertoire
+}
 
 # save repertoire table with metadata fields
-anno_repertoire <- base::merge(x=repertoire, y=samplesheet, by.x = "sample_id", by.y = "sample_id", all.x=T)
 write.table(anno_repertoire, opt$outname, quote=F, sep="\t", row.names = F)

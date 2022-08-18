@@ -23,6 +23,8 @@ process MERGE_TABLES {
 
     head -n 1 ${tab[0]} > ${meta.id}_preannotation.tsv
     tail -n +2 ${tab} >> ${meta.id}_preannotation.tsv
+
+    # Remove line introduced by tail when merging multiple samples
     sed -i '/==>/d' ${meta.id}_preannotation.tsv
 
     add_metadata.R --repertoire ${meta.id}_preannotation.tsv --samplesheet ${samplesheet} --outname "${meta.id}.tsv"
