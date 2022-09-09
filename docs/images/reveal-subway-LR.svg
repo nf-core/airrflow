@@ -1,0 +1,1224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="432.26245mm"
+   height="195.43909mm"
+   viewBox="0 0 432.26244 195.43908"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="airrflow-subway-LR.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.50373355"
+     inkscape:cx="676.94518"
+     inkscape:cy="470.48683"
+     inkscape:window-width="1920"
+     inkscape:window-height="1013"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer7"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-midpoints="true"
+     showguides="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:lockguides="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid824"
+       originx="48.621211"
+       originy="-0.64738669" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient132122"
+       inkscape:swatch="gradient">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop132118" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop132120" />
+    </linearGradient>
+    <clipPath
+       id="d">
+      <path
+         d="M 0,266 H 1022 V 0 H 0 Z"
+         id="path9" />
+    </clipPath>
+    <clipPath
+       id="c">
+      <path
+         d="m 280.17,136.33 -21.5,-21.584 h 61 v 21.584 z"
+         id="path12" />
+    </clipPath>
+    <linearGradient
+       id="a"
+       x2="1"
+       gradientTransform="matrix(47.34875,36.9925,-36.9925,47.34875,344.325,162.1875)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#0c542a"
+         offset="0"
+         id="stop15" />
+      <stop
+         stop-color="#0c542a"
+         offset=".21472"
+         id="stop17" />
+      <stop
+         stop-color="#25af64"
+         offset=".57995"
+         id="stop19" />
+      <stop
+         stop-color="#25af64"
+         offset=".84663"
+         id="stop21" />
+      <stop
+         stop-color="#25af64"
+         offset="1"
+         id="stop23" />
+    </linearGradient>
+    <clipPath
+       id="b">
+      <path
+         d="M 0,266 H 1022 V 0 H 0 Z"
+         id="path26" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="airrflow-LR"
+     style="display:inline"
+     transform="translate(-178.26027,1.5425951)"
+     sodipodi:insensitive="true">
+    <g
+       id="g2123-3-6-06"
+       transform="matrix(0.55367776,0,0,0.55367776,24.913121,-26.969306)"
+       style="display:inline;stroke-width:1.79471"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968">
+      <g
+         transform="matrix(0.32789193,0,0,-0.32789193,126.76739,712.38407)"
+         id="g196-6-3-4"
+         style="stroke-width:1.79471">
+        <path
+           id="path184-7-94-62"
+           d="m 598.73267,1905.0888 h -2.51304 v 12.1255 c 0,0.076 -0.0119,0.1518 -0.0221,0.2284 -0.004,0.4815 -0.15713,0.9544 -0.48679,1.3291 l -20.17826,23.0502 c -0.006,0.01 -0.0118,0.01 -0.0161,0.014 -0.12027,0.1343 -0.2605,0.246 -0.4087,0.3427 -0.0439,0.029 -0.0882,0.054 -0.13415,0.08 -0.12844,0.07 -0.26468,0.1282 -0.40491,0.1702 -0.038,0.011 -0.0722,0.026 -0.1102,0.036 -0.15238,0.036 -0.31066,0.059 -0.47103,0.059 h -49.59068 c -2.26452,0 -4.10417,-1.8417 -4.10417,-4.1044 v -33.3298 h -2.51247 c -3.23944,0 -5.86611,-2.6255 -5.86611,-5.8661 v -30.5048 c 0,-3.2383 2.62667,-5.8655 5.86611,-5.8655 h 2.51266 v -20.8815 c 0,-2.2624 1.83965,-4.1043 4.10417,-4.1043 h 67.71875 c 2.26242,0 4.10417,1.8417 4.10417,4.1043 v 20.8815 h 2.51304 c 3.23849,0 5.86573,2.6272 5.86573,5.8655 v 30.5039 c -1.9e-4,3.2404 -2.62743,5.8661 -5.86592,5.8661 z m -74.33596,33.33 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"
+           style="stroke-width:1.79471" />
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot192-5-8-58"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.79471px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           transform="matrix(1,0,0,-1,56.331558,3752.8958)"><flowRegion
+             id="flowRegion188-3-1-62"
+             style="stroke-width:1.79471px"><rect
+               id="rect186-5-2-8"
+               width="112"
+               height="53.599998"
+               x="474.39999"
+               y="-1904.0004"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#ffffff;stroke-width:1.79471px"
+               transform="scale(1,-1)" /></flowRegion><flowPara
+             id="flowPara190-6-9-4"
+             style="font-size:32px;line-height:1.25;stroke-width:1.79471px">tsv</flowPara></flowRoot>
+        <path
+           id="path194-2-3-7"
+           d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccsscccccccccc"
+           style="fill:#ffffff;stroke-width:1.79471" />
+      </g>
+    </g>
+    <g
+       id="g2123-3-6-7-2"
+       transform="matrix(0.26226841,0,0,0.26226841,127.70142,5.1369669)"
+       style="display:inline;stroke-width:1.79471"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968">
+      <g
+         transform="matrix(0.32789193,0,0,-0.32789193,126.76739,712.38407)"
+         id="g196-6-3-3-4"
+         style="stroke-width:1.79471">
+        <path
+           id="path184-7-94-6-0"
+           d="m 598.73267,1905.0888 h -2.51304 v 12.1255 c 0,0.076 -0.0119,0.1518 -0.0221,0.2284 -0.004,0.4815 -0.15713,0.9544 -0.48679,1.3291 l -20.17826,23.0502 c -0.006,0.01 -0.0118,0.01 -0.0161,0.014 -0.12027,0.1343 -0.2605,0.246 -0.4087,0.3427 -0.0439,0.029 -0.0882,0.054 -0.13415,0.08 -0.12844,0.07 -0.26468,0.1282 -0.40491,0.1702 -0.038,0.011 -0.0722,0.026 -0.1102,0.036 -0.15238,0.036 -0.31066,0.059 -0.47103,0.059 h -49.59068 c -2.26452,0 -4.10417,-1.8417 -4.10417,-4.1044 v -33.3298 h -2.51247 c -3.23944,0 -5.86611,-2.6255 -5.86611,-5.8661 v -30.5048 c 0,-3.2383 2.62667,-5.8655 5.86611,-5.8655 h 2.51266 v -20.8815 c 0,-2.2624 1.83965,-4.1043 4.10417,-4.1043 h 67.71875 c 2.26242,0 4.10417,1.8417 4.10417,4.1043 v 20.8815 h 2.51304 c 3.23849,0 5.86573,2.6272 5.86573,5.8655 v 30.5039 c -1.9e-4,3.2404 -2.62743,5.8661 -5.86592,5.8661 z m -74.33596,33.33 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"
+           style="stroke-width:1.79471" />
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot192-5-8-5-6"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.79471px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           transform="matrix(1,0,0,-1,56.331558,3752.8958)"><flowRegion
+             id="flowRegion188-3-1-6-2"
+             style="stroke-width:1.79471px"><rect
+               id="rect186-5-2-3-99"
+               width="112"
+               height="53.599998"
+               x="474.39999"
+               y="-1904.0004"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#ffffff;stroke-width:1.79471px"
+               transform="scale(1,-1)" /></flowRegion><flowPara
+             id="flowPara190-6-9-9-08"
+             style="font-size:32px;line-height:1.25;stroke-width:1.79471px">tsv</flowPara></flowRoot>
+        <path
+           id="path194-2-3-4-1"
+           d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccsscccccccccc"
+           style="fill:#ffffff;stroke-width:1.79471" />
+      </g>
+    </g>
+    <g
+       id="g2123-3-6-7-8-3"
+       transform="matrix(0.26226841,0,0,0.26226841,127.70142,-4.9835898)"
+       style="display:inline;stroke-width:1.79471"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968">
+      <g
+         transform="matrix(0.32789193,0,0,-0.32789193,126.76739,712.38407)"
+         id="g196-6-3-3-1-1"
+         style="stroke-width:1.79471">
+        <path
+           id="path184-7-94-6-2-1"
+           d="m 598.73267,1905.0888 h -2.51304 v 12.1255 c 0,0.076 -0.0119,0.1518 -0.0221,0.2284 -0.004,0.4815 -0.15713,0.9544 -0.48679,1.3291 l -20.17826,23.0502 c -0.006,0.01 -0.0118,0.01 -0.0161,0.014 -0.12027,0.1343 -0.2605,0.246 -0.4087,0.3427 -0.0439,0.029 -0.0882,0.054 -0.13415,0.08 -0.12844,0.07 -0.26468,0.1282 -0.40491,0.1702 -0.038,0.011 -0.0722,0.026 -0.1102,0.036 -0.15238,0.036 -0.31066,0.059 -0.47103,0.059 h -49.59068 c -2.26452,0 -4.10417,-1.8417 -4.10417,-4.1044 v -33.3298 h -2.51247 c -3.23944,0 -5.86611,-2.6255 -5.86611,-5.8661 v -30.5048 c 0,-3.2383 2.62667,-5.8655 5.86611,-5.8655 h 2.51266 v -20.8815 c 0,-2.2624 1.83965,-4.1043 4.10417,-4.1043 h 67.71875 c 2.26242,0 4.10417,1.8417 4.10417,4.1043 v 20.8815 h 2.51304 c 3.23849,0 5.86573,2.6272 5.86573,5.8655 v 30.5039 c -1.9e-4,3.2404 -2.62743,5.8661 -5.86592,5.8661 z m -74.33596,33.33 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"
+           style="stroke-width:1.79471" />
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot192-5-8-5-9-0"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.79471px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           transform="matrix(1,0,0,-1,67.051202,3752.8958)"><flowRegion
+             id="flowRegion188-3-1-6-3-3"
+             style="stroke-width:1.79471px"><rect
+               id="rect186-5-2-3-9-4"
+               width="112"
+               height="53.599998"
+               x="474.39999"
+               y="-1904.0004"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#ffffff;stroke-width:1.79471px"
+               transform="scale(1,-1)" /></flowRegion><flowPara
+             id="flowPara190-6-9-9-0-0"
+             style="font-size:32px;line-height:1.25;stroke-width:1.79471px">fa</flowPara></flowRoot>
+        <path
+           id="path194-2-3-4-8-3"
+           d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccsscccccccccc"
+           style="fill:#ffffff;stroke-width:1.79471" />
+      </g>
+    </g>
+    <g
+       id="g2123-3-6-0-9"
+       transform="matrix(0.52579841,0,0,0.52579841,160.32377,-33.828426)"
+       style="display:inline;stroke-width:1.79471"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968">
+      <g
+         transform="matrix(0.36471833,0,0,-0.34527771,109.4761,750.43121)"
+         id="g6322-11-1">
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot5864-3-69"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           transform="matrix(1,0,0,-1,56.331558,3754.5096)"><flowRegion
+             id="flowRegion5866-4-3"><rect
+               id="rect5868-0-3"
+               width="112"
+               height="53.599998"
+               x="474.39999"
+               y="-1904.0004"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#ffffff"
+               transform="scale(1,-1)" /></flowRegion><flowPara
+             id="flowPara5870-39-8"
+             style="font-size:32px;line-height:1.25">zip</flowPara></flowRoot>
+        <path
+           id="path6276-4-1-0"
+           d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccsscccccccccc"
+           style="fill:none;stroke:none;stroke-opacity:1" />
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+       x="187.58179"
+       y="13.482705"
+       id="text10160-8-6-8-2-5"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         id="tspan10158-4-1-1-8-6"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+         x="187.58179"
+         y="13.482705">Samplesheet</tspan></text>
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+       id="path3447-0-7-2-6-6-6"
+       cx="264.27994"
+       cy="71.682686"
+       r="2.6458333"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:2.64581;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 264.28004,36.493105 v 12.7"
+       id="path2500-5-22-8-2-2-8-1-3-4"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:2.64581;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 264.27994,55.503881 v 12.7"
+       id="path2500-5-22-8-2-2-8-1-3-6-0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968" />
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+       x="283.64319"
+       y="54.546783"
+       id="text10160-8-6-7-9-0"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="283.64319"
+         y="54.546783"
+         id="tspan18545-4">MakeDb</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+       x="270.27408"
+       y="72.939949"
+       id="text10160-8-6-7-2-2-6"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         id="tspan10158-4-1-3-9-1-2"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+         x="270.27408"
+         y="72.939949">Filter quality</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+       x="277.01028"
+       y="115.33129"
+       id="text10160-8-6-7-2-2-9-6"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         id="tspan10158-4-1-3-9-1-6-7"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+         x="277.01028"
+         y="115.33129">Productive</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+       x="277.0661"
+       y="137.69754"
+       id="text10160-8-6-7-2-2-9-9-5"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         id="tspan10158-4-1-3-9-1-6-3-6"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+         x="277.0661"
+         y="137.69754">mod3 junction</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+       x="264.51404"
+       y="180.41473"
+       id="text10160-8-6-7-2-3-5-5-9"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="264.51404"
+         y="180.41473"
+         id="tspan43523-8">Add metadata</tspan></text>
+    <g
+       id="g51217-7"
+       transform="translate(180.97362,6.3656738)"
+       style="display:inline">
+      <circle
+         style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+         id="path3447-0-7-2-6-3-1-2"
+         cx="91.243813"
+         cy="106.5983"
+         r="2.6458333"
+         inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+         inkscape:export-xdpi="299.9968"
+         inkscape:export-ydpi="299.9968" />
+      <circle
+         style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+         id="path3447-0-7-2-6-3-0-9-8"
+         cx="91.243813"
+         cy="129.60474"
+         r="2.6458333"
+         inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+         inkscape:export-xdpi="299.9968"
+         inkscape:export-ydpi="299.9968" />
+      <path
+         style="display:inline;fill:none;stroke:#000000;stroke-width:2.64581;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 91.243813,110.291 v 16.50997"
+         id="path2500-5-22-8-2-2-8-1-1-6-7-2"
+         sodipodi:nodetypes="cc"
+         inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+         inkscape:export-xdpi="299.9968"
+         inkscape:export-ydpi="299.9968" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+       x="300.37512"
+       y="43.238625"
+       id="text10160-8-6-7-2-9-4-2-9"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="300.37512"
+         y="43.238625"
+         id="tspan27360-9">Fetch databases</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+       x="238.30528"
+       y="42.795486"
+       id="text10160-8-6-8-6"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="238.30528"
+         y="42.795486"
+         id="tspan14465-0">Convert</tspan></text>
+    <path
+       style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 256.34244,105.76563 v 37.13339"
+       id="path2500-5-22-5-4-7-9-9-1"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g1249-3"
+       transform="translate(134.9071,54.888062)"
+       style="display:inline">
+      <path
+         style="display:inline;fill:#000000;stroke:#1a1a1a;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 80.686105,-22.66326 46.580845,-2.42e-4"
+         id="path2500-5-22-5-4-7-9-5-2"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+       id="path3447-6-2-4-8-1-7-1"
+       cx="264.28003"
+       cy="52.632687"
+       r="2.6458333" />
+    <rect
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;paint-order:stroke markers fill;stop-color:#000000"
+       id="rect918-85-5"
+       width="5.2919998"
+       height="13.229166"
+       x="261.63403"
+       y="25.610098"
+       ry="2.6458333"
+       rx="2.6458333" />
+    <g
+       id="g59524-4-9"
+       transform="translate(60.550761,-75.683921)"
+       style="display:inline">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 195.79168,185.20831 v -7.93749 c 0,-3.94417 2.50272,-7.79437 5.29166,-10.58333 l 2.64584,-2.64584"
+         id="path1232-7-2-9-0-91"
+         sodipodi:nodetypes="cssc" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 211.66668,185.20831 v -7.9375 c 0,-3.94417 -2.50272,-7.79436 -5.29166,-10.58332 l -2.64584,-2.64584"
+         id="path1232-7-2-7-3-0-49"
+         sodipodi:nodetypes="cssc" />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 203.72918,150.58294 v 13.45872"
+         id="path2500-5-60-6-1"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-size:4.23333px;line-height:124%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="215.38452"
+         y="161.82404"
+         id="text53393-0"><tspan
+           sodipodi:role="line"
+           id="tspan53391-7"
+           style="stroke-width:0.264583px"
+           x="215.38452"
+           y="161.82404" /></text>
+    </g>
+    <g
+       id="g59524-4-6-5"
+       transform="matrix(1,0,0,-1,60.550761,324.25785)"
+       style="display:inline">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 195.79168,185.20831 v -7.93749 c 0,-3.94417 2.50272,-7.79437 5.29166,-10.58333 l 2.64584,-2.64584"
+         id="path1232-7-2-9-0-9-8"
+         sodipodi:nodetypes="cssc" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 211.66668,185.20831 v -7.9375 c 0,-3.94417 -2.50272,-7.79436 -5.29166,-10.58332 l -2.64584,-2.64584"
+         id="path1232-7-2-7-3-0-8-7"
+         sodipodi:nodetypes="cssc" />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 203.72918,151.25785 v 12.78381"
+         id="path2500-5-60-6-7-0"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-size:4.23333px;line-height:124%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="215.38452"
+         y="161.82404"
+         id="text53393-2-4"><tspan
+           sodipodi:role="line"
+           id="tspan53391-8-8"
+           style="stroke-width:0.264583px"
+           x="215.38452"
+           y="161.82404" /></text>
+    </g>
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 215.5932,19.237381 h 32.41624 c 3.94417,0 7.79437,2.50271 10.58333,5.29166 l 2.64584,2.64584"
+       id="path1232-7-7-0"
+       sodipodi:nodetypes="cssc" />
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+       id="path3447-6-2-4-8-1-4"
+       cx="238.88362"
+       cy="32.224682"
+       r="2.6458333" />
+    <g
+       id="g1249-9-2"
+       transform="translate(186.51114,54.888062)"
+       style="display:inline" />
+    <g
+       id="g12972"
+       transform="translate(0,-7.4083337)">
+      <path
+         id="path5862-0-5-1"
+         d="m 332.70408,28.39091 c -9.74627,0.145618 -9.5299,-1.64e-4 -15.52414,-1.64e-4 -0.62122,0 -1.12493,0.476651 -1.12493,1.06497 v 5.538039 c 0,0.587902 0.50371,1.064861 1.12493,1.064861 h 15.52417 c 0.62104,0 1.12487,-0.476959 1.12487,-1.064861 v -5.537876 c -4e-5,-0.588283 -0.50386,-1.064969 -1.1249,-1.064969 z"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccssccscc"
+         style="display:inline;stroke-width:0.33487" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot5864-3-6-0"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         transform="matrix(0.19176832,0,0,0.18154647,224.94942,-306.73428)"><flowRegion
+           id="flowRegion5866-4-1-4"><rect
+             id="rect5868-0-1-2"
+             width="112"
+             height="53.599998"
+             x="474.39999"
+             y="-1904.0004"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#ffffff"
+             transform="scale(1,-1)" /></flowRegion><flowPara
+           id="flowPara5870-39-5-2"
+           style="font-size:32px;line-height:1.25">IMGT</flowPara></flowRoot>
+    </g>
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+       id="path3447-0-7-2-6-6-8-2"
+       cx="264.27994"
+       cy="169.70616"
+       r="2.6458333"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968" />
+    <g
+       id="g57733-4-4-0"
+       transform="translate(375.95531,-91.297971)"
+       inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+       inkscape:export-xdpi="299.9968"
+       inkscape:export-ydpi="299.9968"
+       style="display:inline">
+      <path
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.64581;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -179.50445,127.33875 V 244.19699"
+         id="path2500-5-22-8-2-2-8-1-0-6-8-5"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="g1249-0-5"
+       transform="translate(133.04423,192.36955)"
+       style="display:inline">
+      <path
+         style="display:inline;fill:#000000;stroke:#1a1a1a;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 80.686105,-22.66326 46.862865,-2.42e-4"
+         id="path2500-5-22-5-4-7-9-5-3-2"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 217.61754,169.70629 h -5.29166 c -3.94417,0 -7.79438,-2.50272 -10.58333,-5.29167 -2.64584,-2.64583 -5.29167,-6.63916 -5.29167,-10.58334 l -1e-5,-5.29166"
+       id="path1232-36-5-9-0-9"
+       sodipodi:nodetypes="csssc" />
+    <g
+       id="g96276"
+       transform="rotate(-90,202.02407,43.892223)">
+      <g
+         id="g115075">
+        <path
+           style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 84.179878,336.03024 v 47.53371"
+           id="path2500-5-2-3-0-3-4-5-4-8"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="display:inline;fill:none;stroke:#7eb2dd;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 68.304878,218.36553 V 393.56395"
+           id="path2500-5-2-3-2-5-3"
+           sodipodi:nodetypes="cc" />
+        <g
+           id="g59524-4-4-0-8"
+           transform="matrix(1,0,0,-1,-127.48681,570.18659)"
+           style="display:inline">
+          <path
+             style="fill:none;stroke:#7eb2dd;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 195.79168,185.20803 v -7.93721 c 0,-3.94417 2.50272,-7.79437 5.29166,-10.58333 l 2.64584,-2.64584"
+             id="path1232-7-2-9-0-4-3-0"
+             sodipodi:nodetypes="cssc" />
+          <path
+             style="fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 211.66668,185.20831 v -7.9375 c 0,-3.94417 -2.50272,-7.79436 -5.29166,-10.58332 l -2.64584,-2.64584"
+             id="path1232-7-2-7-3-0-4-0-4"
+             sodipodi:nodetypes="cssc" />
+          <path
+             style="fill:#000000;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 203.72918,150.58294 v 12.92411"
+             id="path2500-5-60-6-4-9-0"
+             sodipodi:nodetypes="cc" />
+          <text
+             xml:space="preserve"
+             style="font-size:4.23333px;line-height:124%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             x="215.38452"
+             y="161.82404"
+             id="text53393-7-2-9"><tspan
+               sodipodi:role="line"
+               id="tspan53391-6-5-1"
+               style="stroke-width:0.264583px"
+               x="215.38452"
+               y="161.82404" /></text>
+          <rect
+             style="fill:#7eb2dd;fill-opacity:1;fill-rule:evenodd;stroke:#7eb2dd;stroke-width:0.507252;stroke-opacity:1;paint-order:markers stroke fill;stop-color:#000000"
+             id="rect43044-4-9"
+             width="0.81100696"
+             height="1.8902205"
+             x="202.6599"
+             y="163.76068" />
+          <rect
+             style="display:inline;fill:#ff9914;fill-opacity:1;fill-rule:evenodd;stroke:#ff9914;stroke-width:0.502796;stroke-opacity:1;paint-order:markers stroke fill;stop-color:#000000"
+             id="rect43044-3-0-6"
+             width="0.79494572"
+             height="1.8946769"
+             x="203.97592"
+             y="163.75845" />
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+           x="248.50128"
+           y="-115.44842"
+           id="text10160-8-6-7-2-3-5-4-1-2"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="rotate(90)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-2-5-7-8-5"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="248.50128"
+             y="-115.44842">Create</tspan><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="248.50128"
+             y="-107.51092"
+             id="tspan96536">germlines</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+           x="197.40855"
+           y="-74.250778"
+           id="text10160-8-6-7-2-3-5-4-4-9-4"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="rotate(90)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-2-5-7-3-6-4"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+             x="197.40855"
+             y="-74.250778">Single cell QC</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+           x="284.55289"
+           y="-115.53214"
+           id="text10160-8-6-7-2-3-3-6-9"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="rotate(90)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-2-7-0-9"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="284.55289"
+             y="-115.53214">Remove</tspan><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="284.55289"
+             y="-107.59464"
+             id="tspan102526">chimeric</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+           x="334.93481"
+           y="-106.23021"
+           id="text10160-8-6-7-2-3-3-7-8-3"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="rotate(90)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-2-7-4-9-6"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="334.93481"
+             y="-106.23021">Detect</tspan><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="334.93481"
+             y="-98.292709"
+             id="tspan104606">cross</tspan><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="334.93481"
+             y="-90.355209"
+             id="tspan105594">contamination</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;text-align:center;letter-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.264583"
+           x="381.54678"
+           y="-98.626541"
+           id="text10160-8-6-7-2-3-3-7-0-6-0"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="rotate(90)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-2-7-4-7-4-5"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="381.54678"
+             y="-98.626541">Collapse</tspan><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="381.54678"
+             y="-90.689041"
+             id="tspan108196">duplicates</tspan></text>
+        <g
+           id="g59524-4-4-02"
+           transform="translate(-127.48681,26.243449)"
+           style="display:inline">
+          <path
+             style="fill:none;stroke:#7eb2dd;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 195.79168,185.20831 v -7.93749 c 0,-3.94417 2.50272,-7.79437 5.29166,-10.58333 l 2.64584,-2.64584"
+             id="path1232-7-2-9-0-4-9"
+             sodipodi:nodetypes="cssc" />
+          <path
+             style="fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 211.66668,185.20831 v -7.9375 c 0,-3.94417 -2.50272,-7.79436 -5.29166,-10.58332 l -2.64584,-2.64584"
+             id="path1232-7-2-7-3-0-4-4"
+             sodipodi:nodetypes="cssc" />
+          <path
+             style="fill:#000000;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 203.72918,150.58294 v 12.92411"
+             id="path2500-5-60-6-4-3"
+             sodipodi:nodetypes="cc" />
+          <text
+             xml:space="preserve"
+             style="font-size:4.23333px;line-height:124%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             x="215.38452"
+             y="161.82404"
+             id="text53393-7-5"><tspan
+               sodipodi:role="line"
+               id="tspan53391-6-1"
+               style="stroke-width:0.264583px"
+               x="215.38452"
+               y="161.82404" /></text>
+          <rect
+             style="fill:#7eb2dd;fill-opacity:1;fill-rule:evenodd;stroke:#7eb2dd;stroke-width:0.507252;stroke-opacity:1;paint-order:markers stroke fill;stop-color:#000000"
+             id="rect43044-7"
+             width="0.81100696"
+             height="1.8902205"
+             x="202.6599"
+             y="163.76068" />
+          <rect
+             style="display:inline;fill:#ff9914;fill-opacity:1;fill-rule:evenodd;stroke:#ff9914;stroke-width:0.502796;stroke-opacity:1;paint-order:markers stroke fill;stop-color:#000000"
+             id="rect43044-3-4"
+             width="0.79494572"
+             height="1.8946769"
+             x="203.97592"
+             y="163.75845" />
+        </g>
+        <circle
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-0-5-8-3-3"
+           cx="68.304878"
+           cy="215.15588"
+           r="2.6458333"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968" />
+        <g
+           id="g61543-1"
+           transform="rotate(90,75.728248,114.60986)"
+           style="display:inline">
+          <path
+             style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 172.57015,106.15824 h 7.93749 c 3.94417,0 7.79437,-2.50271 10.58333,-5.29166 l 2.64584,-2.64584"
+             id="path1232-7-6-6-4"
+             sodipodi:nodetypes="cssc" />
+          <path
+             style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 172.57015,106.15824 h 21.16666"
+             id="path2500-5-2-3-2-6"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 193.73682,106.15823 h 21.16667"
+             id="path2500-5-2-3-0-17-9"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 214.9035,106.15823 h 39.77884"
+             id="path2500-5-2-3-0-3-8-4"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 214.9035,90.28324 h 29.77884"
+             id="path2500-5-2-3-0-3-4-5-2"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 214.90349,90.28324 h -7.9375 c -3.94417,0 -7.79437,2.50272 -10.58333,5.29166 l -2.64584,2.64584"
+             id="path1232-7-2-7-6-7-2"
+             sodipodi:nodetypes="cssc" />
+          <g
+             id="g75683-6"
+             transform="matrix(-1,0,0,1,532.76908,37.880661)">
+            <path
+               style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 246.9572,68.277569 h 7.93749 c 3.94417,0 7.79437,-2.50271 10.58333,-5.29166 l 2.64584,-2.64584"
+               id="path1232-7-6-6-9-4"
+               sodipodi:nodetypes="cssc" />
+            <path
+               style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 238.08674,68.277569 h 30.03712"
+               id="path2500-5-2-3-2-7-1"
+               sodipodi:nodetypes="cc" />
+            <path
+               style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 268.12387,68.277559 h 21.16667"
+               id="path2500-5-2-3-0-17-7-2"
+               sodipodi:nodetypes="cc" />
+            <path
+               style="display:inline;fill:none;stroke:#ff9914;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 289.29054,52.402569 h -7.9375 c -3.94417,0 -7.79437,2.50272 -10.58333,5.29166 l -2.64584,2.64584"
+               id="path1232-7-2-7-6-7-6-8"
+               sodipodi:nodetypes="cssc" />
+          </g>
+        </g>
+        <ellipse
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-0-5-88-2"
+           cx="100.05486"
+           cy="248.49353"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           rx="2.6459999"
+           ry="2.6458333" />
+        <circle
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-4-48-8"
+           cx="100.05486"
+           cy="284.47693"
+           r="2.6458333"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968" />
+        <circle
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-4-4-7-8"
+           cx="84.179878"
+           cy="332.36655"
+           r="2.6458333"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968" />
+        <circle
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-4-48-3-6"
+           cx="84.179878"
+           cy="381.53903"
+           r="2.6458333"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968" />
+      </g>
+    </g>
+    <g
+       id="g1249-9-2-8"
+       transform="translate(187.03342,192.36954)"
+       style="display:inline;fill:#000000;stroke:#000000;stroke-opacity:1">
+      <path
+         style="display:inline;fill:#000000;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 80.686105,-22.66326 70.280475,-2.42e-4"
+         id="path2500-5-22-5-4-7-9-5-6-9-3"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="g125831"
+       transform="translate(30.162509)">
+      <g
+         id="g117626"
+         transform="rotate(180,322.49108,242.51593)">
+        <g
+           id="g93561-9"
+           transform="translate(-84.995374,-5.4830662)"
+           style="display:inline">
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+             x="-234.95273"
+             y="-478.99915"
+             id="text10160-8-6-7-2-3-3-7-0-7-1-4-0"
+             inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+             inkscape:export-xdpi="299.9968"
+             inkscape:export-ydpi="299.9968"
+             transform="scale(-1)"><tspan
+               sodipodi:role="line"
+               id="tspan10158-4-1-3-9-2-7-4-7-2-0-0-6"
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+               x="-234.95273"
+               y="-478.99915">Build lineage trees</tspan></text>
+          <circle
+             style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+             id="path3447-0-7-2-6-3-0-4-4-8-2-6-5-8"
+             cx="161.23785"
+             cy="479.85489"
+             r="2.6458333"
+             inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+             inkscape:export-xdpi="299.9968"
+             inkscape:export-ydpi="299.9968" />
+          <path
+             style="display:inline;fill:none;stroke:#000000;stroke-width:2.64581;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 161.23774,464.24477 v 12.7"
+             id="path2500-5-22-8-2-2-8-1-1-6-5-3-6-6-1-9-7"
+             sodipodi:nodetypes="cc"
+             inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+             inkscape:export-xdpi="299.9968"
+             inkscape:export-ydpi="299.9968" />
+          <text
+             xml:space="preserve"
+             style="font-size:4.23333px;line-height:124%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             x="-385.47974"
+             y="-466.69061"
+             id="text121797"
+             transform="scale(-1)"><tspan
+               sodipodi:role="line"
+               id="tspan121795"
+               style="stroke-width:0.264583px"
+               x="-385.47974"
+               y="-466.69061" /></text>
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+           x="-149.1142"
+           y="-417.9339"
+           id="text10160-8-6-7-2-4-2-8-3"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="scale(-1)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-8-4-1-3"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+             x="-149.1142"
+             y="-417.9339">Find threshold</tspan></text>
+        <g
+           id="g61543-2-3"
+           transform="rotate(90,-13.530909,195.93151)"
+           style="display:inline;stroke:#000000">
+          <path
+             style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 172.57015,106.15824 h 7.93749 c 3.94417,0 7.79437,-2.50271 10.58333,-5.29166 l 2.64584,-2.64584"
+             id="path1232-7-6-6-8-7"
+             sodipodi:nodetypes="cssc" />
+          <path
+             style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 172.57015,106.15824 h 21.16666"
+             id="path2500-5-2-3-2-9-3"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 193.73682,106.15823 h 21.16667"
+             id="path2500-5-2-3-0-17-3-2"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 214.90349,90.28324 h -7.9375 c -3.94417,0 -7.79437,2.50272 -10.58333,5.29166 l -2.64584,2.64584"
+             id="path1232-7-2-7-6-7-0-6"
+             sodipodi:nodetypes="cssc" />
+          <g
+             id="g75683-2-5"
+             transform="matrix(-1,0,0,1,496.25648,37.880671)"
+             style="stroke:#000000">
+            <path
+               style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 246.9572,68.277569 h 7.93749 c 3.94417,0 7.79437,-2.50271 10.58333,-5.29166 l 2.64584,-2.64584"
+               id="path1232-7-6-6-9-1-2"
+               sodipodi:nodetypes="cssc" />
+            <path
+               style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 246.9572,68.277569 h 21.16666"
+               id="path2500-5-2-3-2-7-0-6"
+               sodipodi:nodetypes="cc" />
+            <path
+               style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 268.12387,68.277559 h 21.16667"
+               id="path2500-5-2-3-0-17-7-5-5"
+               sodipodi:nodetypes="cc" />
+            <path
+               style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="m 289.29054,52.402569 h -7.9375 c -3.94417,0 -7.79437,2.50272 -10.58333,5.29166 l -2.64584,2.64584"
+               id="path1232-7-2-7-6-7-6-1-8"
+               sodipodi:nodetypes="cssc" />
+          </g>
+        </g>
+        <circle
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-4-4-8-3-4-7"
+           cx="92.117363"
+           cy="420.30118"
+           r="2.6458333"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968" />
+        <circle
+           style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+           id="path3447-0-7-2-6-3-0-4-4-8-2-2-1-9"
+           cx="76.242363"
+           cy="456.94891"
+           r="2.6458333"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968" />
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+           x="-130.49228"
+           y="-454.58163"
+           id="text10160-8-6-7-2-4-2-8-0-6"
+           inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+           inkscape:export-xdpi="299.9968"
+           inkscape:export-ydpi="299.9968"
+           transform="scale(-1)"><tspan
+             sodipodi:role="line"
+             id="tspan10158-4-1-3-9-8-4-1-8-0"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.35px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+             x="-130.49228"
+             y="-454.58163">Define clones</tspan></text>
+      </g>
+      <path
+         style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 547.57313,169.67394 h 5.29166 c 3.94417,0 7.79438,-2.50272 10.58333,-5.29167 2.64584,-2.64583 5.29167,-6.63916 5.29167,-10.58334 L 568.7398,100"
+         id="path1232-36-5-9-0-9-4"
+         sodipodi:nodetypes="csssc" />
+    </g>
+    <image
+       width="105.83334"
+       height="45.772915"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image23150"
+       x="371.22672"
+       y="43.680351" />
+    <g
+       id="g21961">
+      <rect
+         style="fill:none;fill-opacity:0.811765;fill-rule:evenodd;stroke:#ebdd86;stroke-width:3;stroke-miterlimit:15;stroke-dasharray:none;stroke-opacity:0.998192;paint-order:markers stroke fill;stop-color:#000000"
+         id="rect1471"
+         width="159.72217"
+         height="192.40572"
+         x="179.76027"
+         y="-0.0092221815"
+         rx="20"
+         ry="20" />
+      <circle
+         style="fill:#ebde86;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3;stroke-miterlimit:15;stroke-dasharray:none;stroke-opacity:0.996383;paint-order:markers stroke fill;stop-color:#000000"
+         id="path10372"
+         cx="339.24371"
+         cy="57.068455"
+         r="13" />
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+         x="334.02438"
+         y="62.211979"
+         id="text10160-8-6-5-0-2"
+         inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+         inkscape:export-xdpi="299.9968"
+         inkscape:export-ydpi="299.9968"><tspan
+           sodipodi:role="line"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+           x="334.02438"
+           y="62.211979"
+           id="tspan11783-0-6">1</tspan></text>
+    </g>
+    <g
+       id="g27112"
+       transform="translate(0,4.4907778)">
+      <rect
+         style="fill:none;fill-opacity:0.811765;fill-rule:evenodd;stroke:#ebdd86;stroke-width:3;stroke-miterlimit:15;stroke-dasharray:none;stroke-opacity:0.998192;paint-order:markers stroke fill;stop-color:#000000"
+         id="rect1471-7"
+         width="101.88014"
+         height="99.767166"
+         x="507.14258"
+         y="-4.5333729"
+         rx="20"
+         ry="20" />
+      <circle
+         style="fill:#ebde86;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3;stroke-miterlimit:15;stroke-dasharray:none;stroke-opacity:0.996383;paint-order:markers stroke fill;stop-color:#000000"
+         id="path10372-3"
+         cx="507.47845"
+         cy="19.691269"
+         r="13" />
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+         x="502.25919"
+         y="24.834793"
+         id="text10160-8-6-5-0-2-6"
+         inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+         inkscape:export-xdpi="299.9968"
+         inkscape:export-ydpi="299.9968"><tspan
+           sodipodi:role="line"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+           x="502.25919"
+           y="24.834793"
+           id="tspan11783-0-6-5">3</tspan></text>
+    </g>
+    <g
+       id="g27106"
+       transform="translate(2.5825882,0.19416222)">
+      <rect
+         style="display:inline;fill:none;fill-opacity:0.811765;fill-rule:evenodd;stroke:#ebdd86;stroke-width:3;stroke-miterlimit:15;stroke-dasharray:none;stroke-opacity:0.998192;paint-order:markers stroke fill;stop-color:#000000"
+         id="rect1471-7-6"
+         width="261.53427"
+         height="85.131775"
+         x="344.8725"
+         y="107.07056"
+         rx="20"
+         ry="20" />
+      <circle
+         style="display:inline;fill:#ebde86;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3;stroke-miterlimit:15;stroke-dasharray:none;stroke-opacity:0.996383;paint-order:markers stroke fill;stop-color:#000000"
+         id="path10372-3-3"
+         cx="470.48849"
+         cy="106.93417"
+         r="13" />
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;line-height:1.25;font-family:Commissioner;-inkscape-font-specification:Commissioner;letter-spacing:0px;display:inline;stroke-width:0.264583"
+         x="465.26926"
+         y="112.07767"
+         id="text10160-8-6-5-0-2-6-9"
+         inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png"
+         inkscape:export-xdpi="299.9968"
+         inkscape:export-ydpi="299.9968"><tspan
+           sodipodi:role="line"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
+           x="465.26926"
+           y="112.07767"
+           id="tspan11783-0-6-5-4">2</tspan></text>
+    </g>
+    <g
+       id="g5565"
+       transform="translate(-26.649212,36.543632)">
+      <path
+         style="display:inline;fill:none;stroke:#b3b5b2;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 294.89816,-4.31883 h 7.93749 c 3.94417,0 7.79437,-2.50271 10.58333,-5.29166 l 2.64584,-2.64584"
+         id="path1232-7-6-6-4-6"
+         sodipodi:nodetypes="cssc" />
+      <path
+         style="display:inline;fill:none;stroke:#000000;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 294.89816,-4.31883 h 43.75105"
+         id="path2500-5-2-3-2-6-3"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="display:inline;fill:none;stroke:#b3b5b2;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 338.64921,-20.19383 H 329.294 c -3.94417,0 -7.79437,2.50272 -10.58333,5.29166 l -2.64584,2.64584"
+         id="path1232-7-2-7-6-7-2-9"
+         sodipodi:nodetypes="cssc" />
+    </g>
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+       id="path3447-6-2-4-8-1-3-6"
+       cx="290.3952"
+       cy="32.224682"
+       r="2.6458333" />
+  </g>
+</svg>
