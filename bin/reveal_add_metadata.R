@@ -93,7 +93,7 @@ if (!is.null(opt$OUTNAME)) {
     output_fn <- sub(".tsv$", "_meta-pass.tsv", basename(opt$REPERTOIRE))
 }
 
-write_airr(db, file = output_fn)
+write_rearrangement(db, file = output_fn)
 
 
 write("START> AddMetadata", stdout())
