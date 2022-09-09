@@ -83,7 +83,7 @@ internal_fields <-
     )
 metadata <- metadata[, !colnames(metadata) %in% internal_fields]
 
-db <- read_airr(opt$REPERTOIRE)
+db <- read_rearrangement(opt$REPERTOIRE)
 
 db <- cbind(db, metadata)
 
