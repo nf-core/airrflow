@@ -280,17 +280,17 @@
             "properties": {
                 "report_rmd": {
                     "type": "string",
-                    "default": "/Users/gisela/Projects/Pipelines/nf-core-bcellmagic/assets/repertoire_comparison.Rmd",
+                    "default": "${projectDir}/assets/repertoire_comparison.Rmd",
                     "description": "Custom report Rmarkdown file."
                 },
                 "report_css": {
                     "type": "string",
-                    "default": "/Users/gisela/Projects/Pipelines/nf-core-bcellmagic/assets/nf-core_style.css",
+                    "default": "${projectDir}/assets/nf-core_style.css",
                     "description": "Custom report style file in css format."
                 },
                 "report_logo": {
                     "type": "string",
-                    "default": "/Users/gisela/Projects/Pipelines/nf-core-bcellmagic/assets/nf-core-airrflow_logo_light.png",
+                    "default": "${projectDir}/assets/nf-core-airrflow_logo_light.png",
                     "description": "Custom logo for the report."
                 }
             }
