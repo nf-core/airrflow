@@ -168,7 +168,7 @@
             "fa_icon": "fas fa-barcode"
         },
         "presto_options": {
-            "title": "pResto options",
+            "title": "pRESTO options",
             "type": "object",
             "description": "Options for the presto tools",
             "default": "",
