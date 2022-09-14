@@ -7,7 +7,7 @@ for FILE in ${DIR}/*.txt       # get the file names you want to work on
 do
     if [ $IDX -eq 0 ]
     then
-        head -n 26 $FILE > "${DIR}/head.txt"
+        awk '/<graph id=/ {exit} {print}' $FILE > "${DIR}/head.txt"
         tail -n 1 $FILE > "${DIR}/tail.txt"
         awk '/<graph /,/<\/graph>/' "${FILE}" >> "${DIR}/All_graphs_patient_nohead.graphml"
         ((IDX++))
