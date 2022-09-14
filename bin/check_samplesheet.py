@@ -8,6 +8,7 @@ import errno
 import argparse
 import pandas as pd
 
+
 def parse_args(args=None):
     Description = "Read nf-core/airrflow samplesheet file and check its contents."
     Epilog = "Example usage: python check_samplesheet.py <FILE_IN>"
@@ -63,15 +64,9 @@ def check_samplesheet(file_in):
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         for col in REQUIRED_COLUMNS:
             if col not in header:
-                print(
-                    "ERROR: Please check samplesheet header: {} ".format(
-                        ",".join(header)
-                    )
-                )
+                print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
                 print("Header is missing column {}".format(col))
-                print(
-                    "Header must contain columns {}".format("\t".join(REQUIRED_COLUMNS))
-                )
+                print("Header must contain columns {}".format("\t".join(REQUIRED_COLUMNS)))
                 sys.exit(1)
 
         ## Check that rows have the same fields as header, and at least the compulsory ones are provided
@@ -81,18 +76,14 @@ def check_samplesheet(file_in):
             ## Check valid number of columns per row
             if len(lspl) < len(header):
                 print_error(
-                    "Invalid number of columns in this row (should be {})!".format(
-                        len(header)
-                    ),
+                    "Invalid number of columns in this row (should be {})!".format(len(header)),
                     "Line {}".format(line_num),
                     line,
                 )
             num_cols = len([x for x in lspl if x])
             if num_cols < MIN_COLS:
                 print_error(
-                    "Invalid number of populated columns (should be {})!".format(
-                        MIN_COLS
-                    ),
+                    "Invalid number of populated columns (should be {})!".format(MIN_COLS),
                     "Line",
                     line,
                 )

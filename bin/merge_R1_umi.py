@@ -11,13 +11,9 @@ parser.add_argument(
     type=str,
     help="Path of I1 fastq.gz file containing the UMI barcode.",
 )
-parser.add_argument(
-    "-s", "--umi_start", type=int, help="UMI start position in index file."
-)
+parser.add_argument("-s", "--umi_start", type=int, help="UMI start position in index file.")
 parser.add_argument("-l", "--umi_length", type=int, help="UMI length.")
-parser.add_argument(
-    "-o", "--outname", type=str, default="UMI_R1.fastq.gz", help="Name of output file."
-)
+parser.add_argument("-o", "--outname", type=str, default="UMI_R1.fastq.gz", help="Name of output file.")
 
 args = parser.parse_args()
 
