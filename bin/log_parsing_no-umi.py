@@ -76,9 +76,7 @@ for process in processes:
                 for line in f:
                     if " START>" in line:
                         if c < 1:
-                            s_code.append(
-                                logfile.split("/")[1].split("_command_log")[0]
-                            )
+                            s_code.append(logfile.split("/")[1].split("_command_log")[0])
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
@@ -313,15 +311,9 @@ df_process_list[1].to_csv(
     header=True,
     index=False,
 )
-df_process_list[2].to_csv(
-    path_or_buf="Table_all_details_mask_primers.tsv", sep="\t", header=True, index=False
-)
-df_process_list[3].to_csv(
-    path_or_buf="Table_all_details_deduplicate.tsv", sep="\t", header=True, index=False
-)
-df_process_list[4].to_csv(
-    path_or_buf="Table_all_details_igblast.tsv", sep="\t", header=True, index=False
-)
+df_process_list[2].to_csv(path_or_buf="Table_all_details_mask_primers.tsv", sep="\t", header=True, index=False)
+df_process_list[3].to_csv(path_or_buf="Table_all_details_deduplicate.tsv", sep="\t", header=True, index=False)
+df_process_list[4].to_csv(path_or_buf="Table_all_details_igblast.tsv", sep="\t", header=True, index=False)
 
 final_table = dict(zip(colnames, values))
 print(final_table)
@@ -334,6 +326,4 @@ metadata = pd.read_csv("metadata.tsv", sep="\t")
 metadata = metadata[metadata.columns.drop(list(metadata.filter(regex="filename")))]
 logs_metadata = metadata.merge(df_final_table, left_on="sample_id", right_on="Sample")
 logs_metadata = logs_metadata.drop(["Sample"], axis=1)
-logs_metadata.to_csv(
-    path_or_buf="Table_sequences_process.tsv", sep="\t", header=True, index=False
-)
+logs_metadata.to_csv(path_or_buf="Table_sequences_process.tsv", sep="\t", header=True, index=False)

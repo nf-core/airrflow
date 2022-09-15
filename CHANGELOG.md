@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Lineage tree construction now also includes trees with just one sequence.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added metadata annotation to final repertoire table.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to provide custom Rmarkdown report.
+- [#183](https://github.com/nf-core/airrflow/pull/183) Update template to nf-core tools v2.5.2
 
 ### `Fixed`
 
