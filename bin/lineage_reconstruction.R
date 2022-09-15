@@ -69,13 +69,13 @@ save_graph <- function(df_pat, clone_num){
     # Make changeo clone and Build Phylip Lineage
     if ( opt$node_text == "none" ) {
         clone <- makeChangeoClone(sub_db_clone, text_fields = c("c_primer", "subject_id",
-                                                        "sample_id", "clone_id"),
+                                                        "sample_id", "clone_id", "pcr_target_locus"),
                                         num_fields = "duplicate_count")
         graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
         V(graph)$label <- ""
     } else {
         clone <- makeChangeoClone(sub_db_clone, text_fields = append(c("c_primer", "subject_id",
-                                                            "sample_id", "clone_id"), opt$node_text),
+                                                            "sample_id", "clone_id", "pcr_target_locus"), opt$node_text),
                                             num_fields = "duplicate_count")
         graph <- buildPhylipLineage(clone, dnapars_exec, rm_temp = T, verbose = F)
         varname <- opt$node_text
@@ -93,7 +93,7 @@ save_graph <- function(df_pat, clone_num){
     vsize[is.na(vsize)] <- 1
 
     # Save graph in graphML format
-    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$subject_id[1], "_", clone@data$pcr_target_locus[1], "_clone_id_", clone_num, ".txt", sep=""), format = c("graphml"))
+    write_graph(graph, file=paste(patdir_lineage_graphml, "/Graph_", clone@data$subject_id[1], "_", clone@data$pcr_target_locus[1], "_clone_id_", clone_num, ".graphml", sep=""), format = c("graphml"))
 
     # Plot tree
     pdf(paste(patdir_lineage_trees,"/Clone_tree_", clone@data$subject_id[1], "_clone_id_", clone_num, ".pdf", sep=""))
