@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.12        | 1.13        |
+
 ### `Deprecated`
 
 ## [2.2.0] - 2022-06-02 "Reparo"
