@@ -6,10 +6,11 @@ include { MERGE_TABLES } from '../../modules/local/merge_tables'
 
 workflow MERGE_TABLES_WF {
     take:
-    tables
+    ch_tables
+    ch_samplesheet
 
     main:
-    tables
+    ch_tables
         .dump()
         .map{it -> [ it[0].subject+'_'+it[0].locus, it[0].id, it[0].locus, it[0].subject, it[0].species, it[1] ]}
         .groupTuple()
@@ -18,7 +19,10 @@ workflow MERGE_TABLES_WF {
         .dump()
         .set{ch_merge_tables}
 
-    MERGE_TABLES( ch_merge_tables )
+    MERGE_TABLES(
+        ch_merge_tables,
+        ch_samplesheet.collect()
+    )
 
     emit:
     tab = MERGE_TABLES.out.tab // channel: [ val(meta), tab ]

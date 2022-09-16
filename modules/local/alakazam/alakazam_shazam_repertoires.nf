@@ -10,12 +10,17 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     input:
     path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
-    tuple path(repertoire_report), path(css), path(logo)
+    path(repertoire_report)
+    path(css)
+    path(logo)
 
     output:
     path "versions.yml" , emit: versions
-    path("repertoire_comparison")
-    path("Bcellmagic_report.html")
+    path("repertoire_comparison"), emit: results_folder
+    path("*.html"), emit: report_html
+    path(repertoire_report)
+    path(css)
+    path(logo)
 
     script:
     """

@@ -3,14 +3,20 @@
     "homePage": "https://github.com/nf-core/airrflow",
     "repos": {
         "nf-core/modules": {
-            "custom/dumpsoftwareversions": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "fastqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
-            },
-            "multiqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+            "git_url": "https://github.com/nf-core/modules.git",
+            "modules": {
+                "custom/dumpsoftwareversions": {
+                    "branch": "master",
+                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
+                },
+                "fastqc": {
+                    "branch": "master",
+                    "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                },
+                "multiqc": {
+                    "branch": "master",
+                    "git_sha": "4b1d4bf401d4cf65ebc4f604bc8c8e7551109db3"
+                }
             }
         }
     }

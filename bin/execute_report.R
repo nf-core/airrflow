@@ -12,4 +12,4 @@ opt = parse_args(opt_parser)
 
 wd=getwd()
 
-rmarkdown::render(opt$report_file, output_file = "Bcellmagic_report.html", knit_root_dir = wd, output_dir = wd)
+rmarkdown::render(opt$report_file, output_file = "Airrflow_report.html", knit_root_dir = wd, output_dir = wd)
