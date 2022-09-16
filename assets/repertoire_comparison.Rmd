@@ -202,6 +202,7 @@ div_p
 ```{r include = FALSE}
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
+write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversity_data_subject.tsv"), sep="\t", quote = F, row.names = F)
 ```
 
 # V gene usage

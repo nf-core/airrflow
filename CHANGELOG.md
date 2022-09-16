@@ -3,7 +3,30 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.2.0] - 2022-06-03 "Reparo"
+## [2.3.0] - 2022-09-22 "Expelliarmus"
+
+### `Added`
+
+- [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to add any property in the AIRR sequence table as label on the lineage tree nodes.
+- [#180](https://github.com/nf-core/airrflow/pull/180) Lineage tree construction now also includes trees with just one sequence.
+- [#180](https://github.com/nf-core/airrflow/pull/180) Added metadata annotation to final repertoire table.
+- [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to provide custom Rmarkdown report.
+- [#183](https://github.com/nf-core/airrflow/pull/183) Update template to nf-core tools v2.5.1
+- [#183](https://github.com/nf-core/airrflow/pull/183) Add option to provide another different threshold in splitseq process
+
+### `Fixed`
+
+- [#180](https://github.com/nf-core/airrflow/pull/180) Repertoire analysis report now also saves diversity table.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.12        | 1.13        |
+
+### `Deprecated`
+
+## [2.2.0] - 2022-06-02 "Reparo"
 
 ### `Added`
 

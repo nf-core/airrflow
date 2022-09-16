@@ -8,7 +8,6 @@ class WorkflowBcellmagic {
     // Check and validate parameters
     //
     public static void initialise(params, log) {
-
     }
 
     //
@@ -24,16 +23,16 @@ class WorkflowBcellmagic {
                 for (param in group_params.keySet()) {
                     summary_section += "        <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
                 }
-                summary_section += "    </dl>\n"
+                summary_section += '    </dl>\n'
             }
         }
 
-        String yaml_file_text  = "id: '${workflow.manifest.name.replace('/','-')}-summary'\n"
+        String yaml_file_text  = "id: '${workflow.manifest.name.replace('/', '-')}-summary'\n"
         yaml_file_text        += "description: ' - this information is collected when the pipeline is started.'\n"
         yaml_file_text        += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
         yaml_file_text        += "section_href: 'https://github.com/${workflow.manifest.name}'\n"
         yaml_file_text        += "plot_type: 'html'\n"
-        yaml_file_text        += "data: |\n"
+        yaml_file_text        += 'data: |\n'
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
     }
@@ -43,12 +42,13 @@ class WorkflowBcellmagic {
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            log.error '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n' +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                "  Currently, the available genome keys are:\n" +
-                "  ${params.genomes.keySet().join(", ")}\n" +
-                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                '  Currently, the available genome keys are:\n' +
+                "  ${params.genomes.keySet().join(', ')}\n" +
+                '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
             System.exit(1)
         }
     }
+
 }
