@@ -14,8 +14,8 @@ process ALAKAZAM_LINEAGE {
     tuple val(meta), path("${tab}"), emit: tab
     path "versions.yml" , emit: versions
     path("*.tsv")
-    path("Clone_tree_plots/*.pdf"), emit: graph_plots, optional true
-    path("Graphml_trees/*.graphml"), emit: graph_export, optional true
+    path("Clone_tree_plots/*.pdf"), emit: graph_plots optional true
+    path("Graphml_trees/*.graphml"), emit: graph_export optional true
 
     script:
     def args = task.ext.args ?: ''
