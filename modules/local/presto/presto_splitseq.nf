@@ -11,7 +11,7 @@ process PRESTO_SPLITSEQ {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_atleast-2.fasta"), emit: fasta
+    tuple val(meta), path("${meta.id}_atleast-*.fasta"), emit: fasta
     path("*_command_log.txt"), emit: logs
     path "versions.yml" , emit: versions
 
