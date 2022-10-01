@@ -234,18 +234,23 @@ workflow SEQUENCE_ASSEMBLY {
 
     ch_versions = ch_versions.mix(ch_presto_software)
 
-
-
-
-
-
-
-
     emit:
     versions = ch_versions
+    // assembled sequences in fasta format
+    fasta = ch_presto_fasta
+    // fastqc files for multiQC report
     fastqc_preassembly = FASTQC.out.zip
     fastqc_postassembly = ch_fastqc_postassembly
-
+    // presto logs for html report
+    presto_filterseq_logs = ch_presto_filterseq_logs
+    presto_maskprimers_logs = ch_presto_maskprimers_logs
+    presto_pairseq_logs = ch_presto_pairseq_logs
+    presto_clustersets_logs = ch_presto_clustersets_logs
+    presto_buildconsensus_logs = ch_presto_buildconsensus_logs
+    presto_postconsensus_pairseq_logs = ch_presto_postconsensus_pairseq_logs
+    presto_assemblepairs_logs = ch_presto_assemblepairs_logs
+    presto_collapseseq_logs = ch_presto_collapseseq_logs
+    presto_splitseq_logs = ch_presto_splitseq_logs
 }
 
 
