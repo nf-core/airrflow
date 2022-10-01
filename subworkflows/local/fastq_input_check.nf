@@ -4,7 +4,7 @@
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 
-workflow INPUT_CHECK {
+workflow FASTQ_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.tsv
 
