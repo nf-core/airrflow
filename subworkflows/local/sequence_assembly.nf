@@ -6,89 +6,6 @@
 */
 
 
-if (!params.library_generation_method) {
-    exit 1, "Please specify a library generation method with the `--library_generation_method` option."
-}
-
-// Validate library generation method parameter
-if (params.library_generation_method == 'specific_pcr_umi'){
-    if (params.vprimers)  {
-        ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
-    } else {
-        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr_umi' library generation method."
-    }
-    if (params.cprimers)  {
-        ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
-    } else {
-        exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr_umi' library generation method."
-    }
-    if (params.race_linker)  {
-        exit 1, "Please do not set '--race_linker' when using the 'specific_pcr_umi' library generation method."
-    }
-    if (params.umi_length < 2)  {
-        exit 1, "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
-    }
-} else if (params.library_generation_method == 'specific_pcr') {
-    if (params.vprimers)  {
-        ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
-    } else {
-        exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr' library generation method."
-    }
-    if (params.cprimers)  {
-        ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
-    } else {
-        exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr' library generation method."
-    }
-    if (params.race_linker)  {
-        exit 1, "Please do not set '--race_linker' when using the 'specific_pcr' library generation method."
-    }
-    if (params.umi_length > 0)  {
-        exit 1, "Please do not set a UMI length with the library preparation method 'specific_pcr'. Please specify instead a method that suports umi."
-    } else {
-        params.umi_length = 0
-    }
-} else if (params.library_generation_method == 'dt_5p_race_umi') {
-    if (params.vprimers) {
-        exit 1, "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
-    } else if (params.race_linker) {
-        ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-    } else {
-        exit 1, "The oligo-dT 5'-RACE UMI library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
-    }
-    if (params.cprimers)  {
-        ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
-    } else {
-        exit 1, "The oligo-dT 5'-RACE UMI library generation method requires the C-region primer sequences, please provide a fasta file with the '--cprimers' option."
-    }
-    if (params.umi_length < 2)  {
-        exit 1, "The oligo-dT 5'-RACE UMI 'dt_5p_race_umi' library generation method requires specifying the '--umi_length' to a value greater than 1."
-    }
-} else if (params.library_generation_method == 'dt_5p_race') {
-    if (params.vprimers) {
-        exit 1, "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
-    } else if (params.race_linker) {
-        ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-    } else {
-        exit 1, "The oligo-dT 5'-RACE library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
-    }
-    if (params.cprimers)  {
-        ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
-    } else {
-        exit 1, "The oligo-dT 5'-RACE library generation method requires the C-region primer sequences, please provide a fasta file with the '--cprimers' option."
-    }
-    if (params.umi_length > 0)  {
-        exit 1, "Please do not set a UMI length with the library preparation method oligo-dT 5'-RACE 'dt_5p_race'. Please specify instead a method that suports umi (e.g. 'dt_5p_race_umi')."
-    } else {
-        params.umi_length = 0
-    }
-} else {
-    exit 1, "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."
-}
-
-// Validate UMI position
-if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
-if (params.umi_length < 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
-if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
 // Rmarkdown report file
 ch_report_rmd = Channel.fromPath(params.report_rmd, checkIfExists: true)
@@ -108,10 +25,6 @@ ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
 */
 
 //CHANGEO
-include { FETCH_DATABASES } from '../../modules/local/fetch_databases'
-include { UNZIP_DB as UNZIP_IGBLAST } from '../../modules/local/unzip_db'
-include { UNZIP_DB as UNZIP_IMGT } from '../../modules/local/unzip_db'
-include { CHANGEO_ASSIGNGENES } from '../../modules/local/changeo/changeo_assigngenes'
 include { CHANGEO_MAKEDB } from '../../modules/local/changeo/changeo_makedb'
 include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_parsedb_split'
 include { CHANGEO_PARSEDB_SELECT } from '../../modules/local/changeo/changeo_parsedb_select'
@@ -162,6 +75,93 @@ workflow SEQUENCE_ASSEMBLY {
     ch_input // channel:
 
     main:
+
+    // Validate params
+    if (!params.library_generation_method) {
+        exit 1, "Please specify a library generation method with the `--library_generation_method` option."
+    }
+
+    // Validate library generation method parameter
+    if (params.library_generation_method == 'specific_pcr_umi'){
+        if (params.vprimers)  {
+            ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
+        } else {
+            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr_umi' library generation method."
+        }
+        if (params.cprimers)  {
+            ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+        } else {
+            exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr_umi' library generation method."
+        }
+        if (params.race_linker)  {
+            exit 1, "Please do not set '--race_linker' when using the 'specific_pcr_umi' library generation method."
+        }
+        if (params.umi_length < 2)  {
+            exit 1, "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
+        }
+    } else if (params.library_generation_method == 'specific_pcr') {
+        if (params.vprimers)  {
+            ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
+        } else {
+            exit 1, "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr' library generation method."
+        }
+        if (params.cprimers)  {
+            ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+        } else {
+            exit 1, "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr' library generation method."
+        }
+        if (params.race_linker)  {
+            exit 1, "Please do not set '--race_linker' when using the 'specific_pcr' library generation method."
+        }
+        if (params.umi_length > 0)  {
+            exit 1, "Please do not set a UMI length with the library preparation method 'specific_pcr'. Please specify instead a method that suports umi."
+        } else {
+            params.umi_length = 0
+        }
+    } else if (params.library_generation_method == 'dt_5p_race_umi') {
+        if (params.vprimers) {
+            exit 1, "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
+        } else if (params.race_linker) {
+            ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else {
+            exit 1, "The oligo-dT 5'-RACE UMI library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
+        }
+        if (params.cprimers)  {
+            ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+        } else {
+            exit 1, "The oligo-dT 5'-RACE UMI library generation method requires the C-region primer sequences, please provide a fasta file with the '--cprimers' option."
+        }
+        if (params.umi_length < 2)  {
+            exit 1, "The oligo-dT 5'-RACE UMI 'dt_5p_race_umi' library generation method requires specifying the '--umi_length' to a value greater than 1."
+        }
+    } else if (params.library_generation_method == 'dt_5p_race') {
+        if (params.vprimers) {
+            exit 1, "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
+        } else if (params.race_linker) {
+            ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else {
+            exit 1, "The oligo-dT 5'-RACE library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
+        }
+        if (params.cprimers)  {
+            ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+        } else {
+            exit 1, "The oligo-dT 5'-RACE library generation method requires the C-region primer sequences, please provide a fasta file with the '--cprimers' option."
+        }
+        if (params.umi_length > 0)  {
+            exit 1, "Please do not set a UMI length with the library preparation method oligo-dT 5'-RACE 'dt_5p_race'. Please specify instead a method that suports umi (e.g. 'dt_5p_race_umi')."
+        } else {
+            params.umi_length = 0
+        }
+    } else {
+        exit 1, "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."
+    }
+
+    // Validate UMI position
+    if (params.index_file & params.umi_position == 'R2') {exit 1, "Please do not set `--umi_position` option if index file with UMIs is provided."}
+    if (params.umi_length < 0) {exit 1, "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
+    if (!params.index_file & params.umi_start != 0) {exit 1, "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
+
+
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
@@ -254,45 +254,6 @@ workflow SEQUENCE_ASSEMBLY {
 }
 
 
-    // // FETCH DATABASES
-    // // If paths to databases are provided
-    // if( params.igblast_base ){
-
-    //     if (params.igblast_base.endsWith(".zip")) {
-    //         Channel.fromPath("${params.igblast_base}")
-    //                 .ifEmpty{ exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-    //                 .set { ch_igblast_zipped }
-    //         UNZIP_IGBLAST( ch_igblast_zipped.collect() )
-    //         ch_igblast = UNZIP_IGBLAST.out.unzipped
-    //         ch_versions = ch_versions.mix(UNZIP_IGBLAST.out.versions.ifEmpty(null))
-    //     } else {
-    //         Channel.fromPath("${params.igblast_base}")
-    //             .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-    //             .set { ch_igblast }
-    //     }
-    // }
-    // if( params.imgtdb_base ){
-
-    //     if (params.imgtdb_base.endsWith(".zip")) {
-    //         Channel.fromPath("${params.imgtdb_base}")
-    //                 .ifEmpty{ exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-    //                 .set { ch_imgt_zipped }
-    //         UNZIP_IMGT( ch_imgt_zipped.collect() )
-    //         ch_imgt = UNZIP_IMGT.out.unzipped
-    //         ch_versions = ch_versions.mix(UNZIP_IMGT.out.versions.ifEmpty(null))
-    //     } else {
-    //         Channel.fromPath("${params.imgtdb_base}")
-    //             .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-    //             .set { ch_imgt }
-    //     }
-    // }
-
-    // if (!params.igblast_base | !params.imgtdb_base) {
-    //     FETCH_DATABASES()
-    //     ch_igblast = FETCH_DATABASES.out.igblast
-    //     ch_imgt = FETCH_DATABASES.out.imgt
-    //     ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
-    // }
 
     // // Run Igblast for gene assignment
     // CHANGEO_ASSIGNGENES (

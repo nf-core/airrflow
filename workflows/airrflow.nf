@@ -14,8 +14,13 @@ WorkflowAirrflow.initialise(params, log)
 def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
-if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
+if (params.input) {
+    ch_input = Channel.fromPath(params.input)
+} else {
+    exit 1, "Please provide input file containing the sample metadata with the '--input' option."
+}
 
+// TODO: check that params.reassign can only be false if input file is fasta tsv (and V/D/J assignments are available).
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,10 +40,15 @@ ch_report_logo = params.report_logo ? Channel.fromPath( params.report_logo, chec
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '../modules/local/changeo/changeo_convertdb_fasta'
+
+
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { SEQUENCE_ASSEMBLY } from '../subworkflows/local/sequence_assembly'
+include { ASSEMBLED_INPUT_CHECK } from '../subworkflows/local/assembled_input_check'
+include { VDJ_ANNOTATION } from '../subworkflows/local/vdj_annotation'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,9 +75,50 @@ workflow AIRRFLOW {
 
     ch_versions = Channel.empty()
 
-    SEQUENCE_ASSEMBLY( ch_input )
+    if ( params.mode == "fastq" ) {
 
-    ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
+        // Perform sequence assembly if input type is fastq
+        SEQUENCE_ASSEMBLY( ch_input )
+
+        ch_fasta = SEQUENCE_ASSEMBLY.out.fasta
+        ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
+        ch_fastqc_preassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_preassembly
+        ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+
+    } else if ( params.mode == "assembled" ) {
+
+        ch_fastqc_preassembly_mqc = Channel.empty()
+        ch_fastqc_postassembly_mqc = Channel.empty()
+
+        ASSEMBLED_INPUT_CHECK (ch_input,
+                            params.miairr,
+                            params.collapseby,
+                            params.cloneby)
+
+        if (params.reassign) {
+
+            CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
+                ASSEMBLED_INPUT_CHECK.out.ch_tsv
+            )
+            ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
+            ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
+            //ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+
+        } else {
+
+            ch_fasta_from_tsv = Channel.empty()
+
+        }
+
+        ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
+
+    } else {
+        exit 1, "Mode parameter value not valid."
+    }
+
+    // Perform V(D)J annotation and filtering
+    VDJ_ANNOTATION( ch_fasta )
+    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions. ifEmpty(null))
 
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (
@@ -85,8 +136,8 @@ workflow AIRRFLOW {
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-        ch_multiqc_files = ch_multiqc_files.mix(SEQUENCE_ASSEMBLY.out.fastqc_preassembly.collect{it[1]}.ifEmpty([]))
-        ch_multiqc_files = ch_multiqc_files.mix(SEQUENCE_ASSEMBLY.out.fastqc_postassembly.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_preassembly_mqc.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_mqc.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
             ch_multiqc_files.collect(),
@@ -94,7 +145,7 @@ workflow AIRRFLOW {
             ch_multiqc_custom_config.collect().ifEmpty([]),
             ch_report_logo.collect().ifEmpty([])
         )
-        multiqc_report       = MULTIQC.out.report.toList()
+        multiqc_report = MULTIQC.out.report.toList()
         ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
 

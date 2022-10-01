@@ -2,20 +2,18 @@
  * Check input samplesheet and get channels
  */
 
-include {
-    VALIDATE_INPUT
-    } from '../../modules/local/enchantr/validate_input'
+include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
 
-workflow REVEAL_INPUT_CHECK {
+workflow ASSEMBLED_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.csv
     miairr
     collapseby
     cloneby
-    reassign
+    //reassign
 
     main:
-    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby, reassign)
+    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby ) //removed reassign
     validated_input = VALIDATE_INPUT.out.validated_input
     validated_input
         .splitCsv(header: true, sep:'\t')
