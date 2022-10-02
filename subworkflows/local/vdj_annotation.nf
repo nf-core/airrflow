@@ -2,11 +2,20 @@ include { FETCH_DATABASES } from '../../modules/local/fetch_databases'
 include { UNZIP_DB as UNZIP_IGBLAST } from '../../modules/local/unzip_db'
 include { UNZIP_DB as UNZIP_IMGT } from '../../modules/local/unzip_db'
 include { CHANGEO_ASSIGNGENES } from '../../modules/local/changeo/changeo_assigngenes'
+include { CHANGEO_MAKEDB } from '../../modules/local/changeo/changeo_makedb'
+include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_parsedb_split'
+
+// reveal
+include { FILTER_QUALITY  } from '../../modules/local/reveal/filter_quality'
+include { FILTER_JUNCTION_MOD3  } from '../../modules/local/reveal/filter_junction_mod3'
+include { ADD_META_TO_TAB  } from '../../modules/local/reveal/add_meta_to_tab'
+
 
 workflow VDJ_ANNOTATION {
 
     take:
     ch_fasta
+    ch_validated_samplesheet
 
     main:
     ch_versions = Channel.empty()
@@ -60,8 +69,53 @@ workflow VDJ_ANNOTATION {
     //ch_file_sizes = ch_file_sizes.mix(CHANGEO_ASSIGNGENES_REVEAL.out.logs)
     ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
 
+    CHANGEO_MAKEDB (
+        CHANGEO_ASSIGNGENES.out.fasta,
+        CHANGEO_ASSIGNGENES.out.blast,
+        ch_imgt.collect()
+    )
+    // TODO: check what this does
+    //ch_file_sizes = ch_file_sizes.mix(CHANGEO_MAKEDB_REVEAL.out.logs)
+    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
+
+    // Apply quality filters:
+    // - locus should match v_call chain
+    // - seq alignment min length informative positions 200
+    // - max 10% N nucleotides
+    // TODO: emit versions
+    FILTER_QUALITY(
+        CHANGEO_MAKEDB.out.tab
+    )
+    //ch_file_sizes = ch_file_sizes.mix(FILTER_QUALITY.out.logs)
+
+    if (params.productive_only) {
+        CHANGEO_PARSEDB_SPLIT (
+            FILTER_QUALITY.out.tab
+        )
+        //ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions.ifEmpty(null))
+
+        // Apply filter: junction length multiple of 3
+        // TODO: Add to enchantr and emit versions?
+        FILTER_JUNCTION_MOD3(
+            CHANGEO_PARSEDB_SPLIT.out.tab
+        )
+        //ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
+        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab.ifEmpty(null)
+    } else {
+        ch_repertoire = FILTER_QUALITY.out.tab.ifEmpty(null)
+    }
+
+    ADD_META_TO_TAB(
+        ch_repertoire,
+        ch_validated_samplesheet
+    )
+    //TODO: emit versions
+    //ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
+
+
     emit:
-    fasta_assigned = CHANGEO_ASSIGNGENES.out.fasta
     versions = ch_versions
+    repertoire = ADD_META_TO_TAB.out.tab
 
 }

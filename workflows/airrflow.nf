@@ -84,6 +84,7 @@ workflow AIRRFLOW {
         ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
         ch_fastqc_preassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_preassembly
         ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+        ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
     } else if ( params.mode == "assembled" ) {
 
@@ -111,14 +112,33 @@ workflow AIRRFLOW {
         }
 
         ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
-
+        ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
     } else {
         exit 1, "Mode parameter value not valid."
     }
 
     // Perform V(D)J annotation and filtering
-    VDJ_ANNOTATION( ch_fasta )
+    VDJ_ANNOTATION(
+        ch_fasta,
+        ch_validated_samplesheet
+    )
     ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions. ifEmpty(null))
+
+    ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
+        .dump(tag: 'meta_to_tab_out')
+        .branch { it ->
+            single: it[0].single_cell == 'true'
+            bulk:   it[0].single_cell == 'false'
+        }
+
+    // Processing bulk datasets
+    ch_repertoire_by_processing.bulk
+        .dump(tag: 'bulk')
+    BULK_GERMLINES_AND_FILTER()
+
+    // Processing single-cell datasets
+    ch_repertoire_by_processing.single
+        .dump(tag: 'single')
 
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (
@@ -150,7 +170,6 @@ workflow AIRRFLOW {
     }
 
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
-
 
 }
 

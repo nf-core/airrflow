@@ -25,8 +25,7 @@ ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
 */
 
 //CHANGEO
-include { CHANGEO_MAKEDB } from '../../modules/local/changeo/changeo_makedb'
-include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_parsedb_split'
+
 include { CHANGEO_PARSEDB_SELECT } from '../../modules/local/changeo/changeo_parsedb_select'
 include { CHANGEO_CONVERTDB_FASTA } from '../../modules/local/changeo/changeo_convertdb_fasta'
 
@@ -238,6 +237,8 @@ workflow SEQUENCE_ASSEMBLY {
     versions = ch_versions
     // assembled sequences in fasta format
     fasta = ch_presto_fasta
+    // validated metadata
+    samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
     // fastqc files for multiQC report
     fastqc_preassembly = FASTQC.out.zip
     fastqc_postassembly = ch_fastqc_postassembly
@@ -254,21 +255,6 @@ workflow SEQUENCE_ASSEMBLY {
 }
 
 
-
-    // // Run Igblast for gene assignment
-    // CHANGEO_ASSIGNGENES (
-    //     ch_presto_fasta,
-    //     ch_igblast.collect()
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
-
-    // // Make IgBlast results table
-    // CHANGEO_MAKEDB (
-    //     CHANGEO_ASSIGNGENES.out.fasta,
-    //     CHANGEO_ASSIGNGENES.out.blast,
-    //     ch_imgt.collect()
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
 
     // // Select only productive sequences.
     // CHANGEO_PARSEDB_SPLIT (

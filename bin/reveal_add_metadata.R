@@ -61,7 +61,7 @@ if (!("INPUTID" %in% names(opt))) {
 metadata <- read.csv(opt$METADATA, sep = "\t", header = TRUE, stringsAsFactors = F)
 
 metadata <- metadata %>%
-    filter(id == opt$INPUTID)
+    filter(sample_id == opt$INPUTID)
 
 if (nrow(metadata) != 1) {
     stop("Expecting nrow(metadata) == 1; nrow(metadata) == ", nrow(metadata), " found")
@@ -77,13 +77,19 @@ internal_fields <-
         "valid_cloneby",
         #        "cloneby_group",
         "cloneby_size",
+        "id",
         "filetype",
         "valid_single_cell",
-        "valid_pcr_target_locus"
+        "valid_pcr_target_locus",
+        "filename_R1",
+        "filename_R2",
+        "filename_I1"
     )
 metadata <- metadata[, !colnames(metadata) %in% internal_fields]
 
-db <- read_airr(opt$REPERTOIRE)
+# TODO: fix this command
+# db <- airr::read_airr(opt$REPERTOIRE)
+db <- read.csv(opt$REPERTOIRE, sep="\t", header=TRUE, stringsAsFactors = F)
 
 db <- cbind(db, metadata)
 
@@ -93,7 +99,9 @@ if (!is.null(opt$OUTNAME)) {
     output_fn <- sub(".tsv$", "_meta-pass.tsv", basename(opt$REPERTOIRE))
 }
 
-write_airr(db, file = output_fn)
+# TODO: fix this command
+# airr::write_airr(db, file = output_fn)
+write.table(db, output_fn,quote=F, sep="\t", row.names = F)
 
 
 write("START> AddMetadata", stdout())
