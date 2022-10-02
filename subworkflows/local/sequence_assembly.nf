@@ -34,7 +34,6 @@ include { SHAZAM_THRESHOLD } from '../../modules/local/shazam/shazam_threshold'
 
 //CHANGEO
 include { CHANGEO_DEFINECLONES } from '../../modules/local/changeo/changeo_defineclones'
-include { CHANGEO_CREATEGERMLINES } from '../../modules/local/changeo/changeo_creategermlines'
 include { CHANGEO_BUILDTREES } from '../../modules/local/changeo/changeo_buildtrees'
 
 //ALAKAZAM
@@ -256,11 +255,6 @@ workflow SEQUENCE_ASSEMBLY {
 
 
 
-    // // Select only productive sequences.
-    // CHANGEO_PARSEDB_SPLIT (
-    //     CHANGEO_MAKEDB.out.tab
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions.ifEmpty(null))
 
     // // Selecting IGH for ig loci, TR for tr loci.
     // CHANGEO_PARSEDB_SELECT(
@@ -302,7 +296,7 @@ workflow SEQUENCE_ASSEMBLY {
     // )
     // ch_versions = ch_versions.mix(CHANGEO_DEFINECLONES.out.versions.ifEmpty(null))
 
-    // // Identify germline sequences
+    // // Identify germline sequences -- DONE BEFORE CLONES
     // CHANGEO_CREATEGERMLINES(
     //     CHANGEO_DEFINECLONES.out.tab,
     //     ch_imgt.collect()

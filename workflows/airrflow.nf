@@ -49,6 +49,8 @@ include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '.
 include { SEQUENCE_ASSEMBLY } from '../subworkflows/local/sequence_assembly'
 include { ASSEMBLED_INPUT_CHECK } from '../subworkflows/local/assembled_input_check'
 include { VDJ_ANNOTATION } from '../subworkflows/local/vdj_annotation'
+include { BULK_GERMLINES_AND_FILTER } from '../subworkflows/local/bulk_germlines_and_filter'
+include { SINGLE_CELL_QC_AND_FILTERING } from '../subworkflows/local/single_cell_qc_and_filtering'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,14 +133,21 @@ workflow AIRRFLOW {
             bulk:   it[0].single_cell == 'false'
         }
 
-    // Processing bulk datasets
+    // Bulk: Assign germlines and filtering
     ch_repertoire_by_processing.bulk
         .dump(tag: 'bulk')
-    BULK_GERMLINES_AND_FILTER()
+    BULK_GERMLINES_AND_FILTER(
+        ch_repertoire_by_processing.bulk,
+        VDJ_ANNOTATION.out.imgt.collect()
+    )
 
-    // Processing single-cell datasets
+    // Single cell: QC and filtering
     ch_repertoire_by_processing.single
         .dump(tag: 'single')
+    SINGLE_CELL_QC_AND_FILTERING( ch_repertoire_by_processing.single )
+
+    ch_repertoires_for_clones = BULK_GERMLINES_AND_FILTER.out.repertoires
+                                    .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
 
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (

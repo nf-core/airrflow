@@ -17,11 +17,12 @@ process CHANGEO_CREATEGERMLINES {
     path "versions.yml" , emit: versions
 
     script:
+    def args = task.ext.args ?: ''
     """
-    CreateGermlines.py -d ${tab} -g dmask --cloned \\
+    CreateGermlines.py -d ${tab} \\
     -r ${imgt_base}/${meta.species}/vdj/ \\
-    --format airr \\
-    --log ${meta.id}.log --outname ${meta.id} > ${meta.id}_command_log.txt
+    -g dmask --format airr \\
+    --log ${meta.id}.log --outname ${meta.id} $args > ${meta.id}_command_log.txt
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
 
     cat <<-END_VERSIONS > versions.yml

@@ -14,7 +14,7 @@ include { ADD_META_TO_TAB  } from '../../modules/local/reveal/add_meta_to_tab'
 workflow VDJ_ANNOTATION {
 
     take:
-    ch_fasta
+    ch_fasta // [meta, fasta]
     ch_validated_samplesheet
 
     main:
@@ -117,5 +117,7 @@ workflow VDJ_ANNOTATION {
     emit:
     versions = ch_versions
     repertoire = ADD_META_TO_TAB.out.tab
+    imgt = ch_imgt
+    igblast = ch_igblast
 
 }
