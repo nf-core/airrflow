@@ -2,20 +2,19 @@
  * Check input samplesheet and get channels
  */
 
-include {
-    VALIDATE_INPUT
-    } from '../../modules/local/enchantr/validate_input'
+include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
 
-workflow REVEAL_INPUT_CHECK {
+workflow ASSEMBLED_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.csv
     miairr
     collapseby
     cloneby
-    reassign
+    //reassign
 
     main:
-    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby, reassign)
+    // TODO: validate input should check that sample_ids are unique
+    VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby ) //removed reassign
     validated_input = VALIDATE_INPUT.out.validated_input
     validated_input
         .splitCsv(header: true, sep:'\t')
@@ -37,7 +36,7 @@ def get_meta (LinkedHashMap col) {
 
     def meta = [:]
 
-    meta.id     = col.id
+    meta.id     = col.sample_id
     meta.filename     = col.filename
     meta.subject_id   = col.subject_id
     meta.species     = col.species

@@ -4,7 +4,7 @@
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 
-workflow INPUT_CHECK {
+workflow FASTQ_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.tsv
 
@@ -18,6 +18,7 @@ workflow INPUT_CHECK {
     emit:
     reads                                     // channel: [ val(meta), [ reads ] ]
     versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
+    samplesheet = SAMPLESHEET_CHECK.out.tsv // tsv metadata file
 }
 
 // Function to map
@@ -27,6 +28,7 @@ def create_fastq_channels(LinkedHashMap col) {
     meta.subject      = col.subject_id
     meta.locus        = col.pcr_target_locus
     meta.species      = col.species
+    meta.single_cell  = 'false'
 
     def array = []
     if (!file(col.filename_R1).exists()) {
