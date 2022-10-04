@@ -21,18 +21,6 @@ if (params.miairr)  {
     file(params.miairr, checkIfExists: true)
 }
 
-// If paths to databases are provided
-if( params.igblast_base ){
-    Channel.fromPath("${params.igblast_base}")
-            .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-            .set { ch_igblast }
-}
-if( params.imgtdb_base ){
-    Channel.fromPath("${params.imgtdb_base}")
-            .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-            .set { ch_imgt }
-}
-
 /*
 ========================================================================================
     CONFIG FILES
