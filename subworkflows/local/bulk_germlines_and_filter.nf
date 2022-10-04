@@ -44,18 +44,22 @@ workflow BULK_GERMLINES_AND_FILTER {
     // and update file size log accordingly
     DETECT_CONTAMINATION(
         ch_bulk_chimeric_pass
-            .map{ it -> [ it[1] ] }
-            .collect()
+            .map{ it -> [ it[0]$sample_id, it[0], it[1] ] }
         )
     // TODO file size
     ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
 
+    ch_for_collapse = ch_bulk_chimeric_pass
+            .map{ it -> [ it[0].sample_id, it[0], it[1] ] }
+            .groupTuple()
+
     // TODO: collapse duplicates do not remove meta map
     COLLAPSE_DUPLICATES(
-        ch_bulk_chimeric_pass
-            .map{ it -> [ it[1] ] }
-            .collect()
+        ch_for_collapse
     )
+
+
+
     ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
     // TODO file size
 

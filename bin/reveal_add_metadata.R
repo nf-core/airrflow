@@ -87,9 +87,7 @@ internal_fields <-
     )
 metadata <- metadata[, !colnames(metadata) %in% internal_fields]
 
-# TODO: fix this command
-# db <- airr::read_airr(opt$REPERTOIRE)
-db <- read.csv(opt$REPERTOIRE, sep="\t", header=TRUE, stringsAsFactors = F)
+db <- read_rearrangement(opt$REPERTOIRE)
 
 db <- cbind(db, metadata)
 
@@ -99,9 +97,7 @@ if (!is.null(opt$OUTNAME)) {
     output_fn <- sub(".tsv$", "_meta-pass.tsv", basename(opt$REPERTOIRE))
 }
 
-# TODO: fix this command
-# airr::write_airr(db, file = output_fn)
-write.table(db, output_fn,quote=F, sep="\t", row.names = F)
+write_rearrangement(db, file = output_fn)
 
 
 write("START> AddMetadata", stdout())
