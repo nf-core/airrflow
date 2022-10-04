@@ -10,18 +10,6 @@ if (params.miairr)  {
     file(params.miairr, checkIfExists: true)
 }
 
-// If paths to databases are provided
-if( params.igblast_base ){
-    Channel.fromPath("${params.igblast_base}")
-            .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
-            .set { ch_igblast }
-}
-if( params.imgtdb_base ){
-    Channel.fromPath("${params.imgtdb_base}")
-            .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
-            .set { ch_imgt }
-}
-
 /*
 ========================================================================================
     CONFIG FILES
@@ -30,6 +18,8 @@ if( params.imgtdb_base ){
 
 ch_multiqc_config  = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_report_logo = Channel.fromPath(params.report_logo, checkIfExists: true)
+
 
 /*
 ========================================================================================
@@ -326,9 +316,9 @@ workflow REVEAL {
 
     // TODO fix file sizes
     // Process logs to report file sizes at each step
-    REPORT_FILE_SIZE (
-        ch_file_sizes.map { it }.collect()
-    )
+    //REPORT_FILE_SIZE (
+    //    ch_file_sizes.map { it }.collect()
+    //)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -342,8 +332,6 @@ workflow REVEAL {
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
-        ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
-        ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
@@ -351,7 +339,10 @@ workflow REVEAL {
     //   ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.yaml.collect())
 
         MULTIQC (
-            ch_multiqc_files.collect()
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.collect(),
+            ch_multiqc_custom_config.collect().ifEmpty([]),
+            ch_report_logo.collect().ifEmpty([])
         )
         multiqc_report       = MULTIQC.out.report.toList()
         ch_versions = ch_versions.mix(MULTIQC.out.versions)

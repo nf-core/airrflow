@@ -102,5 +102,5 @@ for (i in 1:length(repertoires)) {
     } else {
         output_fn <- paste0(ids[i],"_collapse-pass.tsv")
     }
-    write_airr(db %>% filter(id == ids[i]), file=output_fn)
+    write_rearrangement(db %>% filter(id == ids[i]), file=output_fn)
 }

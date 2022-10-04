@@ -14,6 +14,7 @@ process DEFINE_CLONES {
     tag 'all_reps'
     label 'immcantation'
     label 'enchantr'
+    label 'process_high'
     label 'process_long'
 
     // TODO: update container

@@ -3,6 +3,9 @@ process DETECT_CONTAMINATION {
     label 'immcantation'
     label 'enchantr'
 
+    label 'process_long'
+    label 'process_high'
+
     cache  'lenient'
 
     // TODO: update container

@@ -2,6 +2,7 @@ process FIND_THRESHOLD {
     tag "all_reps"
     label 'immcantation'
     label 'enchantr'
+    label 'process_high'
     label 'process_long'
 
     cache 'lenient'
@@ -25,7 +26,7 @@ process FIND_THRESHOLD {
     script:
     meta=[]
     """
-    Rscript -e "enchantr::enchantr_report('find_threshold', report_params=list('input'='${tab.join(',')}','cloneby'='${cloneby}','singlecell'='${singlecell}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='all_reps', 'log'='all_reps_clone_command_log'))"
+    Rscript -e "enchantr::enchantr_report('find_threshold', report_params=list('input'='${tab.join(',')}','cloneby'='${cloneby}','singlecell'='${singlecell}','outdir'=getwd(),'nproc'=${task.cpus},'outname'='all_reps','log'='all_reps_clone_command_log'))"
     mv enchantr all_reps_dist_report
     """
 }

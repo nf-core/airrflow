@@ -543,6 +543,11 @@
                     "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping"
                 },
+                "igphyml": {
+                    "type": "string",
+                    "default": "/usr/local/share/igphyml/src/igphyml",
+                    "description": "Path to IgPhyml executable"
+                },
                 "singlecell": {
                     "type": "string",
                     "default": "single_cell",
