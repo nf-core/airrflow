@@ -51,8 +51,9 @@ workflow BULK_GERMLINES_AND_FILTER {
     ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
 
     ch_for_collapse = ch_bulk_chimeric_pass
-            .map{ it -> [ it[0].sample_id, it[0], it[1] ] }
+            .map{ it -> [ it[0].id, it[0], it[1] ] }
             .groupTuple()
+            .dump()
 
     // TODO: collapse duplicates do not remove meta map
     COLLAPSE_DUPLICATES(
