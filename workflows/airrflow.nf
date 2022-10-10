@@ -136,6 +136,7 @@ workflow AIRRFLOW {
     // Bulk: Assign germlines and filtering
     ch_repertoire_by_processing.bulk
         .dump(tag: 'bulk')
+
     BULK_GERMLINES_AND_FILTER(
         ch_repertoire_by_processing.bulk,
         VDJ_ANNOTATION.out.imgt.collect()
