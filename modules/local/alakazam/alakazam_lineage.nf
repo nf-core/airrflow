@@ -2,7 +2,7 @@ process ALAKAZAM_LINEAGE {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-alakazam=1.2.0 bioconda::changeo=1.2.0 bioconda::phylip=3.697 conda-forge::r-optparse=1.7.1" : null)  // Please also update the phylip version manually in the script section below as phylip does not print the version
+    conda (params.enable_conda ? "conda-forge::r-base=4.2.1 bioconda::r-alakazam=1.2.1 bioconda::changeo=1.2.0 bioconda::phylip=3.697 conda-forge::r-optparse=1.7.1" : null)  // Please also update the phylip version manually in the script section below as phylip does not print the version
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-adaea5efbfa2a35669a6db7ddb1e1c8d5e60ef6e:031d6ccffe3e78cd908a83c2387b67eb856da7dd-0' :
         'quay.io/biocontainers/mulled-v2-adaea5efbfa2a35669a6db7ddb1e1c8d5e60ef6e:031d6ccffe3e78cd908a83c2387b67eb856da7dd-0' }"
