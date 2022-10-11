@@ -51,6 +51,7 @@ include { ASSEMBLED_INPUT_CHECK } from '../subworkflows/local/assembled_input_ch
 include { VDJ_ANNOTATION } from '../subworkflows/local/vdj_annotation'
 include { BULK_GERMLINES_AND_FILTER } from '../subworkflows/local/bulk_germlines_and_filter'
 include { SINGLE_CELL_QC_AND_FILTERING } from '../subworkflows/local/single_cell_qc_and_filtering'
+include { CLONAL_ANALYSIS } from '../subworkflows/local/clonal_analysis'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -141,14 +142,24 @@ workflow AIRRFLOW {
         ch_repertoire_by_processing.bulk,
         VDJ_ANNOTATION.out.imgt.collect()
     )
+    ch_versions = ch_versions.mix( BULK_GERMLINES_AND_FILTER.out.versions.ifEmpty(null))
 
     // Single cell: QC and filtering
     ch_repertoire_by_processing.single
         .dump(tag: 'single')
     SINGLE_CELL_QC_AND_FILTERING( ch_repertoire_by_processing.single )
+    ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
 
     ch_repertoires_for_clones = BULK_GERMLINES_AND_FILTER.out.repertoires
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
+                                    .map{ it -> [ it[1] ]}
+                                    .collect()
+
+    // Clonal analysis
+    CLONAL_ANALYSIS(
+        ch_repertoires_for_clones,
+        VDJ_ANNOTATION.out.imgt.collect()
+    )
 
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (

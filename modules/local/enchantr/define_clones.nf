@@ -23,25 +23,22 @@ process DEFINE_CLONES {
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format
     path(tabs)
-    val cloneby
-    val singlecell
     val threshold
     path imgt_base
 
     output:
-    tuple val(meta), path("*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
+    path("*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
 
     script:
-    meta=[]
     def outname = ''
     if (task.ext.args.containsKey('outname')) { outname = task.ext.args['outname'] }
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
-                                        'cloneby'='${cloneby}','threshold'=${threshold}, \\
+                                        'cloneby'='${params.cloneby}','threshold'=${threshold}, \\
                                         'outputby'='id', \\
                                         'outname'='${outname}', \\
                                         'singlecell'='${singlecell}','outdir'=getwd(), \\
