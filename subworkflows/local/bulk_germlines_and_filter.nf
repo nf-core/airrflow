@@ -19,7 +19,7 @@ workflow BULK_GERMLINES_AND_FILTER {
         // Create germlines (not --cloned)
         CHANGEO_CREATEGERMLINES(
             ch_repertoire,
-            ch_imgt
+            ch_imgt.collect()
         )
         //TODO: file sizes
         //ch_file_sizes = ch_file_sizes.mix(CREATEGERMLINES.out.logs)
@@ -28,7 +28,7 @@ workflow BULK_GERMLINES_AND_FILTER {
         // Remove chimera
         REMOVE_CHIMERIC(
             CHANGEO_CREATEGERMLINES.out.tab,
-            ch_imgt
+            ch_imgt.collect()
         )
         // TODO: ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
         ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
@@ -45,7 +45,7 @@ workflow BULK_GERMLINES_AND_FILTER {
 
     DETECT_CONTAMINATION(
         ch_bulk_chimeric_pass
-            .map{ it -> [ it[0].sample_id, it[0], it[1] ] }
+            .map{ it -> [ it[0].id, it[0], it[1] ] }
     )
     // TODO file size
     ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))

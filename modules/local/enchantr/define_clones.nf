@@ -39,9 +39,9 @@ process DEFINE_CLONES {
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
                                         'cloneby'='${params.cloneby}','threshold'=${threshold}, \\
-                                        'outputby'='id', \\
+                                        'outputby'='sample_id', \\
                                         'outname'='${outname}', \\
-                                        'singlecell'='${singlecell}','outdir'=getwd(), \\
+                                        'singlecell'='${params.singlecell}','outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
                                         'log'='all_reps_clone_command_log' ${args}))"
     mv enchantr 'all_reps_clone_report'

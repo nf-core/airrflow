@@ -123,7 +123,7 @@ workflow AIRRFLOW {
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(
         ch_fasta,
-        ch_validated_samplesheet
+        ch_validated_samplesheet.collect()
     )
     ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions. ifEmpty(null))
 

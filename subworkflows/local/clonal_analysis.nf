@@ -21,6 +21,7 @@ workflow CLONAL_ANALYSIS {
             .splitText( limit:1 ) { it.trim().toString() }
             .dump(tag: 'clone_threshold')
             .filter { it != 'NA'}
+            .filter { it != 'NaN' }
             .dump(tag: "threshold")
             .ifEmpty { exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."}
 
