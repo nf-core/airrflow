@@ -30,9 +30,7 @@ workflow CLONAL_ANALYSIS {
 
 
     DEFINE_CLONES(
-        ch_repertoire
-        .map{ it -> [ it[1] ] }
-        .collect(),
+        ch_repertoire,
         clone_threshold,
         ch_imgt
     )
