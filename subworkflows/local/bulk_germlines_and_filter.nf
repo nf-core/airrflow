@@ -35,7 +35,7 @@ workflow BULK_GERMLINES_AND_FILTER {
         ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions.ifEmpty(null))
 
     } else {
-        ch_bulk_chimeric_pass = ch_repertoire_by_processing.bulk
+        ch_bulk_chimeric_pass = ch_repertoire
     }
 
     // For Bulk data, detect cross-contamination
@@ -59,6 +59,7 @@ workflow BULK_GERMLINES_AND_FILTER {
     COLLAPSE_DUPLICATES(
         ch_for_collapse
     )
+
 
     ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
     // TODO file size

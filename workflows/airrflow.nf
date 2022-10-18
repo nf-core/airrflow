@@ -144,16 +144,26 @@ workflow AIRRFLOW {
     )
     ch_versions = ch_versions.mix( BULK_GERMLINES_AND_FILTER.out.versions.ifEmpty(null))
 
+    ch_bulk_out = BULK_GERMLINES_AND_FILTER.out.repertoires
+    ch_bulk_out.dump(tag: 'bulk_filt_out')
+
     // Single cell: QC and filtering
     ch_repertoire_by_processing.single
         .dump(tag: 'single')
-    SINGLE_CELL_QC_AND_FILTERING( ch_repertoire_by_processing.single )
+
+    SINGLE_CELL_QC_AND_FILTERING(
+        ch_repertoire_by_processing.single
+    )
     ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
 
-    ch_repertoires_for_clones = BULK_GERMLINES_AND_FILTER.out.repertoires
+    ch_bulk_filtered = BULK_GERMLINES_AND_FILTER.out.repertoires
+                        .map{ it -> it[1] }
+
+    ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
-                                    .map{ it -> [ it[1] ]}
+                                    .dump(tag: 'after mix')
                                     .collect()
+                                    .dump(tag: 'after collect')
 
     // Clonal analysis
     CLONAL_ANALYSIS(
