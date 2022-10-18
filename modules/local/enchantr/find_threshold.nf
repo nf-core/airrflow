@@ -12,9 +12,7 @@ process FIND_THRESHOLD {
 
 
     input:
-    path tab // tuple val(meta) // sequence tsv in AIRR format
-    val(cloneby)
-    val(singlecell)
+    path tab // sequence tsv in AIRR format
 
     output:
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
@@ -24,9 +22,8 @@ process FIND_THRESHOLD {
     path "*_threshold-mean.tsv", emit: mean_threshold
 
     script:
-    meta=[]
     """
-    Rscript -e "enchantr::enchantr_report('find_threshold', report_params=list('input'='${tab.join(',')}','cloneby'='${cloneby}','singlecell'='${singlecell}','outdir'=getwd(),'nproc'=${task.cpus},'outname'='all_reps','log'='all_reps_clone_command_log'))"
+    Rscript -e "enchantr::enchantr_report('find_threshold', report_params=list('input'='${tab.join(',')}','cloneby'='${params.cloneby}','singlecell'='${params.singlecell}','outdir'=getwd(),'nproc'=${task.cpus},'outname'='all_reps','log'='all_reps_clone_command_log'))"
     mv enchantr all_reps_dist_report
     """
 }
