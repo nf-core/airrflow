@@ -12,8 +12,6 @@ workflow CLONAL_ANALYSIS {
     if (params.clonal_threshold == "auto") {
         FIND_THRESHOLD (
             ch_repertoire
-            .map{ it -> [ it[1] ] }
-            .collect()
         )
         ch_threshold = FIND_THRESHOLD.out.mean_threshold
 
