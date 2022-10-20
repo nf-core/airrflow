@@ -45,7 +45,8 @@ workflow BULK_GERMLINES_AND_FILTER {
 
     DETECT_CONTAMINATION(
         ch_bulk_chimeric_pass
-            .map{ it -> [ it[0].id, it[0], it[1] ] }
+            .map{ it -> [ it[1] ] }
+            .collect()
     )
     // TODO file size
     ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))

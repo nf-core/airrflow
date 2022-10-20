@@ -12,7 +12,7 @@ process DETECT_CONTAMINATION {
     container "immcantation/suite:devel"
 
     input:
-    tuple val(sample_id), val(meta), path(tabs)
+    path(tabs)
 
     output:
     tuple val(meta), path("*cont-flag.tsv"), emit: tab // sequence tsv in AIRR format
