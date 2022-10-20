@@ -157,7 +157,6 @@ workflow AIRRFLOW {
     ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
 
     ch_bulk_filtered = BULK_GERMLINES_AND_FILTER.out.repertoires
-                        .map{ it -> it[1] }
 
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)

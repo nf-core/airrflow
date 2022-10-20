@@ -1,5 +1,6 @@
 include { FIND_THRESHOLD  } from '../../modules/local/enchantr/find_threshold'
 include { DEFINE_CLONES  } from '../../modules/local/enchantr/define_clones'
+include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
 
 workflow CLONAL_ANALYSIS {
     take:
@@ -35,6 +36,13 @@ workflow CLONAL_ANALYSIS {
         ch_imgt
     )
 
+    if (!params.skip_lineage){
+        DOWSER_LINEAGES(
+            DEFINE_CLONES.out.tab
+                .flatten()
+        )
+    }
+
     emit:
-    DEFINE_CLONES.out.tab
+    repertoires_with_clones = DEFINE_CLONES.out.tab
 }
