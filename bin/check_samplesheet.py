@@ -41,7 +41,7 @@ def check_samplesheet(file_in):
     """
     This function checks that the samplesheet:
 
-    - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species
+    - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species, single_cell
     - sample ids are unique
     - samples from the same subject come from the same species
     - pcr_target_locus is "IG" or "TR"
@@ -52,7 +52,7 @@ def check_samplesheet(file_in):
     with open(file_in, "r") as fin:
 
         ## Check that required columns are present
-        MIN_COLS = 6
+        MIN_COLS = 7
         REQUIRED_COLUMNS = [
             "sample_id",
             "filename_R1",
@@ -60,6 +60,7 @@ def check_samplesheet(file_in):
             "subject_id",
             "species",
             "pcr_target_locus",
+            "single_cell"
         ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         for col in REQUIRED_COLUMNS:
