@@ -5,13 +5,15 @@ workflow CLONAL_ANALYSIS {
     take:
     ch_repertoire
     ch_imgt
+    ch_logo
 
     main:
     ch_versions = Channel.empty()
 
     if (params.clonal_threshold == "auto") {
         FIND_THRESHOLD (
-            ch_repertoire
+            ch_repertoire,
+            ch_logo
         )
         ch_threshold = FIND_THRESHOLD.out.mean_threshold
 
