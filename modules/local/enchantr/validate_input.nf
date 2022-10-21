@@ -3,11 +3,13 @@
  */
 process VALIDATE_INPUT {
     tag "$samplesheet"
-    label 'immcantation'
+
     label 'enchantr'
 
-    // TODO: update container
-    container "immcantation/suite:devel"
+    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.1--r41hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
 
     input:
     file samplesheet
@@ -19,9 +21,13 @@ process VALIDATE_INPUT {
     output:
     path "validated_input.tsv", emit: validated_input
     path "validated_input_not-valid.tsv", emit: not_valid_input, optional: true
+    path "versions.yml", emit: versions
 
     script:
     """
     Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','reassign'='${params.reassign}','miairr'='${miairr}','outdir'=getwd()))"
+
+    echo "\"${task.process}\":" > versions.yml
+    Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
     """
 }

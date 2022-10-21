@@ -1,12 +1,16 @@
 process REMOVE_CHIMERIC {
     tag "$meta.id"
-    label 'immcantation'
-    label 'enchantr'
+
     label 'process_high'
     label 'process_long'
 
-    // TODO: update container
-    container "immcantation/suite:devel"
+    label 'enchantr'
+
+
+    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.1--r41hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
 
 
     input:
@@ -21,9 +25,16 @@ process REMOVE_CHIMERIC {
 
     script:
     """
-    Rscript -e "enchantr:::enchantr_report('chimera_analysis', report_params=list('input'='${tab}','outdir'=getwd(), 'nproc'=${task.cpus},'outname'='${meta.id}', 'log'='${meta.id}_chimeric_command_log'))"
+    Rscript -e "enchantr:::enchantr_report('chimera_analysis', \\
+        report_params=list('input'='${tab}',\\
+        'outdir'=getwd(), \\
+        'nproc'=${task.cpus},\\
+        'outname'='${meta.id}', \\
+        'log'='${meta.id}_chimeric_command_log'))"
+
     echo "\"${task.process}\":" > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
+
     mv enchantr ${meta.id}_chimera_report
     """
 }

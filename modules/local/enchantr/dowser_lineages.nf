@@ -12,12 +12,14 @@ def asString (args) {
 
 process DOWSER_LINEAGES {
     tag "$tabs"
-    label 'immcantation'
-    label 'enchantr'
-    label 'process_long'
 
-    // TODO: update container
-    container "immcantation/suite:devel"
+    label 'process_long'
+    label 'enchantr'
+
+    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.1--r41hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format
@@ -26,9 +28,9 @@ process DOWSER_LINEAGES {
     output:
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
+    path "versions.yml", emit: versions
 
     script:
-    meta=[]
     def args = asString(task.ext.args)
     def id_name = "$tabs".replaceFirst('__.*','')
     // TODO use nice outname, not tabs
@@ -39,6 +41,10 @@ process DOWSER_LINEAGES {
                                         'outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
                                         'log'='${id_name}_dowser_command_log' ${args}))"
+
+    echo "${task.process}": > versions.yml
+    Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
+
     mv enchantr '${id_name}_dowser_report'
     """
 }
