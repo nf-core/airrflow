@@ -1,9 +1,8 @@
 process COLLAPSE_DUPLICATES {
     tag 'all_bulk_reps'
 
-    label 'process_long'
+    label 'process_long_parallelized'
     cache  'lenient'
-    label 'enchantr'
 
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)

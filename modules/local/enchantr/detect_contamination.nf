@@ -1,9 +1,8 @@
 process DETECT_CONTAMINATION {
     tag "multi_repertoire"
 
-    label 'process_long'
-    label 'process_high'
-    label 'enchantr'
+    label 'process_long_parallelized'
+    label 'immcantation'
 
 
     //conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)

@@ -1,8 +1,7 @@
 process REMOVE_CHIMERIC {
     tag "$meta.id"
 
-    label 'process_high'
-    label 'process_long'
+    label 'process_long_parallelized'
 
     label 'enchantr'
 
