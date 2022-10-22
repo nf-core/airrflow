@@ -49,7 +49,7 @@ include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '.
 include { SEQUENCE_ASSEMBLY } from '../subworkflows/local/sequence_assembly'
 include { ASSEMBLED_INPUT_CHECK } from '../subworkflows/local/assembled_input_check'
 include { VDJ_ANNOTATION } from '../subworkflows/local/vdj_annotation'
-include { BULK_GERMLINES_AND_FILTER } from '../subworkflows/local/bulk_germlines_and_filter'
+include { BULK_QC_AND_FILTER } from '../subworkflows/local/bulk_qc_and_filter'
 include { SINGLE_CELL_QC_AND_FILTERING } from '../subworkflows/local/single_cell_qc_and_filtering'
 include { CLONAL_ANALYSIS } from '../subworkflows/local/clonal_analysis'
 
@@ -138,13 +138,13 @@ workflow AIRRFLOW {
     ch_repertoire_by_processing.bulk
         .dump(tag: 'bulk')
 
-    BULK_GERMLINES_AND_FILTER(
+    BULK_QC_AND_FILTER(
         ch_repertoire_by_processing.bulk,
         VDJ_ANNOTATION.out.imgt.collect()
     )
-    ch_versions = ch_versions.mix( BULK_GERMLINES_AND_FILTER.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null))
 
-    ch_bulk_out = BULK_GERMLINES_AND_FILTER.out.repertoires
+    ch_bulk_out = BULK_QC_AND_FILTER.out.repertoires
     ch_bulk_out.dump(tag: 'bulk_filt_out')
 
     // Single cell: QC and filtering
@@ -156,7 +156,7 @@ workflow AIRRFLOW {
     )
     ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
 
-    ch_bulk_filtered = BULK_GERMLINES_AND_FILTER.out.repertoires
+    ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
 
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)

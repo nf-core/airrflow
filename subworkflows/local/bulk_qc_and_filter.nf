@@ -3,7 +3,7 @@ include { REMOVE_CHIMERIC  } from '../../modules/local/enchantr/remove_chimeric'
 include { DETECT_CONTAMINATION  } from '../../modules/local/enchantr/detect_contamination'
 include { COLLAPSE_DUPLICATES  } from '../../modules/local/enchantr/collapse_duplicates'
 
-workflow BULK_GERMLINES_AND_FILTER {
+workflow BULK_QC_AND_FILTER {
 
     take:
     ch_repertoire // tuple [meta, repertoire_tab]
@@ -52,8 +52,6 @@ workflow BULK_GERMLINES_AND_FILTER {
     ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
 
     ch_for_collapse = ch_bulk_chimeric_pass
-            .map{ it -> [ it[1] ] }
-            .collect()
             .dump()
 
     COLLAPSE_DUPLICATES(

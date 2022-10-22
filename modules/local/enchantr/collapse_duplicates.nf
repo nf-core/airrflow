@@ -1,5 +1,5 @@
 process COLLAPSE_DUPLICATES {
-    tag 'all_bulk_reps'
+    tag "$meta.id"
 
     label 'process_long_parallelized'
     cache  'lenient'
@@ -11,7 +11,7 @@ process COLLAPSE_DUPLICATES {
         'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
 
     input:
-    path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
+    tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
 
     output:
     path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
@@ -27,12 +27,12 @@ process COLLAPSE_DUPLICATES {
         'collapseby'='${params.collapseby}',\\
         'outdir'=getwd(),\\
         'nproc'=${task.cpus},\\
-        'outname'='all_reps',\\
-        'log'='all_reps_collapse_command_log'))"
+        'outname'='${meta.id}',\\
+        'log'='${meta.id}_collapse_command_log'))"
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
 
-    mv enchantr all_reps_collapse_report
+    mv enchantr ${meta.id}_collapse_report
     """
 }
