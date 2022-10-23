@@ -119,5 +119,6 @@ workflow VDJ_ANNOTATION {
     repertoire = ADD_META_TO_TAB.out.tab
     imgt = ch_imgt
     igblast = ch_igblast
+    changeo_makedb_logs = CHANGEO_MAKEDB.out.logs
 
 }

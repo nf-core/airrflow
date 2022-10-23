@@ -194,12 +194,15 @@ workflow SEQUENCE_ASSEMBLY {
         ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
         ch_presto_software = PRESTO_SANS_UMI.out.software
         ch_fastqc_postassembly = PRESTO_SANS_UMI.out.fastqc_postassembly_gz
-        ch_presto_logs = Channel.empty()
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_SANS_UMI.out.presto_assemblepairs_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_SANS_UMI.out.presto_filterseq_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_SANS_UMI.out.presto_maskprimers_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_SANS_UMI.out.presto_collapseseq_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_SANS_UMI.out.presto_splitseq_logs)
+        ch_presto_assemblepairs_logs = PRESTO_SANS_UMI.out.presto_assemblepairs_logs
+        ch_presto_filterseq_logs = PRESTO_SANS_UMI.out.presto_filterseq_logs
+        ch_presto_maskprimers_logs = PRESTO_SANS_UMI.out.presto_maskprimers_logs
+        ch_presto_collapseseq_logs = PRESTO_SANS_UMI.out.presto_collapseseq_logs
+        ch_presto_splitseq_logs = PRESTO_SANS_UMI.out.presto_splitseq_logs
+        ch_presto_pairseq_logs = Channel.empty()
+        ch_presto_clustersets_logs = Channel.empty()
+        ch_presto_buildconsensus_logs = Channel.empty()
+        ch_presto_postconsensus_pairseq_logs = Channel.empty()
 
     } else {
         //
@@ -214,15 +217,15 @@ workflow SEQUENCE_ASSEMBLY {
         ch_presto_software = PRESTO_UMI.out.software
         ch_fastqc_postassembly = PRESTO_UMI.out.fastqc_postassembly_gz
         ch_presto_logs = Channel.empty()
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_filterseq_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_maskprimers_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_pairseq_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_clustersets_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_buildconsensus_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_postconsensus_pairseq_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_assemblepairs_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_collapseseq_logs)
-        ch_presto_logs = ch_presto_logs.mix(PRESTO_UMI.out.presto_splitseq_logs)
+        ch_presto_filterseq_logs = PRESTO_UMI.out.presto_filterseq_logs
+        ch_presto_maskprimers_logs = PRESTO_UMI.out.presto_maskprimers_logs
+        ch_presto_pairseq_logs = PRESTO_UMI.out.presto_pairseq_logs
+        ch_presto_clustersets_logs = PRESTO_UMI.out.presto_clustersets_logs
+        ch_presto_buildconsensus_logs = PRESTO_UMI.out.presto_buildconsensus_logs
+        ch_presto_postconsensus_pairseq_logs = PRESTO_UMI.out.presto_postconsensus_pairseq_logs
+        ch_presto_assemblepairs_logs = PRESTO_UMI.out.presto_assemblepairs_logs
+        ch_presto_collapseseq_logs = PRESTO_UMI.out.presto_collapseseq_logs
+        ch_presto_splitseq_logs = PRESTO_UMI.out.presto_splitseq_logs
     }
 
     ch_versions = ch_versions.mix(ch_presto_software)
@@ -237,5 +240,13 @@ workflow SEQUENCE_ASSEMBLY {
     fastqc_preassembly = FASTQC.out.zip
     fastqc_postassembly = ch_fastqc_postassembly
     // presto logs for html report
-    presto_logs = ch_presto_logs
+    presto_filterseq_logs = ch_presto_filterseq_logs
+    presto_maskprimers_logs = ch_presto_maskprimers_logs
+    presto_pairseq_logs = ch_presto_pairseq_logs
+    presto_clustersets_logs = ch_presto_clustersets_logs
+    presto_buildconsensus_logs = ch_presto_buildconsensus_logs
+    presto_postconsensus_pairseq_logs = ch_presto_postconsensus_pairseq_logs
+    presto_assemblepairs_logs = ch_presto_assemblepairs_logs
+    presto_collapseseq_logs = ch_presto_collapseseq_logs
+    presto_splitseq_logs = ch_presto_splitseq_logs
 }

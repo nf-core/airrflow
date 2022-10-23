@@ -32,7 +32,9 @@ ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.y
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
 
 // Report files
-ch_report_logo = params.report_logo ? Channel.fromPath( params.report_logo, checkIfExists: true ) : Channel.empty()
+ch_report_rmd = Channel.fromPath(params.report_rmd, checkIfExists: true)
+ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
+ch_report_logo = Channel.fromPath(params.report_logo, checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,14 +90,12 @@ workflow AIRRFLOW {
         ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
         ch_fastqc_preassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_preassembly
         ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
-        ch_presto_logs = SEQUENCE_ASSEMBLY.out.presto_logs
         ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
     } else if ( params.mode == "assembled" ) {
 
         ch_fastqc_preassembly_mqc = Channel.empty()
         ch_fastqc_postassembly_mqc = Channel.empty()
-        ch_presto_logs = Channel.empty()
 
         ASSEMBLED_INPUT_CHECK (ch_input,
                             params.miairr,
@@ -103,22 +103,19 @@ workflow AIRRFLOW {
                             params.cloneby)
 
         if (params.reassign) {
-
             CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 ASSEMBLED_INPUT_CHECK.out.ch_tsv
             )
             ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
             ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
             //ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
-
         } else {
-
             ch_fasta_from_tsv = Channel.empty()
-
         }
 
         ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
         ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
+
     } else {
         exit 1, "Mode parameter value not valid."
     }
@@ -130,6 +127,7 @@ workflow AIRRFLOW {
     )
     ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions. ifEmpty(null))
 
+    // Split bulk and single cell repertoires
     ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
         .dump(tag: 'meta_to_tab_out')
         .branch { it ->
@@ -147,8 +145,9 @@ workflow AIRRFLOW {
     )
     ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null))
 
-    ch_bulk_out = BULK_QC_AND_FILTER.out.repertoires
-    ch_bulk_out.dump(tag: 'bulk_filt_out')
+    ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
+                                        .map{it -> it[1]}
+                                        .dump(tag: 'bulk_filt_out')
 
     // Single cell: QC and filtering
     ch_repertoire_by_processing.single
@@ -159,12 +158,10 @@ workflow AIRRFLOW {
     )
     ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
 
-    ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
-
+    // Mixing bulk and single cell channels for clonal analysis
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
                                     .dump(tag: 'after mix')
-                                    .map{it -> it[1]}
                                     .collect()
                                     .dump(tag: 'after collect')
 
@@ -175,12 +172,25 @@ workflow AIRRFLOW {
     )
     ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty(null))
 
-    // if (!params.skip_report){
-    //     REPERTOIRE_ANALYSIS_REPORTING(
-    //         ch_presto_logs.collect(),
-
-    //     )
-    // }
+    if (!params.skip_report){
+        REPERTOIRE_ANALYSIS_REPORTING(
+            SEQUENCE_ASSEMBLY.out.presto_filterseq_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_pairseq_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_clustersets_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.collect().ifEmpty([]),
+            SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.collect().ifEmpty([]),
+            VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
+            CLONAL_ANALYSIS.out.repertoire,
+            ch_input.collect(),
+            ch_report_rmd.collect(),
+            ch_report_css.collect(),
+            ch_report_logo.collect()
+        )
+    }
 
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (
