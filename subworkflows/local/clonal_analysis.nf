@@ -45,6 +45,6 @@ workflow CLONAL_ANALYSIS {
     }
 
     emit:
-    repertoires_with_clones = DEFINE_CLONES.out.tab
+    repertoire = DEFINE_CLONES.out.tab
     versions = ch_versions
 }

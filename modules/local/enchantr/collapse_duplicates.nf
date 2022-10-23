@@ -15,7 +15,7 @@ process COLLAPSE_DUPLICATES {
     tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
 
     output:
-    path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml" , emit: versions
