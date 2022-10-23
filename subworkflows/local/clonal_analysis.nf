@@ -12,10 +12,10 @@ workflow CLONAL_ANALYSIS {
 
     if (params.clonal_threshold == "auto") {
         FIND_THRESHOLD (
-            ch_repertoire.map{ it -> it[1]}
-            .collect()
+            ch_repertoire
         )
         ch_threshold = FIND_THRESHOLD.out.mean_threshold
+        ch_versions = ch_versions.mix(FIND_THRESHOLD.out.versions)
 
         clone_threshold = ch_threshold
             .splitText( limit:1 ) { it.trim().toString() }
@@ -28,22 +28,23 @@ workflow CLONAL_ANALYSIS {
     } else {
         clone_threshold = params.clonal_threshold
     }
-    //TODO: emit FIND_THRESHOLD versions
-
 
     DEFINE_CLONES(
         ch_repertoire,
         clone_threshold,
         ch_imgt
     )
+    ch_versions = ch_versions.mix(DEFINE_CLONES.out.versions)
 
     if (!params.skip_lineage){
         DOWSER_LINEAGES(
             DEFINE_CLONES.out.tab
                 .flatten()
         )
+        ch_versions = ch_versions.mix(DOWSER_LINEAGES.out.versions)
     }
 
     emit:
     repertoires_with_clones = DEFINE_CLONES.out.tab
+    versions = ch_versions
 }

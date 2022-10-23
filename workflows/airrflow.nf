@@ -52,6 +52,7 @@ include { VDJ_ANNOTATION } from '../subworkflows/local/vdj_annotation'
 include { BULK_QC_AND_FILTER } from '../subworkflows/local/bulk_qc_and_filter'
 include { SINGLE_CELL_QC_AND_FILTERING } from '../subworkflows/local/single_cell_qc_and_filtering'
 include { CLONAL_ANALYSIS } from '../subworkflows/local/clonal_analysis'
+include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire_analysis_reporting'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,12 +88,14 @@ workflow AIRRFLOW {
         ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
         ch_fastqc_preassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_preassembly
         ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+        ch_presto_logs = SEQUENCE_ASSEMBLY.out.presto_logs
         ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
     } else if ( params.mode == "assembled" ) {
 
         ch_fastqc_preassembly_mqc = Channel.empty()
         ch_fastqc_postassembly_mqc = Channel.empty()
+        ch_presto_logs = Channel.empty()
 
         ASSEMBLED_INPUT_CHECK (ch_input,
                             params.miairr,
@@ -161,6 +164,7 @@ workflow AIRRFLOW {
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
                                     .dump(tag: 'after mix')
+                                    .map{it -> it[1]}
                                     .collect()
                                     .dump(tag: 'after collect')
 
@@ -169,6 +173,14 @@ workflow AIRRFLOW {
         ch_repertoires_for_clones,
         VDJ_ANNOTATION.out.imgt.collect()
     )
+    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty(null))
+
+    // if (!params.skip_report){
+    //     REPERTOIRE_ANALYSIS_REPORTING(
+    //         ch_presto_logs.collect(),
+
+    //     )
+    // }
 
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (
