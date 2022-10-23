@@ -1,6 +1,7 @@
 process DETECT_CONTAMINATION {
     tag "multi_repertoire"
 
+    label 'process_high'
     label 'process_long_parallelized'
     label 'immcantation'
 

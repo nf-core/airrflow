@@ -1,6 +1,7 @@
 process COLLAPSE_DUPLICATES {
     tag "$meta.id"
 
+    label 'process_high'
     label 'process_long_parallelized'
     cache  'lenient'
 
