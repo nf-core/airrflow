@@ -1,6 +1,7 @@
 process SINGLE_CELL_QC {
     tag 'all_single_cell'
 
+    label 'process_medium'
     label 'enchantr'
 
 

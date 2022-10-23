@@ -5,6 +5,7 @@ process VALIDATE_INPUT {
     tag "$samplesheet"
 
     label 'enchantr'
+    label 'single_cpu'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

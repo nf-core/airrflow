@@ -13,6 +13,7 @@ def asString (args) {
 process DOWSER_LINEAGES {
     tag "$tabs"
 
+    label 'process_high'
     label 'process_long'
     label 'enchantr'
 
