@@ -22,7 +22,7 @@ process CHANGEO_CREATEGERMLINES {
     CreateGermlines.py -d ${tab} \\
     -r ${imgt_base}/${meta.species}/vdj/ \\
     -g dmask --format airr \\
-    --log ${meta.id}.log --outname ${meta.id} $args > ${meta.id}_command_log.txt
+    --log ${meta.id}.log --outname ${meta.id} $args > ${meta.id}_create-germlines_command_log.txt
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
 
     cat <<-END_VERSIONS > versions.yml

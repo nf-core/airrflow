@@ -184,6 +184,8 @@ workflow AIRRFLOW {
             SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.collect().ifEmpty([]),
             SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
+            VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
+            BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
             CLONAL_ANALYSIS.out.repertoire,
             ch_input.collect(),
             ch_report_rmd.collect(),

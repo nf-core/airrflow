@@ -1,4 +1,5 @@
 include { PARSE_LOGS } from '../../modules/local/parse_logs.nf'
+include { REPORT_FILE_SIZE } from '../../modules/local/enchantr/report_file_size.nf'
 include { ALAKAZAM_SHAZAM_REPERTOIRES  } from '../../modules/local/alakazam/alakazam_shazam_repertoires'
 
 workflow REPERTOIRE_ANALYSIS_REPORTING {
@@ -14,6 +15,8 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_presto_collapseseq_logs
     ch_presto_splitseq_logs
     ch_changeo_makedb_logs
+    ch_vdj_annotation_logs
+    ch_bulk_qc_and_filter_logs
     ch_repertoires
     ch_input
     ch_report_rmd
@@ -44,6 +47,10 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_parsed_logs = Channel.empty()
     }
 
+    ch_logs = ch_vdj_annotation_logs.mix(ch_bulk_qc_and_filter_logs)
+    REPORT_FILE_SIZE(
+        ch_logs.collect().ifEmpty([])
+    )
 
     ALAKAZAM_SHAZAM_REPERTOIRES(
         ch_repertoires,

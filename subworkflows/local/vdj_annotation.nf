@@ -19,6 +19,7 @@ workflow VDJ_ANNOTATION {
 
     main:
     ch_versions = Channel.empty()
+    ch_logs = Channel.empty()
 
     // FETCH DATABASES
     // TODO: this can take a long time, and the progress shows 0%. Would be
@@ -74,8 +75,7 @@ workflow VDJ_ANNOTATION {
         CHANGEO_ASSIGNGENES.out.blast,
         ch_imgt.collect()
     )
-    // TODO: check what this does
-    //ch_file_sizes = ch_file_sizes.mix(CHANGEO_MAKEDB_REVEAL.out.logs)
+    ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
     ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
 
     // Apply quality filters:
@@ -86,13 +86,13 @@ workflow VDJ_ANNOTATION {
     FILTER_QUALITY(
         CHANGEO_MAKEDB.out.tab
     )
-    //ch_file_sizes = ch_file_sizes.mix(FILTER_QUALITY.out.logs)
+    ch_logs = ch_logs.mix(FILTER_QUALITY.out.logs)
 
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT (
             FILTER_QUALITY.out.tab
         )
-        //ch_file_sizes = ch_file_sizes.mix(CHANGEO_PARSEDB_SPLIT_REVEAL.out.logs)
+        ch_logs = ch_logs.mix(CHANGEO_PARSEDB_SPLIT.out.logs)
         ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions.ifEmpty(null))
 
         // Apply filter: junction length multiple of 3
@@ -100,7 +100,7 @@ workflow VDJ_ANNOTATION {
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT.out.tab
         )
-        //ch_file_sizes = ch_file_sizes.mix(FILTER_JUNCTION_MOD3.out.logs)
+        ch_logs = ch_logs.mix(FILTER_JUNCTION_MOD3.out.logs)
         ch_repertoire = FILTER_JUNCTION_MOD3.out.tab.ifEmpty(null)
     } else {
         ch_repertoire = FILTER_QUALITY.out.tab.ifEmpty(null)
@@ -111,7 +111,7 @@ workflow VDJ_ANNOTATION {
         ch_validated_samplesheet
     )
     //TODO: emit versions
-    //ch_file_sizes = ch_file_sizes.mix(ADD_META_TO_TAB.out.logs)
+    ch_logs = ch_logs.mix(ADD_META_TO_TAB.out.logs)
 
 
     emit:
@@ -120,5 +120,6 @@ workflow VDJ_ANNOTATION {
     imgt = ch_imgt
     igblast = ch_igblast
     changeo_makedb_logs = CHANGEO_MAKEDB.out.logs
+    logs = ch_logs
 
 }
