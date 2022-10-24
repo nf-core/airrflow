@@ -54,7 +54,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
 
     ALAKAZAM_SHAZAM_REPERTOIRES(
         ch_repertoires,
-        ch_parsed_logs.collect(),
+        ch_parsed_logs.collect().ifEmpty([]),
         ch_report_rmd,
         ch_report_css,
         ch_report_logo
