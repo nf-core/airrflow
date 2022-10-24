@@ -3,6 +3,7 @@ process FIND_THRESHOLD {
 
     label 'process_high'
     label 'process_long'
+    label 'immcantation'
     label 'enchantr'
 
 

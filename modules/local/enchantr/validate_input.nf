@@ -3,7 +3,7 @@
  */
 process VALIDATE_INPUT {
     tag "$samplesheet"
-
+    label 'immcantation'
     label 'enchantr'
     label 'single_cpu'
 

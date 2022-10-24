@@ -1,5 +1,6 @@
 process SHAZAM_THRESHOLD {
     tag "$meta.id"
+    label 'immcantation'
 
     conda (params.enable_conda ? "conda-forge::r-base=4.2.1 bioconda::r-shazam=1.1.2" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

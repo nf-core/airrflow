@@ -3,7 +3,7 @@ process REMOVE_CHIMERIC {
 
     label 'process_high'
     label 'process_long_parallelized'
-
+    label 'immcantation'
     label 'enchantr'
 
 

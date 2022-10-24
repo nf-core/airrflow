@@ -1,6 +1,7 @@
 process CHANGEO_ASSIGNGENES {
     tag "$meta.id"
     label 'process_low'
+    label 'immcantation'
 
     conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.19.0 conda-forge::wget=1.20.3" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

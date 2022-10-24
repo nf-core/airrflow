@@ -16,6 +16,7 @@ process DOWSER_LINEAGES {
     label 'process_high'
     label 'process_long'
     label 'error_ignore'
+    label 'immcantation'
     label 'enchantr'
 
     // conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
