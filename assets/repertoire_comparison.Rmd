@@ -39,17 +39,20 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Airrflow analysis pipeline
 
-## Pipeline overview
-
 ## Number of sequences
 
 Number of reads for each of the samples and number of sequences left after representative analysis steps.
 
 ```{r seq_numbers, echo=FALSE, results='asis'}
-tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
-kable(tab_seqs) %>%
-    kable_styling("hover") %>%
-    scroll_box(width = "100%", height = "400px")
+read_table <- function(tab_file){
+        tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
+        kable(tab_seqs) %>%
+          kable_styling("hover") %>%
+          scroll_box(width = "100%", height = "400px")
+    }
+tryCatch( {read_table("./Table_sequences.tsv")} ,
+  error=function(e){message("No sequence numbers are available if starting with assembled reads.")})
+
 ```
 
 
@@ -62,7 +65,7 @@ outdir <- "repertoire_comparison"
 
 ### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
 
-all_files <- system(paste0("find '",datadir,"' -name '*germ-pass.tsv'"), intern=T)
+all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
 
 dir.create(outdir)
 diversity_dir <- paste(outdir, "Diversity", sep="/")

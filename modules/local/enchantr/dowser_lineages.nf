@@ -13,13 +13,16 @@ def asString (args) {
 process DOWSER_LINEAGES {
     tag "$tabs"
 
+    label 'process_high'
     label 'process_long'
+    label 'error_ignore'
     label 'enchantr'
 
-    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.1--r41hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
+    // conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
+    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    //     'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.1--r41hdfd78af_0':
+    //     'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
+    container 'immcantation/suite:devel'
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format

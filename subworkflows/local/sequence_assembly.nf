@@ -40,9 +40,6 @@ include { CHANGEO_BUILDTREES } from '../../modules/local/changeo/changeo_buildtr
 include { ALAKAZAM_LINEAGE } from '../../modules/local/alakazam/alakazam_lineage'
 include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../../modules/local/alakazam/alakazam_shazam_repertoires'
 
-//LOG PARSING
-include { PARSE_LOGS } from '../../modules/local/parse_logs'
-
 // Local: Sub-workflows
 include { FASTQ_INPUT_CHECK           } from '../../subworkflows/local/fastq_input_check'
 include { MERGE_TABLES_WF       } from '../../subworkflows/local/merge_tables_wf'
@@ -202,11 +199,11 @@ workflow SEQUENCE_ASSEMBLY {
         ch_presto_maskprimers_logs = PRESTO_SANS_UMI.out.presto_maskprimers_logs
         ch_presto_collapseseq_logs = PRESTO_SANS_UMI.out.presto_collapseseq_logs
         ch_presto_splitseq_logs = PRESTO_SANS_UMI.out.presto_splitseq_logs
-        // These channels will be empty in the sans-UMI workflow
         ch_presto_pairseq_logs = Channel.empty()
         ch_presto_clustersets_logs = Channel.empty()
         ch_presto_buildconsensus_logs = Channel.empty()
         ch_presto_postconsensus_pairseq_logs = Channel.empty()
+
     } else {
         //
         // SUBWORKFLOW: pRESTO with UMIs
@@ -219,6 +216,7 @@ workflow SEQUENCE_ASSEMBLY {
         ch_presto_fasta = PRESTO_UMI.out.fasta
         ch_presto_software = PRESTO_UMI.out.software
         ch_fastqc_postassembly = PRESTO_UMI.out.fastqc_postassembly_gz
+        ch_presto_logs = Channel.empty()
         ch_presto_filterseq_logs = PRESTO_UMI.out.presto_filterseq_logs
         ch_presto_maskprimers_logs = PRESTO_UMI.out.presto_maskprimers_logs
         ch_presto_pairseq_logs = PRESTO_UMI.out.presto_pairseq_logs
@@ -252,93 +250,3 @@ workflow SEQUENCE_ASSEMBLY {
     presto_collapseseq_logs = ch_presto_collapseseq_logs
     presto_splitseq_logs = ch_presto_splitseq_logs
 }
-
-
-
-
-    // // Selecting IGH for ig loci, TR for tr loci.
-    // CHANGEO_PARSEDB_SELECT(
-    //     CHANGEO_PARSEDB_SPLIT.out.tab
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SELECT.out.versions.ifEmpty(null))
-
-    // // Convert sequence table to fasta.
-    // CHANGEO_CONVERTDB_FASTA (
-    //     CHANGEO_PARSEDB_SELECT.out.tab
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA.out.versions.ifEmpty(null))
-
-    // // Subworkflow: merge tables from the same patient
-    // MERGE_TABLES_WF(
-    //     CHANGEO_PARSEDB_SELECT.out.tab,
-    //     ch_input.collect()
-    // )
-
-    // // Shazam clonal threshold
-    // // Only if threshold is not manually set
-    // if (!params.set_cluster_threshold){
-    //     SHAZAM_THRESHOLD(
-    //         MERGE_TABLES_WF.out.tab,
-    //         ch_imgt.collect()
-    //     )
-    //     ch_tab_for_changeo_defineclones = SHAZAM_THRESHOLD.out.tab
-    //     ch_threshold = SHAZAM_THRESHOLD.out.threshold
-    //     ch_versions = ch_versions.mix(SHAZAM_THRESHOLD.out.versions.ifEmpty(null))
-    // } else {
-    //     ch_tab_for_changeo_defineclones = MERGE_TABLES_WF.out.tab
-    //     ch_threshold = file('EMPTY')
-    // }
-
-    // // Define B-cell clones
-    // CHANGEO_DEFINECLONES(
-    //     ch_tab_for_changeo_defineclones,
-    //     ch_threshold,
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_DEFINECLONES.out.versions.ifEmpty(null))
-
-    // // Identify germline sequences -- DONE BEFORE CLONES
-    // CHANGEO_CREATEGERMLINES(
-    //     CHANGEO_DEFINECLONES.out.tab,
-    //     ch_imgt.collect()
-    // )
-    // ch_versions = ch_versions.mix(CHANGEO_CREATEGERMLINES.out.versions.ifEmpty(null))
-
-    // // Lineage reconstruction alakazam
-    // if (!params.skip_lineage) {
-    //     ALAKAZAM_LINEAGE(
-    //         CHANGEO_CREATEGERMLINES.out.tab
-    //     )
-    //     ch_versions = ch_versions.mix(ALAKAZAM_LINEAGE.out.versions.ifEmpty(null))
-    // }
-
-    // ch_all_tabs_repertoire = CHANGEO_CREATEGERMLINES.out.tab
-    //                                                 .map{ it -> [ it[1] ] }
-    //                                                 .collect()
-
-    // Process logs parsing: getting sequence numbers
-    // PARSE_LOGS(
-    //     ch_presto_filterseq_logs.collect(),
-    //     ch_presto_maskprimers_logs.collect(),
-    //     ch_presto_pairseq_logs.collect().ifEmpty([]),
-    //     ch_presto_clustersets_logs.collect().ifEmpty([]),
-    //     ch_presto_buildconsensus_logs.collect().ifEmpty([]),
-    //     ch_presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
-    //     ch_presto_assemblepairs_logs.collect(),
-    //     ch_presto_collapseseq_logs.collect(),
-    //     ch_presto_splitseq_logs.collect(),
-    //     //CHANGEO_MAKEDB.out.logs.collect(),
-    //     ch_input
-    // )
-    // ch_versions = ch_versions.mix(PARSE_LOGS.out.versions.ifEmpty(null))
-
-    // // Alakazam shazam repertoire comparison report
-    // if (!params.skip_report){
-    //     ALAKAZAM_SHAZAM_REPERTOIRES(
-    //         ch_all_tabs_repertoire,
-    //         PARSE_LOGS.out.logs.collect(),
-    //         ch_report_rmd.collect(),
-    //         ch_report_css.collect(),
-    //         ch_report_logo.collect()
-    //     )
-    //     ch_versions = ch_versions.mix(ALAKAZAM_SHAZAM_REPERTOIRES.out.versions.ifEmpty(null))
-    // }
