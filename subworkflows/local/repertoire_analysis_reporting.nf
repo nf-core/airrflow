@@ -59,7 +59,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_report_css,
         ch_report_logo
     )
-    ch_versions = ch_versions.mix(PARSE_LOGS.out.versions)
+    ch_versions = ch_versions.mix(ALAKAZAM_SHAZAM_REPERTOIRES.out.versions)
 
     emit:
     versions = ch_versions

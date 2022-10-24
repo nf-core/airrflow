@@ -92,6 +92,16 @@ workflow AIRRFLOW {
         ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
         ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
+        ch_presto_filterseq_logs = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
+        ch_presto_maskprimers_logs = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
+        ch_presto_pairseq_logs =  SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
+        ch_presto_clustersets_logs =  SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
+        ch_presto_buildconsensus_logs =  SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
+        ch_presto_postconsensus_pairseq_logs =  SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
+        ch_presto_assemblepairs_logs =  SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
+        ch_presto_collapseseq_logs =  SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
+        ch_presto_splitseq_logs =  SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+
     } else if ( params.mode == "assembled" ) {
 
         ch_fastqc_preassembly_mqc = Channel.empty()
@@ -115,6 +125,16 @@ workflow AIRRFLOW {
 
         ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
         ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
+
+        ch_presto_filterseq_logs = Channel.empty()
+        ch_presto_maskprimers_logs = Channel.empty()
+        ch_presto_pairseq_logs =  Channel.empty()
+        ch_presto_clustersets_logs =  Channel.empty()
+        ch_presto_buildconsensus_logs =  Channel.empty()
+        ch_presto_postconsensus_pairseq_logs =  Channel.empty()
+        ch_presto_assemblepairs_logs =  Channel.empty()
+        ch_presto_collapseseq_logs =  Channel.empty()
+        ch_presto_splitseq_logs =  Channel.empty()
 
     } else {
         exit 1, "Mode parameter value not valid."
@@ -174,15 +194,15 @@ workflow AIRRFLOW {
 
     if (!params.skip_report){
         REPERTOIRE_ANALYSIS_REPORTING(
-            SEQUENCE_ASSEMBLY.out.presto_filterseq_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_pairseq_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_clustersets_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.collect().ifEmpty([]),
-            SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.collect().ifEmpty([]),
+            ch_presto_filterseq_logs.collect().ifEmpty([]),
+            ch_presto_maskprimers_logs.collect().ifEmpty([]),
+            ch_presto_pairseq_logs.collect().ifEmpty([]),
+            ch_presto_clustersets_logs.collect().ifEmpty([]),
+            ch_presto_buildconsensus_logs.collect().ifEmpty([]),
+            ch_presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
+            ch_presto_assemblepairs_logs.collect().ifEmpty([]),
+            ch_presto_collapseseq_logs.collect().ifEmpty([]),
+            ch_presto_splitseq_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
             BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
