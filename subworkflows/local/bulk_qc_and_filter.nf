@@ -12,6 +12,7 @@ workflow BULK_QC_AND_FILTER {
     main:
 
     ch_versions = Channel.empty()
+    ch_logs = Channel.empty()
 
     // Remove chimeric sequences if requested
     if (params.remove_chimeric) {
@@ -21,8 +22,7 @@ workflow BULK_QC_AND_FILTER {
             ch_repertoire,
             ch_imgt.collect()
         )
-        //TODO: file sizes
-        //ch_file_sizes = ch_file_sizes.mix(CREATEGERMLINES.out.logs)
+        ch_logs = ch_logs.mix(CHANGEO_CREATEGERMLINES.out.logs)
         ch_versions = ch_versions.mix(CHANGEO_CREATEGERMLINES.out.versions.ifEmpty(null))
 
         // Remove chimera
@@ -30,9 +30,10 @@ workflow BULK_QC_AND_FILTER {
             CHANGEO_CREATEGERMLINES.out.tab,
             ch_imgt.collect()
         )
-        // TODO: ch_file_sizes = ch_file_sizes.mix(REMOVE_CHIMERIC.out.logs)
-        ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
+        ch_logs = ch_logs.mix(REMOVE_CHIMERIC.out.logs)
         ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions.ifEmpty(null))
+        ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
+
 
     } else {
         ch_bulk_chimeric_pass = ch_repertoire
@@ -61,12 +62,12 @@ workflow BULK_QC_AND_FILTER {
         ch_for_collapse
     )
 
-
     ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
     // TODO file size
 
     emit:
     versions = ch_versions
     repertoires = COLLAPSE_DUPLICATES.out.tab
+    logs = ch_logs
 
 }
