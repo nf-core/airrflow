@@ -36,7 +36,7 @@ process FIND_THRESHOLD {
             'outdir'=getwd(),\\
             'nproc'=${task.cpus},\\
             'outname'='all_reps',\\
-            'log'='all_reps_clone_command_log',\\
+            'log'='all_reps_threshold_command_log',\\
             'logo'='${logo}'))"
 
     echo "${task.process}": > versions.yml
