@@ -36,7 +36,7 @@ process DEFINE_CLONES {
                                         'cloneby'='${params.cloneby}','threshold'=${threshold}, \\
                                         'outputby'='sample_id', \\
                                         'outname'='${outname}', \\
-                                        'singlecell'='${params.singlecell}','outdir'=getwd(), \\
+                                        'singlecell'='${params.singlecell}','outdir'=file.path(getwd(),"enchantr"), \\
                                         'nproc'=${task.cpus},\\
                                         'log'='all_reps_clone_command_log' ${args}))"
 
