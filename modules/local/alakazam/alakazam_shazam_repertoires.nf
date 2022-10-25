@@ -1,7 +1,6 @@
 process ALAKAZAM_SHAZAM_REPERTOIRES {
     tag "report"
     label 'process_high'
-    label 'immcantation'
 
     conda (params.enable_conda ? "conda-forge::r-base=4.2.1 bioconda::r-alakazam=1.2.1 bioconda::r-shazam=1.1.2 conda-forge::r-kableextra=1.3.4 conda-forge::r-knitr=1.33 conda-forge::r-stringr=1.4.0 conda-forge::r-dplyr=1.0.6 conda-forge::r-optparse=1.7.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
