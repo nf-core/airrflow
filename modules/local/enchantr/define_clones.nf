@@ -1,7 +1,7 @@
 process DEFINE_CLONES {
     tag 'all_reps'
 
-    label 'process_long'
+    label 'process_high'
     label 'enchantr'
 
 
