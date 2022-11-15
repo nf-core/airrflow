@@ -1,17 +1,13 @@
 process DEFINE_CLONES {
     tag 'all_reps'
 
-    label 'process_high'
-    label 'process_long'
-    label 'enchantr'
+    label 'process_long_parallelized'
     label 'immcantation'
 
-    //conda (params.enable_conda ? "bioconda::r-enchantr=0.0.1" : null)
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.1--r41hdfd78af_0':
-    //    'quay.io/biocontainers/r-enchantr:0.0.1--r41hdfd78af_0' }"
-    container 'immcantation/suite:devel'
-    // TODO: fix issue in enchantr missing r-reshape2 dependency and update container
+    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.3--r42hdfd78af_1':
+        'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format

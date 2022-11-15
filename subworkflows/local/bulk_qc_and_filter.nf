@@ -44,13 +44,15 @@ workflow BULK_QC_AND_FILTER {
     // TODO: add a flag to specify remove suspicious sequences
     // and update file size log accordingly
 
-    DETECT_CONTAMINATION(
-        ch_bulk_chimeric_pass
+    if (params.detect_contamination) {
+        DETECT_CONTAMINATION(
+            ch_bulk_chimeric_pass
             .map{ it -> [ it[1] ] }
             .collect()
-    )
-    // TODO file size
-    ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
+        )
+        // TODO file size
+        ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
+    }
 
     ch_for_collapse = ch_bulk_chimeric_pass
             .dump()

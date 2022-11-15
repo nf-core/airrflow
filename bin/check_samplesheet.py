@@ -60,7 +60,7 @@ def check_samplesheet(file_in):
             "subject_id",
             "species",
             "pcr_target_locus",
-            "single_cell"
+            "single_cell",
         ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         for col in REQUIRED_COLUMNS:

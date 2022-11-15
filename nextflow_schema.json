@@ -12,20 +12,18 @@
             "description": "Define where the pipeline should find input data and save output data.",
             "required": ["input", "outdir"],
             "properties": {
-                "subworkflow": {
-                    "type": "string",
-                    "default": "bcellmagic",
-                    "fa_icon": "fas fa-project-diagram",
-                    "hidden": true,
-                    "description": "Specify the subworkflow to be executed.",
-                    "enum": ["bcellmagic", "reveal"]
-                },
                 "input": {
                     "type": "string",
                     "mimetype": "text/tsv",
-                    "fa_icon": "fas fa-dna",
+                    "fa_icon": "fas fa-table",
                     "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
                     "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. The file should include the following columns, separated with tabs, with exactly these header names:\n\n```bash\nID Source Treatment Extraction_time Population R1 R2 I1\nQMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sample_S8_L001_R2_001.fastq.gz sample_S8_L001_I1_001.fastq.gz\n```\n\nThis metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:\n\n* ID: sample ID.\n* Source: patient or organism code.\n* Treatment: treatment condition applied to the sample.\n* Extraction_time: time of cell extraction for the sample.\n* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).\n* R1: path to fastq file with first mates of paired-end sequencing.\n* R2: path to fastq file with second mates of paired-end sequencing.\n* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column)\n\nSpecify the path for your input file like this:\n\n```bash\n--input 'path/to/metadata/metadata_sheet.tsv'\n```"
+                },
+                "mode": {
+                    "type": "string",
+                    "default": "fastq",
+                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".ptions are: 'raw'",
+                    "enum": ["fastq", "assembled"]
                 },
                 "outdir": {
                     "type": "string",
@@ -60,7 +58,8 @@
                     "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
                     "fa_icon": "fas fa-dna"
                 }
-            }
+            },
+            "fa_icon": "fas fa-flask"
         },
         "databases_cache": {
             "title": "Databases cache",
@@ -127,7 +126,7 @@
                 "primer_revpr": {
                     "type": "boolean",
                     "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-barcode"
+                    "fa_icon": "fas fa-dna"
                 }
             },
             "fa_icon": "fas fa-dna"
@@ -220,57 +219,33 @@
             },
             "fa_icon": "fas fa-align-center"
         },
-        "clustering_threshold_definition": {
-            "title": "Clustering threshold definition",
+        "clonal_analysis_options": {
+            "title": "Clonal analysis options",
             "type": "object",
             "description": "Define how the B-cell clonal trees should be calculated.",
             "default": "",
             "properties": {
-                "set_cluster_threshold": {
-                    "type": "boolean",
-                    "description": "Set to true if to manually adjust the clustering threshold for cell clones.",
-                    "help_text": "Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
-                    "fa_icon": "fab fa-pagelines"
-                },
-                "cluster_threshold": {
-                    "type": "number",
-                    "default": 0.14,
-                    "description": "Set the clustering threshold Hamming distance value.",
-                    "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
-                    "fa_icon": "fab fa-pagelines"
-                },
                 "threshold_method": {
                     "type": "string",
                     "default": "density",
                     "description": "Set the method for finding the clustering threshold.",
                     "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances.",
                     "fa_icon": "fab fa-pagelines"
+                },
+                "clonal_threshold": {
+                    "type": "string",
+                    "default": "auto",
+                    "fa_icon": "fab fa-pagelines",
+                    "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
+                },
+                "skip_lineage": {
+                    "type": "boolean",
+                    "description": "Skip clonal lineage analysis and lineage tree plotting.",
+                    "fa_icon": "fas fa-angle-double-right"
                 }
             },
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
             "fa_icon": "fab fa-pagelines"
-        },
-        "downstream_options": {
-            "title": "Downstream options",
-            "type": "object",
-            "description": "Define downstream analysis options.",
-            "default": "",
-            "properties": {
-                "skip_report": {
-                    "type": "boolean",
-                    "description": "Skip repertoire analysis and report generation"
-                },
-                "skip_lineage": {
-                    "type": "boolean",
-                    "description": "Skip clonal lineage analysis and lineage tree plotting."
-                },
-                "skip_multiqc": {
-                    "type": "boolean",
-                    "description": "Skip multiqc report"
-                }
-            },
-            "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
-            "fa_icon": "fas fa-angle-double-right"
         },
         "report_options": {
             "title": "Report options",
@@ -281,19 +256,33 @@
                 "report_rmd": {
                     "type": "string",
                     "default": "${projectDir}/assets/repertoire_comparison.Rmd",
-                    "description": "Custom report Rmarkdown file."
+                    "description": "Custom report Rmarkdown file.",
+                    "fa_icon": "far fa-file-code"
                 },
                 "report_css": {
                     "type": "string",
                     "default": "${projectDir}/assets/nf-core_style.css",
-                    "description": "Custom report style file in css format."
+                    "description": "Custom report style file in css format.",
+                    "fa_icon": "far fa-file-code"
                 },
                 "report_logo": {
                     "type": "string",
                     "default": "${projectDir}/assets/nf-core-airrflow_logo_light.png",
-                    "description": "Custom logo for the report."
+                    "description": "Custom logo for the report.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "skip_report": {
+                    "type": "boolean",
+                    "description": "Skip repertoire analysis and report generation",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip multiqc report",
+                    "fa_icon": "fas fa-angle-double-right"
                 }
-            }
+            },
+            "fa_icon": "far fa-file-code"
         },
         "software_packaging_options": {
             "title": "Software packaging options",
@@ -533,10 +522,10 @@
                     "default": true,
                     "description": "Whether to apply the chimera removal filter"
                 },
-                "threshold": {
-                    "type": ["string", "number"],
-                    "default": "auto",
-                    "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
+                "detect_contamination": {
+                    "type": "string",
+                    "default": "false",
+                    "fa_icon": "fas fa-search"
                 },
                 "miairr": {
                     "type": "string",
@@ -576,10 +565,7 @@
             "$ref": "#/definitions/presto_options"
         },
         {
-            "$ref": "#/definitions/clustering_threshold_definition"
-        },
-        {
-            "$ref": "#/definitions/downstream_options"
+            "$ref": "#/definitions/clonal_analysis_options"
         },
         {
             "$ref": "#/definitions/report_options"
