@@ -20,8 +20,8 @@ process VALIDATE_INPUT {
     //val reassign
 
     output:
-    path "*/validated_input.tsv", emit: validated_input
-    path "*/validated_input_not-valid.tsv", emit: not_valid_input, optional: true
+    path "validated_input.tsv", emit: validated_input
+    path "validated_input_not-valid.tsv", emit: not_valid_input, optional: true
     path "versions.yml", emit: versions
 
     script:
