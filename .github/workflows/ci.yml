@@ -58,6 +58,17 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
 
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/*/.nextflow.log
+            /home/runner/*/work
+            !/home/runner/*/work/conda
+            !/home/runner/*/work/singularity
+
   test_container:
     name: Run workflow with immcantation devel test_container
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/airrflow') }}
@@ -80,6 +91,17 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/*/.nextflow.log
+            /home/runner/*/work
+            !/home/runner/*/work/conda
+            !/home/runner/*/work/singularity
 
 
 
