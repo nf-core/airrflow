@@ -10,10 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": [
-                "input",
-                "outdir"
-            ],
+            "required": ["input", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -26,10 +23,7 @@
                     "type": "string",
                     "default": "fastq",
                     "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".ptions are: 'raw'",
-                    "enum": [
-                        "fastq",
-                        "assembled"
-                    ]
+                    "enum": ["fastq", "assembled"]
                 },
                 "outdir": {
                     "type": "string",
@@ -56,12 +50,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-flask",
                     "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": [
-                        "specific_pcr_umi",
-                        "specific_pcr",
-                        "dt_5p_race",
-                        "dt_5p_race_umi"
-                    ],
+                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi"],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
                 },
                 "race_linker": {
@@ -132,10 +121,7 @@
                     "default": "R1",
                     "fa_icon": "fas fa-dna",
                     "description": "Indicate if C region primers are in the R1 or R2 reads.",
-                    "enum": [
-                        "R1",
-                        "R2"
-                    ]
+                    "enum": ["R1", "R2"]
                 },
                 "primer_revpr": {
                     "type": "boolean",
@@ -162,10 +148,7 @@
                     "default": "R1",
                     "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
                     "help_text": "The pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter to R1 or R2, respectively.",
-                    "enum": [
-                        "R1",
-                        "R2"
-                    ],
+                    "enum": ["R1", "R2"],
                     "fa_icon": "fas fa-barcode"
                 },
                 "umi_length": {
@@ -211,12 +194,7 @@
                     "type": "string",
                     "default": "cut",
                     "description": "Masking mode for the Presto MaskPrimer step. Available: cut, mask, trim, tag.",
-                    "enum": [
-                        "cut",
-                        "mask",
-                        "trim",
-                        "tag"
-                    ],
+                    "enum": ["cut", "mask", "trim", "tag"],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-mask"
                 },
@@ -448,14 +426,7 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ],
+                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
                 "email_on_fail": {
