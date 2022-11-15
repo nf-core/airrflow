@@ -2,7 +2,7 @@ process SHAZAM_THRESHOLD {
     tag "$meta.id"
     label 'immcantation'
 
-    conda (params.enable_conda ? "conda-forge::r-base=4.2.1 bioconda::r-shazam=1.1.2" : null)
+    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-shazam=1.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-db80433cc6df75bc43a5fd7bfa7529a7df8cfe15:f0e1329252bbc0f36a8656cfa655cf205da30e5b-0' :
         'quay.io/biocontainers/mulled-v2-db80433cc6df75bc43a5fd7bfa7529a7df8cfe15:f0e1329252bbc0f36a8656cfa655cf205da30e5b-0' }"
