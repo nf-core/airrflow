@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to provide custom Rmarkdown report.
 - [#183](https://github.com/nf-core/airrflow/pull/183) Update template to nf-core tools v2.5.1
 - [#183](https://github.com/nf-core/airrflow/pull/183) Add option to provide another different threshold in splitseq process
-- Rename reveal test to test_assembled, add separate test for immcantation devel container
+- Rename reveal test to test_assembled, add separate test for immcantation devel container as another job so other tests are not cancelled if this test does not run through.
 
 ### `Fixed`
 

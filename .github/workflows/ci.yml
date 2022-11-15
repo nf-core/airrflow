@@ -44,7 +44,7 @@ jobs:
         NXF_VER:
           - "21.10.3"
           - "latest-everything"
-        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled", "test_immcantation_devel"]
+        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -57,3 +57,29 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+  test_container:
+    name: Run workflow with immcantation devel test_container
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/airrflow') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        NXF_VER:
+          - "21.10.3"
+          - "latest-everything"
+        profile: ["test_immcantation_devel"]
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Run pipeline with test data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+
+
