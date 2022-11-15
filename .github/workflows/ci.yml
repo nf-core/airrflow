@@ -64,10 +64,10 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /home/runner/*/.nextflow.log
-            /home/runner/*/work
-            !/home/runner/*/work/conda
-            !/home/runner/*/work/singularity
+            /home/runner/.nextflow.log
+            /home/runner/work
+            !/home/runner/work/conda
+            !/home/runner/work/singularity
 
   test_container:
     name: Run workflow with immcantation devel test_container
@@ -98,10 +98,10 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /home/runner/*/.nextflow.log
-            /home/runner/*/work
-            !/home/runner/*/work/conda
-            !/home/runner/*/work/singularity
+            /home/runner/.nextflow.log
+            /home/runner/work
+            !/home/runner/work/conda
+            !/home/runner/work/singularity
 
 
 
