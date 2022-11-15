@@ -16,8 +16,8 @@ process DEFINE_CLONES {
     path imgt_base
 
     output:
-    path("all_reps_clone_report/*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
-    path("all_reps_clone_report/*_command_log.txt"), emit: logs //process logs
+    path("*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
+    path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
 
