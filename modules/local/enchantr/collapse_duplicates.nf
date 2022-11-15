@@ -4,7 +4,7 @@ process COLLAPSE_DUPLICATES {
     label 'process_high'
     label 'process_long_parallelized'
     cache  'lenient'
-
+    label 'immcantation'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

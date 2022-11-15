@@ -35,6 +35,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath( params.mult
 ch_report_rmd = Channel.fromPath(params.report_rmd, checkIfExists: true)
 ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
 ch_report_logo = Channel.fromPath(params.report_logo, checkIfExists: true)
+ch_report_logo_img = Channel.fromPath(params.report_logo_img, checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,7 +189,8 @@ workflow AIRRFLOW {
     // Clonal analysis
     CLONAL_ANALYSIS(
         ch_repertoires_for_clones,
-        VDJ_ANNOTATION.out.imgt.collect()
+        VDJ_ANNOTATION.out.imgt.collect(),
+        ch_report_logo_img.collect().ifEmpty([])
     )
     ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty(null))
 

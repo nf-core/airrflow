@@ -31,7 +31,6 @@ process DETECT_CONTAMINATION {
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-
-    mv enchantr al_reps_cont_report
+    mv enchantr all_reps_cont_report
     """
 }

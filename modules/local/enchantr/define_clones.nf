@@ -1,13 +1,13 @@
 process DEFINE_CLONES {
     tag 'all_reps'
 
-    label 'process_high'
+    label 'process_long_parallelized'
+    label 'immcantation'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.3--r42hdfd78af_1':
         'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
-    // TODO: fix issue in enchantr missing r-reshape2 dependency and update container
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format
@@ -16,8 +16,8 @@ process DEFINE_CLONES {
     path imgt_base
 
     output:
-    path("*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
-    path("*_command_log.txt"), emit: logs //process logs
+    path("all_reps_clone_report/*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
+    path("all_reps_clone_report/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
 
@@ -29,7 +29,8 @@ process DEFINE_CLONES {
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
-                                        'cloneby'='${params.cloneby}','threshold'=${threshold}, \\
+                                        'cloneby'='${params.cloneby}', 'force'=FALSE, \\
+                                        'threshold'=${threshold}, \\
                                         'outputby'='sample_id', \\
                                         'outname'='${outname}', \\
                                         'singlecell'='${params.singlecell}','outdir'=getwd(), \\

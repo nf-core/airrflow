@@ -1,6 +1,7 @@
 process PRESTO_MASKPRIMERS_POSTASSEMBLY {
     tag "$meta.id"
     label "process_high"
+    label 'immcantation'
 
     conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

@@ -3,7 +3,7 @@
  */
 process REPORT_FILE_SIZE {
     tag "file_size"
-
+    label 'immcantation'
     label 'single_cpu'
     label 'enchantr'
 

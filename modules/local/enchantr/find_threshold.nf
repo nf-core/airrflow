@@ -3,6 +3,7 @@ process FIND_THRESHOLD {
 
     label 'process_high'
     label 'process_long'
+    label 'immcantation'
     label 'enchantr'
 
 
@@ -16,6 +17,7 @@ process FIND_THRESHOLD {
 
     input:
     path tab // sequence tsv in AIRR format
+    path logo
 
     output:
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
@@ -34,11 +36,11 @@ process FIND_THRESHOLD {
             'outdir'=getwd(),\\
             'nproc'=${task.cpus},\\
             'outname'='all_reps',\\
-            'log'='all_reps_clone_command_log'))"
+            'log'='all_reps_threshold_command_log',\\
+            'logo'='${logo}'))"
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-
     mv enchantr all_reps_dist_report
     """
 }

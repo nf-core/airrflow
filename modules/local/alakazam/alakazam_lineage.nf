@@ -1,6 +1,7 @@
 process ALAKAZAM_LINEAGE {
     tag "$meta.id"
     label 'process_high'
+    label 'immcantation'
 
     conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-alakazam=1.2.0 bioconda::changeo=1.2.0 bioconda::phylip=3.697 conda-forge::r-optparse=1.7.1" : null)  // Please also update the phylip version manually in the script section below as phylip does not print the version
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
