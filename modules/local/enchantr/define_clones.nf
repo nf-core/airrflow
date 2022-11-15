@@ -29,7 +29,7 @@ process DEFINE_CLONES {
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
-                                        'cloneby'='${params.cloneby}', 'force'=FALSE, \\
+                                        'cloneby'='${params.cloneby}', \\
                                         'threshold'=${threshold}, \\
                                         'outputby'='sample_id', \\
                                         'outname'='${outname}', \\
