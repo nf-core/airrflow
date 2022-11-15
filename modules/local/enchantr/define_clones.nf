@@ -30,6 +30,7 @@ process DEFINE_CLONES {
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
                                         'cloneby'='${params.cloneby}', \\
+                                        'force'=FALSE, \\
                                         'threshold'=${threshold}, \\
                                         'outputby'='sample_id', \\
                                         'outname'='${outname}', \\
