@@ -1,3 +1,14 @@
+def asString (args) {
+    s = ""
+    if (args.size()>0) {
+        if (args[0] != 'none') {
+            for (param in args.keySet().sort()){
+                s = s + ",'"+param+"'='"+args[param]+"'"
+            }
+        }
+    }
+    return s
+}
 process DEFINE_CLONES {
     tag 'all_reps'
 
@@ -16,23 +27,20 @@ process DEFINE_CLONES {
     path imgt_base
 
     output:
-    path("*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
-    path("*_command_log.txt"), emit: logs //process logs
+    path("*/*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
+    path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
 
 
     script:
-    def outname = ''
-    if (task.ext.args.containsKey('outname')) { outname = task.ext.args['outname'] }
+    def args = asString(task.ext.args) ?: ''
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
                                         'cloneby'='${params.cloneby}', \\
                                         'threshold'=${threshold}, \\
-                                        'outputby'='sample_id', \\
-                                        'outname'='${outname}', \\
                                         'singlecell'='${params.singlecell}','outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
                                         'log'='all_reps_clone_command_log' ${args}))"
