@@ -45,6 +45,7 @@ jobs:
           - "21.10.3"
           - "latest-everything"
         profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled"]
+      fail-fast: false
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -79,6 +80,7 @@ jobs:
           - "21.10.3"
           - "latest-everything"
         profile: ["test_immcantation_devel"]
+      fail-fast: false
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
