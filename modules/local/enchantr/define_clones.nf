@@ -40,6 +40,7 @@ process DEFINE_CLONES {
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
                                         'cloneby'='${params.cloneby}', \\
+                                        'force'=FALSE, \\
                                         'threshold'=${threshold}, \\
                                         'singlecell'='${params.singlecell}','outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
