@@ -23,7 +23,7 @@ process SINGLE_CELL_QC {
         'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
 
     input:
-    path tabs
+    tuple val(meta), path(tabs)
 
     output:
     path("*/*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
