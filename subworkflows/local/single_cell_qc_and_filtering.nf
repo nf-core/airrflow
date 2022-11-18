@@ -37,8 +37,6 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
                                                     .dump(tag:'scqc-out-joined-meta')
                                                     .map{ it -> [ it[1], it[2] ]}
 
-
-
     emit:
     versions = ch_versions
     repertoires = ch_repertoire_after_scqc_withmeta

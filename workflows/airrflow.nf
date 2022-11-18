@@ -167,7 +167,6 @@ workflow AIRRFLOW {
     ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null))
 
     ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
-                                        .map{it -> it[1]}
                                         .dump(tag: 'bulk_filt_out')
 
     // Single cell: QC and filtering
@@ -183,8 +182,6 @@ workflow AIRRFLOW {
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
                                     .dump(tag: 'after mix')
-                                    .collect()
-                                    .dump(tag: 'after collect')
 
     // Clonal analysis
     CLONAL_ANALYSIS(
