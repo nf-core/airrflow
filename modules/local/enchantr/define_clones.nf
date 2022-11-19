@@ -10,7 +10,7 @@ def asString (args) {
     return s
 }
 process DEFINE_CLONES {
-    tag 'all_reps'
+    tag "${meta.cloneby}"
 
     label 'process_long_parallelized'
     label 'immcantation'
@@ -21,8 +21,7 @@ process DEFINE_CLONES {
         'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
 
     input:
-    //tuple val(meta), path(tabs) // sequence tsv in AIRR format
-    path(tabs)
+    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     val threshold
     path imgt_base
 
@@ -35,13 +34,14 @@ process DEFINE_CLONES {
 
     script:
     def args = asString(task.ext.args) ?: ''
+    def thr = threshold.join("")
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
                                         'cloneby'='${params.cloneby}', \\
                                         'force'=FALSE, \\
-                                        'threshold'=${threshold}, \\
+                                        'threshold'=${thr}, \\
                                         'singlecell'='${params.singlecell}','outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
                                         'log'='all_reps_clone_command_log' ${args}))"
