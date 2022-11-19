@@ -181,7 +181,7 @@ workflow AIRRFLOW {
     // Mixing bulk and single cell channels for clonal analysis
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
-                                    .dump(tag: 'after mix')
+                                    .dump(tag: 'sc bulk mix')
 
     // Clonal analysis
     CLONAL_ANALYSIS(

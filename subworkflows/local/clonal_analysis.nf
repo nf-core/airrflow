@@ -11,9 +11,14 @@ workflow CLONAL_ANALYSIS {
     main:
     ch_versions = Channel.empty()
 
+
     if (params.clonal_threshold == "auto") {
+
+        ch_find_threshold = ch_repertoire.map{ it -> it[1] }
+                                        .dump(tag:'find_threshold')
+
         FIND_THRESHOLD (
-            ch_repertoire,
+            ch_find_threshold,
             ch_logo
         )
         ch_threshold = FIND_THRESHOLD.out.mean_threshold
@@ -30,6 +35,9 @@ workflow CLONAL_ANALYSIS {
     } else {
         clone_threshold = params.clonal_threshold
     }
+
+    ch_repertoire.map{ it -> [ it[0]."${params.cloneby}", it[0], it[1] ] }
+                .dump(tag:'cloneby')
 
     DEFINE_CLONES(
         ch_repertoire,

@@ -6,7 +6,6 @@ process FIND_THRESHOLD {
     label 'immcantation'
     label 'enchantr'
 
-
     cache 'lenient'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
