@@ -3,6 +3,7 @@
  */
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
+//include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
 
 workflow FASTQ_INPUT_CHECK {
     take:
@@ -13,22 +14,40 @@ workflow FASTQ_INPUT_CHECK {
         .tsv
         .splitCsv ( header:true, sep:'\t' )
         .map { create_fastq_channels(it) }
-        .set { reads }
+        .set { ch_reads }
+    // VALIDATE_INPUT(
+    //     samplesheet,
+    //     params.miairr,
+    //     params.collapseby,
+    //     params.cloneby
+    // )
+
+    // VALIDATE_INPUT.out.validated_input
+    //                     .splitCsv(header: true, sep:'\t')
+    //                     .map { get_meta(it) }
+    //                     .set{ ch_reads }
 
     emit:
-    reads                                     // channel: [ val(meta), [ reads ] ]
+    reads = ch_reads // channel: [ val(meta), [ reads ] ]
     versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
     samplesheet = SAMPLESHEET_CHECK.out.tsv // tsv metadata file
 }
 
 // Function to map
 def create_fastq_channels(LinkedHashMap col) {
+
     def meta = [:]
-    meta.id           = col.sample_id
-    meta.subject      = col.subject_id
-    meta.locus        = col.pcr_target_locus
-    meta.species      = col.species
-    meta.single_cell  = 'false'
+
+    meta.id     = col.sample_id
+    meta.filename     = col.filename
+    meta.subject_id   = col.subject_id
+    meta.species     = col.species
+    meta.collapseby_group = col."${params.collapseby}"
+    meta.cloneby_group = col."${params.cloneby}"
+    meta.filetype = "fastq"
+    meta.single_cell = col.single_cell
+    meta.pcr_target_locus = col.pcr_target_locus
+    meta.locus = col.locus
 
     def array = []
     if (!file(col.filename_R1).exists()) {

@@ -14,21 +14,23 @@ workflow ASSEMBLED_INPUT_CHECK {
 
     main:
     // TODO: validate input should check that sample_ids are unique
+
     VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby ) //removed reassign
-    validated_input = VALIDATE_INPUT.out.validated_input
-    validated_input
+    ch_validated_input = VALIDATE_INPUT.out.validated_input
+    ch_validated_input
         .splitCsv(header: true, sep:'\t')
         .map { get_meta(it) }
             .branch { it ->
                 fasta: it[0].filename =~ /[fasta|fa]$/
                 tsv:   it[0].filename =~ /tsv$/
             }
-            .set{ch_metadata}
+            .set{ ch_metadata }
 
     emit:
     ch_fasta = ch_metadata.fasta
     ch_tsv = ch_metadata.tsv
     validated_input = validated_input
+    versions = VALIDATE_INPUT.out.versions
 }
 
 // Function to map

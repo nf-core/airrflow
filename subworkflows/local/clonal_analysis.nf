@@ -39,10 +39,8 @@ workflow CLONAL_ANALYSIS {
 
     ch_repertoire.map{ it -> [ it[0]."${params.cloneby}",
                                 it[0].id,
-                                it[0].filename,
                                 it[0].subject_id,
                                 it[0].species,
-                                it[0].filetype,
                                 it[0].single_cell,
                                 it[0].pcr_target_locus,
                                 it[0].locus,
@@ -78,10 +76,8 @@ def get_meta_tabs(arr) {
     def meta = [:]
     meta.cloneby            = [arr[0]].unique().join("")
     meta.sample_ids         = arr[1]
-    meta.filename           = arr[2]
     meta.subject_id         = arr[3]
     meta.species            = arr[4]
-    meta.filetype           = arr[5]
     meta.single_cell        = arr[6].unique().join("")
     meta.pcr_target_locus   = arr[7].unique().join("")
     meta.locus              = arr[8]
