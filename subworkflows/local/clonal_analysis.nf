@@ -42,7 +42,6 @@ workflow CLONAL_ANALYSIS {
                                 it[0].subject_id,
                                 it[0].species,
                                 it[0].single_cell,
-                                it[0].pcr_target_locus,
                                 it[0].locus,
                                 it[1] ] }
                 .groupTuple()
@@ -76,15 +75,14 @@ def get_meta_tabs(arr) {
     def meta = [:]
     meta.cloneby            = [arr[0]].unique().join("")
     meta.sample_ids         = arr[1]
-    meta.subject_id         = arr[3]
-    meta.species            = arr[4]
-    meta.single_cell        = arr[6].unique().join("")
-    meta.pcr_target_locus   = arr[7].unique().join("")
-    meta.locus              = arr[8]
+    meta.subject_id         = arr[2]
+    meta.species            = arr[3]
+    meta.single_cell        = arr[4].unique().join("")
+    meta.locus              = arr[5].unique().join("")
 
     def array = []
 
-        array = [ meta, arr[9].flatten() ]
+        array = [ meta, arr[6].flatten() ]
 
     return array
 }

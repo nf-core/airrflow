@@ -38,16 +38,14 @@ def create_fastq_channels(LinkedHashMap col) {
 
     def meta = [:]
 
-    meta.id     = col.sample_id
-    meta.filename     = col.filename
-    meta.subject_id   = col.subject_id
-    meta.species     = col.species
-    meta.collapseby_group = col."${params.collapseby}"
-    meta.cloneby_group = col."${params.cloneby}"
-    meta.filetype = "fastq"
-    meta.single_cell = col.single_cell
-    meta.pcr_target_locus = col.pcr_target_locus
-    meta.locus = col.locus
+    meta.id                 = col.sample_id
+    meta.subject_id         = col.subject_id
+    meta.species            = col.species
+    meta.collapseby_group   = col."${params.collapseby}"
+    meta.cloneby_group      = col."${params.cloneby}"
+    meta.filetype           = "fastq"
+    meta.single_cell        = col.single_cell.toLowerCase()
+    meta.locus              = col.pcr_target_locus
 
     def array = []
     if (!file(col.filename_R1).exists()) {
