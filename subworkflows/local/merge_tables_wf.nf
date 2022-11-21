@@ -34,7 +34,7 @@ def get_meta_tabs(arr) {
     meta.id           = arr[0]
     meta.samples      = arr[1]
     meta.locus        = arr[2].unique().join("")
-    meta.subject      = arr[3].unique().join("")
+    meta.subject_id      = arr[3].unique().join("")
     meta.species      = arr[4].unique().join("")
 
     def array = []

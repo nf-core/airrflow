@@ -10,7 +10,7 @@ def asString (args) {
     return s
 }
 process DEFINE_CLONES {
-    tag "${meta.cloneby}"
+    tag "${meta.id}"
 
     label 'process_long_parallelized'
     label 'immcantation'
@@ -44,11 +44,11 @@ process DEFINE_CLONES {
                                         'threshold'=${thr}, \\
                                         'singlecell'='${params.singlecell}','outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
-                                        'log'='all_reps_clone_command_log' ${args}))"
+                                        'log'='${meta.id}_clone_command_log' ${args}))"
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
 
-    mv enchantr 'all_reps_clone_report'
+    mv enchantr '${meta.id}_clone_report'
     """
 }

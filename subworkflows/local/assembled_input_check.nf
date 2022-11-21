@@ -29,7 +29,7 @@ workflow ASSEMBLED_INPUT_CHECK {
     emit:
     ch_fasta = ch_metadata.fasta
     ch_tsv = ch_metadata.tsv
-    validated_input = validated_input
+    validated_input = ch_validated_input
     versions = VALIDATE_INPUT.out.versions
 }
 

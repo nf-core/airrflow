@@ -1,5 +1,6 @@
 include { FIND_THRESHOLD  } from '../../modules/local/enchantr/find_threshold'
-include { DEFINE_CLONES  } from '../../modules/local/enchantr/define_clones'
+include { DEFINE_CLONES as DEFINE_CLONES_COMPUTE  } from '../../modules/local/enchantr/define_clones'
+include { DEFINE_CLONES as DEFINE_CLONES_REPORT } from '../../modules/local/enchantr/define_clones'
 include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
 
 workflow CLONAL_ANALYSIS {
@@ -37,6 +38,7 @@ workflow CLONAL_ANALYSIS {
         clone_threshold = params.clonal_threshold
     }
 
+    // prepare ch for define clones
     ch_repertoire.map{ it -> [ it[0]."${params.cloneby}",
                                 it[0].id,
                                 it[0].subject_id,
@@ -50,30 +52,51 @@ workflow CLONAL_ANALYSIS {
                 .dump(tag:'cloneby_after_map')
                 .set{ ch_define_clones }
 
-    DEFINE_CLONES(
+    DEFINE_CLONES_COMPUTE(
         ch_define_clones,
         clone_threshold.collect(),
         ch_imgt.collect()
     )
-    ch_versions = ch_versions.mix(DEFINE_CLONES.out.versions)
+    ch_versions = ch_versions.mix(DEFINE_CLONES_COMPUTE.out.versions)
+
+    // prepare ch for define clones all samples report
+    DEFINE_CLONES_COMPUTE.out.tab
+            .collect()
+            .map { it -> [ [id:'all_reps'], it ] }
+            .dump(tag: 'all_tabs_cloned')
+            .set{ch_all_repertoires_cloned}
+
+    if (!params.skip_all_clones_report){
+        DEFINE_CLONES_REPORT(
+            ch_all_repertoires_cloned,
+            clone_threshold.collect(),
+            ch_imgt.collect()
+        )
+    }
+
+    // prepare ch for dowser lineages
+    DEFINE_CLONES_COMPUTE.out.tab
+        .flatten()
+        .map { it -> [ [id: "${it.baseName}".replaceFirst("__clone-pass", "")], it ] }
+        .dump(tag: 'tab_cloned')
+        .set{ch_repertoires_cloned}
 
     if (!params.skip_lineage){
         DOWSER_LINEAGES(
-            DEFINE_CLONES.out.tab
-                .flatten()
+            ch_repertoires_cloned
         )
         ch_versions = ch_versions.mix(DOWSER_LINEAGES.out.versions)
     }
 
     emit:
-    repertoire = DEFINE_CLONES.out.tab
+    repertoire = ch_all_repertoires_cloned
     versions = ch_versions
 }
 
 // Function to map
 def get_meta_tabs(arr) {
     def meta = [:]
-    meta.cloneby            = [arr[0]].unique().join("")
+    meta.id            = [arr[0]].unique().join("")
     meta.sample_ids         = arr[1]
     meta.subject_id         = arr[2]
     meta.species            = arr[3]
