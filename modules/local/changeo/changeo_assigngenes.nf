@@ -16,6 +16,7 @@ process CHANGEO_ASSIGNGENES {
     path("*igblast.fmt7"), emit: blast
     tuple val(meta), path("$reads"), emit: fasta
     path "versions.yml" , emit: versions
+    path("*_command_log.txt"), emit: logs //process logs
 
     script:
     def args = task.ext.args ?: ''
