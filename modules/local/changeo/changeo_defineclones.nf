@@ -25,7 +25,7 @@ process CHANGEO_DEFINECLONES {
         thr = thr.trim()
     }
     """
-    DefineClones.py -d $tab --act set --model ham --norm len --nproc $task.cpus --dist $thr --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
+    DefineClones.py -d $tab --act set --model ham --norm len --nproc $task.cpus --dist $thr --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_defineclones_command_log.txt"
     ParseLog.py -l "${meta.id}.log" -f id v_call j_call junction_length cloned filtered clones
 
     cat <<-END_VERSIONS > versions.yml

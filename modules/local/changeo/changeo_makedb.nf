@@ -25,7 +25,7 @@ process CHANGEO_MAKEDB {
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${imgt_base}/${meta.species.toLowerCase()}/vdj/ \\
     $args \\
-    --outname "${meta.id}" > "${meta.id}_command_log.txt"
+    --outname "${meta.id}" > "${meta.id}_makedb_command_log.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
