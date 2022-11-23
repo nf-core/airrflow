@@ -15,6 +15,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_presto_collapseseq_logs
     ch_presto_splitseq_logs
     ch_changeo_makedb_logs
+    ch_reassign_logs
     ch_vdj_annotation_logs
     ch_bulk_qc_and_filter_logs
     ch_repertoires
@@ -48,6 +49,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     }
 
     ch_logs = ch_vdj_annotation_logs.mix(ch_bulk_qc_and_filter_logs)
+    ch_logs = ch_logs.mix(ch_reassign_logs)
     REPORT_FILE_SIZE(
         ch_logs.collect().ifEmpty([])
     )

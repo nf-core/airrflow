@@ -81,7 +81,7 @@ def multiqc_report = []
 workflow AIRRFLOW {
 
     ch_versions = Channel.empty()
-    ch_logs = Channel.empty()
+    ch_reassign_logs = Channel.empty()
 
     if ( params.mode == "fastq" ) {
 
@@ -120,7 +120,7 @@ workflow AIRRFLOW {
             )
             ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
             ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
-            ch_logs = ch_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+            ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
         } else {
             ch_fasta_from_tsv = Channel.empty()
         }
@@ -141,7 +141,6 @@ workflow AIRRFLOW {
     } else {
         exit 1, "Mode parameter value not valid."
     }
-
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(
         ch_fasta,
@@ -206,6 +205,7 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs.collect().ifEmpty([]),
             ch_presto_collapseseq_logs.collect().ifEmpty([]),
             ch_presto_splitseq_logs.collect().ifEmpty([]),
+            ch_reassign_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
             BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
