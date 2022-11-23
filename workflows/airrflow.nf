@@ -81,6 +81,7 @@ def multiqc_report = []
 workflow AIRRFLOW {
 
     ch_versions = Channel.empty()
+    ch_logs = Channel.empty()
 
     if ( params.mode == "fastq" ) {
 
@@ -119,7 +120,7 @@ workflow AIRRFLOW {
             )
             ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
             ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
-            //ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+            ch_logs = ch_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
         } else {
             ch_fasta_from_tsv = Channel.empty()
         }
