@@ -2,6 +2,8 @@ process CHANGEO_BUILDTREES {
     tag "$meta.id"
     label 'process_medium'
     label 'immcantation'
+    label 'changeo'
+
 
     conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda:r-alakazam=1.2.0 bioconda::changeo=1.2.0 bioconda::igphyml=1.1.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
