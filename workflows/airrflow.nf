@@ -112,6 +112,7 @@ workflow AIRRFLOW {
                             params.miairr,
                             params.collapseby,
                             params.cloneby)
+        ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty(null) )
 
         if (params.reassign) {
             CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
@@ -146,7 +147,7 @@ workflow AIRRFLOW {
         ch_fasta,
         ch_validated_samplesheet.collect()
     )
-    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions. ifEmpty(null))
+    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions.ifEmpty(null))
 
     // Split bulk and single cell repertoires
     ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
@@ -167,7 +168,6 @@ workflow AIRRFLOW {
     ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null))
 
     ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
-                                        .map{it -> it[1]}
                                         .dump(tag: 'bulk_filt_out')
 
     // Single cell: QC and filtering
@@ -182,9 +182,7 @@ workflow AIRRFLOW {
     // Mixing bulk and single cell channels for clonal analysis
     ch_repertoires_for_clones = ch_bulk_filtered
                                     .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
-                                    .dump(tag: 'after mix')
-                                    .collect()
-                                    .dump(tag: 'after collect')
+                                    .dump(tag: 'sc bulk mix')
 
     // Clonal analysis
     CLONAL_ANALYSIS(

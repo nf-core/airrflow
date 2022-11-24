@@ -58,9 +58,6 @@ workflow BULK_QC_AND_FILTER {
             .dump()
 
     COLLAPSE_DUPLICATES(
-        //ch_bulk_chimeric_pass
-        //    .map{ it -> [ it[1] ] }
-        //    .collect()
         ch_for_collapse
     )
 

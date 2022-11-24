@@ -11,7 +11,7 @@ def asString (args) {
 }
 
 process DOWSER_LINEAGES {
-    tag "$tabs"
+    tag "${meta.id}"
 
     label 'process_high'
     label 'process_long'
@@ -26,7 +26,7 @@ process DOWSER_LINEAGES {
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format
-    path(tabs)
+    tuple val(meta), path(tabs)
 
     output:
     path("*_command_log.txt"), emit: logs //process logs
