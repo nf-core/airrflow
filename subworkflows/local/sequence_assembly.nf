@@ -42,7 +42,6 @@ include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../../modules/local/alakazam/alaka
 
 // Local: Sub-workflows
 include { FASTQ_INPUT_CHECK           } from '../../subworkflows/local/fastq_input_check'
-include { MERGE_TABLES_WF       } from '../../subworkflows/local/merge_tables_wf'
 include { PRESTO_UMI            } from '../../subworkflows/local/presto_umi'
 include { PRESTO_SANS_UMI            } from '../../subworkflows/local/presto_sans_umi'
 

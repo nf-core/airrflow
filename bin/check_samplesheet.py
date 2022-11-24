@@ -61,6 +61,10 @@ def check_samplesheet(file_in):
             "species",
             "pcr_target_locus",
             "single_cell",
+            "sex",
+            "tissue",
+            "biomaterial_provider",
+            "age"
         ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         for col in REQUIRED_COLUMNS:
