@@ -205,7 +205,7 @@ nextflow run nf-core/airrflow -profile docker \
 
 #### UMI barcode is provided in the index file
 
-If the UMI barcodes are provided in an additional index file, please provide it in the column `filename_I1` in the input samplsheet. You can optionally set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+If the UMI barcodes are provided in an additional index file, please provide it in the column `filename_I1` in the input samplesheet and additionally set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
 
 For example:
 
