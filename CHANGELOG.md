@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
+- Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
+
 ### `Dependencies`
 
 ### `Deprecated`
