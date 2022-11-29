@@ -6,6 +6,7 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
 
     main:
     ch_versions = Channel.empty()
+    ch_logs = Channel.empty()
 
     repertoires
             .dump(tag:"scqc-reps")
@@ -30,7 +31,7 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
                 .dump(tag:"scqc-output-filename")
                 .set{ch_repertoire_after_scqc_with_sampleid}
 
-    // ch_file_sizes = ch_file_sizes.mix(SINGLE_CELL_QC.out.logs)
+    ch_logs = ch_logs.mix(SINGLE_CELL_QC.out.logs)
     ch_versions = ch_versions.mix(SINGLE_CELL_QC.out.versions.ifEmpty(null))
 
     ch_repertoire_after_scqc_withmeta = ch_onlymeta.join(ch_repertoire_after_scqc_with_sampleid)
@@ -40,4 +41,5 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
     emit:
     versions = ch_versions
     repertoires = ch_repertoire_after_scqc_withmeta
+    logs = ch_logs
 }

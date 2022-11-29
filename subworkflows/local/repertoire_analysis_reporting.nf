@@ -18,6 +18,8 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_changeo_makedb_logs
     ch_vdj_annotation_logs
     ch_bulk_qc_and_filter_logs
+    ch_sc_qc_and_filter_logs
+    ch_clonal_analysis_logs
     ch_repertoires
     ch_input
     ch_report_rmd
@@ -48,7 +50,10 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_parsed_logs = Channel.empty()
     }
 
-    ch_logs = ch_vdj_annotation_logs.mix(ch_bulk_qc_and_filter_logs,ch_reassign_logs)
+    ch_logs = ch_vdj_annotation_logs.mix(ch_bulk_qc_and_filter_logs,
+                                        ch_reassign_logs,
+                                        ch_sc_qc_and_filter_logs,
+                                        ch_clonal_analysis_logs)
     REPORT_FILE_SIZE(
         ch_logs.collect().ifEmpty([])
     )

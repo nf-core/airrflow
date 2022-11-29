@@ -3,7 +3,7 @@ process COLLAPSE_DUPLICATES {
 
     label 'process_high'
     label 'process_long_parallelized'
-    cache  'lenient'
+    cache 'lenient'
     label 'immcantation'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
@@ -15,7 +15,7 @@ process COLLAPSE_DUPLICATES {
     tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
 
     output:
-    tuple val(meta), path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*/*/*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml" , emit: versions

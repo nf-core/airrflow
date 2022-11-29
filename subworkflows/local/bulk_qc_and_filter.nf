@@ -50,7 +50,7 @@ workflow BULK_QC_AND_FILTER {
             .map{ it -> [ it[1] ] }
             .collect()
         )
-        // TODO file size
+        ch_logs = ch_logs.mix(DETECT_CONTAMINATION.out.logs)
         ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
     }
 
@@ -62,7 +62,7 @@ workflow BULK_QC_AND_FILTER {
     )
 
     ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
-    // TODO file size
+    ch_logs = ch_logs.mix(COLLAPSE_DUPLICATES.out.logs)
 
     emit:
     versions = ch_versions

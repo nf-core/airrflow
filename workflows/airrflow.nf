@@ -207,6 +207,8 @@ workflow AIRRFLOW {
             VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
             BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
+            SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
+            CLONAL_ANALYSIS.out.logs.collect().ifEmpty([]),
             CLONAL_ANALYSIS.out.repertoire,
             ch_input.collect(),
             ch_report_rmd.collect(),
