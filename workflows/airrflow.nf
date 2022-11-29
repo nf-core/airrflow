@@ -213,7 +213,8 @@ workflow AIRRFLOW {
             ch_input.collect(),
             ch_report_rmd.collect(),
             ch_report_css.collect(),
-            ch_report_logo.collect()
+            ch_report_logo.collect(),
+            ch_validated_samplesheet.collect()
         )
     }
 

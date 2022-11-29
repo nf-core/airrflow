@@ -25,6 +25,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_report_rmd
     ch_report_css
     ch_report_logo
+    ch_metadata
 
     main:
     ch_versions = Channel.empty()
@@ -55,7 +56,8 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
                                         ch_sc_qc_and_filter_logs,
                                         ch_clonal_analysis_logs)
     REPORT_FILE_SIZE(
-        ch_logs.collect().ifEmpty([])
+        ch_logs.collect().ifEmpty([]),
+        ch_metadata
     )
 
     ALAKAZAM_SHAZAM_REPERTOIRES(
