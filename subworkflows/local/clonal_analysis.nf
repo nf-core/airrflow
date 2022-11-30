@@ -11,6 +11,7 @@ workflow CLONAL_ANALYSIS {
 
     main:
     ch_versions = Channel.empty()
+    ch_logs = Channel.empty()
 
 
     if (params.clonal_threshold == "auto") {
@@ -58,6 +59,7 @@ workflow CLONAL_ANALYSIS {
         ch_imgt.collect()
     )
     ch_versions = ch_versions.mix(DEFINE_CLONES_COMPUTE.out.versions)
+    ch_logs = ch_logs.mix(DEFINE_CLONES_COMPUTE.out.logs)
 
     // prepare ch for define clones all samples report
     DEFINE_CLONES_COMPUTE.out.tab
@@ -91,6 +93,7 @@ workflow CLONAL_ANALYSIS {
     emit:
     repertoire = ch_all_repertoires_cloned
     versions = ch_versions
+    logs = ch_logs
 }
 
 // Function to map

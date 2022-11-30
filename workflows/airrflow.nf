@@ -81,6 +81,7 @@ def multiqc_report = []
 workflow AIRRFLOW {
 
     ch_versions = Channel.empty()
+    ch_reassign_logs = Channel.empty()
 
     if ( params.mode == "fastq" ) {
 
@@ -120,7 +121,7 @@ workflow AIRRFLOW {
             )
             ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
             ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
-            //ch_file_sizes = ch_file_sizes.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+            ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
         } else {
             ch_fasta_from_tsv = Channel.empty()
         }
@@ -141,7 +142,6 @@ workflow AIRRFLOW {
     } else {
         exit 1, "Mode parameter value not valid."
     }
-
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(
         ch_fasta,
@@ -203,14 +203,18 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs.collect().ifEmpty([]),
             ch_presto_collapseseq_logs.collect().ifEmpty([]),
             ch_presto_splitseq_logs.collect().ifEmpty([]),
+            ch_reassign_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
             VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
             BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
+            SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
+            CLONAL_ANALYSIS.out.logs.collect().ifEmpty([]),
             CLONAL_ANALYSIS.out.repertoire,
             ch_input.collect(),
             ch_report_rmd.collect(),
             ch_report_css.collect(),
-            ch_report_logo.collect()
+            ch_report_logo.collect(),
+            ch_validated_samplesheet.collect()
         )
     }
 

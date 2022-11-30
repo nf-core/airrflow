@@ -523,7 +523,7 @@
                     "description": "Whether to apply the chimera removal filter"
                 },
                 "detect_contamination": {
-                    "type": "string",
+                    "type": "boolean",
                     "default": "false",
                     "fa_icon": "fas fa-search"
                 },
