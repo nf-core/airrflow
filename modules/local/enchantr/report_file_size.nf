@@ -14,6 +14,7 @@ process REPORT_FILE_SIZE {
 
     input:
     path logs
+    path metadata
 
     output:
     path "*_report", emit: file_size
@@ -23,7 +24,7 @@ process REPORT_FILE_SIZE {
     """
     echo "${logs.join('\n')}" > logs.txt
     Rscript -e "enchantr::enchantr_report('file_size', \\
-        report_params=list('input'='logs.txt',\\
+        report_params=list('input'='logs.txt', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
 
     echo "\"${task.process}\":" > versions.yml
