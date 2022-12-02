@@ -2,8 +2,7 @@
     "name": "nf-core/airrflow",
     "homePage": "https://github.com/nf-core/airrflow",
     "repos": {
-        "nf-core/modules": {
-            "git_url": "https://github.com/nf-core/modules.git",
+        "https://github.com/nf-core/modules.git": {
             "modules": {
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
