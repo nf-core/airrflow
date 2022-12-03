@@ -2,6 +2,7 @@
 
 include { GUNZIP            as GUNZIP_SANS_UMI }         from '../../modules/local/gunzip'
 include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_SANS_UMI } from '../../modules/local/fastqc_postassembly'
+include { FASTP                                             } from '../../modules/nf-core/fastp/main'
 
 //PRESTO
 include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_SANS_UMI }  from '../../modules/local/presto/presto_assemblepairs'
@@ -18,11 +19,23 @@ workflow PRESTO_SANS_UMI {
     ch_reads       // channel: [ val(meta), [ reads ] ]
     ch_cprimers    // channel: [ cprimers.fasta ]
     ch_vprimers    // channel: [ vprimers.fasta ]
+    ch_adapter_fasta // channel: [ adapters.fasta ]
 
     main:
 
     ch_versions = Channel.empty()
-    ch_gunzip = ch_reads
+
+    // Fastp
+    save_merged = false
+    FASTP (
+        ch_reads,
+        ch_adapter_fasta,
+        params.save_trimmed,
+        save_merged
+    )
+    ch_versions = ch_versions.mix(FASTP.out.versions.ifEmpty([]))
+
+    ch_gunzip = FASTP.out.reads.flatten()
 
     // gunzip fastq.gz to fastq
     GUNZIP_SANS_UMI ( ch_gunzip )

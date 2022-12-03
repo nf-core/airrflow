@@ -15,11 +15,14 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = Channel.fromPath(params.input) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
+if (params.input) { ch_input = Channel.fromPath(params.input, checkIfExists: true) } else { exit 1, "Please provide input file containing the sample metadata with the '--input' option." }
 
 if (!params.library_generation_method) {
     exit 1, "Please specify a library generation method with the `--library_generation_method` option."
 }
+
+// Check other params
+if (params.adapter_fasta) { ch_adapter_fasta = Channel.fromPath(params.adapter_fasta, checkIfExists: true) } else { ch_adapter_fasta = [] }
 
 // Validate library generation method parameter
 if (params.library_generation_method == 'specific_pcr_umi'){
@@ -161,7 +164,6 @@ include { PRESTO_SANS_UMI            } from '../subworkflows/local/presto_sans_u
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -183,32 +185,24 @@ workflow BCELLMAGIC {
     //
     INPUT_CHECK ( ch_input )
 
-    ch_fastqc = INPUT_CHECK
+    INPUT_CHECK.out.reads.dump(tag: 'input reads')
+
+    ch_reads = INPUT_CHECK
         .out
         .reads
-        .groupTuple(by: [0])
-        .map{ it -> [ it[0], it[1].flatten() ] }
-
-    ch_presto = ch_fastqc.map{ it -> it.flatten() }
+        .dump(tag: 'input reads')
 
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-
-    //
-    // MODULE: FastQC
-    //
-    FASTQC ( ch_fastqc )
-
-    // Channel for software versions
-    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null))
 
     if (params.umi_length == 0) {
         //
         // SUBWORKFLOW: pRESTO without UMIs
         //
         PRESTO_SANS_UMI (
-            ch_presto,
+            ch_reads,
             ch_cprimers_fasta,
-            ch_vprimers_fasta
+            ch_vprimers_fasta,
+            ch_adapter_fasta
         )
         ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
         ch_presto_software = PRESTO_SANS_UMI.out.software
@@ -228,9 +222,10 @@ workflow BCELLMAGIC {
         // SUBWORKFLOW: pRESTO with UMIs
         //
         PRESTO_UMI (
-            ch_presto,
+            ch_reads,
             ch_cprimers_fasta,
-            ch_vprimers_fasta
+            ch_vprimers_fasta,
+            ch_adapter_fasta
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
         ch_presto_software = PRESTO_UMI.out.software
@@ -412,7 +407,8 @@ workflow BCELLMAGIC {
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+        //ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+        //ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.html.collect{it[1]}.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_gz.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
