@@ -48,7 +48,8 @@ workflow PRESTO_UMI {
         // ch for fastp index
         ch_reads.map{ meta, reads ->
                     [[
-                        id:             meta.id,
+                        sample:         meta.id,
+                        id:             "${meta.id}_INDEX",
                         subject:        meta.subject,
                         locus:          meta.locus,
                         species:        meta.species,
@@ -81,7 +82,7 @@ workflow PRESTO_UMI {
         ch_meta_R1_R2 = FASTP_READS.out.reads
                                         .map{ meta, reads -> [meta.id, meta, reads[0], reads[1]] }
         ch_meta_index = FASTP_INDEX.out.reads
-                                        .map{ meta, index -> [meta.id, meta, index] }
+                                        .map{ meta, index -> [meta.sample, meta, index] }
         ch_meta_R1_R2_index = ch_meta_R1_R2.join( ch_meta_index )
                                             .map{ id, meta1, R1, R2, meta2, index -> [ meta1, R1, R2, index ] }
                                             .dump(tag: 'ch_merge_umi')
