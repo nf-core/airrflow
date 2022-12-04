@@ -80,7 +80,7 @@ workflow PRESTO_UMI {
         )
         ch_versions = ch_versions.mix(FASTP.out.versions.ifEmpty([]))
 
-        ch_rename_fastq_umi = FASTP.out.reads.flatten()
+        ch_rename_fastq_umi = FASTP.out.reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
         RENAME_FASTQ_UMI ( ch_rename_fastq_umi )
         ch_gunzip = RENAME_FASTQ_UMI.out.reads

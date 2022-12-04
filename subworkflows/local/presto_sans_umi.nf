@@ -35,7 +35,7 @@ workflow PRESTO_SANS_UMI {
     )
     ch_versions = ch_versions.mix(FASTP.out.versions.ifEmpty([]))
 
-    ch_gunzip = FASTP.out.reads.flatten()
+    ch_gunzip = FASTP.out.reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
     // gunzip fastq.gz to fastq
     GUNZIP_SANS_UMI ( ch_gunzip )
