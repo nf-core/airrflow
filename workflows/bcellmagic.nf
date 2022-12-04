@@ -206,6 +206,8 @@ workflow BCELLMAGIC {
         )
         ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
         ch_presto_software = PRESTO_SANS_UMI.out.software
+        ch_fastp_reads_html = PRESTO_SANS_UMI.out.fastp_reads_html
+        ch_fastp_reads_json = PRESTO_SANS_UMI.out.fastp_reads_json
         ch_fastqc_postassembly_gz = PRESTO_SANS_UMI.out.fastqc_postassembly_gz
         ch_presto_assemblepairs_logs = PRESTO_SANS_UMI.out.presto_assemblepairs_logs
         ch_presto_filterseq_logs = PRESTO_SANS_UMI.out.presto_filterseq_logs
@@ -231,8 +233,6 @@ workflow BCELLMAGIC {
         ch_presto_software = PRESTO_UMI.out.software
         ch_fastp_reads_html = PRESTO_UMI.out.fastp_reads_html
         ch_fastp_reads_json = PRESTO_UMI.out.fastp_reads_json
-        ch_fastp_index_html = PRESTO_UMI.out.fastp_index_html
-        ch_fastp_index_json = PRESTO_UMI.out.fastp_index_json
         ch_fastqc_postassembly_gz = PRESTO_UMI.out.fastqc_postassembly_gz
         ch_presto_filterseq_logs = PRESTO_UMI.out.presto_filterseq_logs
         ch_presto_maskprimers_logs = PRESTO_UMI.out.presto_maskprimers_logs
@@ -413,8 +413,6 @@ workflow BCELLMAGIC {
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_reads_json.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_reads_html.ifEmpty([]))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_index_json.ifEmpty([]))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_index_html.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_gz.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
