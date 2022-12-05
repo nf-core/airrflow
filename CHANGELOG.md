@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#209](https://github.com/nf-core/airrflow/pull/209) Template update to nf-core tools v2.6.
 - [#210](https://github.com/nf-core/airrflow/pull/210) Add fastp for read QC, adapter trimming and read clipping.
-- [#211](https://github.com/nf-core/airrflow/pull/211) Bump versions to 2.4.0
+- [#212](https://github.com/nf-core/airrflow/pull/212) Bump versions to 2.4.0
 
 ## [2.3.0] - 2022-09-22 "Expelliarmus"
 
