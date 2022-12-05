@@ -24,34 +24,50 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-The pipeline allows processing of end-to-end BCR and TCR bulk and single cell targeted sequencing. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
-## Bulk sequencing data with UMI
+1. QC and sequence assembly (bulk only)
 
 - Raw read quality control, adapter trimming and clipping (`Fastp`)
-- Pre-processing (`pRESTO`)
-  - Filtering sequences by sequencing quality (`pRESTO FilterSeq`).
-  - Mask amplicon primers (`pRESTO MaskPrimers`).
-  - Pair read mates (`pRESTO PairSeq`).
-  - Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough (optional) (`pRESTO ClusterSets`).
-  - Building consensus of sequences with the same UMI barcode
-  - Re-pairing read mates.
-  - Assembling R1 and R2 read mates.
-  - Removing and annotating read duplicates with different UMI barcodes.
-  - Filtering out sequences that do not have at least 2 duplicates.
+- Filtering sequences by sequencing quality (`pRESTO FilterSeq`).
+- Mask amplicon primers (`pRESTO MaskPrimers`).
+- Pair read mates (`pRESTO PairSeq`).
+- For UMI-based sequencing:
+  - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
+  - Building consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
+- Assembling R1 and R2 read mates (`pRESTO AssemblePairs`).
+- Removing and annotating read duplicates (`pRESTO CollapseSeq`).
+- Filtering out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
 
-## Bulk sequencing data without UMI
+2. V(D)J annotation and filtering (bulk and single-cell)
 
-## Bulk sequencing from assembled reads and single-cell sequencing
+- Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Annotate alignmens in AIRR format (`Change-O MakeDB`)
+- Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
+- Filter productive sequences (`Change-O ParseDB split`)
+- Filter junction length multiple of 3
+- Annotate metadata (`EnchantR`)
 
-- Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
-- Finding the Hamming distance threshold for clone definition (`SHazaM`).
-- Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
-- Reconstructing gene calls of germline sequences (`Change-O`).
-- Generating clonal trees (`Alakazam`).
-- Repertoire analysis: calculation of clonal diversity and abundance (`Alakazam`).
+3. QC filtering (bulk and single-cell)
+
+- Bulk sequencing filtering:
+  - Remove chimeric sequences (optional) (`EnchantR`)
+  - Detect cross-contamination (optional) (`EnchantR`)
+  - Collapse duplicates (`EnchantR`)
+- Single-cell QC filtering (`EnchantR`)
+  - TODO: explain exactly what is done.
+
+4. Clonal analysis (bulk and single-cell)
+
+- Find Hamming distance threshold for clone definition (`SHazaM`, `EnchantR`).
+- Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
+- Build lineage trees (`SCOPer`, `EnchantR`).
+
+5. Repertoire analysis and reporting
+
+- Custom repertoire analysis pipeline report (`Alakazam`).
 - Aggregating QC reports (`MultiQC`).
 
 ## Quick Start
@@ -80,10 +96,13 @@ nextflow run nf-core/airrflow \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --input samplesheet.tsv \
 --outdir ./results \
---protocol pcr_umi \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
---umi_length 12
+--umi_length 12 \
+--max_memory 8.GB \
+--max_cpus 8 \
+--outdir ./results
 ```
 
 See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
