@@ -16,25 +16,36 @@
 
 ** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
 
+![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
+
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/airrflow/results).
 
 ## Pipeline summary
 
-By default, the pipeline currently performs the following steps:
+The pipeline allows processing of end-to-end BCR and TCR bulk and single cell targeted sequencing. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
 
-- Raw read quality control (`FastQC`)
+![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
+
+## Bulk sequencing data with UMI
+
+- Raw read quality control, adapter trimming and clipping (`Fastp`)
 - Pre-processing (`pRESTO`)
-  - Filtering sequences by sequencing quality.
-  - Masking amplicon primers.
-  - Pairing read mates.
-  - Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough.
-  - Building consensus of sequences with the same UMI barcode.
+  - Filtering sequences by sequencing quality (`pRESTO FilterSeq`).
+  - Mask amplicon primers (`pRESTO MaskPrimers`).
+  - Pair read mates (`pRESTO PairSeq`).
+  - Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough (optional) (`pRESTO ClusterSets`).
+  - Building consensus of sequences with the same UMI barcode
   - Re-pairing read mates.
   - Assembling R1 and R2 read mates.
   - Removing and annotating read duplicates with different UMI barcodes.
   - Filtering out sequences that do not have at least 2 duplicates.
+
+## Bulk sequencing data without UMI
+
+## Bulk sequencing from assembled reads and single-cell sequencing
+
 - Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
 - Finding the Hamming distance threshold for clone definition (`SHazaM`).
 - Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
