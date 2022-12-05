@@ -24,7 +24,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 By default, the pipeline currently performs the following steps:
 
-- Raw read quality control (`FastQC`)
+- Raw read quality control, adapter trimming and read clipping (`fastp`)
 - Pre-processing (`pRESTO`)
   - Filtering sequences by sequencing quality.
   - Masking amplicon primers.
@@ -35,6 +35,7 @@ By default, the pipeline currently performs the following steps:
   - Assembling R1 and R2 read mates.
   - Removing and annotating read duplicates with different UMI barcodes.
   - Filtering out sequences that do not have at least 2 duplicates.
+- Post-assembly read quality control (`FastQC`s)
 - Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
 - Finding the Hamming distance threshold for clone definition (`SHazaM`).
 - Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
