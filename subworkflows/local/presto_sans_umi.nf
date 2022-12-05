@@ -1,17 +1,17 @@
 // Include statements
 
-include { GUNZIP            as GUNZIP_SANS_UMI }         from '../../modules/local/gunzip'
+include { GUNZIP            as GUNZIP_SANS_UMI                } from '../../modules/local/gunzip'
 include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_SANS_UMI } from '../../modules/local/fastqc_postassembly'
-include { FASTP                                             } from '../../modules/nf-core/fastp/main'
+include { FASTP                                               } from '../../modules/nf-core/fastp/main'
 
 //PRESTO
-include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_SANS_UMI }  from '../../modules/local/presto/presto_assemblepairs'
+include { PRESTO_ASSEMBLEPAIRS               as  PRESTO_ASSEMBLEPAIRS_SANS_UMI }               from '../../modules/local/presto/presto_assemblepairs'
 include { PRESTO_FILTERSEQ_POSTASSEMBLY      as  PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI }      from '../../modules/local/presto/presto_filterseq_postassembly'
 include { PRESTO_MASKPRIMERS_POSTASSEMBLY    as  PRESTO_MASKPRIMERS_POSTASSEMBLY_SANS_UMI }    from '../../modules/local/presto/presto_maskprimers_postassembly'
-include { PRESTO_PARSEHEADERS_PRIMERS   as PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI }    from '../../modules/local/presto/presto_parseheaders_primers'
-include { PRESTO_PARSEHEADERS_METADATA  as PRESTO_PARSEHEADERS_METADATA_SANS_UMI }   from '../../modules/local/presto/presto_parseheaders_metadata'
-include { PRESTO_COLLAPSESEQ    as PRESTO_COLLAPSESEQ_SANS_UMI }     from '../../modules/local/presto/presto_collapseseq'
-include { PRESTO_SPLITSEQ       as PRESTO_SPLITSEQ_SANS_UMI}         from '../../modules/local/presto/presto_splitseq'
+include { PRESTO_PARSEHEADERS_PRIMERS        as PRESTO_PARSEHEADERS_PRIMERS_SANS_UMI }         from '../../modules/local/presto/presto_parseheaders_primers'
+include { PRESTO_PARSEHEADERS_METADATA       as PRESTO_PARSEHEADERS_METADATA_SANS_UMI }        from '../../modules/local/presto/presto_parseheaders_metadata'
+include { PRESTO_COLLAPSESEQ                 as PRESTO_COLLAPSESEQ_SANS_UMI }                  from '../../modules/local/presto/presto_collapseseq'
+include { PRESTO_SPLITSEQ                    as PRESTO_SPLITSEQ_SANS_UMI}                      from '../../modules/local/presto/presto_splitseq'
 
 
 workflow PRESTO_SANS_UMI {
