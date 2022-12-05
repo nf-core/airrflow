@@ -1,7 +1,7 @@
 // Include statements
-include { MERGE_UMI }                               from '../../modules/local/merge_UMI'
-include { RENAME_FASTQ        as RENAME_FASTQ_UMI }   from '../../modules/local/rename_fastq'
-include { GUNZIP              as GUNZIP_UMI }         from '../../modules/local/gunzip'
+include { MERGE_UMI                                      } from '../../modules/local/merge_UMI'
+include { RENAME_FASTQ        as RENAME_FASTQ_UMI        } from '../../modules/local/rename_fastq'
+include { GUNZIP              as GUNZIP_UMI              } from '../../modules/local/gunzip'
 include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_UMI } from '../../modules/local/fastqc_postassembly'
 include { FASTP                                          } from '../../modules/nf-core/fastp/main'
 
