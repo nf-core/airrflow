@@ -3,12 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.4.0dev]
+## [2.4.0] 2022-12-05 "Aparecium"
 
 ### `Added`
 
 - [#209](https://github.com/nf-core/airrflow/pull/209) Template update to nf-core tools v2.6.
 - [#210](https://github.com/nf-core/airrflow/pull/210) Add fastp for read QC, adapter trimming and read clipping.
+- [#211](https://github.com/nf-core/airrflow/pull/211) Bump versions to 2.4.0
 
 ## [2.3.0] - 2022-09-22 "Expelliarmus"
 
