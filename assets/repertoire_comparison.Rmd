@@ -27,6 +27,7 @@ output: html_document
 library(knitr)
 library(kableExtra)
 library(dplyr)
+library(tidyr)
 library(alakazam)
 library(shazam)
 library(stringr)
@@ -41,9 +42,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Number of sequences
 
-Number of reads for each of the samples and number of sequences left after representative analysis steps.
+Number of reads for each of the samples and number of sequences left after sequence assemble and mapping steps.
 
-```{r seq_numbers, echo=FALSE, results='asis'}
+```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
 read_table <- function(tab_file){
         tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
         kable(tab_seqs) %>%
@@ -53,6 +54,21 @@ read_table <- function(tab_file){
 tryCatch( {read_table("./Table_sequences.tsv")} ,
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")})
 
+```
+
+Number of sequences for each of the samples for each downstream filtering and analysis step.
+
+```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
+tab_seqs <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
+
+dat <- tidyr::pivot_wider(tab_seqs,id_cols=sample_id,names_from=task, values_from=to_num_seqs)
+dat <- dat %>% relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
+                                "RemoveChimeric","CollapseDuplicates","ClonePass")))
+
+kable(dat) %>%
+  kable_styling("hover") %>%
+  scroll_box(width = "100%", height = "400px")
 ```
 
 
@@ -76,18 +92,10 @@ dir.create(abundance_dir)
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
-df_all = data.frame()
-for (file in all_files){
-    fname = file
-    print(fname)
 
-    df_pat <- read.csv(fname, sep="\t")
+df_list = lapply(all_files, read.csv, sep="\t")
 
-    df_all <- rbind(df_all, df_pat)
-
-}
-
-write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
+df_all <- dplyr::bind_rows(df_list)
 
 # Remove underscores in these columns
 df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
@@ -95,6 +103,9 @@ df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.characte
 
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
 df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
+
+# Write table to file
+write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
 
 # Set number of bootrstraps
 nboot = 200

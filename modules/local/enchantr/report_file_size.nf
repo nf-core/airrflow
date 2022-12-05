@@ -19,6 +19,7 @@ process REPORT_FILE_SIZE {
     output:
     path "*_report", emit: file_size
     path "versions.yml", emit: versions
+    path "file_size_report/tables/log_data.tsv", emit: table
 
     script:
     """

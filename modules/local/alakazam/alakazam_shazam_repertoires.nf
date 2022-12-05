@@ -10,6 +10,7 @@ process ALAKAZAM_SHAZAM_REPERTOIRES {
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
+    path("Table_sequences_assembled.tsv")
     path(repertoire_report)
     path(css)
     path(logo)
