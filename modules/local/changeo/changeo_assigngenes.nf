@@ -2,6 +2,7 @@ process CHANGEO_ASSIGNGENES {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
+    label 'changeo'
 
     conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1 conda-forge::wget=1.20.1" : null)              // Conda package
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -16,6 +17,7 @@ process CHANGEO_ASSIGNGENES {
     path("*igblast.fmt7"), emit: blast
     tuple val(meta), path("$reads"), emit: fasta
     path "versions.yml" , emit: versions
+    path("*_command_log.txt"), emit: logs //process logs
 
     script:
     def args = task.ext.args ?: ''

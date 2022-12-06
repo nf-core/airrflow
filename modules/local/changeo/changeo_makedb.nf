@@ -2,6 +2,8 @@ process CHANGEO_MAKEDB {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
+    label 'changeo'
+
 
     conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -25,7 +27,7 @@ process CHANGEO_MAKEDB {
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${imgt_base}/${meta.species.toLowerCase()}/vdj/ \\
     $args \\
-    --outname "${meta.id}" > "${meta.id}_command_log.txt"
+    --outname "${meta.id}" > "${meta.id}_makedb_command_log.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

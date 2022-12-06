@@ -2,6 +2,8 @@ process CHANGEO_PARSEDB_SELECT {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
+    label 'changeo'
+
 
     conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -21,7 +23,7 @@ process CHANGEO_PARSEDB_SELECT {
     def args2 = task.ext.args2 ?: ''
     if (meta.locus == 'IG'){
         """
-        ParseDb.py select -d $tab $args --outname ${meta.id} > "${meta.id}_command_log.txt"
+        ParseDb.py select -d $tab $args --outname ${meta.id} > "${meta.id}_select_command_log.txt"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

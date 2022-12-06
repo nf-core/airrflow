@@ -2,6 +2,8 @@ process CHANGEO_CONVERTDB_FASTA {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
+    label 'changeo'
+
 
     conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -19,7 +21,7 @@ process CHANGEO_CONVERTDB_FASTA {
     script:
     def args = task.ext.args ?: ''
     """
-    ConvertDb.py fasta -d $tab $args > "${meta.id}_command_log.txt"
+    ConvertDb.py fasta -d $tab $args > "${meta.id}"_convertdb_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

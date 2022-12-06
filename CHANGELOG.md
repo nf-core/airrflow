@@ -3,6 +3,24 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0dev] -
+
+### `Added`
+
+- Combined old bcellmagic and reveal subworkflows for better pipeline integration.
+- Added compulsory AIRR fields in input samplesheet.
+- Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
+- Added pipeline overview diagram and metro map.
+- Added full logs to `enchantr report filesize` process.
+
+### `Fixed`
+
+- Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## [2.3.0] - 2022-09-22 "Expelliarmus"
 
 ### `Added`

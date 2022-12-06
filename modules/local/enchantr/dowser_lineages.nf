@@ -11,7 +11,7 @@ def asString (args) {
 }
 
 process DOWSER_LINEAGES {
-    tag "$tabs"
+    tag "${meta.id}"
 
     label 'process_high'
     label 'process_long'
@@ -21,12 +21,12 @@ process DOWSER_LINEAGES {
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.3--r42hdfd78af_1':
-        'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.5--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.5--r42hdfd78af_0' }"
 
     input:
     //tuple val(meta), path(tabs) // sequence tsv in AIRR format
-    path(tabs)
+    tuple val(meta), path(tabs)
 
     output:
     path("*_command_log.txt"), emit: logs //process logs
@@ -34,7 +34,7 @@ process DOWSER_LINEAGES {
     path "versions.yml", emit: versions
 
     script:
-    def args = asString(task.ext.args)
+    def args = asString(task.ext.args) ?: ''
     def id_name = "$tabs".replaceFirst('__.*','')
     // TODO use nice outname, not tabs
     """

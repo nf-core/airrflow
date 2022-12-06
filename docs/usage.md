@@ -6,7 +6,9 @@
 
 ## Introduction
 
-The airrflow pipeline allows processing bulk targeted BCR and TCR sequencing data from multiplex or RACE PCR protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+The airrflow pipeline allows processing BCR and TCR targeted sequencing data from bulk and single-cell sequencing protocols. It performs V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+
+![nf-core/airrflow overview](images/airrflow_workflow_overview.png)
 
 ## Running the pipeline
 
@@ -37,28 +39,32 @@ work            # Directory containing the nextflow working files
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-## AIRR fields support
+## Input metadata
 
 ### Supported AIRR fields
 
-nf-core/airrflow offers full support for the AIRR metadata fields. The minimum metadata fields that are needed by the pipeline are listed in the table below. Other metadata fields can be provided in the input samplesheet, which will be available for reporting and introducing comparisons among repertoires.
+nf-core/airrflow offers full support for the [AIRR standards 1.4](https://docs.airr-community.org/en/stable/datarep/metadata.html) metadata annotation. The minimum metadata fields that are needed by the pipeline are listed in the table below. Other non-mandatory AIRR fields can be provided in the input samplesheet, which will be available for reporting and introducing comparisons among repertoires.
 
-| AIRR field                | Type               | Name                          | Description                                           |
+| AIRR field                | Type               | Parameter Name                | Description                                           |
 | ------------------------- | ------------------ | ----------------------------- | ----------------------------------------------------- |
-| sample_id                 | Samplesheet column | sample_id                     | Sample ID assigned by submitter, unique within study  |
-| subject_id                | Samplesheet column | subject_id                    | Subject ID assigned by submitter, unique within study |
-| species                   | Samplesheet column | species                       | Subject species                                       |
-| pcr_target_locus          | Samplesheet column | pcr_target_locus              | Designation of the target locus (IG or TR)            |
+| sample_id                 | Samplesheet column |                               | Sample ID assigned by submitter, unique within study  |
+| subject_id                | Samplesheet column |                               | Subject ID assigned by submitter, unique within study |
+| species                   | Samplesheet column |                               | Subject species                                       |
+| tissue                    | Samplesheet column |                               | Sample tissue                                         |
+| pcr_target_locus          | Samplesheet column |                               | Designation of the target locus (IG or TR)            |
+| sex                       | Samplesheet column |                               | Subject sex                                           |
+| age                       | Samplesheet column |                               | Subject age                                           |
+| biomaterial_provider      | Samplesheet column |                               | Name of sample biomaterial provider                   |
 | library_generation_method | Parameter          | `--library_generation_method` | Generic type of library generation                    |
 
-### Fastq input samplesheet
+### Fastq input samplesheet (bulk)
 
-The required input file is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species` and `pcr_target_locus` are required. An example samplesheet is:
+The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. An example samplesheet is:
 
-| sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | intervention   | collection_time_point_relative | cell_subset  |
-| --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | -------------- | ------------------------------ | ------------ |
-| sample01  | sample1_S8_L001_R1_001.fastq.gz | sample1_S8_L001_R2_001.fastq.gz | sample1_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | Drug_treatment | Baseline                       | plasmablasts |
-| sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | TR               | Drug_treatment | Baseline                       | plasmablasts |
+| sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell | intervention   | collection_time_point_relative | cell_subset  |
+| --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- | -------------- | ------------------------------ | ------------ |
+| sample01  | sample1_S8_L001_R1_001.fastq.gz | sample1_S8_L001_R2_001.fastq.gz | sample1_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
+| sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
 
 - sample_id: Sample ID assigned by submitter, unique within study.
 - filename_R1: path to fastq file with first mates of paired-end sequencing.
@@ -66,7 +72,11 @@ The required input file is a sample sheet in TSV format (tab separated). The col
 - filename_I1 (optional): path to fastq with illumina index and UMI (unique molecular identifier) barcode.
 - subject_id: Subject ID assigned by submitter, unique within study.
 - species: species from which the sample was taken. Supported species are `human` and `mouse`.
+- tissue: tissue from which the sample was taken. E.g. `blood`, `PBMC`, `brain`.
 - pcr_target_locus: Designation of the target locus (`IG` or `TR`).
+- sex: Subject biological sex (`female`, `male`, etc.).
+- age: Subject biological age.
+- single_cell: TRUE or FALSE. Fastq input samplesheet only supports a FALSE value.
 
 Other optional columns can be added. These columns will be available when building the contrasts for the repertoire comparison report. It is recommended that these columns also follow the AIRR nomenclature. Examples are:
 
@@ -77,6 +87,18 @@ Other optional columns can be added. These columns will be available when buildi
 - cell_subset: Commonly-used designation of isolated cell population.
 
 The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables generated by the pipeline.
+
+### Assembled input samplesheet (bulk or single-cell)
+
+The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename`, `subject_id`, `species`, `tissue`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required.
+
+An example samplesheet is
+
+| filename                                                                                                                                  | species | subject_id | sample_id                         | tissue     | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
+|-------------------------------------------------------------------------------------------------------------------------------------------|---------|------------|-----------------------------------|------------|------|-----|----------------------|------------------|-------------|
+| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv              | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb            | PBMC       | NA   | NA  | 10x Genomics         | ig               | TRUE        |
+| sc5p_v2_mm_c57bl6_splenocyte_1k_b_airr_rearrangement.tsv | mouse   | mouse_x    | sc5p_v2_mm_c57bl6_splenocyte_1k_b | splenocyte | NA   | NA  | 10x Genomics         | ig               | TRUE        |
+| bulk-Laserson-2014.fasta                                 | human   | PGP1       | PGP1                              | PBMC       | male | NA  | Laserson-2014        | ig               | FALSE       |
 
 ## Supported library generation methods (protocols)
 
@@ -187,7 +209,7 @@ nextflow run nf-core/airrflow -profile docker \
 
 #### UMI barcode is provided in the index file
 
-If the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+If the UMI barcodes are provided in an additional index file, please provide it in the column `filename_I1` in the input samplesheet and additionally set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
 
 For example:
 

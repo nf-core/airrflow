@@ -3,19 +3,19 @@ process COLLAPSE_DUPLICATES {
 
     label 'process_high'
     label 'process_long_parallelized'
-    cache  'lenient'
+    cache 'lenient'
     label 'immcantation'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.3--r42hdfd78af_1':
-        'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.5--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.5--r42hdfd78af_0' }"
 
     input:
     tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
 
     output:
-    tuple val(meta), path("*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*/*/*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml" , emit: versions

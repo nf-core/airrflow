@@ -9,8 +9,8 @@ process VALIDATE_INPUT {
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.3--r42hdfd78af_1':
-        'quay.io/biocontainers/r-enchantr:0.0.3--r42hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.5--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.5--r42hdfd78af_0' }"
 
     input:
     file samplesheet
@@ -20,8 +20,8 @@ process VALIDATE_INPUT {
     //val reassign
 
     output:
-    path "validated_input.tsv", emit: validated_input
-    path "validated_input_not-valid.tsv", emit: not_valid_input, optional: true
+    path "*/validated_input.tsv", emit: validated_input
+    path "*/validated_input_not-valid.tsv", emit: not_valid_input, optional: true
     path "versions.yml", emit: versions
 
     script:
