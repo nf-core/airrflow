@@ -94,7 +94,11 @@ The required input file for processing raw BCR or TCR bulk targeted sequencing d
 
 An example samplesheet is
 
-<!-- TODO ADD ASSEMBLED INPUT INFO AND SAMPLESHEET EXAMPLE  -->
+| filename                                                                                                                                  | species | subject_id | sample_id                         | tissue     | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
+|-------------------------------------------------------------------------------------------------------------------------------------------|---------|------------|-----------------------------------|------------|------|-----|----------------------|------------------|-------------|
+| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv              | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb            | PBMC       | NA   | NA  | 10x Genomics         | ig               | TRUE        |
+| sc5p_v2_mm_c57bl6_splenocyte_1k_b_airr_rearrangement.tsv | mouse   | mouse_x    | sc5p_v2_mm_c57bl6_splenocyte_1k_b | splenocyte | NA   | NA  | 10x Genomics         | ig               | TRUE        |
+| bulk-Laserson-2014.fasta                                 | human   | PGP1       | PGP1                              | PBMC       | male | NA  | Laserson-2014        | ig               | FALSE       |
 
 ## Supported library generation methods (protocols)
 
