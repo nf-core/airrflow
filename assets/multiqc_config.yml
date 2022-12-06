@@ -19,9 +19,11 @@ module_order:
         - "./*_ASSEMBLED_fastqc.zip"
 
 report_section_order:
-  software_versions:
+  "nf-core-airrflow-methods-description":
     order: -1000
-  nf-core-airrflow-summary:
+  software_versions:
     order: -1001
+  "nf-core-airrflow-summary":
+    order: -1002
 
 export_plots: true

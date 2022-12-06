@@ -1,8 +1,10 @@
 // Include statements
-include { MERGE_UMI }                               from '../../modules/local/merge_UMI'
-include { RENAME_FASTQ      as RENAME_FASTQ_UMI }   from '../../modules/local/rename_fastq'
-include { GUNZIP            as GUNZIP_UMI }         from '../../modules/local/gunzip'
+include { MERGE_UMI                                      } from '../../modules/local/merge_UMI'
+include { RENAME_FASTQ        as RENAME_FASTQ_UMI        } from '../../modules/local/rename_fastq'
+include { GUNZIP              as GUNZIP_UMI              } from '../../modules/local/gunzip'
 include { FASTQC_POSTASSEMBLY as FASTQC_POSTASSEMBLY_UMI } from '../../modules/local/fastqc_postassembly'
+include { FASTP                                          } from '../../modules/nf-core/fastp/main'
+
 
 //PRESTO
 include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI }      from '../../modules/local/presto/presto_filterseq'
@@ -25,18 +27,64 @@ workflow PRESTO_UMI {
     ch_reads       // channel: [ val(meta), [ reads ] ]
     ch_cprimers    // channel: [ cprimers.fasta ]
     ch_vprimers    // channel: [ vprimers.fasta ]
+    ch_adapter_fasta // channel: [ adapters.fasta ]
 
     main:
 
     ch_versions = Channel.empty()
+
+    // prepare reads for fastp
+    ch_reads.dump(tag:'presto umi reads')
+
     // Merge UMI from index file to R1 if provided
     if (params.index_file) {
-        MERGE_UMI ( ch_reads )
+
+        // ch for fastp reads R1 R2
+        ch_reads.map{ meta, reads -> [meta, [reads[0], reads[1]]] }
+                .dump(tag: 'presto_umi_R1_R2_reads')
+                .set{ ch_reads_R1_R2 }
+
+        // Fastp reads R1 R2
+        save_merged = false
+        FASTP (
+            ch_reads_R1_R2,
+            ch_adapter_fasta,
+            params.save_trimmed,
+            save_merged
+        )
+        ch_versions = ch_versions.mix(FASTP.out.versions.ifEmpty([]))
+
+        //ch for merge umi
+        ch_meta_R1_R2 = FASTP.out.reads
+                                        .map{ meta, reads -> [meta.id, meta, reads[0], reads[1]] }
+        ch_meta_index = ch_reads
+                                .map{ meta, reads -> [meta.id, meta, reads[2]] }
+        ch_meta_R1_R2_index = ch_meta_R1_R2.join( ch_meta_index )
+                                            .map{ id, meta1, R1, R2, meta2, index -> [ meta1, R1, R2, index ] }
+                                            .dump(tag: 'ch_merge_umi')
+
+        MERGE_UMI ( ch_meta_R1_R2_index )
         ch_gunzip = MERGE_UMI.out.reads
         ch_versions = ch_versions.mix(MERGE_UMI.out.versions.ifEmpty(null))
+
+
     } else {
-        RENAME_FASTQ_UMI ( ch_reads )
+
+        // Fastp reads
+        save_merged = false
+        FASTP (
+            ch_reads,
+            ch_adapter_fasta,
+            params.save_trimmed,
+            save_merged
+        )
+        ch_versions = ch_versions.mix(FASTP.out.versions.ifEmpty([]))
+
+        ch_rename_fastq_umi = FASTP.out.reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
+
+        RENAME_FASTQ_UMI ( ch_rename_fastq_umi )
         ch_gunzip = RENAME_FASTQ_UMI.out.reads
+
     }
 
     // gunzip fastq.gz to fastq
@@ -139,6 +187,8 @@ workflow PRESTO_UMI {
     emit:
     fasta = PRESTO_SPLITSEQ_UMI.out.fasta
     software = ch_versions
+    fastp_reads_json = FASTP.out.json.collect{ meta,json -> json }
+    fastp_reads_html = FASTP.out.html.collect{ meta,html -> html }
     fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_UMI.out.zip
     presto_filterseq_logs = PRESTO_FILTERSEQ_UMI.out.logs
     presto_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs.collect()
