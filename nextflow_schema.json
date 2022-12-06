@@ -203,19 +203,19 @@
         "vdj_annotation_options": {
             "title": "VDJ annotation options",
             "type": "object",
-            "description": "Options for the VDJ annotation processes",
+            "description": "Options for the VDJ annotation processes.",
             "default": "",
             "properties": {
                 "reassign": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file",
+                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file.",
                     "fa_icon": "fas fa-redo"
                 },
                 "productive_only": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Subset to productive  sequences",
+                    "description": "Subset to productive  sequences.",
                     "fa_icon": "fab fa-product-hunt"
                 },
                 "save_databases": {
@@ -241,24 +241,24 @@
         "bulk_filtering_options": {
             "title": "Bulk filtering options",
             "type": "object",
-            "description": "Options for bulk sequence filtering after VDJ assignment",
+            "description": "Options for bulk sequence filtering after VDJ assignment.",
             "default": "",
             "properties": {
                 "collapseby": {
                     "type": "string",
                     "default": "filename,cell_id",
-                    "description": "Name of the field used to collapse duplicated sequences",
+                    "description": "Name of the field used to collapse duplicated sequences.",
                     "fa_icon": "fas fa-compress-alt"
                 },
                 "detect_contamination": {
                     "type": "boolean",
                     "fa_icon": "fas fa-search",
-                    "description": "Whether to run the process to detect contamination"
+                    "description": "Whether to run the process to detect contamination."
                 },
                 "remove_chimeric": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to apply the chimera removal filter",
+                    "description": "Whether to apply the chimera removal filter.",
                     "fa_icon": "fas fa-minus-square"
                 }
             },
@@ -284,25 +284,25 @@
                 "cloneby": {
                     "type": "string",
                     "default": "subject_id",
-                    "description": "Name of the field used to group data files to identify clones",
+                    "description": "Name of the field used to group data files to identify clones.",
                     "fa_icon": "fab fa-pagelines"
                 },
                 "igphyml": {
                     "type": "string",
                     "default": "/usr/local/share/igphyml/src/igphyml",
-                    "description": "Path to IgPhyml executable",
+                    "description": "Path to IgPhyml executable.",
                     "fa_icon": "fas fa-file"
                 },
                 "singlecell": {
                     "type": "string",
                     "default": "single_cell",
-                    "description": "Name of the field used to determine if a sample is single cell sequencing or not",
+                    "description": "Name of the field used to determine if a sample is single cell sequencing or not.",
                     "fa_icon": "fas fa-border-all"
                 },
                 "skip_all_clones_report": {
                     "type": "string",
                     "default": "false",
-                    "description": "Skip report of EnchantR DefineClones for all samples together",
+                    "description": "Skip report of EnchantR DefineClones for all samples together.",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },
