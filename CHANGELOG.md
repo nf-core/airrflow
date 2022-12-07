@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- Combined old bcellmagic and reveal subworkflows for better pipeline integration.
 - Added compulsory AIRR fields in input samplesheet.
+- Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
+- Added pipeline overview diagram and metro map.
+- Added full logs to `enchantr report filesize` process.
 
 ### `Fixed`
+
+- Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
 
 ### `Dependencies`
 

@@ -94,7 +94,11 @@ The required input file for processing raw BCR or TCR bulk targeted sequencing d
 
 An example samplesheet is
 
-<!-- TODO ADD ASSEMBLED INPUT INFO AND SAMPLESHEET EXAMPLE  -->
+| filename                                                                                                                                  | species | subject_id | sample_id                         | tissue     | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
+|-------------------------------------------------------------------------------------------------------------------------------------------|---------|------------|-----------------------------------|------------|------|-----|----------------------|------------------|-------------|
+| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv              | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb            | PBMC       | NA   | NA  | 10x Genomics         | ig               | TRUE        |
+| sc5p_v2_mm_c57bl6_splenocyte_1k_b_airr_rearrangement.tsv | mouse   | mouse_x    | sc5p_v2_mm_c57bl6_splenocyte_1k_b | splenocyte | NA   | NA  | 10x Genomics         | ig               | TRUE        |
+| bulk-Laserson-2014.fasta                                 | human   | PGP1       | PGP1                              | PBMC       | male | NA  | Laserson-2014        | ig               | FALSE       |
 
 ## Supported library generation methods (protocols)
 
@@ -205,7 +209,7 @@ nextflow run nf-core/airrflow -profile docker \
 
 #### UMI barcode is provided in the index file
 
-If the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+If the UMI barcodes are provided in an additional index file, please provide it in the column `filename_I1` in the input samplesheet and additionally set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
 
 For example:
 

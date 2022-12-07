@@ -59,10 +59,12 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_logs.collect().ifEmpty([]),
         ch_metadata
     )
+    ch_versions = ch_versions.mix(REPORT_FILE_SIZE.out.versions)
 
     ALAKAZAM_SHAZAM_REPERTOIRES(
         ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
+        REPORT_FILE_SIZE.out.table.ifEmpty([]),
         ch_report_rmd,
         ch_report_css,
         ch_report_logo

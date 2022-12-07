@@ -64,7 +64,7 @@ def check_samplesheet(file_in):
             "sex",
             "tissue",
             "biomaterial_provider",
-            "age"
+            "age",
         ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         for col in REQUIRED_COLUMNS:
