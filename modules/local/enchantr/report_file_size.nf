@@ -21,8 +21,12 @@ process REPORT_FILE_SIZE {
     path "versions.yml", emit: versions
 
     script:
+    def all_logs = logs.join('\n')
+    def logs_file = workDir + '/logs.txt'
+    logs_file = file(logs_file)
+    logs_file.text = all_logs
     """
-    echo "${logs.join('\n')}" > logs.txt
+    mv "${logs_file}" .
     Rscript -e "enchantr::enchantr_report('file_size', \\
         report_params=list('input'='logs.txt', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
