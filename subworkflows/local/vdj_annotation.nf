@@ -62,8 +62,6 @@ workflow VDJ_ANNOTATION {
         ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
 
-    ch_fasta.dump(tag:'input_assigngenes')
-
     CHANGEO_ASSIGNGENES (
         ch_fasta,
         ch_igblast.collect()

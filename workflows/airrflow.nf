@@ -15,7 +15,7 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 if (params.input) {
-    ch_input = Channel.fromPath(params.input)
+    ch_input = Channel.fromPath(params.input, checkIfExists: true)
 } else {
     exit 1, "Please provide input file containing the sample metadata with the '--input' option."
 }
@@ -66,8 +66,8 @@ include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,7 +90,8 @@ workflow AIRRFLOW {
 
         ch_fasta = SEQUENCE_ASSEMBLY.out.fasta
         ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
-        ch_fastqc_preassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_preassembly
+        ch_fastp_html = SEQUENCE_ASSEMBLY.out.fastp_reads_html
+        ch_fastp_json = SEQUENCE_ASSEMBLY.out.fastp_reads_json
         ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
         ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
@@ -151,7 +152,6 @@ workflow AIRRFLOW {
 
     // Split bulk and single cell repertoires
     ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
-        .dump(tag: 'meta_to_tab_out')
         .branch { it ->
             single: it[0].single_cell == 'true'
             bulk:   it[0].single_cell == 'false'
@@ -168,7 +168,6 @@ workflow AIRRFLOW {
     ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null))
 
     ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
-                                        .dump(tag: 'bulk_filt_out')
 
     // Single cell: QC and filtering
     ch_repertoire_by_processing.single
@@ -227,14 +226,15 @@ workflow AIRRFLOW {
     // MODULE: MultiQC
     //
     if (!params.skip_multiqc) {
-        workflow_summary    = WorkflowBcellmagic.paramsSummaryMultiqc(workflow, summary_params)
+        workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_preassembly_mqc.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_mqc.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (

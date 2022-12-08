@@ -54,7 +54,7 @@ include { PRESTO_SANS_UMI            } from '../../subworkflows/local/presto_san
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../../modules/nf-core/modules/fastqc/main'
+include { FASTQC                      } from '../../modules/nf-core/fastqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,6 +74,13 @@ workflow SEQUENCE_ASSEMBLY {
     if (!params.library_generation_method) {
         exit 1, "Please specify a library generation method with the `--library_generation_method` option."
     }
+
+    if (params.adapter_fasta) {
+        ch_adapter_fasta = Channel.fromPath(params.adapter_fasta, checkIfExists: true)
+    } else {
+        ch_adapter_fasta = []
+    }
+
 
     // Validate library generation method parameter
     if (params.library_generation_method == 'specific_pcr_umi'){
@@ -162,36 +169,24 @@ workflow SEQUENCE_ASSEMBLY {
     ch_versions = Channel.empty()
 
     FASTQ_INPUT_CHECK(ch_input)
-
-    ch_fastqc = FASTQ_INPUT_CHECK
-        .out
-        .reads
-        .groupTuple(by: [0])
-        .map{ it -> [ it[0], it[1].flatten() ] }
-
-    ch_presto = ch_fastqc.map{ it -> it.flatten() }
-
     ch_versions = ch_versions.mix(FASTQ_INPUT_CHECK.out.versions)
 
-    //
-    // MODULE: FastQC
-    //
-    FASTQC ( ch_fastqc )
-
-    // Channel for software versions
-    ch_versions = ch_versions.mix(FASTQC.out.versions.ifEmpty(null))
+    ch_reads = FASTQ_INPUT_CHECK.out.reads
 
     if (params.umi_length == 0) {
         //
         // SUBWORKFLOW: pRESTO without UMIs
         //
         PRESTO_SANS_UMI (
-            ch_presto,
+            ch_reads,
             ch_cprimers_fasta,
-            ch_vprimers_fasta
+            ch_vprimers_fasta,
+            ch_adapter_fasta
         )
         ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
         ch_presto_software = PRESTO_SANS_UMI.out.software
+        ch_fastp_reads_html = PRESTO_SANS_UMI.out.fastp_reads_html
+        ch_fastp_reads_json = PRESTO_SANS_UMI.out.fastp_reads_json
         ch_fastqc_postassembly = PRESTO_SANS_UMI.out.fastqc_postassembly_gz
         ch_presto_assemblepairs_logs = PRESTO_SANS_UMI.out.presto_assemblepairs_logs
         ch_presto_filterseq_logs = PRESTO_SANS_UMI.out.presto_filterseq_logs
@@ -208,14 +203,16 @@ workflow SEQUENCE_ASSEMBLY {
         // SUBWORKFLOW: pRESTO with UMIs
         //
         PRESTO_UMI (
-            ch_presto,
+            ch_reads,
             ch_cprimers_fasta,
-            ch_vprimers_fasta
+            ch_vprimers_fasta,
+            ch_adapter_fasta
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
         ch_presto_software = PRESTO_UMI.out.software
+        ch_fastp_reads_html = PRESTO_UMI.out.fastp_reads_html
+        ch_fastp_reads_json = PRESTO_UMI.out.fastp_reads_json
         ch_fastqc_postassembly = PRESTO_UMI.out.fastqc_postassembly_gz
-        ch_presto_logs = Channel.empty()
         ch_presto_filterseq_logs = PRESTO_UMI.out.presto_filterseq_logs
         ch_presto_maskprimers_logs = PRESTO_UMI.out.presto_maskprimers_logs
         ch_presto_pairseq_logs = PRESTO_UMI.out.presto_pairseq_logs
@@ -235,8 +232,10 @@ workflow SEQUENCE_ASSEMBLY {
     fasta = ch_presto_fasta
     // validated metadata
     samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
+    //fastp
+    fastp_reads_html = ch_fastp_reads_html
+    fastp_reads_json = ch_fastp_reads_json
     // fastqc files for multiQC report
-    fastqc_preassembly = FASTQC.out.zip
     fastqc_postassembly = ch_fastqc_postassembly
     // presto logs for html report
     presto_filterseq_logs = ch_presto_filterseq_logs

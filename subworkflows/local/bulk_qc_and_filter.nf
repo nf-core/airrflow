@@ -54,11 +54,8 @@ workflow BULK_QC_AND_FILTER {
         ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
     }
 
-    ch_for_collapse = ch_bulk_chimeric_pass
-            .dump()
-
     COLLAPSE_DUPLICATES(
-        ch_for_collapse
+        ch_bulk_chimeric_pass
     )
 
     ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
