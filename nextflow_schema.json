@@ -164,7 +164,8 @@
                 "adapter_fasta": {
                     "type": "string",
                     "default": "None",
-                    "fa_icon": "fas fa-file"
+                    "fa_icon": "fas fa-file",
+                    "description": "Fasta file with adapter sequences to be trimmed."
                 },
                 "clip_r1": {
                     "type": "integer",
