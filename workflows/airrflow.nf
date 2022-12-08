@@ -107,9 +107,6 @@ workflow AIRRFLOW {
 
     } else if ( params.mode == "assembled" ) {
 
-        ch_fastqc_preassembly_mqc = Channel.empty()
-        ch_fastqc_postassembly_mqc = Channel.empty()
-
         ASSEMBLED_INPUT_CHECK (ch_input,
                             params.miairr,
                             params.collapseby,
@@ -139,6 +136,9 @@ workflow AIRRFLOW {
         ch_presto_assemblepairs_logs =  Channel.empty()
         ch_presto_collapseseq_logs =  Channel.empty()
         ch_presto_splitseq_logs =  Channel.empty()
+        ch_fastp_html = Channel.empty()
+        ch_fastp_json = Channel.empty()
+        ch_fastqc_postassembly_mqc = Channel.empty()
 
     } else {
         exit 1, "Mode parameter value not valid."
