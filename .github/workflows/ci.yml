@@ -46,7 +46,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
         profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled"]
       fail-fast: false
@@ -81,7 +81,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
         profile: ["test_assembled_immcantation_devel", "test_raw_immcantation_devel"]
       fail-fast: false
