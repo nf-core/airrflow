@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
 - Added pipeline overview diagram and metro map.
 - Added full logs to `enchantr report filesize` process.
+- Template update to nf-core tools v2.7.1
 
 ### `Fixed`
 

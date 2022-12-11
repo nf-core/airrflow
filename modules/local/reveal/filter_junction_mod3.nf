@@ -3,7 +3,7 @@ process FILTER_JUNCTION_MOD3 {
     label 'immcantation'
     label 'single_cpu'
 
-    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.3" : null)
+    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.5" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.5--r42hdfd78af_0':
         'quay.io/biocontainers/r-enchantr:0.0.5--r42hdfd78af_0' }"
