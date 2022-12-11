@@ -244,7 +244,6 @@ workflow AIRRFLOW {
             ch_report_logo.collect().ifEmpty([])
         )
         multiqc_report = MULTIQC.out.report.toList()
-        ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
 
 }
