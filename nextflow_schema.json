@@ -327,7 +327,7 @@
             "default": "",
             "properties": {
                 "clonal_threshold": {
-                    "type": "string,number",
+                    "type": ["string", "number"],
                     "default": "auto",
                     "fa_icon": "fab fa-pagelines",
                     "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
