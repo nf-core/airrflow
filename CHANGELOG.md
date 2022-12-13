@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
 - Added pipeline overview diagram and metro map.
 - Added full logs to `enchantr report filesize` process.
+- Template update to nf-core tools v2.7.1
 
 ### `Fixed`
 
@@ -20,6 +21,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Dependencies`
 
 ### `Deprecated`
+
+## [2.4.0] 2022-12-05 "Aparecium"
+
+### `Added`
+
+- [#209](https://github.com/nf-core/airrflow/pull/209) Template update to nf-core tools v2.6.
+- [#210](https://github.com/nf-core/airrflow/pull/210) Add fastp for read QC, adapter trimming and read clipping.
+- [#212](https://github.com/nf-core/airrflow/pull/212) Bump versions to 2.4.0
 
 ## [2.3.0] - 2022-09-22 "Expelliarmus"
 

@@ -10,7 +10,7 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [FastQC](#fastqc) - read quality control
+- [FastP](#fastp) - read quality control, adapter trimming and read clipping
 - [pRESTO](#presto) - read pre-processing
   - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by quality
   - [Mask primers](#mask-primers) - Masking primers
@@ -21,6 +21,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Assemble mates](#assemble-mates) - Assemble sequence mates.
   - [Remove duplicates](#remove-duplicates) - Remove and annotate read duplicates.
   - [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 duplicates.
+- [FastQC](#fastqc) - read quality control post-assembly
 - [Change-O](#change-o) - Assign genes and clonotyping
   - [Assign genes with Igblast](#assign-genes-with-igblast)
   - [Make database from assigned genes](#make-database-from-assigned-genes)
@@ -39,29 +40,20 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [MultiQC](#MultiQC) - MultiQC
 - [Pipeline information](#pipeline-information) - Pipeline information
 
-## FastQC
+## Fastp
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics for the raw unmated reads.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the raw unmated reads.
-  - `postassembly/`
-    - `*_ASSEMBLED_fastqc.html`: FastQC report containing quality metrics for the mated and quality filtered reads.
-    - `*_ASSEMBLED_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the mated and quality filtered reads.
+- `fastp/`
+  - `<sample_id>/`
+    - `*.fastp.html`: Fast report containing quality metrics for the mated and quality filtered reads.
+    - `*.fastp.json`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the mated and quality filtered reads.
+    - `*.fastp.log`: Fastp
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
-
-![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
-
-![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
-
-![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
-
-> **NB:** Two sets of FastQC plots are displayed in the MultiQC report: first for the raw _untrimmed_ and unmated reads and secondly for the assembled and QC filtered reads (but before collapsing duplicates). They may contain adapter sequence and potentially regions with low quality.
+[fastp](https://doi.org/10.1093/bioinformatics/bty560) gives general quality metrics about your sequenced reads, as well as allows filtering reads by quality, trimming adapters and clipping reads at 5' or 3' ends. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [fastp documentation](https://github.com/OpenGene/fastp).
 
 ## presto
 
@@ -192,6 +184,28 @@ Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0
 </details>
 
 Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the pRESTO Immcantation toolset.
+
+## FastQC
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fastqc/`
+  - `postassembly/`
+    - `*_ASSEMBLED_fastqc.html`: FastQC report containing quality metrics for the mated and quality filtered reads.
+    - `*_ASSEMBLED_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images for the mated and quality filtered reads.
+
+</details>
+
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+
+![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
+
+![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
+
+![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
+
+> **NB:** Two sets of FastQC plots are displayed in the MultiQC report: first for the raw _untrimmed_ and unmated reads and secondly for the assembled and QC filtered reads (but before collapsing duplicates). They may contain adapter sequence and potentially regions with low quality.
 
 ## Change-O
 

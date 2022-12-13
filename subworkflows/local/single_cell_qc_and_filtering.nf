@@ -9,7 +9,6 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
     ch_logs = Channel.empty()
 
     repertoires
-            .dump(tag:"scqc-reps")
             .map{ it -> [   it[0].id,
                             it[0] ] }
             .set{ch_onlymeta}
@@ -17,7 +16,6 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
     repertoires
             .map { it -> it[1]}
             .collect()
-            .dump(tag:'scqc-aftercollect')
             .set{ch_repertoire_allsc}
 
     SINGLE_CELL_QC(
@@ -26,16 +24,13 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
 
     SINGLE_CELL_QC.out.tab
                 .flatten()
-                .dump(tag:"scqc-output")
                 .map { it -> [ "${it.baseName}".replaceFirst("__scqc-pass", ""), it ] }
-                .dump(tag:"scqc-output-filename")
                 .set{ch_repertoire_after_scqc_with_sampleid}
 
     ch_logs = ch_logs.mix(SINGLE_CELL_QC.out.logs)
     ch_versions = ch_versions.mix(SINGLE_CELL_QC.out.versions.ifEmpty(null))
 
     ch_repertoire_after_scqc_withmeta = ch_onlymeta.join(ch_repertoire_after_scqc_with_sampleid)
-                                                    .dump(tag:'scqc-out-joined-meta')
                                                     .map{ it -> [ it[1], it[2] ]}
 
     emit:

@@ -61,8 +61,12 @@ Number of sequences for each of the samples for each downstream filtering and an
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
 
+if (any(is.na(tab_seqs$sample_id))) {
+  tab_seqs$sample_id <- sapply(tab_seqs$file_0, function(x) unlist(strsplit(as.character(x), "_"))[1])
+}
+
 dat <- tidyr::pivot_wider(tab_seqs,id_cols=sample_id,names_from=task, values_from=to_num_seqs)
-dat <- dat %>% relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass")))
 

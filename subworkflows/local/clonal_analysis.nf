@@ -18,7 +18,6 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
-                                        .dump(tag:'find_threshold')
 
         FIND_THRESHOLD (
             ch_find_threshold,
@@ -32,7 +31,6 @@ workflow CLONAL_ANALYSIS {
             .dump(tag: 'clone_threshold')
             .filter { it != 'NA'}
             .filter { it != 'NaN' }
-            .dump(tag: "threshold")
             .ifEmpty { exit 1, "Automatic clone_threshold is 'NA'. Consider setting params.threshold manually."}
 
     } else {
@@ -48,9 +46,7 @@ workflow CLONAL_ANALYSIS {
                                 it[0].locus,
                                 it[1] ] }
                 .groupTuple()
-                .dump(tag:'cloneby')
                 .map{ get_meta_tabs(it) }
-                .dump(tag:'cloneby_after_map')
                 .set{ ch_define_clones }
 
     DEFINE_CLONES_COMPUTE(
@@ -65,7 +61,6 @@ workflow CLONAL_ANALYSIS {
     DEFINE_CLONES_COMPUTE.out.tab
             .collect()
             .map { it -> [ [id:'all_reps'], it ] }
-            .dump(tag: 'all_tabs_cloned')
             .set{ch_all_repertoires_cloned}
 
     if (!params.skip_all_clones_report){
@@ -80,7 +75,6 @@ workflow CLONAL_ANALYSIS {
     DEFINE_CLONES_COMPUTE.out.tab
         .flatten()
         .map { it -> [ [id: "${it.baseName}".replaceFirst("__clone-pass", "")], it ] }
-        .dump(tag: 'tab_cloned')
         .set{ch_repertoires_cloned}
 
     if (!params.skip_lineage){

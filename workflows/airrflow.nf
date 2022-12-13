@@ -15,7 +15,7 @@ def checkPathParamList = [ params.input, params.multiqc_config ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 if (params.input) {
-    ch_input = Channel.fromPath(params.input)
+    ch_input = Channel.fromPath(params.input, checkIfExists: true)
 } else {
     exit 1, "Please provide input file containing the sample metadata with the '--input' option."
 }
@@ -66,8 +66,8 @@ include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,7 +90,8 @@ workflow AIRRFLOW {
 
         ch_fasta = SEQUENCE_ASSEMBLY.out.fasta
         ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
-        ch_fastqc_preassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_preassembly
+        ch_fastp_html = SEQUENCE_ASSEMBLY.out.fastp_reads_html
+        ch_fastp_json = SEQUENCE_ASSEMBLY.out.fastp_reads_json
         ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
         ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
@@ -106,21 +107,18 @@ workflow AIRRFLOW {
 
     } else if ( params.mode == "assembled" ) {
 
-        ch_fastqc_preassembly_mqc = Channel.empty()
-        ch_fastqc_postassembly_mqc = Channel.empty()
-
         ASSEMBLED_INPUT_CHECK (ch_input,
                             params.miairr,
                             params.collapseby,
                             params.cloneby)
-        ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty(null) )
+        ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty([]) )
 
         if (params.reassign) {
             CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 ASSEMBLED_INPUT_CHECK.out.ch_tsv
             )
             ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-            ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty(null))
+            ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty([]))
             ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
         } else {
             ch_fasta_from_tsv = Channel.empty()
@@ -138,6 +136,9 @@ workflow AIRRFLOW {
         ch_presto_assemblepairs_logs =  Channel.empty()
         ch_presto_collapseseq_logs =  Channel.empty()
         ch_presto_splitseq_logs =  Channel.empty()
+        ch_fastp_html = Channel.empty()
+        ch_fastp_json = Channel.empty()
+        ch_fastqc_postassembly_mqc = Channel.empty()
 
     } else {
         exit 1, "Mode parameter value not valid."
@@ -147,11 +148,10 @@ workflow AIRRFLOW {
         ch_fasta,
         ch_validated_samplesheet.collect()
     )
-    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions.ifEmpty([]))
 
     // Split bulk and single cell repertoires
     ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
-        .dump(tag: 'meta_to_tab_out')
         .branch { it ->
             single: it[0].single_cell == 'true'
             bulk:   it[0].single_cell == 'false'
@@ -165,10 +165,9 @@ workflow AIRRFLOW {
         ch_repertoire_by_processing.bulk,
         VDJ_ANNOTATION.out.imgt.collect()
     )
-    ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty([]))
 
     ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
-                                        .dump(tag: 'bulk_filt_out')
 
     // Single cell: QC and filtering
     ch_repertoire_by_processing.single
@@ -177,7 +176,7 @@ workflow AIRRFLOW {
     SINGLE_CELL_QC_AND_FILTERING(
         ch_repertoire_by_processing.single
     )
-    ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
+    ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty([]) )
 
     // Mixing bulk and single cell channels for clonal analysis
     ch_repertoires_for_clones = ch_bulk_filtered
@@ -190,7 +189,7 @@ workflow AIRRFLOW {
         VDJ_ANNOTATION.out.imgt.collect(),
         ch_report_logo_img.collect().ifEmpty([])
     )
-    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty([]))
 
     if (!params.skip_report){
         REPERTOIRE_ANALYSIS_REPORTING(
@@ -217,7 +216,8 @@ workflow AIRRFLOW {
             ch_validated_samplesheet.collect()
         )
     }
-
+    ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
+    ch_versions.dump(tag: "channel_versions")
     // Software versions
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -227,14 +227,15 @@ workflow AIRRFLOW {
     // MODULE: MultiQC
     //
     if (!params.skip_multiqc) {
-        workflow_summary    = WorkflowBcellmagic.paramsSummaryMultiqc(workflow, summary_params)
+        workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_preassembly_mqc.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_mqc.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
@@ -244,10 +245,7 @@ workflow AIRRFLOW {
             ch_report_logo.collect().ifEmpty([])
         )
         multiqc_report = MULTIQC.out.report.toList()
-        ch_versions    = ch_versions.mix( MULTIQC.out.versions )
     }
-
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 
 }
 
@@ -262,6 +260,10 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
     NfcoreTemplate.summary(workflow, params, log)
+
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
 }
 
 /*

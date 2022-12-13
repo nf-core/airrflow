@@ -147,8 +147,64 @@
             "help_text": "The pipeline requires indication of UMI barcode treatment (for identifying unique transcripts). These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter. If no UMI barcodes are present, specify `--umi_length = 0` to use the sans-UMI subworkflow.",
             "fa_icon": "fas fa-barcode"
         },
+        "adapter_trimming": {
+            "title": "Adapter trimming",
+            "type": "object",
+            "description": "Options for adapter trimming and read clipping",
+            "default": "",
+            "fa_icon": "fas fa-cut",
+            "properties": {
+                "trim_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to trim adapters in fastq reads with fastp.",
+                    "help_text": "By default adapters will be auto-detected, but adapter sequences can also be provided in a `fasta` file with the `--adapter_fasta` option.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "adapter_fasta": {
+                    "type": "string",
+                    "default": "None",
+                    "fa_icon": "fas fa-file",
+                    "description": "Fasta file with adapter sequences to be trimmed."
+                },
+                "clip_r1": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 5' in R1 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "clip_r2": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 5' in R2 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "three_prime_clip_r1": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 3' in R1 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "three_prime_clip_r2": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 3' in R2 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "trim_nextseq": {
+                    "type": "boolean",
+                    "description": "Trim adapters specific for Nextseq sequencing",
+                    "fa_icon": "fas fa-cut"
+                },
+                "save_trimmed": {
+                    "type": "boolean",
+                    "description": "Option to save trimmed reads.",
+                    "fa_icon": "far fa-save"
+                }
+            }
+        },
         "sequence_assembly_options": {
-            "title": "Sequence assembly options",
+            "title": "sequence assembly options",
             "type": "object",
             "description": "Options for the pRESTO sequence assembly processes",
             "default": "",
@@ -271,7 +327,7 @@
             "default": "",
             "properties": {
                 "clonal_threshold": {
-                    "type": "string",
+                    "type": ["string", "number"],
                     "default": "auto",
                     "fa_icon": "fab fa-pagelines",
                     "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
@@ -300,8 +356,7 @@
                     "fa_icon": "fas fa-border-all"
                 },
                 "skip_all_clones_report": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
                     "description": "Skip report of EnchantR DefineClones for all samples together.",
                     "fa_icon": "fas fa-angle-double-right"
                 }
@@ -443,7 +498,7 @@
         "max_job_request_options": {
             "title": "Max job request options",
             "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
+            "fa_icon": "fas fa-microchip",
             "description": "Set the top limit for requested resources for any single job.",
             "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
             "properties": {
@@ -485,6 +540,12 @@
                 "help": {
                     "type": "boolean",
                     "description": "Display help text.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
@@ -530,11 +591,29 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "hidden": true
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
+                },
+                "multiqc_logo": {
+                    "type": "string",
+                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
+                    "fa_icon": "fas fa-image",
+                    "hidden": true
+                },
+                "multiqc_methods_description": {
+                    "type": "string",
+                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
+                    "fa_icon": "fas fa-cog"
                 },
                 "tracedir": {
                     "type": "string",
@@ -572,6 +651,9 @@
         },
         {
             "$ref": "#/definitions/umi_barcode_handling"
+        },
+        {
+            "$ref": "#/definitions/adapter_trimming"
         },
         {
             "$ref": "#/definitions/sequence_assembly_options"
