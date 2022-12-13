@@ -9,6 +9,7 @@ process IMMCANTATION {
     path "versions.yml", emit: versions
 
     script:
+    //TODO: this process can probably be removed
     """
     if ! command -v versions report &> /dev/null
     then
