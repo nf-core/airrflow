@@ -3,12 +3,17 @@ def asString (args) {
     if (args.size()>0) {
         if (args[0] != 'none') {
             for (param in args.keySet().sort()){
-                s = s + ",'"+param+"'='"+args[param]+"'"
+                value = args[param].toString()
+                if (!value.isNumber()) {
+                    value = "'"+value+"'"
+                }
+                s = s + ",'"+param+"'="+value
             }
         }
     }
     return s
 }
+
 process DEFINE_CLONES {
     tag "${meta.id}"
 
