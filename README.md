@@ -15,7 +15,9 @@
 
 ## Introduction
 
-** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
+** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io)
+toolset. The input data can be (a) targeted amplicon bulk sequencing data of the V, D, J and C regions
+of the B/T-cell receptor with multiplex PCR or 5' RACE protocol or (b) assembled reads (bulk or single cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
