@@ -70,7 +70,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/FilterSeq.html) from the pRESTO Immcantation toolset. The default quality threshold is 20.
+Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/stable/tools/FilterSeq.html) from the pRESTO Immcantation toolset. The default quality threshold is 20.
 
 ### Mask primers
 
@@ -83,7 +83,7 @@ Filters reads that are below a quality threshold by using the tool [FilterSeq](h
 
 </details>
 
-Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/version-0.5.11/tools/MaskPrimers.html) of the pRESTO Immcantation toolset.
+Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/stable/tools/MaskPrimers.html) of the pRESTO Immcantation toolset.
 
 ### Pair mates
 
@@ -95,7 +95,7 @@ Masks primers that are provided in the C-primers and V-primers input files. It u
 
 </details>
 
-Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the pRESTO Immcantation toolset.
+Pair read mates using [PairSeq](https://presto.readthedocs.io/en/stable/tools/PairSeq.html) from the pRESTO Immcantation toolset.
 
 ### Cluster sets
 
@@ -108,7 +108,7 @@ Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/
 
 </details>
 
-Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/version-0.5.11/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
+Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/stable/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
 
 ### Parse clusters
 
@@ -133,7 +133,7 @@ Annotate cluster ID as part of the barcode, using [Parseheaders copy](https://pr
 
 </details>
 
-Build sequence consensus from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/version-0.5.11/tools/BuildConsensus.html) from the pRESTO Immcantation toolset.
+Build sequence consensus from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/stable/tools/BuildConsensus.html) from the pRESTO Immcantation toolset.
 
 ### Re-pair mates
 
@@ -145,7 +145,7 @@ Build sequence consensus from all sequences that were annotated to have the same
 
 </details>
 
-Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the pRESTO Immcantation toolset.
+Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/stable/tools/PairSeq.html) from the pRESTO Immcantation toolset.
 
 ### Assemble mates
 
@@ -158,7 +158,7 @@ Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.
 
 </details>
 
-Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/version-0.5.11/tools/AssemblePairs.html) from the pRESTO Immcantation toolset.
+Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/stable/tools/AssemblePairs.html) from the pRESTO Immcantation toolset.
 
 ### Remove duplicates
 
@@ -171,7 +171,7 @@ Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/versi
 
 </details>
 
-Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/CollapseSeq.html) from the pRESTO Immcantation toolset.
+Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/stable/tools/CollapseSeq.html) from the pRESTO Immcantation toolset.
 
 ### Filter sequences for at least 2 representatives
 
@@ -183,7 +183,7 @@ Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0
 
 </details>
 
-Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the pRESTO Immcantation toolset.
+Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/stable/tools/SplitSeq.html) from the pRESTO Immcantation toolset.
 
 ## FastQC
 
@@ -209,43 +209,95 @@ Remove sequences which do not have 2 representative using [SplitSeq](https://pre
 
 ## Change-O
 
+### Convert input to fasta, if needed
+
+<details markdown="1">
+<summary>Output files. Optional. </summary>
+
+- `vdj_annotation/convert-db/<sampleID>`
+  - `*.fasta`: The sequences in fasta format.
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+
+</details>
+
+This folder is generated when the input data are AIRR-C formatted rearrangement tables that need to
+be reprocessed (`--reassign true`). For example, 10x Genomics' `airr_rearrangement.tsv` files. [ConvertDb fasta](https://changeo.readthedocs.io/en/stable/tools/ConvertDb.html#convertdb-py-fasta) is used to
+generate a `.fasta` file from the rearrangement table.
+
 ### Assign genes with Igblast
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/01-assigngenes/<sampleID>`
-  - `fasta/*.fasta`: Igblast results converted to fasta format with genotype V-call annotated in the header.
+- `vdj_annotation/01-assigngenes/<sampleID>`
+  - `*.fmt7`: Igblast results.
+  - `*.fasta`: Igblast results converted to fasta.
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
 
 </details>
 
-Assign genes with Igblast, using the IMGT database is performed by the [AssignGenes](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#running-igblast) command of the Change-O tool from the Immcantation Framework.
+Assign genes with Igblast, using the IMGT database is performed by the [AssignGenes](https://changeo.readthedocs.io/en/stable/examples/igblast.html#running-igblast) command of the Change-O tool from the Immcantation Framework.
 
 ### Make database from assigned genes
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/02-makedb/<sampleID>`
-  - `logs`: Log of the process that will be parsed to generate a report.
-  - `tab`: Table in AIRR format containing the assigned gene information and metadata provided in the starting metadata sheet.
+- `vdj_annotation/02-makedb/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*db-pass.tsv`: Rearrangement table in AIRR-C format containing the assigned gene information.
 
 </details>
 
-A table is generated with [MakeDB](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#processing-the-output-of-igblast) following the [AIRR standards](https://docs.airr-community.org/en/stable/datarep/rearrangements.html).
+IgBLAST's results are parsed and standardized with [MakeDB](https://changeo.readthedocs.io/en/stable/examples/igblast.html#processing-the-output-of-igblast) to follow the [AIRR Community standards](https://docs.airr-community.org/en/stable/datarep/rearrangements.html) for rearrangement data.
+
+### Quality filter sequences
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `vdj_annotation/03-quality-filter/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*quality-pass.tsv*`: Rearrangement table in AIRR-C format containing the sequences that passed the quality filtering steps.
+
+</details>
+
+A table is generated that retains sequences with concordant locus in the  `v_call` and `locus` fields, with a `sequence_alignment` with a maximum of 10% of Ns and a length of at least 200 informative nucleotides (not `-`, `.` or `N`).
 
 ### Removal of non-productive sequences
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/03-parsedb_split/<sampleID>`
-  - `logs`: Log of the process that will be parsed to generate a report.
-  - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and metadata provided in the starting metadata sheet.
+- `vdj_annotation/04-select-productive/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*productive-T.tsv*`: Rearrangement table in AIRR-C format, with only productive sequences.
 
 </details>
 
-Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html).
+Non-functional sequences identified with IgBLAST are removed with [ParseDb](https://changeo.readthedocs.io/en/stable/tools/ParseDb.html).
+
+### Removal of sequences with junction length not multiple of 3
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `vdj_annotation/05-select-junction-mod3/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*junction-pass.tsv*`: Rearrangement table in AIRR-C format, with only sequences that have a nucleotide junction length multiple of 3.
+
+</details>
+
+### Add metadata
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `vdj_annotation/06-annotate-metadata/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*meta-pass.tsv*`: Rearrangement table in AIRR-C format annotated with metadata provided in the starting metadata sheet.
+
+</details>
 
 ### Selection of IGH / TR sequences
 
@@ -258,7 +310,7 @@ Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.
 
 </details>
 
-Heavy chain sequences (IGH) are selected if 'ig' locus is selected, TR sequences are selected if 'tr' locus is selected. The tool [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html) is employed.
+Heavy chain sequences (IGH) are selected if 'ig' locus is selected, TR sequences are selected if 'tr' locus is selected. The tool [ParseDb](https://changeo.readthedocs.io/en/stable/tools/ParseDb.html) is employed.
 
 ### Convert database to fasta
 
@@ -270,7 +322,7 @@ Heavy chain sequences (IGH) are selected if 'ig' locus is selected, TR sequences
 
 </details>
 
-Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ConvertDb.html?highlight=convertdb) tool.
+Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/latest/tools/ConvertDb.html?highlight=convertdb) tool.
 
 ## Shazam
 
