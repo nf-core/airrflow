@@ -10,6 +10,8 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
+TODO: update this to add/remove lines
+
 - [FastP](#fastp) - read quality control, adapter trimming and read clipping
 - [pRESTO](#presto) - read pre-processing
   - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by quality
@@ -299,52 +301,75 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 </details>
 
-### Selection of IGH / TR sequences
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `changeo/04-parsedb_select/<sampleID>`
-  - `logs`: Log of the process that will be parsed to generate a report.
-  - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and IGH/TR sequences, and metadata provided in the starting metadata sheet.
-
-</details>
-
-Heavy chain sequences (IGH) are selected if 'ig' locus is selected, TR sequences are selected if 'tr' locus is selected. The tool [ParseDb](https://changeo.readthedocs.io/en/stable/tools/ParseDb.html) is employed.
-
-### Convert database to fasta
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `changeo/05-convertdb-fasta/<sampleID>`
-  - `fasta`: Fasta file containing the processed sequences with the barcode ID and allele annotation in the header.
-
-</details>
-
-Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/latest/tools/ConvertDb.html?highlight=convertdb) tool.
-
 ## Shazam
 
-### Merging tables per subject
+### Reconstruct germlines
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/01-merged-tables/<subjectID>`
-  - `tab`: Table in AIRR format containing the assigned gene information.
+- `bulk-qc-filtering/01-create-germlines/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*germ-pass.tsv`: Rearrangement table in AIRR-C format with an additional
+     field with the reconstructed germline sequence for each sequence.
 
 </details>
 
-AIRR tables for each subject are merged to be able to determine the subject genotype and full clonal analysis.
+Reconstructing the germline sequences with the [CreateGermlines](https://changeo.readthedocs.io/en/stable/tools/CreateGermlines.html#creategermlines) Immcantation tool.
 
-### Determining hamming distance threshold
+### Chimera filter
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/02-clonal-threshold/<subjectID>`
-  - `threshold`: Hamming distance threshold of the Junction regions as determined by Shazam.
+- `bulk-qc-filtering/02-chimera-filter/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*chimera-pass.tsv`: Rearrangement table in AIRR-C format sequences that
+     passed the chimera removal filter.
+  - `<sampleID>_chimera_report`: Report with plots showing the mutation patterns
+
+</details>
+
+Mutations patterns in different window sizes are analyzed with functions from
+the Immcantation R package [SHazaM](https://shazam.readthedocs.io/en/stable/).
+
+### Detect contamination
+
+<details markdown="1">
+<summary>Output files. Optional. </summary>
+
+- `bulk-qc-filtering/03-detect_contamination`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*cont-flag.tsv`: Rearrangement table in AIRR-C format with sequences that
+     passed the chimera removal filter.
+  - `all_reps_cont_report`: Report.
+
+</details>
+
+This folder is genereated when `detect_contamination` is set to `true`.
+
+### Collapse duplicates
+
+<details markdown="1">
+<summary>Output files. </summary>
+
+- `bulk-qc-filtering/04-collapse-duplicates/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*collapse_report/`: Report.
+    - `repertoires/*collapse-pass.tsv`: Rearrangement table in AIRR-C format with duplicated
+       sequences removed.
+
+</details>
+
+### TODO: single cell QC
+
+### TODO update: Determining hamming distance threshold
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `clonal_analysis/find-threshold/`
+  - `all_reps_threshold-mean.tsv`: Hamming distance threshold of the Junction regions as determined by Shazam.
   - `plots`: Plot of the Hamming distance distribution between junction regions displaying the threshold for clonal assignment as determined by Shazam.
 
 </details>
