@@ -24,22 +24,6 @@ ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//CHANGEO
-
-include { CHANGEO_PARSEDB_SELECT } from '../../modules/local/changeo/changeo_parsedb_select'
-include { CHANGEO_CONVERTDB_FASTA } from '../../modules/local/changeo/changeo_convertdb_fasta'
-
-//SHAZAM
-include { SHAZAM_THRESHOLD } from '../../modules/local/shazam/shazam_threshold'
-
-//CHANGEO
-include { CHANGEO_DEFINECLONES } from '../../modules/local/changeo/changeo_defineclones'
-include { CHANGEO_BUILDTREES } from '../../modules/local/changeo/changeo_buildtrees'
-
-//ALAKAZAM
-include { ALAKAZAM_LINEAGE } from '../../modules/local/alakazam/alakazam_lineage'
-include { ALAKAZAM_SHAZAM_REPERTOIRES } from '../../modules/local/alakazam/alakazam_shazam_repertoires'
-
 // Local: Sub-workflows
 include { FASTQ_INPUT_CHECK           } from '../../subworkflows/local/fastq_input_check'
 include { PRESTO_UMI            } from '../../subworkflows/local/presto_umi'

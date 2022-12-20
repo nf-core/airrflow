@@ -3,6 +3,7 @@
  */
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
+//TODO: when enchantr supports input samplesheet from raw sequencing, update code here to commented one.
 //include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
 
 workflow FASTQ_INPUT_CHECK {
