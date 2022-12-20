@@ -361,22 +361,36 @@ This folder is genereated when `detect_contamination` is set to `true`.
 
 </details>
 
-### TODO: single cell QC
+### Single cell QC
 
-### TODO update: Determining hamming distance threshold
+<details markdown="1">
+<summary>Output files. </summary>
+
+- `qc-filtering/single-cell-qc/all_reps_scqc_report`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*all_reps_scqc_report/`: Report.
+    - `*scqc-pass.tsv`: Rearrangement table in AIRR-C format with sequences that
+       passed the quality filtering.
+
+</details>
+
+### Determining hamming distance threshold
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `clonal_analysis/find-threshold/`
-  - `all_reps_threshold-mean.tsv`: Hamming distance threshold of the Junction regions as determined by Shazam.
-  - `plots`: Plot of the Hamming distance distribution between junction regions displaying the threshold for clonal assignment as determined by Shazam.
+  - `*log`: Log of the process that will be parsed to generate a report.
+  - `all_reps_threshold-mean.tsv`: Mean of all hamming distance thresholds of the
+     Junction regions as determined by Shazam.
+  - `all_reps_threshold-summary.tsv`: Thresholds for each group of `--cloneby` samples.
+  - `all_reps_dist_report`: Report
 
 </details>
 
-Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io/en/version-0.1.11_a/).
+Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io) when `clonal_threshold` is set to `auto`.
 
-## Change-O define clones
+## TODO updata scoper: Change-O define clones
 
 ### Define clones
 
