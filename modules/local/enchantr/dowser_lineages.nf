@@ -18,11 +18,9 @@ def asString (args) {
 process DOWSER_LINEAGES {
     tag "${meta.id}"
 
-    label 'process_high'
-    label 'process_long'
+    label 'process_long_parallelized'
     label 'error_ignore'
     label 'immcantation'
-    label 'enchantr'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

@@ -2,7 +2,6 @@ process CHANGEO_DEFINECLONES {
     tag "$meta.id"
     label 'process_medium'
     label 'immcantation'
-    label 'changeo'
 
 
     conda (params.enable_conda ? "bioconda::changeo=1.2.0 bioconda::igblast=1.17.1" : null)

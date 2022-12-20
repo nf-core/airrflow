@@ -19,8 +19,6 @@ process SINGLE_CELL_QC {
     tag 'all_single_cell'
     label 'immcantation'
     label 'process_medium'
-    label 'enchantr'
-
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
