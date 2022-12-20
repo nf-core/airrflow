@@ -4,7 +4,6 @@
 process VALIDATE_INPUT {
     tag "$samplesheet"
     label 'immcantation'
-    label 'enchantr'
     label 'single_cpu'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6" : null)

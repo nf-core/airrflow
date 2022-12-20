@@ -5,7 +5,6 @@ process REPORT_FILE_SIZE {
     tag "file_size"
     label 'immcantation'
     label 'single_cpu'
-    label 'enchantr'
 
     conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
