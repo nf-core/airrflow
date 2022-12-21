@@ -428,23 +428,36 @@ Assigning clones to the sequences obtained from IgBlast with the [scoper::hierar
 
 </details>
 
-Reconstructing clonal linage with the [Alakazam R package](https://alakazam.readthedocs.io/en/stable/) from the Immcantation toolset.
+Reconstructing clonal linage with [IgPhyML](https://igphyml.readthedocs.io/en/stable/) and
+[dowser](https://dowser.readthedocs.io/en/stable/topics/getTrees/) from the Immcantation toolset.
 
 ## Repertoire comparison
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `repertoire_comparison/`
+- `repertoire_analysis/repertoire_comparison/`
   - `all_data.tsv`: AIRR format table containing the processed sequence information for all subjects.
   - `Abundance`: contains clonal abundance calculation plots and tables.
   - `Diversity`: contains diversity calculation plots and tables.
   - `V_family`: contains V gene and family distribution calculation plots and tables.
-- `Bcellmagic_report.html`: Contains the repertoire comparison results in an html report form: Abundance, Diversity, V gene usage tables and plots. Comparison between treatments and subjects.
+- `Airrflow_report.html`: Contains the repertoire comparison results in an html report form: Abundance, Diversity, V gene usage tables and plots. Comparison between treatments and subjects.
 
 </details>
 
 Calculation of several repertoire characteristics (diversity, abundance, V gene usage) for comparison between subjects, time points and cell populations. An Rmarkdown report is generated with the [Alakazam R package](https://alakazam.readthedocs.io/en/stable/).
+
+## Tracking number of reads
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `report_file_size/file_size_report`: Report summarizing the number of sequences after the most important pipeline steps.
+    - `tables/*tsv`: Tables with the number of sequences at each processing step.
+
+</details>
+
+Parsing the logs from the previous processes. Summary of the number of sequences left after each of the most important pipeline steps.
 
 ## Log parsing
 
