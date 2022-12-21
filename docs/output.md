@@ -10,6 +10,8 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
+TODO: update this to add/remove lines
+
 - [FastP](#fastp) - read quality control, adapter trimming and read clipping
 - [pRESTO](#presto) - read pre-processing
   - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by quality
@@ -70,7 +72,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/FilterSeq.html) from the pRESTO Immcantation toolset. The default quality threshold is 20.
+Filters reads that are below a quality threshold by using the tool [FilterSeq](https://presto.readthedocs.io/en/stable/tools/FilterSeq.html) from the pRESTO Immcantation toolset. The default quality threshold is 20.
 
 ### Mask primers
 
@@ -83,7 +85,7 @@ Filters reads that are below a quality threshold by using the tool [FilterSeq](h
 
 </details>
 
-Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/version-0.5.11/tools/MaskPrimers.html) of the pRESTO Immcantation toolset.
+Masks primers that are provided in the C-primers and V-primers input files. It uses the tool [MaskPrimers](https://presto.readthedocs.io/en/stable/tools/MaskPrimers.html) of the pRESTO Immcantation toolset.
 
 ### Pair mates
 
@@ -95,7 +97,7 @@ Masks primers that are provided in the C-primers and V-primers input files. It u
 
 </details>
 
-Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the pRESTO Immcantation toolset.
+Pair read mates using [PairSeq](https://presto.readthedocs.io/en/stable/tools/PairSeq.html) from the pRESTO Immcantation toolset.
 
 ### Cluster sets
 
@@ -108,7 +110,7 @@ Pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/
 
 </details>
 
-Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/version-0.5.11/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
+Cluster sequences according to similarity, using [ClusterSets set](https://presto.readthedocs.io/en/stable/tools/ClusterSets.html#clustersets-set). This step is introduced to deal with too low UMI diversity.
 
 ### Parse clusters
 
@@ -133,7 +135,7 @@ Annotate cluster ID as part of the barcode, using [Parseheaders copy](https://pr
 
 </details>
 
-Build sequence consensus from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/version-0.5.11/tools/BuildConsensus.html) from the pRESTO Immcantation toolset.
+Build sequence consensus from all sequences that were annotated to have the same UMI. Uses [BuildConsensus](https://presto.readthedocs.io/en/stable/tools/BuildConsensus.html) from the pRESTO Immcantation toolset.
 
 ### Re-pair mates
 
@@ -145,7 +147,7 @@ Build sequence consensus from all sequences that were annotated to have the same
 
 </details>
 
-Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/PairSeq.html) from the pRESTO Immcantation toolset.
+Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/stable/tools/PairSeq.html) from the pRESTO Immcantation toolset.
 
 ### Assemble mates
 
@@ -158,7 +160,7 @@ Re-pair read mates using [PairSeq](https://presto.readthedocs.io/en/version-0.5.
 
 </details>
 
-Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/version-0.5.11/tools/AssemblePairs.html) from the pRESTO Immcantation toolset.
+Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/stable/tools/AssemblePairs.html) from the pRESTO Immcantation toolset.
 
 ### Remove duplicates
 
@@ -171,7 +173,7 @@ Assemble read mates using [AssemblePairs](https://presto.readthedocs.io/en/versi
 
 </details>
 
-Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/CollapseSeq.html) from the pRESTO Immcantation toolset.
+Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/stable/tools/CollapseSeq.html) from the pRESTO Immcantation toolset.
 
 ### Filter sequences for at least 2 representatives
 
@@ -183,7 +185,7 @@ Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/version-0
 
 </details>
 
-Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/version-0.5.11/tools/SplitSeq.html) from the pRESTO Immcantation toolset.
+Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/stable/tools/SplitSeq.html) from the pRESTO Immcantation toolset.
 
 ## FastQC
 
@@ -209,97 +211,186 @@ Remove sequences which do not have 2 representative using [SplitSeq](https://pre
 
 ## Change-O
 
+### Convert input to fasta, if needed
+
+<details markdown="1">
+<summary>Output files. Optional. </summary>
+
+- `vdj_annotation/convert-db/<sampleID>`
+  - `*.fasta`: The sequences in fasta format.
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+
+</details>
+
+This folder is generated when the input data are AIRR-C formatted rearrangement tables that need to
+be reprocessed (`--reassign true`). For example, 10x Genomics' `airr_rearrangement.tsv` files. [ConvertDb fasta](https://changeo.readthedocs.io/en/stable/tools/ConvertDb.html#convertdb-py-fasta) is used to
+generate a `.fasta` file from the rearrangement table.
+
 ### Assign genes with Igblast
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/01-assigngenes/<sampleID>`
-  - `fasta/*.fasta`: Igblast results converted to fasta format with genotype V-call annotated in the header.
+- `vdj_annotation/01-assigngenes/<sampleID>`
+  - `*.fmt7`: Igblast results.
+  - `*.fasta`: Igblast results converted to fasta.
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
 
 </details>
 
-Assign genes with Igblast, using the IMGT database is performed by the [AssignGenes](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#running-igblast) command of the Change-O tool from the Immcantation Framework.
+Assign genes with Igblast, using the IMGT database is performed by the [AssignGenes](https://changeo.readthedocs.io/en/stable/examples/igblast.html#running-igblast) command of the Change-O tool from the Immcantation Framework.
 
 ### Make database from assigned genes
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/02-makedb/<sampleID>`
-  - `logs`: Log of the process that will be parsed to generate a report.
-  - `tab`: Table in AIRR format containing the assigned gene information and metadata provided in the starting metadata sheet.
+- `vdj_annotation/02-makedb/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*db-pass.tsv`: Rearrangement table in AIRR-C format containing the assigned gene information.
 
 </details>
 
-A table is generated with [MakeDB](https://changeo.readthedocs.io/en/version-0.4.5/examples/igblast.html#processing-the-output-of-igblast) following the [AIRR standards](https://docs.airr-community.org/en/stable/datarep/rearrangements.html).
+IgBLAST's results are parsed and standardized with [MakeDB](https://changeo.readthedocs.io/en/stable/examples/igblast.html#processing-the-output-of-igblast) to follow the [AIRR Community standards](https://docs.airr-community.org/en/stable/datarep/rearrangements.html) for rearrangement data.
+
+### Quality filter sequences
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `vdj_annotation/03-quality-filter/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*quality-pass.tsv*`: Rearrangement table in AIRR-C format containing the sequences that passed the quality filtering steps.
+
+</details>
+
+A table is generated that retains sequences with concordant locus in the  `v_call` and `locus` fields, with a `sequence_alignment` with a maximum of 10% of Ns and a length of at least 200 informative nucleotides (not `-`, `.` or `N`).
 
 ### Removal of non-productive sequences
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/03-parsedb_split/<sampleID>`
-  - `logs`: Log of the process that will be parsed to generate a report.
-  - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and metadata provided in the starting metadata sheet.
+- `vdj_annotation/04-select-productive/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*productive-T.tsv*`: Rearrangement table in AIRR-C format, with only productive sequences.
 
 </details>
 
-Non-functional sequences are removed with [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html).
+Non-functional sequences identified with IgBLAST are removed with [ParseDb](https://changeo.readthedocs.io/en/stable/tools/ParseDb.html).
 
-### Selection of IGH / TR sequences
+### Removal of sequences with junction length not multiple of 3
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/04-parsedb_select/<sampleID>`
-  - `logs`: Log of the process that will be parsed to generate a report.
-  - `tab`: Table in AIRR format containing the assigned gene information, with only productive sequences and IGH/TR sequences, and metadata provided in the starting metadata sheet.
+- `vdj_annotation/05-select-junction-mod3/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*junction-pass.tsv*`: Rearrangement table in AIRR-C format, with only sequences that have a nucleotide junction length multiple of 3.
 
 </details>
 
-Heavy chain sequences (IGH) are selected if 'ig' locus is selected, TR sequences are selected if 'tr' locus is selected. The tool [ParseDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ParseDb.html) is employed.
-
-### Convert database to fasta
+### Add metadata
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/05-convertdb-fasta/<sampleID>`
-  - `fasta`: Fasta file containing the processed sequences with the barcode ID and allele annotation in the header.
+- `vdj_annotation/06-annotate-metadata/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*meta-pass.tsv*`: Rearrangement table in AIRR-C format annotated with metadata provided in the starting metadata sheet.
 
 </details>
-
-Sequences in are additionally converted to a fasta file with the [ConvertDb](https://changeo.readthedocs.io/en/version-0.4.5/tools/ConvertDb.html?highlight=convertdb) tool.
 
 ## Shazam
 
-### Merging tables per subject
+### Reconstruct germlines
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/01-merged-tables/<subjectID>`
-  - `tab`: Table in AIRR format containing the assigned gene information.
+- `bulk-qc-filtering/01-create-germlines/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*germ-pass.tsv`: Rearrangement table in AIRR-C format with an additional
+     field with the reconstructed germline sequence for each sequence.
 
 </details>
 
-AIRR tables for each subject are merged to be able to determine the subject genotype and full clonal analysis.
+Reconstructing the germline sequences with the [CreateGermlines](https://changeo.readthedocs.io/en/stable/tools/CreateGermlines.html#creategermlines) Immcantation tool.
+
+### Chimera filter
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `bulk-qc-filtering/02-chimera-filter/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*chimera-pass.tsv`: Rearrangement table in AIRR-C format sequences that
+     passed the chimera removal filter.
+  - `<sampleID>_chimera_report`: Report with plots showing the mutation patterns
+
+</details>
+
+Mutations patterns in different window sizes are analyzed with functions from
+the Immcantation R package [SHazaM](https://shazam.readthedocs.io/en/stable/).
+
+### Detect contamination
+
+<details markdown="1">
+<summary>Output files. Optional. </summary>
+
+- `bulk-qc-filtering/03-detect_contamination`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*cont-flag.tsv`: Rearrangement table in AIRR-C format with sequences that
+     passed the chimera removal filter.
+  - `all_reps_cont_report`: Report.
+
+</details>
+
+This folder is genereated when `detect_contamination` is set to `true`.
+
+### Collapse duplicates
+
+<details markdown="1">
+<summary>Output files. </summary>
+
+- `bulk-qc-filtering/04-collapse-duplicates/<sampleID>`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*collapse_report/`: Report.
+    - `repertoires/*collapse-pass.tsv`: Rearrangement table in AIRR-C format with duplicated
+       sequences removed.
+
+</details>
+
+### Single cell QC
+
+<details markdown="1">
+<summary>Output files. </summary>
+
+- `qc-filtering/single-cell-qc/all_reps_scqc_report`
+  - `*log.txt`: Log of the process that will be parsed to generate a report.
+  - `*all_reps_scqc_report/`: Report.
+    - `*scqc-pass.tsv`: Rearrangement table in AIRR-C format with sequences that
+       passed the quality filtering.
+
+</details>
 
 ### Determining hamming distance threshold
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `shazam/02-clonal-threshold/<subjectID>`
-  - `threshold`: Hamming distance threshold of the Junction regions as determined by Shazam.
-  - `plots`: Plot of the Hamming distance distribution between junction regions displaying the threshold for clonal assignment as determined by Shazam.
+- `clonal_analysis/find-threshold/`
+  - `*log`: Log of the process that will be parsed to generate a report.
+  - `all_reps_threshold-mean.tsv`: Mean of all hamming distance thresholds of the
+     Junction regions as determined by Shazam.
+  - `all_reps_threshold-summary.tsv`: Thresholds for each group of `--cloneby` samples.
+  - `all_reps_dist_report`: Report
 
 </details>
 
-Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io/en/version-0.1.11_a/).
+Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io) when `clonal_threshold` is set to `auto`.
 
-## Change-O define clones
+## TODO updata scoper: Change-O define clones
 
 ### Define clones
 
