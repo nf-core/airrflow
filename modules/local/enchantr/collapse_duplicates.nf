@@ -4,7 +4,7 @@ process COLLAPSE_DUPLICATES {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6" : null)
+    conda "bioconda::r-enchantr=0.0.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.6--r42hdfd78af_0':
         'quay.io/biocontainers/r-enchantr:0.0.6--r42hdfd78af_0' }"
