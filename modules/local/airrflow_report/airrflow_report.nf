@@ -2,7 +2,7 @@ process AIRRFLOW_REPORT {
     tag "${meta.id}"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6 conda-forge::plotly=4.10.1" : null)
+    conda "bioconda::r-enchantr=0.0.6 conda-forge::plotly=4.10.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'nfcore/airrflowreport:dev' :
         'nfcore/airrflowreport:dev' }"
