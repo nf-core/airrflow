@@ -1,11 +1,11 @@
-process ALAKAZAM_SHAZAM_REPERTOIRES {
+process AIRRFLOW_REPORT {
     tag "${meta.id}"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6" : null)
+    conda (params.enable_conda ? "bioconda::r-enchantr=0.0.6 conda-forge::plotly=4.10.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.6--r42hdfd78af_0' :
-        'quay.io/biocontainers/r-enchantr:0.0.6--r42hdfd78af_0' }"
+        'nfcore/airrflowreport:dev' :
+        'nfcore/airrflowreport:dev' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
