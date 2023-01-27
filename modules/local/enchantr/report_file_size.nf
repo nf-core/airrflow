@@ -21,12 +21,8 @@ process REPORT_FILE_SIZE {
     path "file_size_report/tables/log_data.tsv", emit: table
 
     script:
-    def all_logs = logs.join('\n')
-    def logs_file = workDir + '/logs.txt'
-    logs_file = file(logs_file)
-    logs_file.text = all_logs
     """
-    mv "${logs_file}" .
+    echo "${logs.join('\n')}" > logs.txt
     Rscript -e "enchantr::enchantr_report('file_size', \\
         report_params=list('input'='logs.txt', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
