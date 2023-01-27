@@ -428,7 +428,7 @@ Assigning clones to the sequences obtained from IgBlast with the [scoper::hierar
 
 </details>
 
-Reconstructing clonal linage with [IgPhyML](https://igphyml.readthedocs.io/en/stable/) and
+Reconstructing clonal lineage with [IgPhyML](https://igphyml.readthedocs.io/en/stable/) and
 [dowser](https://dowser.readthedocs.io/en/stable/topics/getTrees/) from the Immcantation toolset.
 
 ## Repertoire comparison
