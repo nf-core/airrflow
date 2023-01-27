@@ -3,7 +3,7 @@ process PRESTO_MASKPRIMERS {
     label "process_high"
     label 'immcantation'
 
-    conda (params.enable_conda ? "bioconda::presto=0.7.1" : null)
+    conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
         'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"

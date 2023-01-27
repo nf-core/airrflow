@@ -1,6 +1,6 @@
 include { PARSE_LOGS } from '../../modules/local/parse_logs.nf'
 include { REPORT_FILE_SIZE } from '../../modules/local/enchantr/report_file_size.nf'
-include { ALAKAZAM_SHAZAM_REPERTOIRES  } from '../../modules/local/alakazam/alakazam_shazam_repertoires'
+include { AIRRFLOW_REPORT  } from '../../modules/local/airrflow_report/airrflow_report'
 
 workflow REPERTOIRE_ANALYSIS_REPORTING {
 
@@ -61,7 +61,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     )
     ch_versions = ch_versions.mix(REPORT_FILE_SIZE.out.versions)
 
-    ALAKAZAM_SHAZAM_REPERTOIRES(
+    AIRRFLOW_REPORT(
         ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
         REPORT_FILE_SIZE.out.table.ifEmpty([]),
@@ -69,7 +69,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_report_css,
         ch_report_logo
     )
-    ch_versions = ch_versions.mix(ALAKAZAM_SHAZAM_REPERTOIRES.out.versions)
+    ch_versions = ch_versions.mix(AIRRFLOW_REPORT.out.versions)
 
     emit:
     versions = ch_versions

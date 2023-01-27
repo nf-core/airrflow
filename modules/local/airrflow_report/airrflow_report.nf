@@ -1,11 +1,11 @@
-process ALAKAZAM_SHAZAM_REPERTOIRES {
+process AIRRFLOW_REPORT {
     tag "${meta.id}"
     label 'process_high'
 
-    conda (params.enable_conda ? "conda-forge::r-base=4.1.2 bioconda::r-alakazam=1.2.0 bioconda::r-shazam=1.1.0 conda-forge::r-kableextra=1.3.4 conda-forge::r-knitr=1.33 conda-forge::r-stringr=1.4.0 conda-forge::r-dplyr=1.0.6 conda-forge::r-optparse=1.7.1" : null)
+    conda "bioconda::r-enchantr=0.0.6 conda-forge::plotly=4.10.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-7da73314bcc47157b442d16c3dcfbe81e75a404f:9bb35f8114dffcd97b3afb5de8587355aca16b66-0' :
-        'quay.io/biocontainers/mulled-v2-7da73314bcc47157b442d16c3dcfbe81e75a404f:9bb35f8114dffcd97b3afb5de8587355aca16b66-0' }"
+        'nfcore/airrflowreport:dev' :
+        'nfcore/airrflowreport:dev' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format

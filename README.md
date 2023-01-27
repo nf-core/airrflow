@@ -5,7 +5,6 @@
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
-
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -47,7 +46,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 2. V(D)J annotation and filtering (bulk and single-cell)
 
 - Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
-- Annotate alignmens in AIRR format (`Change-O MakeDB`)
+- Annotate alignments in AIRR format (`Change-O MakeDB`)
 - Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
 - Filter productive sequences (`Change-O ParseDB split`)
 - Filter junction length multiple of 3
@@ -66,7 +65,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 - Find Hamming distance threshold for clone definition (`SHazaM`, `EnchantR`).
 - Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
-- Build lineage trees (`SCOPer`, `EnchantR`).
+- Build lineage trees (`SCOPer`, `IgphyML`, `EnchantR`).
 
 5. Repertoire analysis and reporting
 
@@ -116,11 +115,10 @@ The nf-core/airrflow pipeline comes with documentation about the pipeline [usage
 
 ## Credits
 
-nf-core/airrflow was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
+nf-core/airrflow was written by [Gisela Gabenet](https://github.com/ggabernet), [Susanna Marquez](https://github.com/ssnn-airr), [Alexander Peltzer](@apeltzer) and [Simon Heumos](@subwaystation).
 
 Further contributors to the pipeline are:
 
-- [@ssnn-airr](https://github.com/ssnn-airr)
 - [@dladd](https://github.com/dladd)
 
 ## Contributions and Support
