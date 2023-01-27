@@ -264,7 +264,7 @@ IgBLAST's results are parsed and standardized with [MakeDB](https://changeo.read
 
 </details>
 
-A table is generated that retains sequences with concordant locus in the  `v_call` and `locus` fields, with a `sequence_alignment` with a maximum of 10% of Ns and a length of at least 200 informative nucleotides (not `-`, `.` or `N`).
+A table is generated that retains sequences with concordant locus in the `v_call` and `locus` fields, with a `sequence_alignment` with a maximum of 10% of Ns and a length of at least 200 informative nucleotides (not `-`, `.` or `N`).
 
 ### Removal of non-productive sequences
 
@@ -311,7 +311,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 - `qc-filtering/bulk-qc-filtering/01-create-germlines/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*germ-pass.tsv`: Rearrangement table in AIRR-C format with an additional
-     field with the reconstructed germline sequence for each sequence.
+    field with the reconstructed germline sequence for each sequence.
 
 </details>
 
@@ -325,7 +325,7 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 - `qc-filtering/bulk-qc-filtering/02-chimera-filter/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*chimera-pass.tsv`: Rearrangement table in AIRR-C format sequences that
-     passed the chimera removal filter.
+    passed the chimera removal filter.
   - `<sampleID>_chimera_report`: Report with plots showing the mutation patterns
 
 </details>
@@ -341,7 +341,7 @@ the Immcantation R package [SHazaM](https://shazam.readthedocs.io/en/stable/).
 - `qc-filtering/bulk-qc-filtering/03-detect_contamination`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*cont-flag.tsv`: Rearrangement table in AIRR-C format with sequences that
-     passed the chimera removal filter.
+    passed the chimera removal filter.
   - `all_reps_cont_report`: Report.
 
 </details>
@@ -357,7 +357,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*collapse_report/`: Report.
     - `repertoires/*collapse-pass.tsv`: Rearrangement table in AIRR-C format with duplicated
-       sequences removed.
+      sequences removed.
 
 </details>
 
@@ -370,7 +370,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*all_reps_scqc_report/`: Report.
     - `*scqc-pass.tsv`: Rearrangement table in AIRR-C format with sequences that
-       passed the quality filtering.
+      passed the quality filtering.
 
 </details>
 
@@ -382,7 +382,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
 - `clonal_analysis/find-threshold/`
   - `*log`: Log of the process that will be parsed to generate a report.
   - `all_reps_threshold-mean.tsv`: Mean of all hamming distance thresholds of the
-     Junction regions as determined by Shazam.
+    Junction regions as determined by Shazam.
   - `all_reps_threshold-summary.tsv`: Thresholds for each group of `--cloneby` samples.
   - `all_reps_dist_report`: Report
 
@@ -399,8 +399,8 @@ Determining the hamming distance threshold of the junction regions for clonal de
 
 - `clonal_analysis/define_clones/<subjectID>`
   - `*log`: Log of the process that will be parsed to generate a report.
-  - `repertoires/<sampleID>_clone-pass.tsv`:  Rearrangement tables in AIRR-C format with sequences that
-       passed the clonal assignment step. The field `clone_id` contains the clonal clusters identifiers.
+  - `repertoires/<sampleID>_clone-pass.tsv`: Rearrangement tables in AIRR-C format with sequences that
+    passed the clonal assignment step. The field `clone_id` contains the clonal clusters identifiers.
   - `tables/`: Table in AIRR format containing the assigned gene information and an additional field with the clone id.
     - `clonal_abundance.tsv`
     - `clonal_diversity.tsv`
@@ -417,6 +417,7 @@ A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is
 Assigning clones to the sequences obtained from IgBlast with the [scoper::hierarchicalClones](https://scoper.readthedocs.io/en/stable/topics/hierarchicalClones/) Immcantation tool.
 
 #
+
 ## Lineage reconstruction
 
 <details markdown="1">
@@ -453,7 +454,7 @@ Calculation of several repertoire characteristics (diversity, abundance, V gene 
 <summary>Output files</summary>
 
 - `report_file_size/file_size_report`: Report summarizing the number of sequences after the most important pipeline steps.
-    - `tables/*tsv`: Tables with the number of sequences at each processing step.
+  - `tables/*tsv`: Tables with the number of sequences at each processing step.
 
 </details>
 
