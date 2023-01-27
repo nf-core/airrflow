@@ -55,11 +55,14 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 3. QC filtering (bulk and single-cell)
 
 - Bulk sequencing filtering:
-  - Remove chimeric sequences (optional) (`EnchantR`)
+  - Remove chimeric sequences (optional) (`SHazaM`, `EnchantR`)
   - Detect cross-contamination (optional) (`EnchantR`)
-  - Collapse duplicates (`EnchantR`)
+  - Collapse duplicates (`Alakazam`, `EnchantR`)
 - Single-cell QC filtering (`EnchantR`)
-  - TODO: explain exactly what is done.
+  - Removes cells without heavy chains.
+  - Remove cells with multiple heavy chains.
+  - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence.
+  - Modifies `cell_id`s to ensure they are unique in the project.
 
 4. Clonal analysis (bulk and single-cell)
 

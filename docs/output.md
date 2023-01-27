@@ -308,7 +308,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 <details markdown="1">
 <summary>Output files</summary>
 
-- `bulk-qc-filtering/01-create-germlines/<sampleID>`
+- `qc-filtering/bulk-qc-filtering/01-create-germlines/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*germ-pass.tsv`: Rearrangement table in AIRR-C format with an additional
     field with the reconstructed germline sequence for each sequence.
@@ -322,7 +322,7 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 <details markdown="1">
 <summary>Output files</summary>
 
-- `bulk-qc-filtering/02-chimera-filter/<sampleID>`
+- `qc-filtering/bulk-qc-filtering/02-chimera-filter/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*chimera-pass.tsv`: Rearrangement table in AIRR-C format sequences that
     passed the chimera removal filter.
@@ -338,7 +338,7 @@ the Immcantation R package [SHazaM](https://shazam.readthedocs.io/en/stable/).
 <details markdown="1">
 <summary>Output files. Optional. </summary>
 
-- `bulk-qc-filtering/03-detect_contamination`
+- `qc-filtering/bulk-qc-filtering/03-detect_contamination`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*cont-flag.tsv`: Rearrangement table in AIRR-C format with sequences that
     passed the chimera removal filter.
@@ -353,7 +353,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
 <details markdown="1">
 <summary>Output files. </summary>
 
-- `bulk-qc-filtering/04-collapse-duplicates/<sampleID>`
+- `qc-filtering/bulk-qc-filtering/04-collapse-duplicates/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*collapse_report/`: Report.
     - `repertoires/*collapse-pass.tsv`: Rearrangement table in AIRR-C format with duplicated
@@ -390,55 +390,54 @@ This folder is genereated when `detect_contamination` is set to `true`.
 
 Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io) when `clonal_threshold` is set to `auto`.
 
-## TODO updata scoper: Change-O define clones
+## SCOPer define clones
 
 ### Define clones
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `changeo/06-define_clones/<subjectID>`
-  - `tab`: Table in AIRR format containing the assigned gene information and an additional field with the clone id.
+- `clonal_analysis/define_clones/<subjectID>`
+  - `*log`: Log of the process that will be parsed to generate a report.
+  - `repertoires/<sampleID>_clone-pass.tsv`: Rearrangement tables in AIRR-C format with sequences that
+    passed the clonal assignment step. The field `clone_id` contains the clonal clusters identifiers.
+  - `tables/`: Table in AIRR format containing the assigned gene information and an additional field with the clone id.
+    - `clonal_abundance.tsv`
+    - `clonal_diversity.tsv`
+    - `clone_sizes_table.tsv`
+    - `num_clones_table_nosingle.tsv`
+    - `num_clones_table.tsv`
+  - `ggplots/`: Diversity and abundance plots as `ggplot` objects.
+  - `figures/`: Clone size, diversity and abundance `png` plots.
+
+A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is generated for all data.
 
 </details>
 
-Assigning clones to the sequences obtained from IgBlast with the [DefineClones](https://changeo.readthedocs.io/en/version-0.4.5/tools/DefineClones.html?highlight=DefineClones) Immcantation tool.
+Assigning clones to the sequences obtained from IgBlast with the [scoper::hierarchicalClones](https://scoper.readthedocs.io/en/stable/topics/hierarchicalClones/) Immcantation tool.
 
-### Reconstruct germlines
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `changeo/07-create_germlines/<subjectID>`
-  - `tab`: Table in AIRR format contaning the assigned gene information and an additional field with the germline reconstructed gene calls.
-
-</details>
-
-Reconstructing the germline sequences with the [CreateGermlines](https://changeo.readthedocs.io/en/version-0.4.5/tools/CreateGermlines.html#creategermlines) Immcantation tool.
+#
 
 ## Lineage reconstruction
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `lineage_reconstruction/`
-  - `tab`
-    - `Clones_table_patient.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone.
-    - `Clones_table_patient_filtered_between_3_and_1000.tsv`: contains a summary of the clones found for the patient, and the number of unique and total sequences identified in each clone, filtered by clones of size between 3 and 1000, for which the lineages were reconstructed and the trees plotted.
-    - `xxx_germ-pass.tsv`: AIRR format table with all the sequences from a patient after the germline annotation step.
-  - `Clone_tree_plots`: Contains a rooted graphical representation of each of the clones, saved in pdf format.
-  - `Graphml_trees`: All lineage trees for the patient exported in a GraphML format: `All_graphs_patient.graphml`.
+- `clonal_analysis/dowser_lineages/`
+  - `<sampleID>*log`: Log of the process that will be parsed to generate a report.
+  - `<sample1ID>_dowser_report`: Report
 
 </details>
 
-Reconstructing clonal linage with the [Alakazam R package](https://alakazam.readthedocs.io/en/stable/) from the Immcantation toolset.
+Reconstructing clonal lineage with [IgPhyML](https://igphyml.readthedocs.io/en/stable/) and
+[dowser](https://dowser.readthedocs.io/en/stable/topics/getTrees/) from the Immcantation toolset.
 
 ## Repertoire comparison
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `repertoire_comparison/`
+- `repertoire_analysis/repertoire_comparison/`
   - `all_data.tsv`: AIRR format table containing the processed sequence information for all subjects.
   - `Abundance`: contains clonal abundance calculation plots and tables.
   - `Diversity`: contains diversity calculation plots and tables.
@@ -448,6 +447,18 @@ Reconstructing clonal linage with the [Alakazam R package](https://alakazam.read
 </details>
 
 Calculation of several repertoire characteristics (diversity, abundance, V gene usage) for comparison between subjects, time points and cell populations. An Rmarkdown report is generated with the [Alakazam R package](https://alakazam.readthedocs.io/en/stable/).
+
+## Tracking number of reads
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `report_file_size/file_size_report`: Report summarizing the number of sequences after the most important pipeline steps.
+  - `tables/*tsv`: Tables with the number of sequences at each processing step.
+
+</details>
+
+Parsing the logs from the previous processes. Summary of the number of sequences left after each of the most important pipeline steps.
 
 ## Log parsing
 
