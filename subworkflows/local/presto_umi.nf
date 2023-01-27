@@ -33,15 +33,11 @@ workflow PRESTO_UMI {
 
     ch_versions = Channel.empty()
 
-    // prepare reads for fastp
-    ch_reads.dump(tag:'presto umi reads')
-
     // Merge UMI from index file to R1 if provided
     if (params.index_file) {
 
         // ch for fastp reads R1 R2
         ch_reads.map{ meta, reads -> [meta, [reads[0], reads[1]]] }
-                .dump(tag: 'presto_umi_R1_R2_reads')
                 .set{ ch_reads_R1_R2 }
 
         // Fastp reads R1 R2
@@ -61,7 +57,6 @@ workflow PRESTO_UMI {
                                 .map{ meta, reads -> [meta.id, meta, reads[2]] }
         ch_meta_R1_R2_index = ch_meta_R1_R2.join( ch_meta_index )
                                             .map{ id, meta1, R1, R2, meta2, index -> [ meta1, R1, R2, index ] }
-                                            .dump(tag: 'ch_merge_umi')
 
         MERGE_UMI ( ch_meta_R1_R2_index )
         ch_gunzip = MERGE_UMI.out.reads

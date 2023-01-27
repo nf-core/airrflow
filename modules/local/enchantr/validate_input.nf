@@ -4,24 +4,30 @@
 process VALIDATE_INPUT {
     tag "$samplesheet"
     label 'immcantation'
-    label 'enchantr'
+    label 'single_cpu'
 
-    // TODO: update container
-    container "immcantation/suite:devel"
+    conda "bioconda::r-enchantr=0.0.6"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.6--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.6--r42hdfd78af_0' }"
 
     input:
     file samplesheet
     path miairr
     val collapseby
     val cloneby
-    val reassign
+    //val reassign
 
     output:
-    path "validated_input.tsv", emit: validated_input
-    path "validated_input_not-valid.tsv", emit: not_valid_input, optional: true
+    path "*/validated_input.tsv", emit: validated_input
+    path "*/validated_input_not-valid.tsv", emit: not_valid_input, optional: true
+    path "versions.yml", emit: versions
 
     script:
     """
-    Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','reassign'='${reassign}','miairr'='${miairr}','outdir'=getwd()))"
+    Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','reassign'='${params.reassign}','miairr'='${miairr}','outdir'=getwd()))"
+
+    echo "\"${task.process}\":" > versions.yml
+    Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
     """
 }

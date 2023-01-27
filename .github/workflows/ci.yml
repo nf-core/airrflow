@@ -11,6 +11,10 @@ on:
 env:
   NXF_ANSI_LOG: false
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Run pipeline with test data
@@ -20,11 +24,28 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v4
+        with:
+          FILES: |
+            modules/local/airrflow_report/Dockerfile
+            modules/local/airrflow_report/environment.yml
+
+      - name: Build new docker image
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/airrflowreport:dev
+
+      - name: Pull docker image
+        if: ${{ !env.MATCHED_FILES }}
+        run: |
+          docker pull nfcore/airrflowreport:dev
+          docker tag nfcore/airrflowreport:dev nfcore/airrflowreport:dev
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -42,12 +63,30 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
-        profile: ["test_tcr", "test_no_umi", "test_tcr_thr", "test_nocluster", "test_fetchimgt"]
+        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled"]
+      fail-fast: false
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v4
+        with:
+          FILES: |
+            modules/local/airrflow_report/Dockerfile
+            modules/local/airrflow_report/environment.yml
+
+      - name: Build new docker image
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/airrflowreport:dev
+
+      - name: Pull docker image
+        if: ${{ !env.MATCHED_FILES }}
+        run: |
+          docker pull nfcore/airrflowreport:dev
+          docker tag nfcore/airrflowreport:dev nfcore/airrflowreport:dev
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -57,3 +96,66 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/.nextflow.log
+            /home/runner/work
+            !/home/runner/work/conda
+            !/home/runner/work/singularity
+
+  test_container:
+    name: Run workflow with immcantation devel test_container
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/airrflow') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        NXF_VER:
+          - "22.10.1"
+          - "latest-everything"
+        profile: ["test_assembled_immcantation_devel", "test_raw_immcantation_devel"]
+      fail-fast: false
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v4
+        with:
+          FILES: |
+            modules/local/airrflow_report/Dockerfile
+            modules/local/airrflow_report/environment.yml
+
+      - name: Build new docker image
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/airrflowreport:dev
+
+      - name: Pull docker image
+        if: ${{ !env.MATCHED_FILES }}
+        run: |
+          docker pull nfcore/airrflowreport:dev
+          docker tag nfcore/airrflowreport:dev nfcore/airrflowreport:dev
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Run pipeline with test data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/.nextflow.log
+            /home/runner/work
+            !/home/runner/work/conda
+            !/home/runner/work/singularity

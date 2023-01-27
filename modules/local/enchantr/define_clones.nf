@@ -1,9 +1,14 @@
 def asString (args) {
-    s = ""
+    def s = ""
+    def value = ""
     if (args.size()>0) {
         if (args[0] != 'none') {
             for (param in args.keySet().sort()){
-                s = s + ",'"+param+"'='"+args[param]+"'"
+                value = args[param].toString()
+                if (!value.isNumber()) {
+                    value = "'"+value+"'"
+                }
+                s = s + ",'"+param+"'="+value
             }
         }
     }
@@ -11,41 +16,45 @@ def asString (args) {
 }
 
 process DEFINE_CLONES {
-    tag 'all_reps'
-    label 'immcantation'
-    label 'enchantr'
-    label 'process_long'
+    tag "${meta.id}"
 
-    // TODO: update container
-    container "immcantation/suite:devel"
+    label 'process_long_parallelized'
+    label 'immcantation'
+
+    conda "bioconda::r-enchantr=0.0.6"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.6--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.0.6--r42hdfd78af_0' }"
 
     input:
-    //tuple val(meta), path(tabs) // sequence tsv in AIRR format
-    path(tabs)
-    val cloneby
-    val singlecell
+    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     val threshold
     path imgt_base
 
     output:
-    tuple val(meta), path("*clone-pass.tsv"), emit: tab, optional: true // sequence tsv in AIRR format
-    path("*_command_log.txt"), emit: logs //process logs
+    path("*/*/*clone-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
+    path "versions.yml", emit: versions
+
 
     script:
-    meta=[]
-    def outname = ''
-    if (task.ext.args.containsKey('outname')) { outname = task.ext.args['outname'] }
+    def args = asString(task.ext.args) ?: ''
+    def thr = threshold.join("")
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${tabs.join(',')}', \\
                                         'imgt_db'='${imgt_base}', \\
-                                        'cloneby'='${cloneby}','threshold'=${threshold}, \\
-                                        'outputby'='id', \\
-                                        'outname'='${outname}', \\
-                                        'singlecell'='${singlecell}','outdir'=getwd(), \\
+                                        'cloneby'='${params.cloneby}', \\
+                                        'force'=FALSE, \\
+                                        'threshold'=${thr}, \\
+                                        'singlecell'='${params.singlecell}','outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
-                                        'log'='all_reps_clone_command_log' ${args}))"
-    mv enchantr 'all_reps_clone_report'
+                                        'log'='${meta.id}_clone_command_log' ${args}))"
+
+    echo "${task.process}": > versions.yml
+    Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
+
+    mv enchantr '${meta.id}_clone_report'
     """
 }

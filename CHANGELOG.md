@@ -3,6 +3,38 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0dev] -
+
+### `Added`
+
+- Combined old bcellmagic and reveal subworkflows for better pipeline integration.
+- Added compulsory AIRR fields in input samplesheet.
+- Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
+- Added pipeline overview diagram and metro map.
+- Added full logs to `enchantr report filesize` process.
+- Template update to nf-core tools v2.7.1
+- Template update to nf-core tools v2.7.2
+
+### `Fixed`
+
+- Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.13        | 1.14        |
+| pandas     | 1.1.5       | 1.5.3       |
+| presto     | 0.7.0       | 0.7.1       |
+| changeo    | 1.2.0       | 1.3.0       |
+| igblast    | 1.17.1      | 1.19.0      |
+| r-enchantr |             | 0.0.6       |
+| r-plotly   |             | 4.10.1      |
+
+### `Deprecated`
+
+- Deprecated param `enable_conda`
+
 ## [2.4.0] 2022-12-05 "Aparecium"
 
 ### `Added`
@@ -21,6 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to provide custom Rmarkdown report.
 - [#183](https://github.com/nf-core/airrflow/pull/183) Update template to nf-core tools v2.5.1
 - [#183](https://github.com/nf-core/airrflow/pull/183) Add option to provide another different threshold in splitseq process
+- Rename reveal test to test_assembled, add separate test for immcantation devel container as another job so other tests are not cancelled if this test does not run through.
 
 ### `Fixed`
 

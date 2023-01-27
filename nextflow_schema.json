@@ -12,20 +12,19 @@
             "description": "Define where the pipeline should find input data and save output data.",
             "required": ["input", "outdir"],
             "properties": {
-                "subworkflow": {
-                    "type": "string",
-                    "default": "bcellmagic",
-                    "fa_icon": "fas fa-project-diagram",
-                    "hidden": true,
-                    "description": "Specify the subworkflow to be executed.",
-                    "enum": ["bcellmagic", "reveal"]
-                },
                 "input": {
                     "type": "string",
                     "mimetype": "text/tsv",
-                    "fa_icon": "fas fa-dna",
+                    "fa_icon": "fas fa-table",
                     "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
                     "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. The file should include the following columns, separated with tabs, with exactly these header names:\n\n```bash\nID Source Treatment Extraction_time Population R1 R2 I1\nQMKMK072AD Patient_2 Drug_treatment baseline p sample_S8_L001_R1_001.fastq.gz sample_S8_L001_R2_001.fastq.gz sample_S8_L001_I1_001.fastq.gz\n```\n\nThis metadata will then be automatically annotated in a column with the same header in the tables outputed by the pipeline. Where:\n\n* ID: sample ID.\n* Source: patient or organism code.\n* Treatment: treatment condition applied to the sample.\n* Extraction_time: time of cell extraction for the sample.\n* Population: B-cell population (e.g. naive, double-negative, memory, plasmablast).\n* R1: path to fastq file with first mates of paired-end sequencing.\n* R2: path to fastq file with second mates of paired-end sequencing.\n* I1: path to fastq with illumina index and UMI (unique molecular identifier) barcode (optional column)\n\nSpecify the path for your input file like this:\n\n```bash\n--input 'path/to/metadata/metadata_sheet.tsv'\n```"
+                },
+                "mode": {
+                    "type": "string",
+                    "default": "fastq",
+                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".ptions are: 'raw'",
+                    "enum": ["fastq", "assembled"],
+                    "fa_icon": "fas fa-terminal"
                 },
                 "outdir": {
                     "type": "string",
@@ -39,6 +38,12 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                },
+                "miairr": {
+                    "type": "string",
+                    "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "description": "Path to MiAIRR-BioSample mapping",
+                    "fa_icon": "fas fa-table"
                 }
             }
         },
@@ -62,33 +67,6 @@
                 }
             },
             "fa_icon": "fas fa-flask"
-        },
-        "databases_cache": {
-            "title": "Databases cache",
-            "type": "object",
-            "description": "Define the paths to the igblast and IMGT databases if you have them cached.",
-            "default": "",
-            "properties": {
-                "igblast_base": {
-                    "type": "string",
-                    "description": "Path to the cached igblast database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded.",
-                    "fa_icon": "fas fa-database"
-                },
-                "imgtdb_base": {
-                    "type": "string",
-                    "description": "Path to the cached igblast database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded.",
-                    "fa_icon": "fas fa-database"
-                },
-                "save_databases": {
-                    "type": "boolean",
-                    "description": "Save databases so you can use the cache in future runs.",
-                    "fa_icon": "fas fa-file-download"
-                }
-            },
-            "help_text": "",
-            "fa_icon": "fas fa-database"
         },
         "primer_handling": {
             "title": "Primer handling",
@@ -128,7 +106,7 @@
                 "primer_revpr": {
                     "type": "boolean",
                     "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-barcode"
+                    "fa_icon": "fas fa-dna"
                 }
             },
             "fa_icon": "fas fa-dna"
@@ -139,12 +117,6 @@
             "description": "Define how UMI barcodes should be treated.",
             "default": "",
             "properties": {
-                "index_file": {
-                    "type": "boolean",
-                    "description": "Indicate if UMI indices are recorded in a separate index file.",
-                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
-                    "fa_icon": "fas fa-barcode"
-                },
                 "umi_position": {
                     "type": "string",
                     "default": "R1",
@@ -162,6 +134,13 @@
                 "umi_start": {
                     "type": "integer",
                     "description": "UMI barcode start position in the index read.",
+                    "fa_icon": "fas fa-barcode",
+                    "default": 0
+                },
+                "index_file": {
+                    "type": "boolean",
+                    "description": "Indicate if UMI indices are recorded in a separate index file.",
+                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
                     "fa_icon": "fas fa-barcode"
                 }
             },
@@ -184,8 +163,9 @@
                 },
                 "adapter_fasta": {
                     "type": "string",
-                    "default": null,
-                    "fa_icon": "fas fa-file"
+                    "default": "None",
+                    "fa_icon": "fas fa-file",
+                    "description": "Fasta file with adapter sequences to be trimmed."
                 },
                 "clip_r1": {
                     "type": "integer",
@@ -223,34 +203,34 @@
                 }
             }
         },
-        "presto_options": {
-            "title": "pRESTO options",
+        "sequence_assembly_options": {
+            "title": "sequence assembly options",
             "type": "object",
-            "description": "Options for the presto tools",
+            "description": "Options for the pRESTO sequence assembly processes",
             "default": "",
             "properties": {
                 "filterseq_q": {
                     "type": "integer",
                     "default": 20,
-                    "description": "Quality threshold for Presto FilterSeq sequence filtering.",
+                    "description": "Quality threshold for pRESTO FilterSeq sequence filtering.",
                     "fa_icon": "fas fa-filter"
                 },
                 "primer_maxerror": {
                     "type": "number",
                     "default": 0.2,
-                    "description": "Maximum primer scoring error in the Presto MaskPrimer step for the C and/or V region primers identification.",
+                    "description": "Maximum primer scoring error in the pRESTO MaskPrimer step for the C and/or V region primers identification.",
                     "fa_icon": "fas fa-align-center"
                 },
                 "primer_consensus": {
                     "type": "number",
                     "default": 0.6,
-                    "description": "Maximum error for building the primer consensus in the Presto Buildconsensus step.",
+                    "description": "Maximum error for building the primer consensus in the pRESTO Buildconsensus step.",
                     "fa_icon": "fas fa-align-center"
                 },
                 "primer_mask_mode": {
                     "type": "string",
                     "default": "cut",
-                    "description": "Masking mode for the Presto MaskPrimer step. Available: cut, mask, trim, tag.",
+                    "description": "Masking mode for the pRESTO MaskPrimer step. Available: cut, mask, trim, tag.",
                     "enum": ["cut", "mask", "trim", "tag"],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-mask"
@@ -259,77 +239,130 @@
                     "type": "number",
                     "default": 0.1,
                     "fa_icon": "fas fa-align-center",
-                    "description": "Maximum error for building the sequence consensus in the Presto BuildConsensus step."
+                    "description": "Maximum error for building the sequence consensus in the pRESTO BuildConsensus step."
                 },
                 "buildconsensus_maxgap": {
                     "type": "number",
                     "default": 0.5,
                     "fa_icon": "fas fa-align-center",
-                    "description": "Maximum gap for building the sequence consensus in the Presto BuildConsensus step."
+                    "description": "Maximum gap for building the sequence consensus in the pRESTO BuildConsensus step."
                 },
                 "cluster_sets": {
                     "type": "boolean",
                     "default": true,
                     "fa_icon": "fas fa-layer-group",
-                    "description": "Cluster sequences by similarity regardless of any annotation with Presto ClusterSets and annotate the cluster ID additionally to the UMI barcode."
+                    "description": "Cluster sequences by similarity regardless of any annotation with pRESTO ClusterSets and annotate the cluster ID additionally to the UMI barcode."
                 }
             },
             "fa_icon": "fas fa-align-center"
         },
-        "clustering_threshold_definition": {
-            "title": "Clustering threshold definition",
+        "vdj_annotation_options": {
+            "title": "VDJ annotation options",
+            "type": "object",
+            "description": "Options for the VDJ annotation processes.",
+            "default": "",
+            "properties": {
+                "reassign": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file.",
+                    "fa_icon": "fas fa-redo"
+                },
+                "productive_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Subset to productive  sequences.",
+                    "fa_icon": "fab fa-product-hunt"
+                },
+                "save_databases": {
+                    "type": "boolean",
+                    "description": "Save databases so you can use the cache in future runs.",
+                    "fa_icon": "fas fa-file-download"
+                },
+                "imgtdb_base": {
+                    "type": "string",
+                    "description": "Path to the cached IMGT database.",
+                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "fa_icon": "fas fa-database"
+                },
+                "igblast_base": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "fa_icon": "fas fa-database"
+                }
+            },
+            "fa_icon": "fas fa-edit"
+        },
+        "bulk_filtering_options": {
+            "title": "Bulk filtering options",
+            "type": "object",
+            "description": "Options for bulk sequence filtering after VDJ assignment.",
+            "default": "",
+            "properties": {
+                "collapseby": {
+                    "type": "string",
+                    "default": "filename,cell_id",
+                    "description": "Name of the field used to collapse duplicated sequences.",
+                    "fa_icon": "fas fa-compress-alt"
+                },
+                "detect_contamination": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-search",
+                    "description": "Whether to run the process to detect contamination."
+                },
+                "remove_chimeric": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to apply the chimera removal filter.",
+                    "fa_icon": "fas fa-minus-square"
+                }
+            },
+            "fa_icon": "fas fa-filter"
+        },
+        "clonal_analysis_options": {
+            "title": "Clonal analysis options",
             "type": "object",
             "description": "Define how the B-cell clonal trees should be calculated.",
             "default": "",
             "properties": {
-                "set_cluster_threshold": {
-                    "type": "boolean",
-                    "description": "Set to true if to manually adjust the clustering threshold for cell clones.",
-                    "help_text": "Set the `--set_cluster_threshold` parameter to allow manual cluster hamming distance threshold definition. Then specify the value in the `--cluster_threshold` parameter.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
-                    "fa_icon": "fab fa-pagelines"
-                },
-                "cluster_threshold": {
-                    "type": "number",
-                    "default": 0.14,
-                    "description": "Set the clustering threshold Hamming distance value.",
-                    "help_text": "To have any effect, the  `--set_cluster_threshold` parameter needs to be set to `true`.\n\nBy default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the junction region sequences will be assessed by hamming distances. A distance threshold for determining if two sequences come from the same clone is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be manually set by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
-                    "fa_icon": "fab fa-pagelines"
-                },
-                "threshold_method": {
-                    "type": "string",
-                    "default": "density",
-                    "description": "Set the method for finding the clustering threshold.",
-                    "help_text": "This method will be used to find the Hamming nearest neighbor distances threshold for determining if a sequence belongs to the same B/T-cell clone or not. Available methods are \"gmm\" for a maximum-likelihood Gamma or Gaussian mixture fitting, and \"density\" for fitting a binned approximation to the ordinary kernel density estimate to the nearest neighbor distances.",
-                    "fa_icon": "fab fa-pagelines"
-                }
-            },
-            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
-            "fa_icon": "fab fa-pagelines"
-        },
-        "downstream_options": {
-            "title": "Downstream options",
-            "type": "object",
-            "description": "Define downstream analysis options.",
-            "default": "",
-            "properties": {
-                "skip_report": {
-                    "type": "boolean",
-                    "description": "Skip repertoire analysis and report generation",
-                    "fa_icon": "fas fa-angle-double-right"
+                "clonal_threshold": {
+                    "type": ["string", "number"],
+                    "default": "auto",
+                    "fa_icon": "fab fa-pagelines",
+                    "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
                 },
                 "skip_lineage": {
                     "type": "boolean",
                     "description": "Skip clonal lineage analysis and lineage tree plotting.",
                     "fa_icon": "fas fa-angle-double-right"
                 },
-                "skip_multiqc": {
+                "cloneby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to identify clones.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "igphyml": {
+                    "type": "string",
+                    "default": "/usr/local/share/igphyml/src/igphyml",
+                    "description": "Path to IgPhyml executable.",
+                    "fa_icon": "fas fa-file"
+                },
+                "singlecell": {
+                    "type": "string",
+                    "default": "single_cell",
+                    "description": "Name of the field used to determine if a sample is single cell sequencing or not.",
+                    "fa_icon": "fas fa-border-all"
+                },
+                "skip_all_clones_report": {
                     "type": "boolean",
-                    "description": "Skip multiqc report",
+                    "description": "Skip report of EnchantR DefineClones for all samples together.",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },
-            "help_text": "Downstream analyses include a series of R scripts based on the Immcantation Alakazam, ChangeO and Shazam packages to calculate:\n- Clonal abundance and diversity\n- Clonal lineage tree export in graphML\n- Clonal overlap and statistics\n- Mutational load\n- Isotype and V-family distribution",
-            "fa_icon": "fas fa-angle-double-right"
+            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V gene assignment, C gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process shazam. Alternatively, a hamming distance threshold can be  manually set   by setting the `--set_cluster_threshold` and `--cluster_threshold` parameters.",
+            "fa_icon": "fab fa-pagelines"
         },
         "report_options": {
             "title": "Report options",
@@ -340,34 +373,39 @@
                 "report_rmd": {
                     "type": "string",
                     "default": "${projectDir}/assets/repertoire_comparison.Rmd",
-                    "description": "Custom report Rmarkdown file."
+                    "description": "Custom report Rmarkdown file.",
+                    "fa_icon": "far fa-file-code"
                 },
                 "report_css": {
                     "type": "string",
                     "default": "${projectDir}/assets/nf-core_style.css",
-                    "description": "Custom report style file in css format."
+                    "description": "Custom report style file in css format.",
+                    "fa_icon": "far fa-file-code"
                 },
                 "report_logo": {
                     "type": "string",
                     "default": "${projectDir}/assets/nf-core-airrflow_logo_light.png",
-                    "description": "Custom logo for the report."
-                }
-            }
-        },
-        "software_packaging_options": {
-            "title": "Software packaging options",
-            "type": "object",
-            "description": "Options for software packaging",
-            "default": "",
-            "properties": {
-                "enable_conda": {
+                    "description": "Custom logo for the report.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_logo_img": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core-airrflow_logo_reports.png",
+                    "description": "Custom logo for the EnchantR reports.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "skip_report": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-box",
-                    "description": "Enable conda to run pipeline with conda environment."
+                    "description": "Skip repertoire analysis and report generation.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip multiqc report.",
+                    "fa_icon": "fas fa-angle-double-right"
                 }
             },
-            "help_text": "Software packaging options",
-            "fa_icon": "fas fa-angle-double-right"
+            "fa_icon": "far fa-file-code"
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -445,7 +483,7 @@
         "max_job_request_options": {
             "title": "Max job request options",
             "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
+            "fa_icon": "fas fa-microchip",
             "description": "Set the top limit for requested resources for any single job.",
             "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
             "properties": {
@@ -487,6 +525,12 @@
                 "help": {
                     "type": "boolean",
                     "description": "Display help text.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
@@ -536,7 +580,7 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -578,54 +622,6 @@
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 }
             }
-        },
-        "subworkflow_reveal": {
-            "title": "Subworkflow Reveal",
-            "type": "object",
-            "description": "Arguments for this subworkflow",
-            "default": "",
-            "properties": {
-                "collapseby": {
-                    "type": "string",
-                    "default": "filename,cell_id",
-                    "description": "Name of the field used to collapse duplicated sequences"
-                },
-                "cloneby": {
-                    "type": "string",
-                    "default": "subject_id",
-                    "description": "Name of the field used to group data files to identify clones"
-                },
-                "reassign": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file"
-                },
-                "productive_only": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Subset to productive  sequences"
-                },
-                "remove_chimeric": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether to apply the chimera removal filter"
-                },
-                "threshold": {
-                    "type": ["string", "number"],
-                    "default": "auto",
-                    "description": "Use `auto` to automatically set a threshold to identify clonally related sequences. Set"
-                },
-                "miairr": {
-                    "type": "string",
-                    "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
-                    "description": "Path to MiAIRR-BioSample mapping"
-                },
-                "singlecell": {
-                    "type": "string",
-                    "default": "single_cell",
-                    "description": "Whether input samples include single cell sequencing samples"
-                }
-            }
         }
     },
     "allOf": [
@@ -634,9 +630,6 @@
         },
         {
             "$ref": "#/definitions/protocol"
-        },
-        {
-            "$ref": "#/definitions/databases_cache"
         },
         {
             "$ref": "#/definitions/primer_handling"
@@ -648,19 +641,19 @@
             "$ref": "#/definitions/adapter_trimming"
         },
         {
-            "$ref": "#/definitions/presto_options"
+            "$ref": "#/definitions/sequence_assembly_options"
         },
         {
-            "$ref": "#/definitions/clustering_threshold_definition"
+            "$ref": "#/definitions/vdj_annotation_options"
         },
         {
-            "$ref": "#/definitions/downstream_options"
+            "$ref": "#/definitions/bulk_filtering_options"
+        },
+        {
+            "$ref": "#/definitions/clonal_analysis_options"
         },
         {
             "$ref": "#/definitions/report_options"
-        },
-        {
-            "$ref": "#/definitions/software_packaging_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
@@ -673,9 +666,6 @@
         },
         {
             "$ref": "#/definitions/generic_options"
-        },
-        {
-            "$ref": "#/definitions/subworkflow_reveal"
         }
     ]
 }
