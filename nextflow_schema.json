@@ -407,21 +407,6 @@
             },
             "fa_icon": "far fa-file-code"
         },
-        "software_packaging_options": {
-            "title": "Software packaging options",
-            "type": "object",
-            "description": "Options for software packaging",
-            "default": "",
-            "properties": {
-                "enable_conda": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-box",
-                    "description": "Enable conda to run pipeline with conda environment."
-                }
-            },
-            "help_text": "Software packaging options",
-            "fa_icon": "fas fa-angle-double-right"
-        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -669,9 +654,6 @@
         },
         {
             "$ref": "#/definitions/report_options"
-        },
-        {
-            "$ref": "#/definitions/software_packaging_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

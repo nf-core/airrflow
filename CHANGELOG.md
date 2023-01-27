@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added pipeline overview diagram and metro map.
 - Added full logs to `enchantr report filesize` process.
 - Template update to nf-core tools v2.7.1
+- Template update to nf-core tools v2.7.2
 
 ### `Fixed`
 
@@ -20,7 +21,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.13        | 1.14        |
+| pandas     | 1.1.5       | 1.5.3       |
+| presto     | 0.7.0       | 0.7.1       |
+| changeo    | 1.2.0       | 1.3.0       |
+| igblast    | 1.17.1      | 1.19.0      |
+| r-enchantr |             | 0.0.6       |
+| r-plotly   |             | 4.10.1      |
+
 ### `Deprecated`
+
+- Deprecated param `enable_conda`
 
 ## [2.4.0] 2022-12-05 "Aparecium"
 
