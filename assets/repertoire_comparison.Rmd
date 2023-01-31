@@ -17,7 +17,7 @@ output:
 
 ---
 title: "Repertoire analysis"
-subtitle: "Clonal abundance, diversity and V-family gene usage"
+subtitle: "Interactive summary report produced by the nf-core/airrflow pipeline"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
 ---
@@ -39,11 +39,11 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 ***
 
-# Airrflow analysis pipeline
+# Number of sequences after each processing step
 
-## Number of sequences
+## Sequence assembly steps
 
-Number of reads for each of the samples and number of sequences left after sequence assemble and mapping steps.
+Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
 
 ```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
 read_table <- function(tab_file){
@@ -53,36 +53,41 @@ read_table <- function(tab_file){
           scroll_box(width = "100%", height = "400px")
     }
 tryCatch( {read_table("./Table_sequences.tsv")} ,
-  error=function(e){message("No sequence numbers are available if starting with assembled reads.")
-                    plot_seqs = FALSE})
+  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
+)
 
 ```
 
 
-```{r seq_numbers_plot, eval=plot_seqs, echo=FALSE, warning=FALSE, results='asis'}
-tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
+```{r seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
+tryCatch( {
+    tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
 
-plot_table <- tidyr::pivot_longer(tab_seqs,
-                                  cols=Sequences_R1:Igblast,
-                                  names_to = "steps",
-                                  values_to ="count")
-plot_table$steps <- factor(plot_table$steps, levels=c("Sequences_R1", "Sequences_R2", "Filtered_quality_R1",
-                                                          "Filtered_quality_R2", "Mask_primers_R1", "Mask_primers_R2",
-                                                          "Paired", "Build_consensus", "Assemble_pairs", "Unique",
-                                                          "Representative_2", "Igblast"))
-seqs_plot <- ggplot(data=plot_table,
-                    aes(x=steps, y=count, group=sample_id)) +
-              geom_line(aes(colour=sample_id)) +
-              geom_point(aes(colour=sample_id)) +
-              xlab("") + ylab("Sequence count") +
-              ggtitle("Number of sequences after each of the sequence assembly steps") +
-              theme(axis.text.x= element_text(angle = 45))
+    plot_table <- tidyr::pivot_longer(tab_seqs,
+                                      cols=Sequences_R1:Igblast,
+                                      names_to = "steps",
+                                      values_to ="count")
+    plot_table$steps <- factor(plot_table$steps, levels=c("Sequences_R1", "Sequences_R2", "Filtered_quality_R1",
+                                                            "Filtered_quality_R2", "Mask_primers_R1", "Mask_primers_R2",
+                                                            "Paired", "Build_consensus", "Assemble_pairs", "Unique",
+                                                            "Representative_2", "Igblast"))
+    seqs_plot <- ggplot(data=plot_table,
+                        aes(x=steps, y=count, group=sample_id)) +
+                  geom_line(aes(colour=sample_id)) +
+                  geom_point(aes(colour=sample_id)) +
+                  xlab("") + ylab("Sequence count") +
+                  ggtitle("Number of sequences after each of the sequence assembly steps") +
+                  theme(axis.text.x= element_text(angle = 45))
 
-ggplotly(seqs_plot)
-
+    ggplotly(seqs_plot)
+  },
+  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
+)
 ```
 
-Number of sequences for each of the samples for each downstream filtering and analysis step.
+## Filtering and clonal analysis steps
+
+Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
 
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
@@ -201,7 +206,7 @@ p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
 ggplotly(p_ca)
 ```
 
-```{r include = FALSE}
+```{r plot_abundance, include = FALSE}
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf"), device="pdf", width = 25, height = 10, units="cm")
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
 write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
@@ -256,17 +261,17 @@ sample_div@diversity$sample_id <- sapply(sample_div@diversity$subj_locus, functi
 sample_div@diversity$subject_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
 sample_div@diversity$locus <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-div_p <- ggplot(sample_div@diversity, aes(x = q, y = d)) +
+div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
     geom_ribbon(aes(ymin = d_lower,
                     ymax = d_upper,
                     fill = sample_id), alpha = 0.4) +
     geom_line(aes(color = sample_id)) +
-    xlab("q") + ylab(expression(""^q * D)) +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(locus), rows=vars(subject_id))
+    xlab("q") + ylab("Diversity(q)") +
+    ggtitle(sample_main) #+
+    #facet_grid(cols=vars(locus), rows=vars(subject_id))
 ggplotly(div_p)
 ```
-```{r include = FALSE}
+```{r plot_diversity, include = FALSE}
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
 write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversity_data_subject.tsv"), sep="\t", quote = F, row.names = F)
@@ -280,7 +285,7 @@ The V gene usage (in percentage) in each of the samples is represented below. Al
 
 Gene family usage is normalized by the number of clones.
 
-```{r, echo=F, fig.width=12, fig.asp=1, fig.align='center'}
+```{r gene_family, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family", clone="clone_id")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -310,7 +315,7 @@ All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ### By clones {-}
 
-```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
+```{r gene_clonal, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene", clone = "clone_id")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -334,7 +339,7 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_da
 
 ### By sequences {-}
 
-```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
+```{r gene_seq, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
