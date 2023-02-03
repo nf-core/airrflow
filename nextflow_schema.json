@@ -302,9 +302,9 @@
             "properties": {
                 "collapseby": {
                     "type": "string",
-                    "default": "filename,cell_id",
                     "description": "Name of the field used to collapse duplicated sequences.",
-                    "fa_icon": "fas fa-compress-alt"
+                    "fa_icon": "fas fa-compress-alt",
+                    "default": "sample_id"
                 },
                 "detect_contamination": {
                     "type": "boolean",
