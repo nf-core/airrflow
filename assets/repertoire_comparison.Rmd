@@ -102,7 +102,9 @@ dat <- tidyr::pivot_wider(tab_seqs_assembled,
                           values_from=to_num_seqs)
 dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
-                                "RemoveChimeric","CollapseDuplicates","ClonePass")))
+                                "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
+
+
 
 kable(dat) %>%
   kable_styling("hover") %>%
