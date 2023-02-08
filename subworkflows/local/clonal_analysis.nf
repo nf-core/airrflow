@@ -1,4 +1,5 @@
 include { FIND_THRESHOLD  } from '../../modules/local/enchantr/find_threshold'
+INCLUDE { FIND_THRESHOLD AS REPORT_THRESHOLD } FROM '../../modules/local/enchantr/find_threshold'
 include { DEFINE_CLONES as DEFINE_CLONES_COMPUTE  } from '../../modules/local/enchantr/define_clones'
 include { DEFINE_CLONES as DEFINE_CLONES_REPORT } from '../../modules/local/enchantr/define_clones'
 include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
@@ -35,6 +36,16 @@ workflow CLONAL_ANALYSIS {
 
     } else {
         clone_threshold = params.clonal_threshold
+
+        ch_find_threshold = ch_repertoire.map{ it -> it[1] }
+                                        .collect()
+
+        REPORT_THRESHOLD (
+            ch_find_threshold,
+            ch_logo
+        )
+        ch_versions = ch_versions.mix(FIND_THRESHOLD.out.versions)
+
     }
 
     // prepare ch for define clones
