@@ -4,7 +4,7 @@ include { UNZIP_DB as UNZIP_IMGT } from '../../modules/local/unzip_db'
 include { CHANGEO_ASSIGNGENES } from '../../modules/local/changeo/changeo_assigngenes'
 include { CHANGEO_MAKEDB } from '../../modules/local/changeo/changeo_makedb'
 include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_parsedb_split'
-
+include { IGBLAST_ASSIGNGENES } from '../../modules/local/igblast/igblast_assigngenes'
 // reveal
 include { FILTER_QUALITY  } from '../../modules/local/reveal/filter_quality'
 include { FILTER_JUNCTION_MOD3  } from '../../modules/local/reveal/filter_junction_mod3'
@@ -61,18 +61,34 @@ workflow VDJ_ANNOTATION {
         ch_imgt = FETCH_DATABASES.out.imgt
         ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
+    if (!params.directcall_igblast){
+        CHANGEO_ASSIGNGENES (
+            ch_fasta,
+            ch_igblast.collect()
+        )
+        ch_assigned_fasta = CHANGEO_ASSIGNGENES.out.fasta
+        ch_assigned_blast = CHANGEO_ASSIGNGENES.out.blast
 
-    CHANGEO_ASSIGNGENES (
-        ch_fasta,
-        ch_igblast.collect()
-    )
+        ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
 
-    ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
-    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
+    } else {
+        IGBLAST_ASSIGNGENES(
+            ch_fasta,
+            ch_igblast.collect()
+        )
+        ch_assigned_fasta = IGBLAST_ASSIGNGENES.out.fasta
+        ch_assigned_blast = IGBLAST_ASSIGNGENES.out.blast
+
+        ch_logs = ch_logs.mix(IGBLAST_ASSIGNGENES.out.logs)
+        ch_versions = ch_versions.mix(IGBLAST_ASSIGNGENES.out.versions.ifEmpty(null))
+    }
+
+
 
     CHANGEO_MAKEDB (
-        CHANGEO_ASSIGNGENES.out.fasta,
-        CHANGEO_ASSIGNGENES.out.blast,
+        ch_assigned_fasta,
+        ch_assigned_blast,
         ch_imgt.collect()
     )
     ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
