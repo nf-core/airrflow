@@ -13,8 +13,7 @@ process IGBLAST_ASSIGNGENES {
     path(igblast) // igblast fasta
 
     output:
-    path("*igblast.fmt7"), emit: blast
-    tuple val(meta), path("$reads"), emit: fasta
+    tuple val(meta), path("*db-pass.tsv"), emit: tab
     path "versions.yml" , emit: versions
     path("*_command_log.txt"), emit: logs //process logs
 
@@ -29,13 +28,16 @@ process IGBLAST_ASSIGNGENES {
         -organism ${meta.species} \
         $args \
         -query $reads \
-        -out ${meta.id}_igblast.fmt7
+        -out ${meta.id}_db-pass.tsv
 
-    echo "START> AssignGenes" > ${meta.id}_changeo_assigngenes_command_log.txt
-    echo "COMMAND> igblast" >> ${meta.id}_changeo_assigngenes_command_log.txt
-    echo "FILE> ${reads}" >> ${meta.id}_changeo_assigngenes_command_log.txt
-    echo "PASS> \$(tail -n 1 ${meta.id}_igblast.fmt7 | grep -o "[0-9]\\+" )" >> ${meta.id}_changeo_assigngenes_command_log.txt
-    echo "END> AssignGenes" >> ${meta.id}_changeo_assigngenes_command_log.txt
+    echo "START> MakeDB" > ${meta.id}_makedb_command_log.txt
+    echo "COMMAND> igblast" >> ${meta.id}_makedb_command_log.txt
+    echo "ALIGNER_FILE> ${meta.id}_igblast.fmt7" >> ${meta.id}_makedb_command_log.txt
+    echo "SEQ_FILE> ${reads}" >> ${meta.id}_makedb_command_log.txt
+    echo "OUTPUT> ${meta.id}_db-pass.tsv" >> ${meta.id}_makedb_command_log.txt
+    echo "PASS> \$(wc -l ${meta.id}_db-pass.tsv )" >> ${meta.id}_makedb_command_log.txt
+    echo "FAIL> 0" >> ${meta.id}_makedb_command_log.txt
+    echo "END> MakeDB" >> ${meta.id}_makedb_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

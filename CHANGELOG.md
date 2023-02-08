@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added full logs to `enchantr report filesize` process.
 - Template update to nf-core tools v2.7.1
 - Template update to nf-core tools v2.7.2
+- Added find threshold report even when specifying clonal threshold
+- Added possibility to provide direct call to igblast
 
 ### `Fixed`
 

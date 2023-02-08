@@ -66,33 +66,33 @@ workflow VDJ_ANNOTATION {
             ch_fasta,
             ch_igblast.collect()
         )
-        ch_assigned_fasta = CHANGEO_ASSIGNGENES.out.fasta
-        ch_assigned_blast = CHANGEO_ASSIGNGENES.out.blast
 
         ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
         ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
+
+        CHANGEO_MAKEDB (
+            CHANGEO_ASSIGNGENES.out.fasta,
+            CHANGEO_ASSIGNGENES.out.blast,
+            ch_imgt.collect()
+        )
+        ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
+
+        ch_assigned_tab = CHANGEO_MAKEDB.out.tab
+        ch_assignment_logs = CHANGEO_MAKEDB.out.logs
 
     } else {
         IGBLAST_ASSIGNGENES(
             ch_fasta,
             ch_igblast.collect()
         )
-        ch_assigned_fasta = IGBLAST_ASSIGNGENES.out.fasta
-        ch_assigned_blast = IGBLAST_ASSIGNGENES.out.blast
+
+        ch_assigned_tab = IGBLAST_ASSIGNGENES.out.tab
 
         ch_logs = ch_logs.mix(IGBLAST_ASSIGNGENES.out.logs)
         ch_versions = ch_versions.mix(IGBLAST_ASSIGNGENES.out.versions.ifEmpty(null))
+        ch_assignment_logs = IGBLAST_ASSIGNGENES.out.logs
     }
-
-
-
-    CHANGEO_MAKEDB (
-        ch_assigned_fasta,
-        ch_assigned_blast,
-        ch_imgt.collect()
-    )
-    ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
-    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
 
     // Apply quality filters:
     // - locus should match v_call chain
@@ -100,7 +100,7 @@ workflow VDJ_ANNOTATION {
     // - max 10% N nucleotides
     // TODO: emit versions
     FILTER_QUALITY(
-        CHANGEO_MAKEDB.out.tab
+        ch_assigned_tab
     )
     ch_logs = ch_logs.mix(FILTER_QUALITY.out.logs)
 
@@ -135,7 +135,7 @@ workflow VDJ_ANNOTATION {
     repertoire = ADD_META_TO_TAB.out.tab
     imgt = ch_imgt
     igblast = ch_igblast
-    changeo_makedb_logs = CHANGEO_MAKEDB.out.logs
+    changeo_makedb_logs = ch_assignment_logs
     logs = ch_logs
 
 }
