@@ -35,7 +35,7 @@ process IGBLAST_ASSIGNGENES {
     echo "ALIGNER_FILE> ${meta.id}_igblast.fmt7" >> ${meta.id}_makedb_command_log.txt
     echo "SEQ_FILE> ${reads}" >> ${meta.id}_makedb_command_log.txt
     echo "OUTPUT> ${meta.id}_db-pass.tsv" >> ${meta.id}_makedb_command_log.txt
-    echo "PASS> \$(wc -l ${meta.id}_db-pass.tsv )" >> ${meta.id}_makedb_command_log.txt
+    echo "PASS> \$(wc -l < ${meta.id}_db-pass.tsv)" >> ${meta.id}_makedb_command_log.txt
     echo "FAIL> 0" >> ${meta.id}_makedb_command_log.txt
     echo "END> MakeDB" >> ${meta.id}_makedb_command_log.txt
 
