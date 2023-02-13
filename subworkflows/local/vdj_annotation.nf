@@ -91,7 +91,7 @@ workflow VDJ_ANNOTATION {
 
         ch_logs = ch_logs.mix(IGBLAST_ASSIGNGENES.out.logs)
         ch_versions = ch_versions.mix(IGBLAST_ASSIGNGENES.out.versions.ifEmpty(null))
-        ch_assignment_logs = IGBLAST_ASSIGNGENES.out.logs
+        ch_assignment_logs = IGBLAST_ASSIGNGENES.out.makedb_log
     }
 
     // Apply quality filters:
