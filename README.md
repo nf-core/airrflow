@@ -15,8 +15,8 @@
 ## Introduction
 
 ** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io)
-toolset. The input data can be (a) targeted amplicon bulk sequencing data of the V, D, J and C regions
-of the B/T-cell receptor with multiplex PCR or 5' RACE protocol or (b) assembled reads (bulk or single cell).
+toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions
+of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -26,14 +26,14 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
 1. QC and sequence assembly (bulk only)
 
-- Raw read quality control, adapter trimming and clipping (`Fastp`)
-- Filtering sequences by sequencing quality (`pRESTO FilterSeq`).
+- Raw read quality control, adapter trimming and clipping (`Fastp`).
+- Filtering sequences by base quality (`pRESTO FilterSeq`).
 - Mask amplicon primers (`pRESTO MaskPrimers`).
 - Pair read mates (`pRESTO PairSeq`).
 - For UMI-based sequencing:
@@ -45,7 +45,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
-- Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Assigning gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
 - Annotate alignments in AIRR format (`Change-O MakeDB`)
 - Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
 - Filter productive sequences (`Change-O ParseDB split`)
@@ -66,7 +66,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 4. Clonal analysis (bulk and single-cell)
 
-- Find Hamming distance threshold for clone definition (`SHazaM`, `EnchantR`).
+- Find threshold for clone definition (`SHazaM`, `EnchantR`).
 - Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
 - Build lineage trees (`SCOPer`, `IgphyML`, `EnchantR`).
 
