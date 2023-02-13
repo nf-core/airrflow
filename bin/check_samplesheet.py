@@ -50,7 +50,6 @@ def check_samplesheet(file_in):
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
-
         ## Check that required columns are present
         MIN_COLS = 7
         REQUIRED_COLUMNS = [
