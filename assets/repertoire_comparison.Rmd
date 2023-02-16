@@ -40,7 +40,7 @@ library(plotly)
 theme_set(theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 knitr::opts_chunk$set(echo = FALSE)
-***
+```
 
 # Number of sequences
 
