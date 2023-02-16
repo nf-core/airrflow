@@ -11,7 +11,7 @@ output:
     highlight: pygments
     pdf_document: true
     pandoc_args: [
-      "+RTS", "-K8192m",
+      "+RTS", "-K4096m",
       "-RTS"
     ]
   html_notebook:
