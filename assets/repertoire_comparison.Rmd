@@ -10,6 +10,10 @@ output:
     css: ./nf-core_style.css
     highlight: pygments
     pdf_document: true
+    pandoc_args: [
+      "+RTS", "-K8192m",
+      "-RTS"
+    ]
   html_notebook:
     toc: yes
 ---
@@ -36,11 +40,6 @@ library(plotly)
 theme_set(theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 knitr::opts_chunk$set(echo = FALSE)
-
-# set pandoc stack size
-stack_size <- getOption("pandoc.stack.size", default = "8192m")
-args <- c(c("+RTS", paste0("-K", stack_size), "-RTS"), args)
-```
 ***
 
 # Number of sequences
