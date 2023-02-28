@@ -11,7 +11,7 @@ process FIND_THRESHOLD {
 
 
     input:
-    path 'input_files/*' // sequence tsv in AIRR format
+    path tab // sequence tsv in AIRR format
     path logo
 
     output:
@@ -24,9 +24,8 @@ process FIND_THRESHOLD {
 
     script:
     """
-    ls input_files/* > tabs.txt
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='tabs.txt',\\
+        report_params=list('input'='${tab}',\\
             'cloneby'='${params.cloneby}',\\
             'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\
