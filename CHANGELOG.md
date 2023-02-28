@@ -7,20 +7,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-- Combined old bcellmagic and reveal subworkflows for better pipeline integration.
-- Added compulsory AIRR fields in input samplesheet.
-- Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
-- Added pipeline overview diagram and metro map.
-- Added full logs to `enchantr report filesize` process.
-- Template update to nf-core tools v2.7.1
+- [#197](https://github.com/nf-core/airrflow/pull/197) Combined old bcellmagic and reveal subworkflows for better pipeline integration.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added compulsory AIRR fields in input samplesheet.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added pipeline overview diagram and metro map.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added full logs to `enchantr report filesize` process.
+- [#215](https://github.com/nf-core/airrflow/pull/215) Template update to nf-core tools v2.7.1
+- [#224](https://github.com/nf-core/airrflow/pull/224) Template update to nf-core tools v2.7.2
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added plotly interactive reports
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added find threshold report even when specifying clonal threshold
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added possibility to provide direct call to igblast
+- [#228](https://github.com/nf-core/airrflow/pull/228/files) Improved docs preparing release
 
 ### `Fixed`
 
-- Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
+- [#221](https://github.com/nf-core/airrflow/pull/221) Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
 
 ### `Dependencies`
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.13        | 1.14        |
+| pandas     | 1.1.5       | 1.5.3       |
+| presto     | 0.7.0       | 0.7.1       |
+| changeo    | 1.2.0       | 1.3.0       |
+| igblast    | 1.17.1      | 1.19.0      |
+| r-enchantr |             | 0.0.6       |
+| r-plotly   |             | 4.10.1      |
+
 ### `Deprecated`
+
+- Deprecated param `enable_conda`
 
 ## [2.4.0] 2022-12-05 "Aparecium"
 

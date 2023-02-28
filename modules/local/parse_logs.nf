@@ -3,7 +3,7 @@ process PARSE_LOGS {
     tag "logs"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::pandas=1.1.5" : null)
+    conda "bioconda::pandas=1.1.5"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pandas:1.1.5' :
         'quay.io/biocontainers/pandas:1.1.5' }"

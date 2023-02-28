@@ -5,7 +5,6 @@
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
-
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -15,7 +14,9 @@
 
 ## Introduction
 
-** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
+** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io)
+toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions
+of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -25,14 +26,14 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
 1. QC and sequence assembly (bulk only)
 
-- Raw read quality control, adapter trimming and clipping (`Fastp`)
-- Filtering sequences by sequencing quality (`pRESTO FilterSeq`).
+- Raw read quality control, adapter trimming and clipping (`Fastp`).
+- Filtering sequences by base quality (`pRESTO FilterSeq`).
 - Mask amplicon primers (`pRESTO MaskPrimers`).
 - Pair read mates (`pRESTO PairSeq`).
 - For UMI-based sequencing:
@@ -44,8 +45,8 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
-- Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
-- Annotate alignmens in AIRR format (`Change-O MakeDB`)
+- Assigning gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Annotate alignments in AIRR format (`Change-O MakeDB`)
 - Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
 - Filter productive sequences (`Change-O ParseDB split`)
 - Filter junction length multiple of 3
@@ -54,17 +55,20 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 3. QC filtering (bulk and single-cell)
 
 - Bulk sequencing filtering:
-  - Remove chimeric sequences (optional) (`EnchantR`)
+  - Remove chimeric sequences (optional) (`SHazaM`, `EnchantR`)
   - Detect cross-contamination (optional) (`EnchantR`)
-  - Collapse duplicates (`EnchantR`)
+  - Collapse duplicates (`Alakazam`, `EnchantR`)
 - Single-cell QC filtering (`EnchantR`)
-  - TODO: explain exactly what is done.
+  - Removes cells without heavy chains.
+  - Remove cells with multiple heavy chains.
+  - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence.
+  - Modifies `cell_id`s to ensure they are unique in the project.
 
 4. Clonal analysis (bulk and single-cell)
 
-- Find Hamming distance threshold for clone definition (`SHazaM`, `EnchantR`).
+- Find threshold for clone definition (`SHazaM`, `EnchantR`).
 - Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
-- Build lineage trees (`SCOPer`, `EnchantR`).
+- Build lineage trees (`SCOPer`, `IgphyML`, `EnchantR`).
 
 5. Repertoire analysis and reporting
 
@@ -114,11 +118,10 @@ The nf-core/airrflow pipeline comes with documentation about the pipeline [usage
 
 ## Credits
 
-nf-core/airrflow was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
+nf-core/airrflow was written by [Gisela Gabenet](https://github.com/ggabernet), [Susanna Marquez](https://github.com/ssnn-airr), [Alexander Peltzer](@apeltzer) and [Simon Heumos](@subwaystation).
 
 Further contributors to the pipeline are:
 
-- [@ssnn-airr](https://github.com/ssnn-airr)
 - [@dladd](https://github.com/dladd)
 
 ## Contributions and Support

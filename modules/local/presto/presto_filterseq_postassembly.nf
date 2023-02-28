@@ -3,10 +3,10 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     label "process_medium"
     label 'immcantation'
 
-    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)
+    conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
-        'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
+        'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)

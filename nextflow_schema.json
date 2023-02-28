@@ -290,6 +290,11 @@
                     "description": "Path to the cached igblast database.",
                     "help_text": "If it is not provided, the database will be newly downloaded.",
                     "fa_icon": "fas fa-database"
+                },
+                "directcall_igblast": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Use this flag for directly calling IgBlast for reference alignment, instead of using the `changeo assigngenes` and `changeo makedb` options that call IgBlast in the background.  Allows  for additional configuration of the IgBlast call."
                 }
             },
             "fa_icon": "fas fa-edit"
@@ -302,9 +307,9 @@
             "properties": {
                 "collapseby": {
                     "type": "string",
-                    "default": "filename,cell_id",
                     "description": "Name of the field used to collapse duplicated sequences.",
-                    "fa_icon": "fas fa-compress-alt"
+                    "fa_icon": "fas fa-compress-alt",
+                    "default": "sample_id"
                 },
                 "detect_contamination": {
                     "type": "boolean",
@@ -313,7 +318,6 @@
                 },
                 "remove_chimeric": {
                     "type": "boolean",
-                    "default": true,
                     "description": "Whether to apply the chimera removal filter.",
                     "fa_icon": "fas fa-minus-square"
                 }
@@ -406,21 +410,6 @@
                 }
             },
             "fa_icon": "far fa-file-code"
-        },
-        "software_packaging_options": {
-            "title": "Software packaging options",
-            "type": "object",
-            "description": "Options for software packaging",
-            "default": "",
-            "properties": {
-                "enable_conda": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-box",
-                    "description": "Enable conda to run pipeline with conda environment."
-                }
-            },
-            "help_text": "Software packaging options",
-            "fa_icon": "fas fa-angle-double-right"
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -669,9 +658,6 @@
         },
         {
             "$ref": "#/definitions/report_options"
-        },
-        {
-            "$ref": "#/definitions/software_packaging_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

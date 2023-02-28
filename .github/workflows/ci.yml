@@ -30,6 +30,23 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v4
+        with:
+          FILES: |
+            modules/local/airrflow_report/Dockerfile
+            modules/local/airrflow_report/environment.yml
+
+      - name: Build new docker image
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/airrflowreport:dev
+
+      - name: Pull docker image
+        if: ${{ !env.MATCHED_FILES }}
+        run: |
+          docker pull nfcore/airrflowreport:dev
+          docker tag nfcore/airrflowreport:dev nfcore/airrflowreport:dev
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
@@ -48,11 +65,28 @@ jobs:
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
-        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled"]
+        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled", "test_igblast"]
       fail-fast: false
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v4
+        with:
+          FILES: |
+            modules/local/airrflow_report/Dockerfile
+            modules/local/airrflow_report/environment.yml
+
+      - name: Build new docker image
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/airrflowreport:dev
+
+      - name: Pull docker image
+        if: ${{ !env.MATCHED_FILES }}
+        run: |
+          docker pull nfcore/airrflowreport:dev
+          docker tag nfcore/airrflowreport:dev nfcore/airrflowreport:dev
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -88,6 +122,23 @@ jobs:
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v4
+        with:
+          FILES: |
+            modules/local/airrflow_report/Dockerfile
+            modules/local/airrflow_report/environment.yml
+
+      - name: Build new docker image
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/airrflowreport:dev
+
+      - name: Pull docker image
+        if: ${{ !env.MATCHED_FILES }}
+        run: |
+          docker pull nfcore/airrflowreport:dev
+          docker tag nfcore/airrflowreport:dev nfcore/airrflowreport:dev
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1

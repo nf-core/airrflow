@@ -21,7 +21,6 @@ processes = [
 df_process_list = []
 
 for process in processes:
-
     find = subprocess.check_output(["find", process, "-name", "*command_log.txt"])
     log_files = find.decode().split("\n")
     log_files = list(filter(None, log_files))
