@@ -24,8 +24,9 @@ process FIND_THRESHOLD {
 
     script:
     """
+    ls input_files/* > tabs.txt
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='./input_files',\\
+        report_params=list('input'='tabs.txt',\\
             'cloneby'='${params.cloneby}',\\
             'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\
