@@ -5,8 +5,8 @@ process ADD_META_TO_TAB {
 
     conda "bioconda::r-enchantr=0.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.0--r42hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.1.0--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.0--r42hdfd78af_1':
+        'quay.io/biocontainers/r-enchantr:0.1.0--r42hdfd78af_1' }"
 
     cache 'deep' // Without 'deep' this process would run when using -resume
 
