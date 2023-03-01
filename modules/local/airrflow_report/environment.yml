@@ -4,6 +4,6 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - r-enchantr=0.0.6
+  - r-enchantr=0.1.0
   - r-kableextra
   - r-plotly

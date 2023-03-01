@@ -2,10 +2,10 @@ process AIRRFLOW_REPORT {
     tag "${meta.id}"
     label 'process_high'
 
-    conda "bioconda::r-enchantr=0.0.6 conda-forge::plotly=4.10.1"
+    conda "bioconda::r-enchantr=0.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'nfcore/airrflowreport:dev' :
-        'nfcore/airrflowreport:dev' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.0--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.1.0--r42hdfd78af_0' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
