@@ -10,39 +10,48 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-TODO: update this to add/remove lines
-
-- [FastP](#fastp) - read quality control, adapter trimming and read clipping
-- [pRESTO](#presto) - read pre-processing
-  - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by quality
-  - [Mask primers](#mask-primers) - Masking primers
-  - [Pair mates](#pair-mates) - Pairing sequence mates.
+- [QC and sequence assembly (bulk only)](#sequence-assembly)
+  - [FastP](#fastp) - read quality control, adapter trimming and read clipping.
+  - [Filter by sequence quality](#filter-by-sequence-quality) - filter sequences by base quality.
+  - [Mask primers](#mask-primers) - Mask amplicon primers.
+  - [Pair mates](#pair-mates) - Pair read mates.
   - [Cluster sets](#cluster-sets) - Cluster sequences according to similarity.
   - [Build consensus](#build-UMI-consensus) - Build consensus of sequences with the same UMI barcode.
   - [Re-pair mates](#re-pair-mates) - Re-pairing sequence mates.
   - [Assemble mates](#assemble-mates) - Assemble sequence mates.
   - [Remove duplicates](#remove-duplicates) - Remove and annotate read duplicates.
   - [Filter sequences for at least 2 representative](#filter-sequences-for-at-least-2-representative) Filter sequences that do not have at least 2 duplicates.
-- [FastQC](#fastqc) - read quality control post-assembly
-- [Change-O](#change-o) - Assign genes and clonotyping
+  - [FastQC](#fastqc) - read quality control post-assembly
+- [VDJ annotation](#vdj-annotation) - Assign genes and clonotyping
+  - [Convert to fasta](#convert-input-to-fasta-optional)
   - [Assign genes with Igblast](#assign-genes-with-igblast)
   - [Make database from assigned genes](#make-database-from-assigned-genes)
+  - [Quality filter alignments](#quality-filter-alignments)
   - [Removal of non-productive sequences](#removal-of-non-productive-sequences)
-  - [Selection of IGH / TR sequences](#selection-of-IGH-/-TR-sequences)
-  - [Convert database to fasta](#convert-database-to-fasta)
-- [Shazam](#shazam) - Genotyping and Clonal threshold
-  - [Genotyping and hamming distance threshold](#determining-hamming-distance-threshold)
-- [Change-O define clones](#change-o-define-clones)
-  - [Define clones](#define-clones) - Defining clonal B-cell or T-cell groups
-  - [Reconstruct germlines](#reconstruct-germlines) - Reconstruct gene calls of germline sequences
-- [Lineage reconstruction](#lineage-reconstruction) - Clonal lineage reconstruction.
+  - [Removal of sequences with junction length not multiple of 3](#removal-of-sequences-with-junction-length-not-multiple-of-3)
+  - [Annotate metadata](#annotate-metadata)
+- [Bulk QC filtering](#bulk-qc-filtering)
+  - [Reconstruct germlines](#reconstruct-germlines)
+  - [Chimeric read filtering](#chimeric-read-filtering-optional)
+  - [Detect contamination](#detect-contamination-optional)
+  - [Collapse duplicates](#collapse-duplicates)
+- [Single cell QC](#single-cell-qc)
+- [Clonal analysis](#clonal-analysis)
+  - [Find clonal threshold](#find-clonal-threshold)
+  - [SCOPer define clones](#scoper-define-clones) - Defining clonal B-cell or T-cell groups
+  - [Dowser lineage reconstruction](#dowser-lineage-reconstruction) - Clonal lineage reconstruction.
 - [Repertoire analysis](#repertoire-analysis) - Repertoire analysis and comparison.
+- [Report file size](#report-file-size) - Log parsing.
 - [Log parsing](#log-parsing) - Log parsing.
-- [Databases](#databases)
-- [MultiQC](#MultiQC) - MultiQC
+- [Databases](#databases) - Downloaded databases.
+- [MultiQC](#MultiQC) - MultiQC report.
 - [Pipeline information](#pipeline-information) - Pipeline information
 
-## Fastp
+## Sequence assembly
+
+> **NB:** If using the sans-UMI subworkflow by specifying `umi_length=0`, the presto directory ordering numbers will differ e.g., mate pair assembly results will be output to `presto/01-assemblepairs/<sampleID>` as this will be the first presto step.
+
+### Fastp
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -56,10 +65,6 @@ TODO: update this to add/remove lines
 </details>
 
 [fastp](https://doi.org/10.1093/bioinformatics/bty560) gives general quality metrics about your sequenced reads, as well as allows filtering reads by quality, trimming adapters and clipping reads at 5' or 3' ends. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [fastp documentation](https://github.com/OpenGene/fastp).
-
-## presto
-
-> **NB:** If using the sans-UMI subworkflow by specifying `umi_length=0`, the presto directory ordering numbers will differ e.g., mate pair assembly results will be output to `presto/01-assemblepairs/<sampleID>` as this will be the first presto step.
 
 ### Filter by sequence quality
 
@@ -187,7 +192,7 @@ Remove duplicates using [CollapseSeq](https://presto.readthedocs.io/en/stable/to
 
 Remove sequences which do not have 2 representative using [SplitSeq](https://presto.readthedocs.io/en/stable/tools/SplitSeq.html) from the pRESTO Immcantation toolset.
 
-## FastQC
+### FastQC
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -209,9 +214,9 @@ Remove sequences which do not have 2 representative using [SplitSeq](https://pre
 
 > **NB:** Two sets of FastQC plots are displayed in the MultiQC report: first for the raw _untrimmed_ and unmated reads and secondly for the assembled and QC filtered reads (but before collapsing duplicates). They may contain adapter sequence and potentially regions with low quality.
 
-## Change-O
+## VDJ annotation
 
-### Convert input to fasta, if needed
+### Convert input to fasta (optional)
 
 <details markdown="1">
 <summary>Output files. Optional. </summary>
@@ -253,7 +258,7 @@ Assign genes with Igblast, using the IMGT database is performed by the [AssignGe
 
 IgBLAST's results are parsed and standardized with [MakeDB](https://changeo.readthedocs.io/en/stable/examples/igblast.html#processing-the-output-of-igblast) to follow the [AIRR Community standards](https://docs.airr-community.org/en/stable/datarep/rearrangements.html) for rearrangement data.
 
-### Quality filter sequences
+### Quality filter alignments
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -290,7 +295,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 </details>
 
-### Add metadata
+### Annotate metadata
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -301,7 +306,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 </details>
 
-## Shazam
+## Bulk QC filtering
 
 ### Reconstruct germlines
 
@@ -317,7 +322,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 Reconstructing the germline sequences with the [CreateGermlines](https://changeo.readthedocs.io/en/stable/tools/CreateGermlines.html#creategermlines) Immcantation tool.
 
-### Chimera filter
+### Chimeric read filtering (optional)
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -333,7 +338,7 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 Mutations patterns in different window sizes are analyzed with functions from
 the Immcantation R package [SHazaM](https://shazam.readthedocs.io/en/stable/).
 
-### Detect contamination
+### Detect contamination (optional)
 
 <details markdown="1">
 <summary>Output files. Optional. </summary>
@@ -361,7 +366,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
 
 </details>
 
-### Single cell QC
+## Single cell QC
 
 <details markdown="1">
 <summary>Output files. </summary>
@@ -374,12 +379,14 @@ This folder is genereated when `detect_contamination` is set to `true`.
 
 </details>
 
-### Determining hamming distance threshold
+## Clonal analysis
+
+### Find clonal threshold
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `clonal_analysis/find-threshold/`
+- `clonal_analysis/find_threshold/`
   - `*log`: Log of the process that will be parsed to generate a report.
   - `all_reps_threshold-mean.tsv`: Mean of all hamming distance thresholds of the
     Junction regions as determined by Shazam.
@@ -390,9 +397,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
 
 Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io) when `clonal_threshold` is set to `auto`.
 
-## SCOPer define clones
-
-### Define clones
+### SCOPer define clones
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -416,9 +421,7 @@ A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is
 
 Assigning clones to the sequences obtained from IgBlast with the [scoper::hierarchicalClones](https://scoper.readthedocs.io/en/stable/topics/hierarchicalClones/) Immcantation tool.
 
-#
-
-## Lineage reconstruction
+### Dowser Lineage reconstruction
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -432,7 +435,7 @@ Assigning clones to the sequences obtained from IgBlast with the [scoper::hierar
 Reconstructing clonal lineage with [IgPhyML](https://igphyml.readthedocs.io/en/stable/) and
 [dowser](https://dowser.readthedocs.io/en/stable/topics/getTrees/) from the Immcantation toolset.
 
-## Repertoire comparison
+## Repertoire analysis
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -448,7 +451,7 @@ Reconstructing clonal lineage with [IgPhyML](https://igphyml.readthedocs.io/en/s
 
 Calculation of several repertoire characteristics (diversity, abundance, V gene usage) for comparison between subjects, time points and cell populations. An Rmarkdown report is generated with the [Alakazam R package](https://alakazam.readthedocs.io/en/stable/).
 
-## Tracking number of reads
+## Report file size
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -475,6 +478,8 @@ Parsing the logs from the previous processes. Summary of the number of sequences
 ## Databases
 
 Copy of the downloaded IMGT database by the process `fetch_databases`, used for the gene assignment step.
+
+If databases are provided with `--imgtdb_base` and `--igblast_base` this folder will not be present.
 
 ## MultiQC
 
