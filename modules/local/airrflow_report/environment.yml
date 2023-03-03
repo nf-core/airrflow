@@ -1,9 +1,0 @@
-name: nf-core-airrflow-report-3.0dev
-channels:
-  - bioconda
-  - conda-forge
-  - defaults
-dependencies:
-  - r-enchantr=0.1.0
-  - r-kableextra
-  - r-plotly

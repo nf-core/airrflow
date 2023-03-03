@@ -25,7 +25,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(knitr)
-library(kableExtra)
 library(dplyr)
 library(tidyr)
 library(alakazam)
@@ -36,6 +35,13 @@ library(plotly)
 theme_set(theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 knitr::opts_chunk$set(echo = FALSE)
+
+# Setting data table and creating output folders
+datadir <- "."
+outdir <- "repertoire_comparison"
+seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
+dir.create(seq_dir)
+
 ```
 ***
 
@@ -44,13 +50,12 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Sequence assembly steps
 
 Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
+The full table can be found under [Table_sequences_assembly]("./Sequence_numbers_summary/Table_sequences_assembly.tsv").
 
 ```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
 read_table <- function(tab_file){
         tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
-        kable(tab_seqs) %>%
-          kable_styling("hover") %>%
-          scroll_box(width = "100%", height = "400px")
+        write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv", sep="\t", quote=F, row.names=F))
     }
 tryCatch( {read_table("./Table_sequences.tsv")} ,
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
@@ -88,6 +93,7 @@ tryCatch( {
 ## Filtering and clonal analysis steps
 
 Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
+The full table can be found under [Table_sequences_assembled]("./Sequence_numbers_summary/Table_sequences_assembled.tsv").
 
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
@@ -105,10 +111,7 @@ dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGe
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
 
 
-
-kable(dat) %>%
-  kable_styling("hover") %>%
-  scroll_box(width = "100%", height = "400px")
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv", sep="\t", quote=F, row.names=F)
 ```
 
 
@@ -133,12 +136,6 @@ ggplotly(seqs_plot_assembled)
 ```
 
 ```{r read_data, include=FALSE}
-# Reading data tables and ceating output folders
-datadir <- "."
-outdir <- "repertoire_comparison"
-
-# setwd to results folder (containing alakazam, shazam, etc. folders)
-
 ### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
 
 all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
