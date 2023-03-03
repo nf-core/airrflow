@@ -10,6 +10,10 @@ output:
     css: ./nf-core_style.css
     highlight: pygments
     pdf_document: true
+    pandoc_args: [
+      "+RTS", "-K4000m",
+      "-RTS"
+    ]
   html_notebook:
     toc: yes
 ---
@@ -43,7 +47,6 @@ seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
 dir.create(seq_dir)
 
 ```
-***
 
 # Number of sequences
 
@@ -80,6 +83,7 @@ tryCatch( {
                         aes(x=steps, y=count, group=sample_id)) +
                   geom_line(aes(colour=sample_id)) +
                   geom_point(aes(colour=sample_id)) +
+                  scale_x_log10() +
                   xlab("") + ylab("Sequence count") +
                   ggtitle("Number of sequences after each of the sequence assembly steps") +
                   theme(axis.text.x= element_text(angle = 45))
@@ -128,6 +132,7 @@ seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
                     aes(x=task, y=to_num_seqs, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
+              scale_x_log10() +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
               theme(axis.text.x= element_text(angle = 45))
@@ -181,7 +186,6 @@ range of the bootstrap samples.
 
 All clonal abundance plots and tables with abundance values can be found under `repertoire_analysis/Abundance`.
 
-## Clonal abundance per subject
 ```{r clonal_abundance, echo=FALSE}
 abund <- estimateAbundance(df_all, group = "subj_locus", ci=0.95, nboot=nboot)
 abund@abundance$sample_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
@@ -250,7 +254,6 @@ The solid line shows the mean Diversity of the bootstrap samples, whereas the tr
 range of the bootstrap samples.
 
 
-## Clonal diversity per subject
 ```{r clonal_diversity, echo = FALSE}
 sample_div <- alphaDiversity(abund, group="subj_locus", min_q=0, max_q=4, step_q=0.05,
                             ci=0.95, nboot=nboot)
