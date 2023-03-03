@@ -111,7 +111,7 @@ dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGe
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
 
 
-write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv", sep="\t", quote=F, row.names=F)
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
 ```
 
 
