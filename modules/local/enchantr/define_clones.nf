@@ -23,8 +23,8 @@ process DEFINE_CLONES {
 
     conda "bioconda::r-enchantr=0.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.0--r42hdfd78af_1':
-        'quay.io/biocontainers/r-enchantr:0.1.0--r42hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.0--r42hdfd78af_2':
+        'quay.io/biocontainers/r-enchantr:0.1.0--r42hdfd78af_2' }"
 
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
