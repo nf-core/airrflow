@@ -84,7 +84,7 @@ tryCatch( {
                         aes(x=steps, y=count, group=sample_id)) +
                   geom_line(aes(colour=sample_id)) +
                   geom_point(aes(colour=sample_id)) +
-                  scale_x_log10() +
+                  scale_y_log10() +
                   xlab("") + ylab("Sequence count") +
                   ggtitle("Number of sequences after each of the sequence assembly steps") +
                   theme(axis.text.x= element_text(angle = 45))
@@ -133,7 +133,7 @@ seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
                     aes(x=task, y=to_num_seqs, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
-              scale_x_log10() +
+              scale_y_log10() +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
               theme(axis.text.x= element_text(angle = 45))
