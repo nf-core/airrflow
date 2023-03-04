@@ -43,6 +43,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # Setting data table and creating output folders
 datadir <- "."
 outdir <- "repertoire_comparison"
+dir.create(outdir)
 seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
 dir.create(seq_dir)
 
@@ -58,7 +59,7 @@ The full table can be found under [Table_sequences_assembly]("./Sequence_numbers
 ```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
 read_table <- function(tab_file){
         tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
-        write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv", sep="\t", quote=F, row.names=F))
+        #write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
     }
 tryCatch( {read_table("./Table_sequences.tsv")} ,
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
@@ -83,7 +84,7 @@ tryCatch( {
                         aes(x=steps, y=count, group=sample_id)) +
                   geom_line(aes(colour=sample_id)) +
                   geom_point(aes(colour=sample_id)) +
-                  scale_x_log10() +
+                  scale_y_log10() +
                   xlab("") + ylab("Sequence count") +
                   ggtitle("Number of sequences after each of the sequence assembly steps") +
                   theme(axis.text.x= element_text(angle = 45))
@@ -115,7 +116,7 @@ dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGe
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
 
 
-write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv", sep="\t", quote=F, row.names=F)
+#write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
 ```
 
 
@@ -132,7 +133,7 @@ seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
                     aes(x=task, y=to_num_seqs, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
-              scale_x_log10() +
+              scale_y_log10() +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
               theme(axis.text.x= element_text(angle = 45))
@@ -145,7 +146,6 @@ ggplotly(seqs_plot_assembled)
 
 all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
 
-dir.create(outdir)
 diversity_dir <- paste(outdir, "Diversity", sep="/")
 abundance_dir <- paste(outdir, "Abundance", sep="/")
 vfamily_dir <- paste(outdir, "V_family", sep="/")
@@ -304,7 +304,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id))
     theme(legend.position = "right")
 ggplotly(g2)
 
-ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.svg"), plot = g2, width = 18, height = 15, units = "cm")
+ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 18, height = 15, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 18, height = 15, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"), sep = "\t", quote = F, row.names = F)
@@ -333,7 +333,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id))
     #facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
     #theme(legend.position = "none")
 ggplotly(g2)
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.svg"), plot = g2, width = 20, height = 40, units = "cm")
+ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_data.tsv"), sep = "\t", quote = F, row.names = F)
@@ -357,7 +357,7 @@ g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     #facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
     #theme(legend.position = "none")
 ggplotly(g2)
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.svg"), plot = g2, width = 20, height = 40, units = "cm")
+ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_data.tsv"), sep = "\t", quote = F, row.names = F)
