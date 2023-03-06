@@ -48,6 +48,7 @@ process IGBLAST_ASSIGNGENES {
     echo "ALIGNER_FILE> ${meta.id}_igblast.fmt7" >> ${meta.id}_makedb_command_log.txt
     echo "SEQ_FILE> ${reads}" >> ${meta.id}_makedb_command_log.txt
     echo "ASIS_ID> False" >> ${meta.id}_makedb_command_log.txt
+    echo "ASIS_CALLS> False" >> ${meta.id}_makedb_command_log.txt
     echo "VALIDATE> strict" >> ${meta.id}_makedb_command_log.txt
     echo "EXTENDED> True" >> ${meta.id}_makedb_command_log.txt
     echo "INFER_JUNCTION> False\n" >> ${meta.id}_makedb_command_log.txt
