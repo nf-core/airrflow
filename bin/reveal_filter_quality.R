@@ -37,6 +37,10 @@ if (!("REPERTOIRE" %in% names(opt))) {
 # Read metadata file
 db <- read_rearrangement(opt$REPERTOIRE)
 
+# Remove rows that have NA values in all of v_call, d_call and j_call (still there when directly calling IgBlast)
+db <- db %>%
+        filter(!(is.na(v_call) & is.na(d_call) & is.na(j_call)))
+
 # locus field and locus obtained from v_call should match
 if (packageVersion("alakazam") < "1.0.3") {
     getLocus <- function(segment_call, first = TRUE, collapse = TRUE,
@@ -58,6 +62,7 @@ same_locus <- getLocus(db[["v_call"]]) == db[["locus"]]
 n_count <- stri_count(db$sequence_alignment, regex = "Nn")
 positions_count <- stri_count(db$sequence_alignment, regex = "[^-.]")
 not_0 <- n_count > 0
+
 if (any(not_0)) {
     n_count[not_0] <- n_count[not_0] / positions_count[not_0]
 }
