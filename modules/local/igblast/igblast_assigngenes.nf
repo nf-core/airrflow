@@ -34,7 +34,7 @@ process IGBLAST_ASSIGNGENES {
     echo "START> AssignGenes" > ${meta.id}_changeo_assigngenes_command_log.txt
     echo "COMMAND> igblast" >> ${meta.id}_changeo_assigngenes_command_log.txt
     echo "VERSION> \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )" >> ${meta.id}_changeo_assigngenes_command_log.txt
-    echo "FILE> ${reads}\n" >> ${meta.id}_changeo_assigngenes_command_log.txt
+    echo "FILE> ${reads}" >> ${meta.id}_changeo_assigngenes_command_log.txt
     echo "ORGANISM> ${meta.species}" >> ${meta.id}_changeo_assigngenes_command_log.txt
     echo "LOCI> ${meta.locus.toLowerCase()}" >> ${meta.id}_changeo_assigngenes_command_log.txt
     echo "NPROC> ${task.cpus}\n" >> ${meta.id}_changeo_assigngenes_command_log.txt
