@@ -59,7 +59,7 @@ The full table can be found under [Table_sequences_assembly]("./Sequence_numbers
 ```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
 read_table <- function(tab_file){
         tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
-        #write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
+        write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
     }
 tryCatch( {read_table("./Table_sequences.tsv")} ,
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
@@ -115,8 +115,8 @@ dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGe
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
 
-
-#write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
+dat <- apply(dat,2,as.character)
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
 ```
 
 
