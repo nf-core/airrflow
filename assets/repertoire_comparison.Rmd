@@ -139,9 +139,14 @@ outdir <- "repertoire_comparison"
 
 # setwd to results folder (containing alakazam, shazam, etc. folders)
 
-### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
+### Read all the tables as produced by the pipeline
 
-all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
+# in the current folder and joins them together in the df_all dataframe
+# all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
+
+# paths to the files are found in the first column of all_repertoires_report_tabs.txt,
+# in the current folder
+all_files <- read.delim("all_repertoires_report_tabs.txt", header=F, sep="\t")[[1]]
 
 dir.create(outdir)
 diversity_dir <- paste(outdir, "Diversity", sep="/")
