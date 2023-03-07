@@ -55,8 +55,16 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
                                         ch_reassign_logs,
                                         ch_sc_qc_and_filter_logs,
                                         ch_clonal_analysis_logs)
+
+    ch_logs_tabs =  ch_logs
+                    .collect()
+                    .flatten()
+                    .map{ it -> it.toString() }
+                    .dump(tag: 'ch_logs_tabs')
+                    .collectFile(name: 'all_logs_tabs.txt', newLine: true)
+
     REPORT_FILE_SIZE(
-        ch_logs.collect().ifEmpty([]),
+        ch_logs_tabs.ifEmpty([]),
         ch_metadata
     )
     ch_versions = ch_versions.mix(REPORT_FILE_SIZE.out.versions)
