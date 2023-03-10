@@ -347,6 +347,12 @@
                     "description": "Name of the field used to group data files to identify clones.",
                     "fa_icon": "fab fa-pagelines"
                 },
+                "crossby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to identify external groups used to identify a clonal threshold.",
+                    "fa_icon": "fab fa-pagelines"
+                },
                 "igphyml": {
                     "type": "string",
                     "default": "/usr/local/share/igphyml/src/igphyml",

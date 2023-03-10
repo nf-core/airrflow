@@ -19,6 +19,9 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
+                                        .flatten()
+                                        .map{ it -> it.toString() }
+                                        .collectFile(name: 'find_threshold_tabs.txt', newLine: true)
 
         FIND_CLONAL_THRESHOLD (
             ch_find_threshold,
@@ -39,6 +42,9 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
+                                        .flatten()
+                                        .map{ it -> it.toString() }
+                                        .collectFile(name: 'report_threshold_tabs.txt', newLine: true)
 
         REPORT_THRESHOLD (
             ch_find_threshold,

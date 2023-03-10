@@ -4,10 +4,10 @@ process FIND_THRESHOLD {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda "bioconda::r-enchantr=0.0.6"
+    conda "bioconda::r-enchantr=0.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.0.6--r42hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.0.6--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
 
 
     input:
@@ -25,8 +25,9 @@ process FIND_THRESHOLD {
     script:
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='${tab.join(',')}',\\
+        report_params=list('input'='${tab}',\\
             'cloneby'='${params.cloneby}',\\
+            'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\
             'outdir'=getwd(),\\
             'nproc'=${task.cpus},\\
