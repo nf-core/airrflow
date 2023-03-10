@@ -1,0 +1,13 @@
+sample_id	filename_R1	filename_R2	subject_id	species	pcr_target_locus	treatment	tissue	population	single_cell	sex	age	biomaterial_provider
+SRR1383451	s3://sra-pub-src-10/SRR1383451/MS7_BC7_CAGATC_L001_R1_001.fastq.gz	s3://sra-pub-src-13/SRR1383451/MS7_BC7_CAGATC_L001_R2_001.fastq.gz	M4	human	IG	Lymph_node	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383452	s3://sra-pub-src-9/SRR1383452/MS8_BC8_ACTTGA_L001_R1_001.fastq.gz	s3://sra-pub-src-13/SRR1383452/MS8_BC8_ACTTGA_L001_R2_001.fastq.gz	M4	human	IG	Lymph_node	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383453	s3://sra-pub-src-14/SRR1383453/MS9_BC9_GATCAG_L001_R1_001.fastq.gz	s3://sra-pub-src-13/SRR1383453/MS9_BC9_GATCAG_L001_R2_001.fastq.gz	M4	human	IG	Lymph_node	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383454	s3://sra-pub-src-12/SRR1383454/MS10_ATCACG_L001_R1_001.fastq.gz	s3://sra-pub-src-12/SRR1383454/MS10_ATCACG_L001_R2_001.fastq.gz	M4	human	IG	Brain_lesion	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383455	s3://sra-pub-src-12/SRR1383455/MS11_CGATGT_L001_R1_001.fastq.gz	s3://sra-pub-src-9/SRR1383455/MS11_CGATGT_L001_R2_001.fastq.gz	M4	human	IG	Brain_lesion	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383456	s3://sra-pub-src-8/SRR1383456/MS12_TTAGGC_L001_R1_001.fastq.gz	s3://sra-pub-src-11/SRR1383456/MS12_TTAGGC_L001_R2_001.fastq.gz	M4	human	IG	Brain_lesion	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383463	s3://sra-pub-src-14/SRR1383463/MS19_TAGCTT_L001_R1_001.fastq.gz	s3://sra-pub-src-10/SRR1383463/MS19_TAGCTT_L001_R2_001.fastq.gz	M5	human	IG	Lymph_node	Baseline	Bcell	FALSE	female	63	uni_tue
+SRR1383464	s3://sra-pub-src-14/SRR1383464/MS20_GGCTAC_L001_R1_001.fastq.gz	s3://sra-pub-src-9/SRR1383464/MS20_GGCTAC_L001_R2_001.fastq.gz	M5	human	IG	Lymph_node	Baseline	Bcell	FALSE	female	63	uni_tue
+SRR1383465	s3://sra-pub-src-9/SRR1383465/MS21_CTTGTA_L001_R1_001.fastq.gz	s3://sra-pub-src-4/SRR1383465/MS21_CTTGTA_L001_R2_001.fastq.gz	M5	human	IG	Lymph_node	Baseline	Bcell	FALSE	female	63	uni_tue
+SRR1383466	s3://sra-pub-src-9/SRR1383466/MS22_AGTCAA_L001_R1_001.fastq.gz	s3://sra-pub-src-9/SRR1383466/MS22_AGTCAA_L001_R2_001.fastq.gz	M5	human	IG	Brain_lesion	Baseline	Bcell	FALSE	female	63	uni_tue
+SRR1383467	s3://sra-pub-src-13/SRR1383467/MS23_AGTTCC_L001_R1_001.fastq.gz	s3://sra-pub-src-14/SRR1383467/MS23_AGTTCC_L001_R2_001.fastq.gz	M5	human	IG	Brain_lesion	Baseline	Bcell	FALSE	female	63	uni_tue
+SRR1383468	s3://sra-pub-src-10/SRR1383468/MS24_ATGTCA_L001_R1_001.fastq.gz	s3://sra-pub-src-10/SRR1383468/MS24_ATGTCA_L001_R2_001.fastq.gz	M5	human	IG	Brain_lesion	Baseline	Bcell	FALSE	female	63	uni_tue
