@@ -54,12 +54,12 @@ dir.create(seq_dir)
 ## Sequence assembly steps
 
 Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
-The full table can be found under [Table_sequences_assembly]("./Sequence_numbers_summary/Table_sequences_assembly.tsv").
+The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
 
 ```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
 read_table <- function(tab_file){
         tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
-        #write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
+        write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
     }
 tryCatch( {read_table("./Table_sequences.tsv")} ,
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
@@ -98,7 +98,7 @@ tryCatch( {
 ## Filtering and clonal analysis steps
 
 Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
-The full table can be found under [Table_sequences_assembled]("./Sequence_numbers_summary/Table_sequences_assembled.tsv").
+The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
 
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
@@ -115,8 +115,8 @@ dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGe
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
 
-
-#write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
+dat <- apply(dat,2,as.character)
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
 ```
 
 
@@ -200,7 +200,7 @@ p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
                     ymax = upper, fill = sample_id), alpha = 0.4) +
     geom_line(aes(color = sample_id)) +
     ggtitle(abund_main) +
-    xlab("Rank") + ylab("Abundance") +
+    xlab("log(Rank)") + ylab("Abundance") +
     scale_x_log10(limits = NULL,
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x))) +

@@ -3,10 +3,10 @@ process ADD_META_TO_TAB {
     label 'immcantation'
     label 'single_cpu'
 
-    conda "bioconda::r-enchantr=0.1.0"
+    conda "bioconda::r-enchantr=0.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.0--r42hdfd78af_2':
-        'quay.io/biocontainers/r-enchantr:0.1.0--r42hdfd78af_2' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
+        'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
 
     cache 'deep' // Without 'deep' this process would run when using -resume
 
