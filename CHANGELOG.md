@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | presto     | 0.7.0       | 0.7.1       |
 | changeo    | 1.2.0       | 1.3.0       |
 | igblast    | 1.17.1      | 1.19.0      |
-| r-enchantr |             | 0.1.0       |
+| r-enchantr |             | 0.1.1       |
 | r-plotly   |             | 4.10.1      |
 
 ### `Deprecated`
