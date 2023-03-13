@@ -81,8 +81,17 @@ workflow CLONAL_ANALYSIS {
             .set{ch_all_repertoires_cloned}
 
     if (!params.skip_all_clones_report){
+
+        ch_all_repertoires_cloned_tabs = ch_all_repertoires_cloned.map{ it -> it[1] }
+                                            .collect()
+                                            .flatten()
+                                            .map{ it -> it.toString() }
+                                            .dump(tag: 'ch_all_repertoires_cloned_tabs')
+                                            .collectFile(name: 'all_repertoires_cloned_tabs.txt', newLine: true)
+                                            .map { it -> [ [id:'all_reps'], it ] }
+
         DEFINE_CLONES_REPORT(
-            ch_all_repertoires_cloned,
+            ch_all_repertoires_cloned_tabs,
             clone_threshold.collect(),
             ch_imgt.collect()
         )

@@ -415,7 +415,8 @@ Determining the hamming distance threshold of the junction regions for clonal de
   - `ggplots/`: Diversity and abundance plots as `ggplot` objects.
   - `figures/`: Clone size, diversity and abundance `png` plots.
 
-A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is generated for all data.
+A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is generated for all data, with additional
+`ggplot` objects and `png` figures showing the convergence between samples.
 
 </details>
 

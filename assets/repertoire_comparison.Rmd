@@ -41,7 +41,6 @@ theme_set(theme_bw(base_family = "ArialMT") +
 knitr::opts_chunk$set(echo = FALSE)
 
 # Setting data table and creating output folders
-datadir <- "."
 outdir <- "repertoire_comparison"
 dir.create(outdir)
 seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
@@ -142,9 +141,9 @@ ggplotly(seqs_plot_assembled)
 ```
 
 ```{r read_data, include=FALSE}
-### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
-
-all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
+# paths to the files are found in the first column of all_repertoires_report_tabs.txt,
+# in the current folder
+all_files <- read.delim("all_repertoires_report_tabs.txt", header=F, sep="\t")[[1]]
 
 diversity_dir <- paste(outdir, "Diversity", sep="/")
 abundance_dir <- paste(outdir, "Abundance", sep="/")
