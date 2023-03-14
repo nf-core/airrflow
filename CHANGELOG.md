@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#225](https://github.com/nf-core/airrflow/pull/225) Added find threshold report even when specifying clonal threshold
 - [#225](https://github.com/nf-core/airrflow/pull/225) Added possibility to provide direct call to igblast
 - [#228](https://github.com/nf-core/airrflow/pull/228) Improved docs preparing release
-- [#240](https://github.com/nf-core/airrflow/pull/240) Added paths to SRA buckets for full size tests
 
 ### `Fixed`
 
