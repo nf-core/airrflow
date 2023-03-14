@@ -10,7 +10,6 @@ workflow ASSEMBLED_INPUT_CHECK {
     miairr
     collapseby
     cloneby
-    //reassign
 
     main:
     // TODO: validate input should check that sample_ids are unique
