@@ -12,12 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#197](https://github.com/nf-core/airrflow/pull/197) Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
 - [#197](https://github.com/nf-core/airrflow/pull/197) Added pipeline overview diagram and metro map.
 - [#197](https://github.com/nf-core/airrflow/pull/197) Added full logs to `enchantr report filesize` process.
-- [#215](https://github.com/nf-core/airrflow/pull/215) Template update to nf-core tools v2.7.1
-- [#224](https://github.com/nf-core/airrflow/pull/224) Template update to nf-core tools v2.7.2
-- [#225](https://github.com/nf-core/airrflow/pull/225) Added plotly interactive reports
-- [#225](https://github.com/nf-core/airrflow/pull/225) Added find threshold report even when specifying clonal threshold
-- [#225](https://github.com/nf-core/airrflow/pull/225) Added possibility to provide direct call to igblast
-- [#228](https://github.com/nf-core/airrflow/pull/228) Improved docs preparing release
+- [#215](https://github.com/nf-core/airrflow/pull/215) Template update to nf-core tools v2.7.1.
+- [#224](https://github.com/nf-core/airrflow/pull/224) Template update to nf-core tools v2.7.2.
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added plotly interactive reports.
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added find threshold report even when specifying clonal threshold.
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added possibility to provide direct call to igblast.
+- [#228](https://github.com/nf-core/airrflow/pull/228) Improved docs preparing release.
+- [#244](https://github.com/nf-core/airrflow/pull/244) Bump versions to 3.0.
 
 ### `Fixed`
 
