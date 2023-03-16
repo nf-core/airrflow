@@ -62,7 +62,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
   - Remove cells without heavy chains.
   - Remove cells with multiple heavy chains.
   - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence.
-  - Modifies `cell_id`s to ensure they are unique in the project.
+  - Modify `cell_id`s to ensure they are unique in the project.
 
 4. Clonal analysis (bulk and single-cell)
 
