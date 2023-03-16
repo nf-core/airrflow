@@ -36,14 +36,14 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 - Pair read mates (`pRESTO PairSeq`).
 - For UMI-based sequencing:
   - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
-  - Building consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
-- Assembling R1 and R2 read mates (`pRESTO AssemblePairs`).
-- Removing and annotating read duplicates (`pRESTO CollapseSeq`).
-- Filtering out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
+  - Build consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
+- Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
+- Remove and annotate read duplicates (`pRESTO CollapseSeq`).
+- Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
-- Assigning gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Assign gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
 - Annotate alignments in AIRR format (`Change-O MakeDB`)
 - Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
 - Filter productive sequences (`Change-O ParseDB split`)
@@ -57,10 +57,10 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
   - Detect cross-contamination (optional) (`EnchantR`)
   - Collapse duplicates (`Alakazam`, `EnchantR`)
 - Single-cell QC filtering (`EnchantR`)
-  - Removes cells without heavy chains.
+  - Remove cells without heavy chains.
   - Remove cells with multiple heavy chains.
   - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence.
-  - Modifies `cell_id`s to ensure they are unique in the project.
+  - Modify `cell_id`s to ensure they are unique in the project.
 
 4. Clonal analysis (bulk and single-cell)
 
@@ -71,7 +71,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 5. Repertoire analysis and reporting
 
 - Custom repertoire analysis pipeline report (`Alakazam`).
-- Aggregating QC reports (`MultiQC`).
+- Aggregate QC reports (`MultiQC`).
 
 ## Quick Start
 
