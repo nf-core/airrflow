@@ -3,6 +3,7 @@
 #
 # Author:  Mohamed Uduman, Jason Anthony Vander Heiden
 # Date:    2017.07.03
+# Licence: AGPL-3
 #
 # Arguments:
 #   -o = Output directory for downloaded files. Defaults to current directory.

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Author:  Jason Anthony Vander Heiden
+# Date:    2016.11.21
+# Licence: AGPL-3
 """
 Clean IMGT germline fasta files for IgBLAST database build
 """

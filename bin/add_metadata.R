@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
-#
+# Written by Gisela Gabernet and released under the MIT license (2020).
+
+
 # Add metadata to repertoire:
 # Arguments:
 #   --repertoire    Tabulated data in AIRR (TSV) format with clonal assignments and germline assignments.

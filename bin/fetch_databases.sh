@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+# Written by Gisela Gabernet and released under the MIT license (2020).
 echo "Fetching databases..."
 
 fetch_imgt.sh -o imgtdb_base

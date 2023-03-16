@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Written by Gisela Gabernet and released under the MIT license (2020).
+
 from Bio import SeqIO
 from gzip import open as gzopen
 import argparse

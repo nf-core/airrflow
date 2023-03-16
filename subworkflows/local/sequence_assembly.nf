@@ -26,8 +26,8 @@ ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
 
 // Local: Sub-workflows
 include { FASTQ_INPUT_CHECK           } from '../../subworkflows/local/fastq_input_check'
-include { PRESTO_UMI            } from '../../subworkflows/local/presto_umi'
-include { PRESTO_SANS_UMI            } from '../../subworkflows/local/presto_sans_umi'
+include { PRESTO_UMI                  } from '../../subworkflows/local/presto_umi'
+include { PRESTO_SANS_UMI             } from '../../subworkflows/local/presto_sans_umi'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

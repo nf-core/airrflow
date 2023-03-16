@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
-#
+# Written by Susanna Marquez and released under the MIT license (2021).
+
 # Junction length multiple of 3 filter:
 # Arguments:
 #   --repertoire  Tabulated data, in Change-O (TAB) or AIRR (TSV) format.
