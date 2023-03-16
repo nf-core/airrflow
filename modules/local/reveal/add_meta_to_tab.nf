@@ -1,7 +1,7 @@
 process ADD_META_TO_TAB {
     tag "$meta.id"
     label 'immcantation'
-    label 'single_cpu'
+    label 'process_single'
 
     conda "bioconda::r-enchantr=0.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
