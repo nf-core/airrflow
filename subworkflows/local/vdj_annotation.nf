@@ -28,14 +28,14 @@ workflow VDJ_ANNOTATION {
     if( params.igblast_base ){
         if (params.igblast_base.endsWith(".zip")) {
             Channel.fromPath("${params.igblast_base}")
-                    .ifEmpty{ exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+                    .ifEmpty{ error "IGBLAST DB not found: ${params.igblast_base}" }
                     .set { ch_igblast_zipped }
             UNZIP_IGBLAST( ch_igblast_zipped.collect() )
             ch_igblast = UNZIP_IGBLAST.out.unzipped
             ch_versions = ch_versions.mix(UNZIP_IGBLAST.out.versions.ifEmpty(null))
         } else {
             Channel.fromPath("${params.igblast_base}")
-                .ifEmpty { exit 1, "IGBLAST DB not found: ${params.igblast_base}" }
+                .ifEmpty { error "IGBLAST DB not found: ${params.igblast_base}" }
                 .set { ch_igblast }
         }
     }
@@ -43,14 +43,14 @@ workflow VDJ_ANNOTATION {
     if( params.imgtdb_base ){
         if (params.imgtdb_base.endsWith(".zip")) {
             Channel.fromPath("${params.imgtdb_base}")
-                    .ifEmpty{ exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+                    .ifEmpty{ error "IMGTDB not found: ${params.imgtdb_base}" }
                     .set { ch_imgt_zipped }
             UNZIP_IMGT( ch_imgt_zipped.collect() )
             ch_imgt = UNZIP_IMGT.out.unzipped
             ch_versions = ch_versions.mix(UNZIP_IMGT.out.versions.ifEmpty(null))
         } else {
             Channel.fromPath("${params.imgtdb_base}")
-                .ifEmpty { exit 1, "IMGTDB not found: ${params.imgtdb_base}" }
+                .ifEmpty { error "IMGTDB not found: ${params.imgtdb_base}" }
                 .set { ch_imgt }
         }
     }

@@ -28,7 +28,6 @@ process DOWSER_LINEAGES {
         'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
 
     input:
-    //tuple val(meta), path(tabs) // sequence tsv in AIRR format
     tuple val(meta), path(tabs)
 
     output:

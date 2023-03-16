@@ -16,10 +16,9 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) {
     ch_input = Channel.fromPath(params.input, checkIfExists: true)
 } else {
-    exit 1, "Please provide input file containing the sample metadata with the '--input' option."
+    error "Please provide input file containing the sample metadata with the '--input' option."
 }
 
-// TODO: check that params.reassign can only be false if input file is fasta tsv (and V/D/J assignments are available).
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,7 +138,7 @@ workflow AIRRFLOW {
         ch_fastqc_postassembly_mqc = Channel.empty()
 
     } else {
-        exit 1, "Mode parameter value not valid."
+        error "Mode parameter value not valid."
     }
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(
