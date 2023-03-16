@@ -73,7 +73,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 5. Repertoire analysis and reporting
 
 - Custom repertoire analysis pipeline report (`Alakazam`).
-- Aggregating QC reports (`MultiQC`).
+- Aggregate QC reports (`MultiQC`).
 
 ## Quick Start
 
