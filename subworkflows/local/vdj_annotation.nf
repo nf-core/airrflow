@@ -98,11 +98,11 @@ workflow VDJ_ANNOTATION {
     // - locus should match v_call chain
     // - seq alignment min length informative positions 200
     // - max 10% N nucleotides
-    // TODO: emit versions
     FILTER_QUALITY(
         ch_assigned_tab
     )
     ch_logs = ch_logs.mix(FILTER_QUALITY.out.logs)
+    ch_versions = ch_versions.mix(FILTER_QUALITY.out.versions.ifEmpty(null))
 
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT (
@@ -112,12 +112,13 @@ workflow VDJ_ANNOTATION {
         ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions.ifEmpty(null))
 
         // Apply filter: junction length multiple of 3
-        // TODO: Add to enchantr and emit versions?
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT.out.tab
         )
         ch_logs = ch_logs.mix(FILTER_JUNCTION_MOD3.out.logs)
+        ch_versions = ch_versions.mix(FILTER_JUNCTION_MOD3.out.versions.ifEmpty(null))
         ch_repertoire = FILTER_JUNCTION_MOD3.out.tab.ifEmpty(null)
+
     } else {
         ch_repertoire = FILTER_QUALITY.out.tab.ifEmpty(null)
     }
@@ -126,8 +127,8 @@ workflow VDJ_ANNOTATION {
         ch_repertoire,
         ch_validated_samplesheet
     )
-    //TODO: emit versions
     ch_logs = ch_logs.mix(ADD_META_TO_TAB.out.logs)
+    ch_versions = ch_versions.mix(ADD_META_TO_TAB.out.versions.ifEmpty(null))
 
 
     emit:

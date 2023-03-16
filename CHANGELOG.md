@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#221](https://github.com/nf-core/airrflow/pull/221) Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
 - [#239](https://github.com/nf-core/airrflow/pull/239) Implemented workaround for Slurm Sbatch file too large. We plan to revert when possible[#242](https://github.com/nf-core/airrflow/issues/242)
+- [#245](https://github.com/nf-core/airrflow/pull/245) Add missing module versions
 
 ### `Dependencies`
 
