@@ -51,7 +51,7 @@ def get_meta (LinkedHashMap col) {
     meta.locus = col.locus
 
     if (!file(col.filename).exists()) {
-        exit 1, "ERROR: Please check input samplesheet: filename does not exist!\n${col.filename}"
+        error "ERROR: Please check input samplesheet: filename does not exist!\n${col.filename}"
     }
 
     return  [ meta, file(col.filename) ]

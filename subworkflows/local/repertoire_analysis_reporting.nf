@@ -20,12 +20,12 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_bulk_qc_and_filter_logs
     ch_sc_qc_and_filter_logs
     ch_clonal_analysis_logs
-    ch_repertoires
-    ch_input
-    ch_report_rmd
-    ch_report_css
-    ch_report_logo
-    ch_metadata
+    ch_repertoires // Repertoire tsv files from clonal analysis process
+    ch_input // Input samplesheet
+    ch_report_rmd // Report Rmarkdown file
+    ch_report_css // Report CSS file
+    ch_report_logo // Logo to be displayed in report
+    ch_metadata // Validated samplesheet
 
     main:
     ch_versions = Channel.empty()
@@ -56,12 +56,11 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
                                         ch_sc_qc_and_filter_logs,
                                         ch_clonal_analysis_logs)
 
-    ch_logs_tabs =  ch_logs
-                    .collect()
-                    .flatten()
-                    .map{ it -> it.toString() }
-                    .dump(tag: 'ch_logs_tabs')
-                    .collectFile(name: 'all_logs_tabs.txt', newLine: true)
+    ch_logs_tabs =  ch_logs.collect()
+                        .flatten()
+                        .map{ it -> it.toString() }
+                        .dump(tag: 'ch_logs_tabs')
+                        .collectFile(name: 'all_logs_tabs.txt', newLine: true)
 
     REPORT_FILE_SIZE(
         ch_logs_tabs.ifEmpty([]),

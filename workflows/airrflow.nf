@@ -16,10 +16,9 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) {
     ch_input = Channel.fromPath(params.input, checkIfExists: true)
 } else {
-    exit 1, "Please provide input file containing the sample metadata with the '--input' option."
+    error "Please provide input file containing the sample metadata with the '--input' option."
 }
 
-// TODO: check that params.reassign can only be false if input file is fasta tsv (and V/D/J assignments are available).
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,12 +46,12 @@ include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '.
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { SEQUENCE_ASSEMBLY } from '../subworkflows/local/sequence_assembly'
-include { ASSEMBLED_INPUT_CHECK } from '../subworkflows/local/assembled_input_check'
-include { VDJ_ANNOTATION } from '../subworkflows/local/vdj_annotation'
-include { BULK_QC_AND_FILTER } from '../subworkflows/local/bulk_qc_and_filter'
-include { SINGLE_CELL_QC_AND_FILTERING } from '../subworkflows/local/single_cell_qc_and_filtering'
-include { CLONAL_ANALYSIS } from '../subworkflows/local/clonal_analysis'
+include { SEQUENCE_ASSEMBLY             } from '../subworkflows/local/sequence_assembly'
+include { ASSEMBLED_INPUT_CHECK         } from '../subworkflows/local/assembled_input_check'
+include { VDJ_ANNOTATION                } from '../subworkflows/local/vdj_annotation'
+include { BULK_QC_AND_FILTER            } from '../subworkflows/local/bulk_qc_and_filter'
+include { SINGLE_CELL_QC_AND_FILTERING  } from '../subworkflows/local/single_cell_qc_and_filtering'
+include { CLONAL_ANALYSIS               } from '../subworkflows/local/clonal_analysis'
 include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire_analysis_reporting'
 
 /*
@@ -86,29 +85,31 @@ workflow AIRRFLOW {
         // Perform sequence assembly if input type is fastq
         SEQUENCE_ASSEMBLY( ch_input )
 
-        ch_fasta = SEQUENCE_ASSEMBLY.out.fasta
-        ch_versions = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
-        ch_fastp_html = SEQUENCE_ASSEMBLY.out.fastp_reads_html
-        ch_fastp_json = SEQUENCE_ASSEMBLY.out.fastp_reads_json
-        ch_fastqc_postassembly_mqc = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
-        ch_validated_samplesheet = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
+        ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
+        ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
+        ch_fastp_html               = SEQUENCE_ASSEMBLY.out.fastp_reads_html
+        ch_fastp_json               = SEQUENCE_ASSEMBLY.out.fastp_reads_json
+        ch_fastqc_postassembly_mqc  = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+        ch_validated_samplesheet    = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
-        ch_presto_filterseq_logs = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
-        ch_presto_maskprimers_logs = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
-        ch_presto_pairseq_logs =  SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
-        ch_presto_clustersets_logs =  SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
-        ch_presto_buildconsensus_logs =  SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
-        ch_presto_postconsensus_pairseq_logs =  SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
-        ch_presto_assemblepairs_logs =  SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
-        ch_presto_collapseseq_logs =  SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
-        ch_presto_splitseq_logs =  SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+        ch_presto_filterseq_logs        = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
+        ch_presto_maskprimers_logs      = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
+        ch_presto_pairseq_logs          = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
+        ch_presto_clustersets_logs      = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
+        ch_presto_buildconsensus_logs   = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
+        ch_presto_postconsensus_pairseq_logs = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
+        ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
+        ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
+        ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
 
     } else if ( params.mode == "assembled" ) {
 
-        ASSEMBLED_INPUT_CHECK (ch_input,
-                            params.miairr,
-                            params.collapseby,
-                            params.cloneby)
+        ASSEMBLED_INPUT_CHECK (
+            ch_input,
+            params.miairr,
+            params.collapseby,
+            params.cloneby
+        )
         ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty([]) )
 
         if (params.reassign) {
@@ -125,21 +126,21 @@ workflow AIRRFLOW {
         ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
         ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
 
-        ch_presto_filterseq_logs = Channel.empty()
-        ch_presto_maskprimers_logs = Channel.empty()
-        ch_presto_pairseq_logs =  Channel.empty()
-        ch_presto_clustersets_logs =  Channel.empty()
-        ch_presto_buildconsensus_logs =  Channel.empty()
-        ch_presto_postconsensus_pairseq_logs =  Channel.empty()
-        ch_presto_assemblepairs_logs =  Channel.empty()
-        ch_presto_collapseseq_logs =  Channel.empty()
-        ch_presto_splitseq_logs =  Channel.empty()
-        ch_fastp_html = Channel.empty()
-        ch_fastp_json = Channel.empty()
-        ch_fastqc_postassembly_mqc = Channel.empty()
+        ch_presto_filterseq_logs             = Channel.empty()
+        ch_presto_maskprimers_logs           = Channel.empty()
+        ch_presto_pairseq_logs               = Channel.empty()
+        ch_presto_clustersets_logs           = Channel.empty()
+        ch_presto_buildconsensus_logs        = Channel.empty()
+        ch_presto_postconsensus_pairseq_logs = Channel.empty()
+        ch_presto_assemblepairs_logs         = Channel.empty()
+        ch_presto_collapseseq_logs           = Channel.empty()
+        ch_presto_splitseq_logs              = Channel.empty()
+        ch_fastp_html                        = Channel.empty()
+        ch_fastp_json                        = Channel.empty()
+        ch_fastqc_postassembly_mqc           = Channel.empty()
 
     } else {
-        exit 1, "Mode parameter value not valid."
+        error "Mode parameter value not valid."
     }
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(

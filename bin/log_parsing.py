@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Written by Gisela Gabernet and released under the MIT license (2020).
+
 # Log_parsing.py
 # Parsing log files for each of the steps for QC analysis.
 

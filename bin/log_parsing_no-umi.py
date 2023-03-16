@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Written by David Ladd and released under the MIT license (2020).
+
 # log_parsing_no-umi.py
 # Parsing log files for each of the steps for QC analysis.
 

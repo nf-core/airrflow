@@ -14,9 +14,7 @@
 
 ## Introduction
 
-** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io)
-toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions
-of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
+** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -33,7 +31,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 1. QC and sequence assembly (bulk only)
 
 - Raw read quality control, adapter trimming and clipping (`Fastp`).
-- Filtering sequences by base quality (`pRESTO FilterSeq`).
+- Filter sequences by base quality (`pRESTO FilterSeq`).
 - Mask amplicon primers (`pRESTO MaskPrimers`).
 - Pair read mates (`pRESTO PairSeq`).
 - For UMI-based sequencing:
@@ -100,7 +98,6 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 nextflow run nf-core/airrflow \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --input samplesheet.tsv \
---outdir ./results \
 --library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \

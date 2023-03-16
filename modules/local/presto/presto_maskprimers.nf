@@ -51,7 +51,7 @@ process PRESTO_MASKPRIMERS {
         END_VERSIONS
         """
     } else {
-        exit 1, "Error in determining cprimer position. Please choose R1 or R2."
+        error "Error in determining cprimer position. Please choose R1 or R2."
     }
 
 }

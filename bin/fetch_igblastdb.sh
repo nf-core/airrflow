@@ -3,6 +3,7 @@
 #
 # Author:  Jason Vander Heiden
 # Date:    2020.08.11
+# Licence: AGPL-3
 #
 # Arguments:
 #   -o = Output directory for downloaded files. Defaults to current directory.

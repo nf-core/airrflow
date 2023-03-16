@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
-#
+# Written by Susanna Marquez and released under the MIT license (2021).
+
 # Quality filter:
 # - locus should match v_call chain
 # - locus should match c_call (TODO)

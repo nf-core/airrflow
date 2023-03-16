@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+# Written by Gisela Gabernet and released under the MIT license (2020).
 
 library(rmarkdown)
 library(optparse)

@@ -53,7 +53,7 @@ process PRESTO_MASKPRIMERS_POSTASSEMBLY {
         END_VERSIONS
         """
     } else {
-        exit 1, "Error in determining cprimer positon."
+        error "Error in determining cprimer positon."
     }
 
 }

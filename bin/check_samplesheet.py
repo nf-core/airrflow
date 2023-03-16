@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# Written by Gisela Gabernet and released under the MIT license (2020).
 # This script is based on the example at: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/design.csv
 
 import os

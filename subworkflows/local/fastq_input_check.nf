@@ -50,24 +50,24 @@ def create_fastq_channels(LinkedHashMap col) {
 
     def array = []
     if (!file(col.filename_R1).exists()) {
-        exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${col.filename_R1}"
+        error "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${col.filename_R1}"
     }
     if (!file(col.filename_R2).exists()) {
-        exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${col.filename_R2}"
+        error "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${col.filename_R2}"
     }
     if (col.filename_I1) {
         if (!params.index_file){
-            exit 1, "ERROR: --index_file was not provided but the index file path is specified in the samplesheet!"
+            error "ERROR: --index_file was not provided but the index file path is specified in the samplesheet!"
         }
         if (!file(col.filename_I1).exists()) {
-            exit 1, "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${col.filename_I1}"
+            error "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${col.filename_I1}"
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2), file(col.filename_I1) ] ]
     } else {
 
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
         if (params.index_file) {
-            exit 1, "ERROR: --index_file was provided but the index file path is not specified in the samplesheet!"
+            error "ERROR: --index_file was provided but the index file path is not specified in the samplesheet!"
         }
     }
     return array

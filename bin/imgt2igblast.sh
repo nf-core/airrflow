@@ -3,6 +3,7 @@
 #
 # Author:  Jason Anthony Vander Heiden
 # Date:    2016.11.21
+# Licence: AGPL-3
 #
 # Arguments:
 #   -i = Input directory containing germlines in the form <species>/vdj/imgt_<species>_<chain><segment>.fasta

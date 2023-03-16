@@ -4,7 +4,7 @@
 process VALIDATE_INPUT {
     tag "$samplesheet"
     label 'immcantation'
-    label 'single_cpu'
+    label 'process_single'
 
     conda "bioconda::r-enchantr=0.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -16,7 +16,6 @@ process VALIDATE_INPUT {
     path miairr
     val collapseby
     val cloneby
-    //val reassign
 
     output:
     path "*/validated_input.tsv", emit: validated_input

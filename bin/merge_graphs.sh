@@ -1,4 +1,5 @@
 #!/bin/bash
+# Written by Gisela Gabernet and released under the MIT license (2020).
 
 DIR="Graphml_trees"   # input files
 
