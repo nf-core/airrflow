@@ -5,8 +5,8 @@ on:
     branches:
       - dev
   pull_request:
-  release:
-    types: [published]
+    branches-ignore:
+      - '!master'
 
 env:
   NXF_ANSI_LOG: false
@@ -16,9 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
+  test_container:
+    name: Run workflow with immcantation devel test_container
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/airrflow') }}
     runs-on: ubuntu-latest
     strategy:
@@ -26,29 +25,7 @@ jobs:
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v3
-
-      - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
-        with:
-          version: "${{ matrix.NXF_VER }}"
-
-      - name: Run pipeline with test data
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
-
-  test_profile:
-    name: Run workflow test with different profiles
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/airrflow') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        NXF_VER:
-          - "22.10.1"
-          - "latest-everything"
-        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled", "test_igblast"]
+        profile: ["test_assembled_immcantation_devel", "test_raw_immcantation_devel"]
       fail-fast: false
     steps:
       - name: Check out pipeline code
