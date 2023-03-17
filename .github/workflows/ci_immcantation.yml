@@ -6,7 +6,7 @@ on:
       - dev
   pull_request:
     branches-ignore:
-      - 'master'
+      - "master"
 
 env:
   NXF_ANSI_LOG: false
