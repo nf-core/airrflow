@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Written by David Ladd and released under the MIT license (2020).
+
 # log_parsing_no-umi.py
 # Parsing log files for each of the steps for QC analysis.
 
@@ -21,7 +23,6 @@ processes = [
 df_process_list = []
 
 for process in processes:
-
     find = subprocess.check_output(["find", process, "-name", "*command_log.txt"])
     log_files = find.decode().split("\n")
     log_files = list(filter(None, log_files))

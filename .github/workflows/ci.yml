@@ -11,6 +11,10 @@ on:
 env:
   NXF_ANSI_LOG: false
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Run pipeline with test data
@@ -20,11 +24,11 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -42,9 +46,10 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
-        profile: ["test_tcr", "test_no_umi", "test_tcr_thr", "test_nocluster", "test_fetchimgt"]
+        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled", "test_igblast"]
+      fail-fast: false
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -57,3 +62,14 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/.nextflow.log
+            /home/runner/work
+            !/home/runner/work/conda
+            !/home/runner/work/singularity

@@ -4,7 +4,7 @@
 [![GitHub Actions Linting Status](https://github.com/nf-core/airrflow/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -14,7 +14,9 @@
 
 ## Introduction
 
-** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell bulk repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset and requires as input targeted amplicon sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol.
+** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
+
+![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
@@ -22,31 +24,58 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-By default, the pipeline currently performs the following steps:
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
 
-- Raw read quality control, adapter trimming and read clipping (`fastp`)
-- Pre-processing (`pRESTO`)
-  - Filtering sequences by sequencing quality.
-  - Masking amplicon primers.
-  - Pairing read mates.
-  - Cluster sequences according to similarity, it helps identify if the UMI barcode diversity was not high enough.
-  - Building consensus of sequences with the same UMI barcode.
-  - Re-pairing read mates.
-  - Assembling R1 and R2 read mates.
-  - Removing and annotating read duplicates with different UMI barcodes.
-  - Filtering out sequences that do not have at least 2 duplicates.
-- Post-assembly read quality control (`FastQC`s)
-- Assigning gene segment alleles with `IgBlast` using the IMGT database (`Change-O`).
-- Finding the Hamming distance threshold for clone definition (`SHazaM`).
-- Clonal assignment: defining clonal lineages of the B-cell / T-cell populations (`Change-O`).
-- Reconstructing gene calls of germline sequences (`Change-O`).
-- Generating clonal trees (`Alakazam`).
-- Repertoire analysis: calculation of clonal diversity and abundance (`Alakazam`).
-- Aggregating QC reports (`MultiQC`).
+![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
+
+1. QC and sequence assembly (bulk only)
+
+- Raw read quality control, adapter trimming and clipping (`Fastp`).
+- Filter sequences by base quality (`pRESTO FilterSeq`).
+- Mask amplicon primers (`pRESTO MaskPrimers`).
+- Pair read mates (`pRESTO PairSeq`).
+- For UMI-based sequencing:
+  - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
+  - Build consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
+- Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
+- Remove and annotate read duplicates (`pRESTO CollapseSeq`).
+- Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
+
+2. V(D)J annotation and filtering (bulk and single-cell)
+
+- Assign gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Annotate alignments in AIRR format (`Change-O MakeDB`)
+- Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
+- Filter productive sequences (`Change-O ParseDB split`)
+- Filter junction length multiple of 3
+- Annotate metadata (`EnchantR`)
+
+3. QC filtering (bulk and single-cell)
+
+- Bulk sequencing filtering:
+  - Remove chimeric sequences (optional) (`SHazaM`, `EnchantR`)
+  - Detect cross-contamination (optional) (`EnchantR`)
+  - Collapse duplicates (`Alakazam`, `EnchantR`)
+- Single-cell QC filtering (`EnchantR`)
+  - Remove cells without heavy chains.
+  - Remove cells with multiple heavy chains.
+  - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence.
+  - Modify `cell_id`s to ensure they are unique in the project.
+
+4. Clonal analysis (bulk and single-cell)
+
+- Find threshold for clone definition (`SHazaM`, `EnchantR`).
+- Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
+- Build lineage trees (`SCOPer`, `IgphyML`, `EnchantR`).
+
+5. Repertoire analysis and reporting
+
+- Custom repertoire analysis pipeline report (`Alakazam`).
+- Aggregate QC reports (`MultiQC`).
 
 ## Quick Start
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
+1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.1`)
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
@@ -69,11 +98,13 @@ By default, the pipeline currently performs the following steps:
 nextflow run nf-core/airrflow \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --input samplesheet.tsv \
---outdir ./results \
---protocol pcr_umi \
+--library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
---umi_length 12
+--umi_length 12 \
+--max_memory 8.GB \
+--max_cpus 8 \
+--outdir ./results
 ```
 
 See [usage docs](https://nf-co.re/airrflow/usage) for all of the available options when running the pipeline.
@@ -84,11 +115,10 @@ The nf-core/airrflow pipeline comes with documentation about the pipeline [usage
 
 ## Credits
 
-nf-core/airrflow was originally written by Gisela Gabernet, Simon Heumos, Alexander Peltzer.
+nf-core/airrflow was written by [Gisela Gabenet](https://github.com/ggabernet), [Susanna Marquez](https://github.com/ssnn-airr), [Alexander Peltzer](@apeltzer) and [Simon Heumos](@subwaystation).
 
 Further contributors to the pipeline are:
 
-- [@ssnn-airr](https://github.com/ssnn-airr)
 - [@dladd](https://github.com/dladd)
 
 ## Contributions and Support

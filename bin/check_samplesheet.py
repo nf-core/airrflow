@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# Written by Gisela Gabernet and released under the MIT license (2020).
 # This script is based on the example at: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/design.csv
 
 import os
@@ -41,7 +41,7 @@ def check_samplesheet(file_in):
     """
     This function checks that the samplesheet:
 
-    - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species
+    - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species, single_cell
     - sample ids are unique
     - samples from the same subject come from the same species
     - pcr_target_locus is "IG" or "TR"
@@ -50,9 +50,8 @@ def check_samplesheet(file_in):
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
-
         ## Check that required columns are present
-        MIN_COLS = 6
+        MIN_COLS = 7
         REQUIRED_COLUMNS = [
             "sample_id",
             "filename_R1",
@@ -60,6 +59,11 @@ def check_samplesheet(file_in):
             "subject_id",
             "species",
             "pcr_target_locus",
+            "single_cell",
+            "sex",
+            "tissue",
+            "biomaterial_provider",
+            "age",
         ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
         for col in REQUIRED_COLUMNS:

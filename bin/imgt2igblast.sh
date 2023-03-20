@@ -3,6 +3,7 @@
 #
 # Author:  Jason Anthony Vander Heiden
 # Date:    2016.11.21
+# Licence: AGPL-3
 #
 # Arguments:
 #   -i = Input directory containing germlines in the form <species>/vdj/imgt_<species>_<chain><segment>.fasta
@@ -64,6 +65,10 @@ do
             F=$(echo imgt_${SPECIES}_${CHAIN}_${SEGMENT}.fasta | tr '[:upper:]' '[:lower:]')
             cat ${GERMDIR}/${SPECIES}/vdj/imgt_${SPECIES}_${CHAIN}?${SEGMENT}.fasta > ${TMPDIR}/${F}
         done
+
+        # C nucleotides
+        F=$(echo imgt_${SPECIES}_${CHAIN}_c.fasta | tr '[:upper:]' '[:lower:]')
+        cat ${GERMDIR}/${SPECIES}/constant/imgt_${SPECIES}_${CHAIN}?C.fasta > ${TMPDIR}/${F}
 
         # V amino acids
         F=$(echo imgt_aa_${SPECIES}_${CHAIN}_v.fasta | tr '[:upper:]' '[:lower:]')

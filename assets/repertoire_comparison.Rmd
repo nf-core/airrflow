@@ -10,6 +10,10 @@ output:
     css: ./nf-core_style.css
     highlight: pygments
     pdf_document: true
+    pandoc_args: [
+      "+RTS", "-K4000m",
+      "-RTS"
+    ]
   html_notebook:
     toc: yes
 ---
@@ -17,7 +21,7 @@ output:
 
 ---
 title: "Repertoire analysis"
-subtitle: "Clonal abundance, diversity and V-family gene usage"
+subtitle: "Interactive summary report produced by the nf-core/airrflow pipeline"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
 ---
@@ -25,46 +29,122 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(knitr)
-library(kableExtra)
 library(dplyr)
+library(tidyr)
 library(alakazam)
 library(shazam)
 library(stringr)
+library(plotly)
 
 theme_set(theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
 knitr::opts_chunk$set(echo = FALSE)
-```
-***
 
-# Airrflow analysis pipeline
+# Setting data table and creating output folders
+outdir <- "repertoire_comparison"
+dir.create(outdir)
+seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
+dir.create(seq_dir)
 
-## Pipeline overview
-
-## Number of sequences
-
-Number of reads for each of the samples and number of sequences left after representative analysis steps.
-
-```{r seq_numbers, echo=FALSE, results='asis'}
-tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
-kable(tab_seqs) %>%
-    kable_styling("hover") %>%
-    scroll_box(width = "100%", height = "400px")
 ```
 
+# Number of sequences
+
+## Sequence assembly steps
+
+Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
+The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
+
+```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
+read_table <- function(tab_file){
+        tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
+        write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
+    }
+tryCatch( {read_table("./Table_sequences.tsv")} ,
+  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
+)
+
+```
+
+
+```{r seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
+tryCatch( {
+    tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
+
+    plot_table <- tidyr::pivot_longer(tab_seqs,
+                                      cols=Sequences_R1:Igblast,
+                                      names_to = "steps",
+                                      values_to ="count")
+    plot_table$steps <- factor(plot_table$steps, levels=c("Sequences_R1", "Sequences_R2", "Filtered_quality_R1",
+                                                            "Filtered_quality_R2", "Mask_primers_R1", "Mask_primers_R2",
+                                                            "Paired", "Build_consensus", "Assemble_pairs", "Unique",
+                                                            "Representative_2", "Igblast"))
+    seqs_plot <- ggplot(data=plot_table,
+                        aes(x=steps, y=count, group=sample_id)) +
+                  geom_line(aes(colour=sample_id)) +
+                  geom_point(aes(colour=sample_id)) +
+                  scale_y_log10() +
+                  xlab("") + ylab("Sequence count") +
+                  ggtitle("Number of sequences after each of the sequence assembly steps") +
+                  theme(axis.text.x= element_text(angle = 45))
+
+    ggplotly(seqs_plot)
+  },
+  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
+)
+```
+
+## Filtering and clonal analysis steps
+
+Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
+The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
+
+```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
+tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
+
+if (any(is.na(tab_seqs_assembled$sample_id))) {
+  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$file_0, function(x) unlist(strsplit(as.character(x), "_"))[1])
+}
+
+dat <- tidyr::pivot_wider(tab_seqs_assembled,
+                          id_cols=sample_id,
+                          names_from=task,
+                          values_from=to_num_seqs)
+dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
+                                "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
+
+dat <- apply(dat,2,as.character)
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
+```
+
+
+```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
+
+tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes-igblast", "MakeDB-igblast",
+                                                                    "FilterQuality",
+                                                          "ParseDb-split", "FilterJunctionMod3", "AddMetadata",
+                                                          "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
+                                                          "ClonePass"))
+tab_seqs_assembled <- tab_seqs_assembled[!grepl("productive-F",tab_seqs_assembled$to_name),]
+
+seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
+                    aes(x=task, y=to_num_seqs, group=sample_id)) +
+              geom_line(aes(colour=sample_id)) +
+              geom_point(aes(colour=sample_id)) +
+              scale_y_log10() +
+              xlab("") + ylab("Sequence count") +
+              ggtitle("Number of sequences after each of the downstream steps") +
+              theme(axis.text.x= element_text(angle = 45))
+
+ggplotly(seqs_plot_assembled)
+```
 
 ```{r read_data, include=FALSE}
-# Reading data tables and ceating output folders
-datadir <- "."
-outdir <- "repertoire_comparison"
+# paths to the files are found in the first column of all_repertoires_report_tabs.txt,
+# in the current folder
+all_files <- read.delim("all_repertoires_report_tabs.txt", header=F, sep="\t")[[1]]
 
-# setwd to results folder (containing alakazam, shazam, etc. folders)
-
-### Read all the tables as produced by the pipeline in the current folder and joins them together in the df_all dataframe
-
-all_files <- system(paste0("find '",datadir,"' -name '*germ-pass.tsv'"), intern=T)
-
-dir.create(outdir)
 diversity_dir <- paste(outdir, "Diversity", sep="/")
 abundance_dir <- paste(outdir, "Abundance", sep="/")
 vfamily_dir <- paste(outdir, "V_family", sep="/")
@@ -73,18 +153,10 @@ dir.create(abundance_dir)
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
-df_all = data.frame()
-for (file in all_files){
-    fname = file
-    print(fname)
 
-    df_pat <- read.csv(fname, sep="\t")
+df_list = lapply(all_files, read.csv, sep="\t")
 
-    df_all <- rbind(df_all, df_pat)
-
-}
-
-write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
+df_all <- dplyr::bind_rows(df_list)
 
 # Remove underscores in these columns
 df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
@@ -92,6 +164,9 @@ df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.characte
 
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
 df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
+
+# Write table to file
+write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
 
 # Set number of bootrstraps
 nboot = 200
@@ -110,7 +185,6 @@ range of the bootstrap samples.
 
 All clonal abundance plots and tables with abundance values can be found under `repertoire_analysis/Abundance`.
 
-## Clonal abundance per subject
 ```{r clonal_abundance, echo=FALSE}
 abund <- estimateAbundance(df_all, group = "subj_locus", ci=0.95, nboot=nboot)
 abund@abundance$sample_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
@@ -125,16 +199,16 @@ p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
                     ymax = upper, fill = sample_id), alpha = 0.4) +
     geom_line(aes(color = sample_id)) +
     ggtitle(abund_main) +
-    xlab("Rank") + ylab("Abundance") +
+    xlab("log(Rank)") + ylab("Abundance") +
     scale_x_log10(limits = NULL,
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-    scale_y_continuous(labels = scales::percent) +
-    facet_grid(cols = vars(locus), rows = vars(subject_id), scales="free", drop = T)
-p_ca
+    scale_y_continuous(labels = scales::percent) #+
+    #facet_grid(cols = vars(locus), rows = vars(subject_id), scales="free", drop = T)
+ggplotly(p_ca)
 ```
 
-```{r include = FALSE}
+```{r plot_abundance, include = FALSE}
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf"), device="pdf", width = 25, height = 10, units="cm")
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
 write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
@@ -179,7 +253,6 @@ The solid line shows the mean Diversity of the bootstrap samples, whereas the tr
 range of the bootstrap samples.
 
 
-## Clonal diversity per subject
 ```{r clonal_diversity, echo = FALSE}
 sample_div <- alphaDiversity(abund, group="subj_locus", min_q=0, max_q=4, step_q=0.05,
                             ci=0.95, nboot=nboot)
@@ -189,17 +262,17 @@ sample_div@diversity$sample_id <- sapply(sample_div@diversity$subj_locus, functi
 sample_div@diversity$subject_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
 sample_div@diversity$locus <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-div_p <- ggplot(sample_div@diversity, aes(x = q, y = d)) +
+div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
     geom_ribbon(aes(ymin = d_lower,
                     ymax = d_upper,
                     fill = sample_id), alpha = 0.4) +
     geom_line(aes(color = sample_id)) +
-    xlab("q") + ylab(expression(""^q * D)) +
-    ggtitle(sample_main) +
-    facet_grid(cols=vars(locus), rows=vars(subject_id))
-div_p
+    xlab("q") + ylab("Diversity(q)") +
+    ggtitle(sample_main) #+
+    #facet_grid(cols=vars(locus), rows=vars(subject_id))
+ggplotly(div_p)
 ```
-```{r include = FALSE}
+```{r plot_diversity, include = FALSE}
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
 write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversity_data_subject.tsv"), sep="\t", quote = F, row.names = F)
@@ -213,7 +286,7 @@ The V gene usage (in percentage) in each of the samples is represented below. Al
 
 Gene family usage is normalized by the number of clones.
 
-```{r, echo=F, fig.width=12, fig.asp=1, fig.align='center'}
+```{r gene_family, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family", clone="clone_id")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -226,11 +299,11 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id))
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
-    facet_grid(cols=vars(locus), rows=vars(subject_id)) +
+    #facet_grid(cols=vars(locus), rows=vars(subject_id)) +
     theme(legend.position = "right")
-g2
+ggplotly(g2)
 
-ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.svg"), plot = g2, width = 18, height = 15, units = "cm")
+ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 18, height = 15, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 18, height = 15, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"), sep = "\t", quote = F, row.names = F)
@@ -243,23 +316,23 @@ All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ### By clones {-}
 
-```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
+```{r gene_clonal, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene", clone = "clone_id")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
 family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=gene)) +
+g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
-    xlab("") +
-    facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
-    theme(legend.position = "none")
-g2
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.svg"), plot = g2, width = 20, height = 40, units = "cm")
+    xlab("") #+
+    #facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
+    #theme(legend.position = "none")
+ggplotly(g2)
+ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_data.tsv"), sep = "\t", quote = F, row.names = F)
@@ -267,23 +340,23 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_da
 
 ### By sequences {-}
 
-```{r, echo=F, fig.width=12, fig.asp=0.8, fig.align='center'}
+```{r gene_seq, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
 family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=gene)) +
+g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
-    xlab("") +
-    facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
-    theme(legend.position = "none")
-g2
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.svg"), plot = g2, width = 20, height = 40, units = "cm")
+    xlab("") #+
+    #facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
+    #theme(legend.position = "none")
+ggplotly(g2)
+ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
 
 write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_data.tsv"), sep = "\t", quote = F, row.names = F)

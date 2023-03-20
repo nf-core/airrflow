@@ -1,11 +1,12 @@
 process PRESTO_MASKPRIMERS {
     tag "$meta.id"
     label "process_high"
+    label 'immcantation'
 
-    conda (params.enable_conda ? "bioconda::presto=0.7.0" : null)
+    conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.0--pyhdfd78af_0' :
-        'quay.io/biocontainers/presto:0.7.0--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
+        'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)
@@ -50,7 +51,7 @@ process PRESTO_MASKPRIMERS {
         END_VERSIONS
         """
     } else {
-        exit 1, "Error in determining cprimer position. Please choose R1 or R2."
+        error "Error in determining cprimer position. Please choose R1 or R2."
     }
 
 }

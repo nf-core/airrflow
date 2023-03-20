@@ -25,20 +25,10 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-if (params.subworkflow == 'bcellmagic') {
-    include { BCELLMAGIC } from './workflows/bcellmagic'
-} else if (params.subworkflow == 'reveal') {
-    include { REVEAL } from './workflows/reveal'
-}
+include { AIRRFLOW } from './workflows/airrflow'
 
 workflow NFCORE_AIRRFLOW {
-    if (params.subworkflow == "bcellmagic") {
-        BCELLMAGIC()
-    } else if (params.subworkflow == "reveal") {
-        REVEAL()
-    } else {
-        exit 1
-    }
+    AIRRFLOW()
 }
 
 workflow {

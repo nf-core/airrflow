@@ -1,12 +1,14 @@
 #!/usr/bin/env Rscript
-#
+# Written by Gisela Gabernet and released under the MIT license (2020).
+
+
 # Add metadata to repertoire:
 # Arguments:
 #   --repertoire    Tabulated data in AIRR (TSV) format with clonal assignments and germline assignments.
 #   --samplesheet   Names of the metadata column to be used as node label on the tree plots
 #   --outname       Filename for the output repertoire
 #   -h  Display help.
-# Example: ./lineage_reconstruction.R --repertoire igblast_germ-pass.tsv --nodelabel population
+# Example: ./add_metadata.R --repertoire igblast_germ-pass.tsv --samplesheet samplesheet.tsv --outname my-repertoire
 
 # Libraries
 suppressPackageStartupMessages(library(dplyr))
@@ -38,7 +40,7 @@ parsed_fields <-
 
 samplesheet_colnames <- colnames(samplesheet)
 
-# merge tables only in case the samplesheet contains more co    lumns than the required ones
+# merge tables only in case the samplesheet contains more columns than the required ones
 print( samplesheet_colnames[!(samplesheet_colnames %in% parsed_fields)])
 
 if (length(samplesheet_colnames[!(samplesheet_colnames %in% parsed_fields)]) > 1 ) {

@@ -4,7 +4,7 @@
 
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowBcellmagic {
+class WorkflowAirrflow {
 
     //
     // Check and validate parameters

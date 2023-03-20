@@ -3,6 +3,47 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0] - 2023-03-15 "Portus"
+
+### `Added`
+
+- [#197](https://github.com/nf-core/airrflow/pull/197) Combined old bcellmagic and reveal subworkflows for better pipeline integration.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added compulsory AIRR fields in input samplesheet.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added option to calculate clones per group `clone_by` and then create a report with the results altogether.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added pipeline overview diagram and metro map.
+- [#197](https://github.com/nf-core/airrflow/pull/197) Added full logs to `enchantr report filesize` process.
+- [#215](https://github.com/nf-core/airrflow/pull/215) Template update to nf-core tools v2.7.1.
+- [#224](https://github.com/nf-core/airrflow/pull/224) Template update to nf-core tools v2.7.2.
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added plotly interactive reports.
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added find threshold report even when specifying clonal threshold.
+- [#225](https://github.com/nf-core/airrflow/pull/225) Added possibility to provide direct call to igblast.
+- [#228](https://github.com/nf-core/airrflow/pull/228) Improved docs preparing release.
+- [#244](https://github.com/nf-core/airrflow/pull/244) Bump versions to 3.0.
+
+### `Fixed`
+
+- [#221](https://github.com/nf-core/airrflow/pull/221) Fixed bug arising when not providing `--index_file FALSE` for some input options not requiring index files.
+- [#239](https://github.com/nf-core/airrflow/pull/239) Implemented workaround for Slurm Sbatch file too large. We plan to revert when possible[#242](https://github.com/nf-core/airrflow/issues/242)
+- [#245](https://github.com/nf-core/airrflow/pull/245) Add missing module versions
+- [#248](https://github.com/nf-core/airrflow/pull/248) Applied review comments by @adamrtalbot @louperelo, thank you!
+- [#249](https://github.com/nf-core/airrflow/pull/249) Do not run tests with immcantation container when doing a PR to master.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.13        | 1.14        |
+| pandas     | 1.1.5       | 1.5.3       |
+| presto     | 0.7.0       | 0.7.1       |
+| changeo    | 1.2.0       | 1.3.0       |
+| igblast    | 1.17.1      | 1.19.0      |
+| r-enchantr |             | 0.1.1       |
+| r-plotly   |             | 4.10.1      |
+
+### `Deprecated`
+
+- Deprecated param `enable_conda`
+
 ## [2.4.0] 2022-12-05 "Aparecium"
 
 ### `Added`
@@ -21,6 +62,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#180](https://github.com/nf-core/airrflow/pull/180) Added possibility to provide custom Rmarkdown report.
 - [#183](https://github.com/nf-core/airrflow/pull/183) Update template to nf-core tools v2.5.1
 - [#183](https://github.com/nf-core/airrflow/pull/183) Add option to provide another different threshold in splitseq process
+- Rename reveal test to test_assembled, add separate test for immcantation devel container as another job so other tests are not cancelled if this test does not run through.
 
 ### `Fixed`
 

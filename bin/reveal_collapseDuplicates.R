@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
-#
+# Written by Susanna Marquez and released under the MIT license (2021).
+
 # Chimeric sequences filter:
 # sequences with >5 mismatches from the germline reference in any 10 base pair window are discarded
 # Arguments:
@@ -102,5 +103,5 @@ for (i in 1:length(repertoires)) {
     } else {
         output_fn <- paste0(ids[i],"_collapse-pass.tsv")
     }
-    write_airr(db %>% filter(id == ids[i]), file=output_fn)
+    write_rearrangement(db %>% filter(id == ids[i]), file=output_fn)
 }

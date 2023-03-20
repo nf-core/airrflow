@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
-#
+# Written by Susanna Marquez and released under the MIT license (2021).
+
 # Merge db and input metadata by
 #
 # Arguments:
@@ -61,7 +62,7 @@ if (!("INPUTID" %in% names(opt))) {
 metadata <- read.csv(opt$METADATA, sep = "\t", header = TRUE, stringsAsFactors = F)
 
 metadata <- metadata %>%
-    filter(id == opt$INPUTID)
+    filter(sample_id == opt$INPUTID)
 
 if (nrow(metadata) != 1) {
     stop("Expecting nrow(metadata) == 1; nrow(metadata) == ", nrow(metadata), " found")
@@ -77,13 +78,17 @@ internal_fields <-
         "valid_cloneby",
         #        "cloneby_group",
         "cloneby_size",
+        "id",
         "filetype",
         "valid_single_cell",
-        "valid_pcr_target_locus"
+        "valid_pcr_target_locus",
+        "filename_R1",
+        "filename_R2",
+        "filename_I1"
     )
 metadata <- metadata[, !colnames(metadata) %in% internal_fields]
 
-db <- read_airr(opt$REPERTOIRE)
+db <- read_rearrangement(opt$REPERTOIRE)
 
 db <- cbind(db, metadata)
 
@@ -93,7 +98,7 @@ if (!is.null(opt$OUTNAME)) {
     output_fn <- sub(".tsv$", "_meta-pass.tsv", basename(opt$REPERTOIRE))
 }
 
-write_airr(db, file = output_fn)
+write_rearrangement(db, file = output_fn)
 
 
 write("START> AddMetadata", stdout())

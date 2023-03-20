@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
-#
+# Written by Susanna Marquez and released under the MIT license (2021).
+
 # Quality filter:
 # - locus should match v_call chain
 # - locus should match c_call (TODO)
@@ -26,8 +27,7 @@ opt_list <- list(
 )
 # Parse arguments
 opt <- parse_args(OptionParser(option_list = opt_list))
-# opt
-# getwd()
+
 
 # Check input file
 if (!("REPERTOIRE" %in% names(opt))) {
@@ -36,6 +36,10 @@ if (!("REPERTOIRE" %in% names(opt))) {
 
 # Read metadata file
 db <- read_rearrangement(opt$REPERTOIRE)
+
+# Remove rows that have NA values in all of v_call, d_call and j_call (still there when directly calling IgBlast)
+filter_na <- is.na(db$v_call) & is.na(db$d_call) & is.na(db$j_call)
+db <- db[!filter_na,]
 
 # locus field and locus obtained from v_call should match
 if (packageVersion("alakazam") < "1.0.3") {
@@ -58,6 +62,7 @@ same_locus <- getLocus(db[["v_call"]]) == db[["locus"]]
 n_count <- stri_count(db$sequence_alignment, regex = "Nn")
 positions_count <- stri_count(db$sequence_alignment, regex = "[^-.]")
 not_0 <- n_count > 0
+
 if (any(not_0)) {
     n_count[not_0] <- n_count[not_0] / positions_count[not_0]
 }
@@ -92,4 +97,4 @@ write("START> FilterQuality", stdout())
 write(paste0("FILE> ", basename(opt$REPERTOIRE)), stdout())
 write(paste0("OUTPUT> ", basename(output_fn)), stdout())
 write(paste0("PASS> ", sum(filter_pass)), stdout())
-write(paste0("FAIL> ", sum(!filter_pass)), stdout())
+write(paste0("FAIL> ", sum(!filter_pass) + sum(filter_na)), stdout())
