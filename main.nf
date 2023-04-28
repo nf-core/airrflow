@@ -4,7 +4,6 @@
     nf-core/airrflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/airrflow
-
     Website: https://nf-co.re/airrflow
     Slack  : https://nfcore.slack.com/channels/airrflow
 ----------------------------------------------------------------------------------------
