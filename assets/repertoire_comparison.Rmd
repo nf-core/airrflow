@@ -201,7 +201,7 @@ p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
                 labels = scales::trans_format("log10", scales::math_format(10^.x))) +
     scale_y_continuous(labels = scales::percent) #+
     #facet_grid(cols = vars(locus), rows = vars(subject_id), scales="free", drop = T)
-ggplot(p_ca)
+p_ca
 
 # Try with plotly native
 # abund@abundance %>% plot_ly( x=~rank, y=~p,
@@ -276,7 +276,7 @@ div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
     xlab("q") + ylab("Diversity(q)") +
     ggtitle(sample_main) #+
     #facet_grid(cols=vars(locus), rows=vars(subject_id))
-ggplot(div_p)
+div_p
 ```
 ```{r plot_diversity, include = FALSE}
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
