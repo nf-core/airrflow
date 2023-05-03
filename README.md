@@ -111,8 +111,6 @@ nextflow run nf-core/airrflow \
 --outdir ./results
 ```
 
-See [usage docs](https://nf-co.re/airrflow/usage) and [parameter docs](https://nf-co.re/airrflow/parameters) for all of the available options when running the pipeline.
-
 > **Warning:**
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
