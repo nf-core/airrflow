@@ -70,11 +70,11 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "PAIRS>" in line:
-                        pairs.append(line.strip().lstrip("PAIRS> "))
+                        pairs.append(line.strip().removeprefix("PAIRS> "))
                     elif "PASS>" in line:
-                        pass_pairs.append(line.strip().lstrip("PASS> "))
+                        pass_pairs.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                        fail_pairs.append(line.strip().lstrip("FAIL> "))
+                        fail_pairs.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -110,20 +110,20 @@ for process in processes:
                             process_name.append(process)
                     elif "SEQUENCES>" in line:
                         if c < 1:
-                            seqs_R1.append(line.strip().lstrip("SEQUENCES> "))
+                            seqs_R1.append(line.strip().removeprefix("SEQUENCES> "))
                         else:
-                            seqs_R2.append(line.strip().lstrip("SEQUENCES> "))
+                            seqs_R2.append(line.strip().removeprefix("SEQUENCES> "))
                     elif "PASS>" in line:
                         if c < 1:
-                            pass_R1.append(line.strip().lstrip("PASS> "))
+                            pass_R1.append(line.strip().removeprefix("PASS> "))
                         else:
-                            pass_R2.append(line.strip().lstrip("PASS> "))
+                            pass_R2.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
                         if c < 1:
-                            fail_R1.append(line.strip().lstrip("FAIL> "))
+                            fail_R1.append(line.strip().removeprefix("FAIL> "))
                             c += 1
                         else:
-                            fail_R2.append(line.strip().lstrip("FAIL> "))
+                            fail_R2.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -155,11 +155,11 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES1>" in line:
-                        seqs1.append(line.strip().lstrip("SEQUENCES1").lstrip("> "))
+                        seqs1.append(line.strip().removeprefix("SEQUENCES1").removeprefix("> "))
                     elif "SEQUENCES2>" in line:
-                        seqs2.append(line.strip().lstrip("SEQUENCES2").lstrip("> "))
+                        seqs2.append(line.strip().removeprefix("SEQUENCES2").removeprefix("> "))
                     elif "PASS>" in line:
-                        pass_pairs.append(line.strip().lstrip("PASS> "))
+                        pass_pairs.append(line.strip().removeprefix("PASS> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -189,15 +189,15 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "OUTPUT>" in line:
-                        output_file.append(line.strip().lstrip("OUTPUT> "))
+                        output_file.append(line.strip().removeprefix("OUTPUT> "))
                     elif "SEQUENCES>" in line:
-                        seqs.append(line.strip().lstrip("SEQUENCES> "))
+                        seqs.append(line.strip().removeprefix("SEQUENCES> "))
                     elif "SETS>" in line:
-                        pairs.append(line.strip().lstrip("SETS> "))
+                        pairs.append(line.strip().removeprefix("SETS> "))
                     elif "PASS>" in line:
-                        pass_pairs.append(line.strip().lstrip("PASS> "))
+                        pass_pairs.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                        fail_pairs.append(line.strip().lstrip("FAIL> "))
+                        fail_pairs.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -228,13 +228,13 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "SEQUENCES>" in line:
-                        seqs.append(line.strip().lstrip("SEQUENCES> "))
+                        seqs.append(line.strip().removeprefix("SEQUENCES> "))
                     elif "UNIQUE>" in line:
-                        unique.append(line.strip().lstrip("UNIQUE> "))
+                        unique.append(line.strip().removeprefix("UNIQUE> "))
                     elif "DUPLICATE>" in line:
-                        duplicate.append(line.strip().lstrip("DUPLICATE> "))
+                        duplicate.append(line.strip().removeprefix("DUPLICATE> "))
                     elif "UNDETERMINED>" in line:
-                        undetermined.append(line.strip().lstrip("UNDETERMINED> "))
+                        undetermined.append(line.strip().removeprefix("UNDETERMINED> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -258,9 +258,9 @@ for process in processes:
                 for line in f:
                     if "PASS>" in line:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
-                        pass_blast.append(line.strip().lstrip("PASS> "))
+                        pass_blast.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                        fail_blast.append(line.strip().lstrip("FAIL> "))
+                        fail_blast.append(line.strip().removeprefix("FAIL> "))
 
         pass_fail = [list(map(int, pass_blast)), list(map(int, fail_blast))]
         repres_2 = [sum(x) for x in zip(*pass_fail)]
@@ -291,13 +291,13 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
-                        seqs.append(line.strip().lstrip("RECORDS> "))
+                        seqs.append(line.strip().removeprefix("RECORDS> "))
                     elif "CLONES>" in line:
-                        clones.append(line.strip().lstrip("CLONES> "))
+                        clones.append(line.strip().removeprefix("CLONES> "))
                     elif "PASS>" in line:
-                        pass_clones.append(line.strip().lstrip("PASS> "))
+                        pass_clones.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                        fail_clones.append(line.strip().lstrip("FAIL> "))
+                        fail_clones.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -326,11 +326,11 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "RECORDS>" in line:
-                        seqs.append(line.strip().lstrip("RECORDS> "))
+                        seqs.append(line.strip().removeprefix("RECORDS> "))
                     elif "PASS>" in line:
-                        pass_clones.append(line.strip().lstrip("PASS> "))
+                        pass_clones.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                        fail_clones.append(line.strip().lstrip("FAIL> "))
+                        fail_clones.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
