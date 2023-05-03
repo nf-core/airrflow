@@ -19,7 +19,6 @@ process DOWSER_LINEAGES {
     tag "${meta.id}"
 
     label 'process_long_parallelized'
-    label 'error_ignore'
     label 'immcantation'
 
     conda "bioconda::r-enchantr=0.1.1"
