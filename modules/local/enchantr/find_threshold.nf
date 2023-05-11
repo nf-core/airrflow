@@ -1,3 +1,20 @@
+def asString (args) {
+    def s = ""
+    def value = ""
+    if (args.size()>0) {
+        if (args[0] != 'none') {
+            for (param in args.keySet().sort()){
+                value = args[param].toString()
+                if (!value.isNumber()) {
+                    value = "'"+value+"'"
+                }
+                s = s + ",'"+param+"'="+value
+            }
+        }
+    }
+    return s
+}
+
 process FIND_THRESHOLD {
     tag "all_reps"
 
@@ -25,7 +42,7 @@ process FIND_THRESHOLD {
     script:
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='${tab}',\\
+        report_params=list('input'='${tab.join(',')}',\\
             'cloneby'='${params.cloneby}',\\
             'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\
@@ -33,7 +50,7 @@ process FIND_THRESHOLD {
             'nproc'=${task.cpus},\\
             'outname'='all_reps',\\
             'log'='all_reps_threshold_command_log',\\
-            'logo'='${logo}'))"
+            'logo'='${logo}' ${args}))"
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
