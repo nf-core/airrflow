@@ -63,7 +63,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_versions = ch_versions.mix(REPORT_FILE_SIZE.out.versions)
 
     AIRRFLOW_REPORT(
-        ch_repertoires_report,
+        ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
         REPORT_FILE_SIZE.out.table.ifEmpty([]),
         ch_report_rmd,
