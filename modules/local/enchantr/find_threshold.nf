@@ -40,7 +40,7 @@ process FIND_THRESHOLD {
     path "versions.yml", emit: versions
 
     script:
-    def args = asString(task.ext.args) ?: ''
+    def args = task.ext.args ? asString(task.ext.args) : ''
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
         report_params=list('input'='${tab.join(',')}',\\

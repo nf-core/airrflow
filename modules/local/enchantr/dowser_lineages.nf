@@ -35,7 +35,7 @@ process DOWSER_LINEAGES {
     path "versions.yml", emit: versions
 
     script:
-    def args = asString(task.ext.args) ?: ''
+    def args = task.ext.args ? asString(task.ext.args) : ''
     def id_name = "$tabs".replaceFirst('__.*','')
     // TODO use nice outname, not tabs
     """

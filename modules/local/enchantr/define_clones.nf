@@ -39,7 +39,7 @@ process DEFINE_CLONES {
 
 
     script:
-    def args = asString(task.ext.args) ?: ''
+    def args = task.ext.args ? asString(task.ext.args) : ''
     def thr = threshold.join("")
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
