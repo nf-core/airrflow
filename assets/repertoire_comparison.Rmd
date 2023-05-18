@@ -42,6 +42,9 @@ dir.create(outdir)
 seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
 dir.create(seq_dir)
 
+# Read data from the work directory
+datadir <- "."
+
 ```
 
 # Number of sequences
@@ -139,7 +142,7 @@ ggplotly(seqs_plot_assembled)
 ```{r read_data, include=FALSE}
 # paths to the files are found in the first column of all_repertoires_report_tabs.txt,
 # in the current folder
-all_files <- read.delim("all_repertoires_report_tabs.txt", header=F, sep="\t")[[1]]
+all_files <- system(paste0("find '",datadir,"' -name '*clone-pass.tsv'"), intern=T)
 
 diversity_dir <- paste(outdir, "Diversity", sep="/")
 abundance_dir <- paste(outdir, "Abundance", sep="/")
