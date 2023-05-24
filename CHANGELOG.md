@@ -3,15 +3,20 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0.1dev] - "Portus" Hotfix
+## [3.1] - "Portus" Hotfix
 
 ### `Added`
 
 - [#250](https://github.com/nf-core/airrflow/pull/250) Back to `dev`.
+- [#256](https://github.com/nf-core/airrflow/pull/256) Template update to nf-core/tools v2.8
+
+
 
 ### `Fixed`
 
 - [#250](https://github.com/nf-core/airrflow/pull/250) Fixed log parsing with `removeprefix` instead of `lstrip`.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Fixes to plotly plots in report sometimes not rendering.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Remove direct call to Igblast in favor of a fix in ChangeoO.
 
 ## [3.0] - 2023-03-20 "Portus"
 
