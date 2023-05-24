@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#250](https://github.com/nf-core/airrflow/pull/250) Fixed log parsing with `removeprefix` instead of `lstrip`.
 - [#258](https://github.com/nf-core/airrflow/pull/258) Fixes to plotly plots in report sometimes not rendering.
-- [#258](https://github.com/nf-core/airrflow/pull/258) Remove direct call to Igblast in favor of a fix in ChangeoO.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Remove direct call to Igblast in favor of a fix in ChangeO.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Added check for whitespaces in certain columns in samplesheet.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Added missing Immcantation references in Airrflow report.
 
 ## [3.0] - 2023-03-20 "Portus"
 
