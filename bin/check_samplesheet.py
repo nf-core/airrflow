@@ -7,6 +7,7 @@ import sys
 import errno
 import argparse
 import pandas as pd
+import re
 
 
 def parse_args(args=None):
@@ -51,8 +52,8 @@ def check_samplesheet(file_in):
     sample_run_dict = {}
     with open(file_in, "r") as fin:
         ## Check that required columns are present
-        MIN_COLS = 7
-        REQUIRED_COLUMNS = [
+        min_cols = 7
+        required_columns = [
             "sample_id",
             "filename_R1",
             "filename_R2",
@@ -65,12 +66,21 @@ def check_samplesheet(file_in):
             "biomaterial_provider",
             "age",
         ]
+        no_whitespaces = [
+            "sample_id",
+            "filename_R1",
+            "filename_R2",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+            "tissue",
+        ]
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
-        for col in REQUIRED_COLUMNS:
+        for col in required_columns:
             if col not in header:
                 print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
                 print("Header is missing column {}".format(col))
-                print("Header must contain columns {}".format("\t".join(REQUIRED_COLUMNS)))
+                print("Header must contain columns {}".format("\t".join(required_columns)))
                 sys.exit(1)
 
         ## Check that rows have the same fields as header, and at least the compulsory ones are provided
@@ -85,9 +95,9 @@ def check_samplesheet(file_in):
                     line,
                 )
             num_cols = len([x for x in lspl if x])
-            if num_cols < MIN_COLS:
+            if num_cols < min_cols:
                 print_error(
-                    "Invalid number of populated columns (should be {})!".format(MIN_COLS),
+                    "Invalid number of populated columns (should be {})!".format(min_cols),
                     "Line",
                     line,
                 )
@@ -117,6 +127,14 @@ def check_samplesheet(file_in):
             if len(tab.groupby("subject_id")["species"].unique()[i]) > 1:
                 print_error(
                     "The same subject_id cannot belong to different species! Check input file columns 'subject_id' and 'species'."
+                )
+
+        ## Check that values do not contain spaces in the no whitespaces columns
+        for col in no_whitespaces:
+            values = tab[col].tolist()
+            if any([re.search(r'\s+',s) for s in values]):
+                print_error(
+                    "The column {} contains values with whitespaces. Please ensure that there are no tabs, spaces or any other whitespaces in these columns as well: {}".format(col,no_whitespaces)
                 )
 
 
