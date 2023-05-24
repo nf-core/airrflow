@@ -202,17 +202,9 @@ p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
     scale_x_log10(limits = NULL,
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-    scale_y_continuous(labels = scales::percent) #+
-    #facet_grid(cols = vars(locus), rows = vars(subject_id), scales="free", drop = T)
-p_ca
+    scale_y_continuous(labels = scales::percent)
 
-# Try with plotly native
-# abund@abundance %>% plot_ly( x=~rank, y=~p,
-#                             type='scatter', color=~sample_id, mode='lines') %>%
-#                     add_ribbons(ymin = ~lower,
-#                                 ymax = ~upper,
-#                                 line = list(color=~sample_id),
-#                                 fillcolor = ~sample_id)
+p_ca
 
 ```
 
@@ -277,8 +269,8 @@ div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
                     fill = sample_id), alpha = 0.4) +
     geom_line(aes(color = sample_id)) +
     xlab("q") + ylab("Diversity(q)") +
-    ggtitle(sample_main) #+
-    #facet_grid(cols=vars(locus), rows=vars(subject_id))
+    ggtitle(sample_main)
+
 div_p
 ```
 ```{r plot_diversity, include = FALSE}
@@ -308,7 +300,6 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id))
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
-    #facet_grid(cols=vars(locus), rows=vars(subject_id)) +
     theme(legend.position = "right")
 ggplotly(g2)
 
@@ -337,9 +328,7 @@ g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id))
     ggtitle("V Gene Family Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
-    xlab("") #+
-    #facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
-    #theme(legend.position = "none")
+    xlab("")
 ggplotly(g2)
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
@@ -361,9 +350,7 @@ g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     ggtitle("V Gene Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
-    xlab("") #+
-    #facet_wrap(vars(subject_id,locus), scales="free_x", ncol = 1) +
-    #theme(legend.position = "none")
+    xlab("")
 ggplotly(g2)
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
