@@ -19,7 +19,6 @@ process DOWSER_LINEAGES {
     tag "${meta.id}"
 
     label 'process_long_parallelized'
-    label 'error_ignore'
     label 'immcantation'
 
     conda "bioconda::r-enchantr=0.1.1"
@@ -36,7 +35,7 @@ process DOWSER_LINEAGES {
     path "versions.yml", emit: versions
 
     script:
-    def args = asString(task.ext.args) ?: ''
+    def args = task.ext.args ? asString(task.ext.args) : ''
     def id_name = "$tabs".replaceFirst('__.*','')
     // TODO use nice outname, not tabs
     """

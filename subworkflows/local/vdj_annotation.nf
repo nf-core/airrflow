@@ -61,38 +61,25 @@ workflow VDJ_ANNOTATION {
         ch_imgt = FETCH_DATABASES.out.imgt
         ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
-    if (!params.directcall_igblast){
-        CHANGEO_ASSIGNGENES (
-            ch_fasta,
-            ch_igblast.collect()
-        )
 
-        ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
-        ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
+    CHANGEO_ASSIGNGENES (
+        ch_fasta,
+        ch_igblast.collect()
+    )
 
-        CHANGEO_MAKEDB (
-            CHANGEO_ASSIGNGENES.out.fasta,
-            CHANGEO_ASSIGNGENES.out.blast,
-            ch_imgt.collect()
-        )
-        ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
-        ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
+    ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
 
-        ch_assigned_tab = CHANGEO_MAKEDB.out.tab
-        ch_assignment_logs = CHANGEO_MAKEDB.out.logs
+    CHANGEO_MAKEDB (
+        CHANGEO_ASSIGNGENES.out.fasta,
+        CHANGEO_ASSIGNGENES.out.blast,
+        ch_imgt.collect()
+    )
+    ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
+    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
 
-    } else {
-        IGBLAST_ASSIGNGENES(
-            ch_fasta,
-            ch_igblast.collect()
-        )
-
-        ch_assigned_tab = IGBLAST_ASSIGNGENES.out.tab
-
-        ch_logs = ch_logs.mix(IGBLAST_ASSIGNGENES.out.logs)
-        ch_versions = ch_versions.mix(IGBLAST_ASSIGNGENES.out.versions.ifEmpty(null))
-        ch_assignment_logs = IGBLAST_ASSIGNGENES.out.makedb_log
-    }
+    ch_assigned_tab = CHANGEO_MAKEDB.out.tab
+    ch_assignment_logs = CHANGEO_MAKEDB.out.logs
 
     // Apply quality filters:
     // - locus should match v_call chain
