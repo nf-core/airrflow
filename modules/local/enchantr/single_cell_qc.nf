@@ -35,7 +35,7 @@ process SINGLE_CELL_QC {
     path("versions.yml"), emit: versions
 
     script:
-    def args = asString(task.ext.args) ?: ''
+    def args = task.ext.args ? asString(task.ext.args) : ''
     """
     echo "${tabs.join('\n')}" > tabs.txt
     Rscript -e "enchantr::enchantr_report('single_cell_qc', \\
