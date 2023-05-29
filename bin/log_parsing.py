@@ -268,9 +268,9 @@ for process in processes:
         df_process = pd.DataFrame.from_dict(
             {
                 "Sample": s_code,
-                "repres_2": repres_2,
+                #"repres_2": repres_2,
                 "pass_igblast": pass_blast,
-                "fail_igblast": fail_blast,
+                #"fail_igblast": fail_blast,
             }
         )
 
@@ -358,7 +358,7 @@ colnames = [
     "Build_consensus",
     "Assemble_pairs",
     "Unique",
-    "Representative_2",
+    #"Representative_2",
     "Igblast",
 ]
 
@@ -375,7 +375,7 @@ values = [
     df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
     df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
     df_process_list[6].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-    df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
+    #df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
     df_process_list[7].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
 ]
 

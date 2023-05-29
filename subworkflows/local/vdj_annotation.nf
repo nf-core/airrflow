@@ -73,7 +73,7 @@ workflow VDJ_ANNOTATION {
         ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES_AIRR.out.versions.ifEmpty(null))
 
         ch_assigned_tab = CHANGEO_ASSIGNGENES_AIRR.out.airr
-        ch_assignment_logs = Channel.empty()
+        ch_assignment_logs = CHANGEO_ASSIGNGENES_AIRR.out.logs
 
     } else {
         CHANGEO_ASSIGNGENES_BLAST (
