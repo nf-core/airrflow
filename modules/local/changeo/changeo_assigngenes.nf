@@ -13,7 +13,8 @@ process CHANGEO_ASSIGNGENES {
     path(igblast) // igblast fasta
 
     output:
-    path("*igblast.fmt7"), emit: blast
+    path("*igblast.fmt7"), emit: blast, optional: true
+    tuple val(meta), path("*igblast.tsv"), emit: airr, optional: true
     tuple val(meta), path("$reads"), emit: fasta
     path "versions.yml" , emit: versions
     path("*_command_log.txt"), emit: logs //process logs

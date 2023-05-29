@@ -1,7 +1,8 @@
 include { FETCH_DATABASES } from '../../modules/local/fetch_databases'
 include { UNZIP_DB as UNZIP_IGBLAST } from '../../modules/local/unzip_db'
 include { UNZIP_DB as UNZIP_IMGT } from '../../modules/local/unzip_db'
-include { CHANGEO_ASSIGNGENES } from '../../modules/local/changeo/changeo_assigngenes'
+include { CHANGEO_ASSIGNGENES as CHANGEO_ASSIGNGENES_BLAST } from '../../modules/local/changeo/changeo_assigngenes'
+include { CHANGEO_ASSIGNGENES as CHANGEO_ASSIGNGENES_AIRR } from '../../modules/local/changeo/changeo_assigngenes'
 include { CHANGEO_MAKEDB } from '../../modules/local/changeo/changeo_makedb'
 include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_parsedb_split'
 include { IGBLAST_ASSIGNGENES } from '../../modules/local/igblast/igblast_assigngenes'
@@ -62,24 +63,39 @@ workflow VDJ_ANNOTATION {
         ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
     }
 
-    CHANGEO_ASSIGNGENES (
-        ch_fasta,
-        ch_igblast.collect()
-    )
+    if (params.changeo_airr) {
+        CHANGEO_ASSIGNGENES_AIRR(
+            ch_fasta,
+            ch_igblast.collect()
+        )
 
-    ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
-    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
+        ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES_AIRR.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES_AIRR.out.versions.ifEmpty(null))
 
-    CHANGEO_MAKEDB (
-        CHANGEO_ASSIGNGENES.out.fasta,
-        CHANGEO_ASSIGNGENES.out.blast,
-        ch_imgt.collect()
-    )
-    ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
-    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
+        ch_assigned_tab = CHANGEO_ASSIGNGENES_AIRR.out.airr
+        ch_assignment_logs = Channel.empty()
 
-    ch_assigned_tab = CHANGEO_MAKEDB.out.tab
-    ch_assignment_logs = CHANGEO_MAKEDB.out.logs
+    } else {
+        CHANGEO_ASSIGNGENES_BLAST (
+            ch_fasta,
+            ch_igblast.collect()
+        )
+
+        ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES_BLAST.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES_BLAST.out.versions.ifEmpty(null))
+
+        CHANGEO_MAKEDB (
+            CHANGEO_ASSIGNGENES_BLAST.out.fasta,
+            CHANGEO_ASSIGNGENES_BLAST.out.blast,
+            ch_imgt.collect()
+        )
+        ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
+        ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
+
+        ch_assigned_tab = CHANGEO_MAKEDB.out.tab
+        ch_assignment_logs = CHANGEO_MAKEDB.out.logs
+    }
+
 
     // Apply quality filters:
     // - locus should match v_call chain

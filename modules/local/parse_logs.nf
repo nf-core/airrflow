@@ -2,6 +2,7 @@
 process PARSE_LOGS {
     tag "logs"
     label 'process_low'
+    label 'error_ignore'
 
     conda "bioconda::pandas=1.1.5"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

@@ -290,6 +290,12 @@
                     "description": "Path to the cached igblast database.",
                     "help_text": "If it is not provided, the database will be newly downloaded.",
                     "fa_icon": "fas fa-database"
+                },
+                "changeo_airr": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-border-all",
+                    "description": "Use Changeo AssignGenes with airr output format instead of blast output format."
                 }
             },
             "fa_icon": "fas fa-edit"
