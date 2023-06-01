@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#250](https://github.com/nf-core/airrflow/pull/250) Back to `dev`.
 - [#256](https://github.com/nf-core/airrflow/pull/256) Merge template updates to nf-core tools 2.8.
 - [#263](https://github.com/nf-core/airrflow/pull/263) Bump versions to 3.1.
+- [##] Added `public_aws_ecr` for using ECR containers
 
 ### `Fixed`
 
