@@ -20,8 +20,8 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
 
     script:
     """
-    FilterSeq.py quality -s $reads -q ${params.filterseq_q} --outname "${meta.id}" --log "${reads.baseName}.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
-    ParseLog.py -l "${reads.baseName}.log" -f ID QUALITY
+    FilterSeq.py quality -s $reads -q ${params.filterseq_q} --outname ${meta.id} --log ${reads.baseName}.log --nproc ${task.cpus} > ${meta.id}_command_log.txt
+    ParseLog.py -l ${reads.baseName}.log -f ID QUALITY
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

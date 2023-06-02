@@ -20,7 +20,7 @@ process CHANGEO_CONVERTDB_FASTA {
     script:
     def args = task.ext.args ?: ''
     """
-    ConvertDb.py fasta -d $tab $args > "${meta.id}"_convertdb_command_log.txt
+    ConvertDb.py fasta -d $tab $args > ${meta.id}_convertdb_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

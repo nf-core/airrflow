@@ -19,7 +19,7 @@ process PRESTO_PARSEHEADERS {
     def subcommand = task.ext.subcommand?: ''
     def args = task.ext.args?: ''
     """
-    ParseHeaders.py $subcommand -s $reads -o "${reads.baseName}_reheader-pass.fastq" $args
+    ParseHeaders.py $subcommand -s $reads -o ${reads.baseName}_reheader-pass.fastq $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

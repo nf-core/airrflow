@@ -21,7 +21,7 @@ process ADD_META_TO_TAB {
 
     script:
     """
-    reveal_add_metadata.R --repertoire "${tab}" --metadata "${validated_input}" --input_id "${meta.id}" --outname "${meta.id}" > "${meta.id}_add-meta_command_log.txt"
+    reveal_add_metadata.R --repertoire ${tab} --metadata ${validated_input} --input_id ${meta.id} --outname ${meta.id} > ${meta.id}_add-meta_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

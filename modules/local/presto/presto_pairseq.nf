@@ -19,7 +19,7 @@ process PRESTO_PAIRSEQ {
     script:
     def copyfield = (params.index_file | params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
     """
-    PairSeq.py -1 '${meta.id}_R1.fastq' -2 '${meta.id}_R2.fastq' $copyfield --coord illumina > "${meta.id}_command_log.txt"
+    PairSeq.py -1 ${meta.id}_R1.fastq -2 ${meta.id}_R2.fastq $copyfield --coord illumina > ${meta.id}_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

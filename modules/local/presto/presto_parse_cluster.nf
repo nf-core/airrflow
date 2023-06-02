@@ -19,8 +19,8 @@ process PRESTO_PARSE_CLUSTER {
 
     script:
     """
-    ParseHeaders.py copy -s $R1 -f BARCODE -k CLUSTER --act cat > "${meta.id}_command_log.txt"
-    ParseHeaders.py copy -s $R2 -f BARCODE -k CLUSTER --act cat >> "${meta.id}_command_log.txt"
+    ParseHeaders.py copy -s $R1 -f BARCODE -k CLUSTER --act cat > ${meta.id}_command_log.txt
+    ParseHeaders.py copy -s $R2 -f BARCODE -k CLUSTER --act cat >> ${meta.id}_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

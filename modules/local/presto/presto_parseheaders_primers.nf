@@ -19,7 +19,7 @@ process PRESTO_PARSEHEADERS_PRIMERS {
     def args = task.ext.args ?: ''
     if (params.cprimer_position == "R1") {
         """
-        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f $args --act first last -k C_PRIMER V_PRIMER
+        ParseHeaders.py copy -s $reads -o ${reads.baseName}_reheader-pass.fastq -f $args --act first last -k C_PRIMER V_PRIMER
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -28,7 +28,7 @@ process PRESTO_PARSEHEADERS_PRIMERS {
         """
     } else if (params.cprimer_position == "R2") {
         """
-        ParseHeaders.py copy -s $reads -o "${reads.baseName}_reheader-pass.fastq" -f $args --act first last -k V_PRIMER C_PRIMER
+        ParseHeaders.py copy -s $reads -o ${reads.baseName}_reheader-pass.fastq -f $args --act first last -k V_PRIMER C_PRIMER
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

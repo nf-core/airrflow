@@ -18,7 +18,7 @@ process FILTER_QUALITY {
 
     script:
     """
-    reveal_filter_quality.R --repertoire $tab --outname ${meta.id} > "${meta.id}_fq_command_log.txt"
+    reveal_filter_quality.R --repertoire $tab --outname ${meta.id} > ${meta.id}_fq_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

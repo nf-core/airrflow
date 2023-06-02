@@ -25,7 +25,7 @@ process PRESTO_ASSEMBLEPAIRS {
     AssemblePairs.py align -1 $R1 -2 $R2 --nproc ${task.cpus} \\
         $args \\
         --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
-    ParseLog.py -l "${meta.id}.log" $args2
+    ParseLog.py -l ${meta.id}.log $args2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

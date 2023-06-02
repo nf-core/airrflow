@@ -22,7 +22,7 @@ process PRESTO_SPLITSEQ {
     SplitSeq.py group -s $reads \\
     $args \\
     --outname ${meta.id} \\
-    --fasta > "${meta.id}_command_log.txt"
+    --fasta > ${meta.id}_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
