@@ -24,7 +24,7 @@ process FIND_THRESHOLD {
     conda "bioconda::r-enchantr=0.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
+        'biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
 
 
     input:

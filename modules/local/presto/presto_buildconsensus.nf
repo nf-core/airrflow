@@ -6,7 +6,7 @@ process PRESTO_BUILDCONSENSUS {
     conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)
