@@ -20,10 +20,10 @@ process SINGLE_CELL_QC {
     label 'immcantation'
     label 'process_medium'
 
-    conda "bioconda::r-enchantr=0.1.1"
+    conda "bioconda::r-enchantr=0.1.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
 
     input:
     path(tabs)
