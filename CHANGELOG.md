@@ -27,7 +27,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | multiqc    | 1.13        | 1.14        |
 | fastp      | 0.23.2      | 0.23.4      |
 
-
 ## [3.0] - 2023-03-20 "Portus"
 
 ### `Added`
