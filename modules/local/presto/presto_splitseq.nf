@@ -6,7 +6,7 @@ process PRESTO_SPLITSEQ {
     conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -22,7 +22,7 @@ process PRESTO_SPLITSEQ {
     SplitSeq.py group -s $reads \\
     $args \\
     --outname ${meta.id} \\
-    --fasta > "${meta.id}_command_log.txt"
+    --fasta > ${meta.id}_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -6,7 +6,7 @@ process PRESTO_COLLAPSESEQ {
     conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -24,8 +24,8 @@ process PRESTO_COLLAPSESEQ {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     """
-    CollapseSeq.py -s $reads $args --outname ${meta.id} --log ${meta.id}.log > "${meta.id}_command_log.txt"
-    ParseLog.py -l "${meta.id}.log" $args2
+    CollapseSeq.py -s $reads $args --outname ${meta.id} --log ${meta.id}.log > ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}.log $args2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

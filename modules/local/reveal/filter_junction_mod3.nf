@@ -3,10 +3,10 @@ process FILTER_JUNCTION_MOD3 {
     label 'immcantation'
     label 'process_single'
 
-    conda "bioconda::r-enchantr=0.1.1"
+    conda "bioconda::r-enchantr=0.1.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
@@ -18,7 +18,7 @@ process FILTER_JUNCTION_MOD3 {
 
     script:
     """
-    reveal_mod_3_junction.R --repertoire $tab --outname ${meta.id} > "${meta.id}_jmod3_command_log.txt"
+    reveal_mod_3_junction.R --repertoire $tab --outname ${meta.id} > ${meta.id}_jmod3_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -6,7 +6,7 @@ process PRESTO_FILTERSEQ {
     conda "bioconda::presto=0.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'quay.io/biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)
@@ -21,9 +21,9 @@ process PRESTO_FILTERSEQ {
 
     script:
     """
-    FilterSeq.py quality -s $R1 -q ${params.filterseq_q} --outname "${meta.id}_R1" --log "${R1.baseName}_R1.log" --nproc ${task.cpus} > "${meta.id}_command_log.txt"
-    FilterSeq.py quality -s $R2 -q ${params.filterseq_q} --outname "${meta.id}_R2" --log "${R2.baseName}_R2.log" --nproc ${task.cpus} >> "${meta.id}_command_log.txt"
-    ParseLog.py -l "${R1.baseName}_R1.log" "${R2.baseName}_R2.log" -f ID QUALITY
+    FilterSeq.py quality -s $R1 -q ${params.filterseq_q} --outname ${meta.id}_R1 --log ${R1.baseName}_R1.log --nproc ${task.cpus} > ${meta.id}_command_log.txt
+    FilterSeq.py quality -s $R2 -q ${params.filterseq_q} --outname ${meta.id}_R2 --log ${R2.baseName}_R2.log --nproc ${task.cpus} >> ${meta.id}_command_log.txt
+    ParseLog.py -l ${R1.baseName}_R1.log ${R2.baseName}_R2.log -f ID QUALITY
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
