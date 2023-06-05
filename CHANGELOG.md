@@ -3,6 +3,30 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1] - 2023-06-05 "Protego"
+
+### `Added`
+
+- [#250](https://github.com/nf-core/airrflow/pull/250) Back to `dev`.
+- [#256](https://github.com/nf-core/airrflow/pull/256) Merge template updates to nf-core tools 2.8.
+- [#263](https://github.com/nf-core/airrflow/pull/263) Bump versions to 3.1.
+
+### `Fixed`
+
+- [#250](https://github.com/nf-core/airrflow/pull/250) Fixed log parsing with `removeprefix` instead of `lstrip`.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Fixes to plotly plots in report sometimes not rendering.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Remove direct call to Igblast in favor of a fix in ChangeO.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Added check for whitespaces in certain columns in samplesheet.
+- [#258](https://github.com/nf-core/airrflow/pull/258) Added missing Immcantation references in Airrflow report.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| r-enchantr | 0.1.1       | 0.1.2       |
+| multiqc    | 1.13        | 1.14        |
+| fastp      | 0.23.2      | 0.23.4      |
+
 ## [3.0] - 2023-03-20 "Portus"
 
 ### `Added`

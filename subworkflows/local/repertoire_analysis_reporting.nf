@@ -56,29 +56,14 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
                                         ch_sc_qc_and_filter_logs,
                                         ch_clonal_analysis_logs)
 
-    ch_logs_tabs =  ch_logs.collect()
-                        .flatten()
-                        .map{ it -> it.toString() }
-                        .dump(tag: 'ch_logs_tabs')
-                        .collectFile(name: 'all_logs_tabs.txt', newLine: true)
-
     REPORT_FILE_SIZE(
-        ch_logs_tabs.ifEmpty([]),
+        ch_logs.collect().ifEmpty([]),
         ch_metadata
     )
     ch_versions = ch_versions.mix(REPORT_FILE_SIZE.out.versions)
 
-    ch_repertoires_report = ch_repertoires
-        .map{ it -> it[1] }
-        .collect()
-        .flatten()
-        .map{ it -> it.toString() }
-        .dump(tag: 'ch_repertoires_report')
-        .collectFile(name: 'all_repertoires_report_tabs.txt', newLine: true)
-        .map { it -> [ [id:'all_reps'], it ] }
-
     AIRRFLOW_REPORT(
-        ch_repertoires_report,
+        ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
         REPORT_FILE_SIZE.out.table.ifEmpty([]),
         ch_report_rmd,
