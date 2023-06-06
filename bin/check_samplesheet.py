@@ -81,7 +81,7 @@ def check_samplesheet(file_in):
                 print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
                 print("Header is missing column {}".format(col))
                 print("Header must contain columns {}".format("\t".join(required_columns)))
-                sys.exit(1)
+                raise IndexError("Header must contain columns {}".format("\t".join(required_columns)))
 
         ## Check that rows have the same fields as header, and at least the compulsory ones are provided
         for line_num, line in enumerate(fin):
