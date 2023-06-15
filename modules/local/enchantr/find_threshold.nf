@@ -30,6 +30,7 @@ process FIND_THRESHOLD {
     input:
     path tab // sequence tsv in AIRR format
     path logo
+    path tabs_samplesheet
 
     output:
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
@@ -43,7 +44,7 @@ process FIND_THRESHOLD {
     def args = task.ext.args ? asString(task.ext.args) : ''
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='${tab.join(',')}',\\
+        report_params=list('input'='${tabs_samplesheet}',\\
             'cloneby'='${params.cloneby}',\\
             'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\

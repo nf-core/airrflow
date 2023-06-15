@@ -19,10 +19,16 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
+        ch_find_threshold_samplesheet =  ch_find_threshold
+                        .flatten()
+                        .map{ it -> it.getName().toString() }
+                        .dump(tag: 'ch_find_threshold_samplesheet')
+                        .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         FIND_CLONAL_THRESHOLD (
             ch_find_threshold,
-            ch_logo
+            ch_logo,
+            ch_find_threshold_samplesheet
         )
         ch_threshold = FIND_CLONAL_THRESHOLD.out.mean_threshold
         ch_versions = ch_versions.mix(FIND_CLONAL_THRESHOLD.out.versions)
@@ -39,10 +45,16 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
+        ch_find_threshold_samplesheet =  ch_find_threshold
+                        .flatten()
+                        .map{ it -> it.getName().toString() }
+                        .dump(tag: 'ch_find_threshold_samplesheet')
+                        .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         REPORT_THRESHOLD (
             ch_find_threshold,
-            ch_logo
+            ch_logo,
+            ch_find_threshold_samplesheet
         )
         ch_versions = ch_versions.mix(REPORT_THRESHOLD.out.versions)
 
