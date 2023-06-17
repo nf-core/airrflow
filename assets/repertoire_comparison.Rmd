@@ -29,8 +29,9 @@ library(dplyr)
 library(tidyr)
 library(alakazam)
 library(shazam)
-library(stringr)
+library(stringi)
 library(plotly)
+library(airr)
 
 theme_set(theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
@@ -152,14 +153,28 @@ dir.create(abundance_dir)
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
-
-df_list = lapply(all_files, read.csv, sep="\t")
-
-df_all <- dplyr::bind_rows(df_list)
+col_select <- c(
+  "sample_id", "subject_id", "sequence_id", "clone_id",
+  "v_call", "d_call", "j_call",
+  "locus",
+  "junction",
+  "pcr_target_locus"
+)
+i <- 0
+df_all <- dplyr::bind_rows(lapply(all_files,
+  function(x) {
+    i <<- i +1
+    message("Loading file #",i,":",x)
+    read_rearrangement(x, col_select=col_select)
+  })
+)
 
 # Remove underscores in these columns
-df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
-df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.character(x), "_", ""))
+# df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
+df_all$subject_id  <- stringi::stri_replace_first_fixed(df_all$subject_id, "_", "")
+
+# df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.character(x), "_", ""))
+df_all$sample_id  <- stringi::stri_replace_first_fixed(df_all$sample_id, "_", "")
 
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
 df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
@@ -168,7 +183,7 @@ df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all
 write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
 
 # Set number of bootrstraps
-nboot = 200
+nboot <- 200
 ```
 
 # Clonal abundance
