@@ -18,8 +18,9 @@ process SAMPLESHEET_CHECK {
     task.ext.when == null || task.ext.when
 
     script: // This script is bundled with the pipeline, in nf-core/airrflow/bin/
+    def args = task.ext.args ?: ''
     """
-    check_samplesheet.py $samplesheet
+    check_samplesheet.py $samplesheet $args
     cp $samplesheet samplesheet.valid.tsv
 
     cat <<-END_VERSIONS > versions.yml
