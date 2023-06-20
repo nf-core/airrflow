@@ -29,7 +29,7 @@ library(dplyr)
 library(tidyr)
 library(alakazam)
 library(shazam)
-library(stringi)
+library(stringr)
 library(plotly)
 library(airr)
 
