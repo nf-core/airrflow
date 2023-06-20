@@ -115,7 +115,7 @@ def check_samplesheet(file_in, assembled):
                 if any([re.search(r"\s+", s) for s in values]):
                     print_error(
                         "The column {} contains values with whitespaces. Please ensure that there are no tabs, spaces or any other whitespaces in these columns as well: {}".format(
-                            col, no_whitespaces
+                            col, no_whitespaces_assembled
                         )
                     )
 
@@ -131,7 +131,7 @@ def check_samplesheet(file_in, assembled):
                 if any([re.search(r"\s+", s) for s in values]):
                     print_error(
                         "The column {} contains values with whitespaces. Please ensure that there are no tabs, spaces or any other whitespaces in these columns as well: {}".format(
-                            col, no_whitespaces
+                            col, no_whitespaces_raw
                         )
                     )
 
