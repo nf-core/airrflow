@@ -52,7 +52,6 @@ def check_samplesheet(file_in, assembled):
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
-
         # Defining minimum columns and required columns
         min_cols = 7
         required_columns_raw = [
@@ -180,8 +179,6 @@ def check_samplesheet(file_in, assembled):
                 print_error(
                     "The same subject_id cannot belong to different species! Check input file columns 'subject_id' and 'species'."
                 )
-
-
 
 
 def main(args=None):
