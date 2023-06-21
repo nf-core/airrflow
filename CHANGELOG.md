@@ -3,7 +3,18 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1] - 2023-06-05 "Protego"
+## [3.2.0dev] -
+
+### `Added`
+
+- Added parameters for FindThreshold in `modules.config`.
+
+### `Fixed`
+
+### `Dependencies`
+
+
+## [3.1.0] - 2023-06-05 "Protego"
 
 ### `Added`
 
