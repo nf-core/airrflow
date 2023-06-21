@@ -29,7 +29,7 @@ library(dplyr)
 library(tidyr)
 library(alakazam)
 library(shazam)
-library(stringi)
+library(stringr)
 library(plotly)
 library(airr)
 
@@ -170,11 +170,8 @@ df_all <- dplyr::bind_rows(lapply(all_files,
 )
 
 # Remove underscores in these columns
-# df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
-df_all$subject_id  <- stringi::stri_replace_first_fixed(df_all$subject_id, "_", "")
-
-# df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.character(x), "_", ""))
-df_all$sample_id  <- stringi::stri_replace_first_fixed(df_all$sample_id, "_", "")
+df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
+df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.character(x), "_", ""))
 
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
 df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
