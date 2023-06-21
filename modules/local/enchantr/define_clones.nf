@@ -52,6 +52,7 @@ process DEFINE_CLONES {
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${imgt_base}', \\
+                                        'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
                                         'force'=FALSE, \\
                                         'threshold'=${thr}, \\
