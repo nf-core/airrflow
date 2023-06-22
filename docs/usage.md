@@ -111,15 +111,14 @@ The metadata specified in the input file will then be automatically annotated in
 
 ## Assembled input samplesheet (bulk or single-cell)
 
-The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename`, `subject_id`, `species`, `tissue`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required.
+The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename`, `subject_id`, `species`, `tissue`, `single_cell`, `pcr_target_locus`, `sex`, `age` and `biomaterial_provider` are required.
 
 An example samplesheet is
 
 | filename                                                 | species | subject_id | sample_id                         | tissue     | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
 | -------------------------------------------------------- | ------- | ---------- | --------------------------------- | ---------- | ---- | --- | -------------------- | ---------------- | ----------- |
-| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv              | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb            | PBMC       | NA   | NA  | 10x Genomics         | ig               | TRUE        |
-| sc5p_v2_mm_c57bl6_splenocyte_1k_b_airr_rearrangement.tsv | mouse   | mouse_x    | sc5p_v2_mm_c57bl6_splenocyte_1k_b | splenocyte | NA   | NA  | 10x Genomics         | ig               | TRUE        |
-| bulk-Laserson-2014.fasta                                 | human   | PGP1       | PGP1                              | PBMC       | male | NA  | Laserson-2014        | ig               | FALSE       |
+| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv              | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb            | PBMC       | NA   | NA  | 10x Genomics         | IG               | TRUE        |
+| bulk-Laserson-2014.fasta                                 | human   | PGP1       | PGP1                              | PBMC       | male | NA  | Laserson-2014        | IG               | FALSE       |
 
 ## Supported AIRR metadata fields
 
