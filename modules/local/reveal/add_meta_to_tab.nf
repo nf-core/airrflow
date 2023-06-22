@@ -3,10 +3,10 @@ process ADD_META_TO_TAB {
     label 'immcantation'
     label 'process_single'
 
-    conda "bioconda::r-enchantr=0.1.1"
+    conda "bioconda::r-enchantr=0.1.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
 
     cache 'deep' // Without 'deep' this process would run when using -resume
 
@@ -21,7 +21,7 @@ process ADD_META_TO_TAB {
 
     script:
     """
-    reveal_add_metadata.R --repertoire "${tab}" --metadata "${validated_input}" --input_id "${meta.id}" --outname "${meta.id}" > "${meta.id}_add-meta_command_log.txt"
+    reveal_add_metadata.R --repertoire ${tab} --metadata ${validated_input} --input_id ${meta.id} --outname ${meta.id} > ${meta.id}_add-meta_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

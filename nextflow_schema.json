@@ -290,11 +290,6 @@
                     "description": "Path to the cached igblast database.",
                     "help_text": "If it is not provided, the database will be newly downloaded.",
                     "fa_icon": "fas fa-database"
-                },
-                "directcall_igblast": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-align-center",
-                    "description": "Use this flag for directly calling IgBlast for reference alignment, instead of using the `changeo assigngenes` and `changeo makedb` options that call IgBlast in the background.  Allows  for additional configuration of the IgBlast call."
                 }
             },
             "fa_icon": "fas fa-edit"

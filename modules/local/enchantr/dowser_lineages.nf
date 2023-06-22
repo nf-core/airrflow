@@ -19,13 +19,12 @@ process DOWSER_LINEAGES {
     tag "${meta.id}"
 
     label 'process_long_parallelized'
-    label 'error_ignore'
     label 'immcantation'
 
-    conda "bioconda::r-enchantr=0.1.1"
+    conda "bioconda::r-enchantr=0.1.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.1--r42hdfd78af_0':
-        'quay.io/biocontainers/r-enchantr:0.1.1--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
 
     input:
     tuple val(meta), path(tabs)
@@ -36,7 +35,7 @@ process DOWSER_LINEAGES {
     path "versions.yml", emit: versions
 
     script:
-    def args = asString(task.ext.args) ?: ''
+    def args = task.ext.args ? asString(task.ext.args) : ''
     def id_name = "$tabs".replaceFirst('__.*','')
     // TODO use nice outname, not tabs
     """

@@ -7,7 +7,7 @@ process CHANGEO_PARSEDB_SELECT {
     conda "bioconda::changeo=1.3.0 bioconda::igblast=1.19.0 conda-forge::wget=1.20.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:00534555924705cdf2f7ac48b4b8b4083527ca58-1' :
-        'quay.io/biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:00534555924705cdf2f7ac48b4b8b4083527ca58-1' }"
+        'biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:00534555924705cdf2f7ac48b4b8b4083527ca58-1' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
@@ -22,7 +22,7 @@ process CHANGEO_PARSEDB_SELECT {
     def args2 = task.ext.args2 ?: ''
     if (meta.locus == 'IG'){
         """
-        ParseDb.py select -d $tab $args --outname ${meta.id} > "${meta.id}_select_command_log.txt"
+        ParseDb.py select -d $tab $args --outname ${meta.id} > ${meta.id}_select_command_log.txt
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
