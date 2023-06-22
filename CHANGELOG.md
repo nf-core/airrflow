@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
-
 ## [3.1.0] - 2023-06-05 "Protego"
 
 ### `Added`
