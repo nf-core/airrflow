@@ -22,7 +22,7 @@
                 "mode": {
                     "type": "string",
                     "default": "fastq",
-                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".ptions are: 'raw'",
+                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".",
                     "enum": ["fastq", "assembled"],
                     "fa_icon": "fas fa-terminal"
                 },

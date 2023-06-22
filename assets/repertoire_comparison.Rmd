@@ -140,10 +140,15 @@ vfamily_dir <- paste(outdir, "V_family", sep="/")
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
+col_select <- c(
+  "sample_id", "subject_id", "sequence_id", "clone_id",
+  "v_call", "d_call", "j_call",
+  "locus",
+  "junction",
+  "pcr_target_locus"
+)
+df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
 
-df_list = lapply(all_files, read_rearrangement)
-
-df_all <- dplyr::bind_rows(df_list)
 
 # Remove underscores in these columns (only needed if including clonal abundance and diversity)
 df_all$subject_id <- stringr::str_replace_all(df_all$subject_id, "_", "")
@@ -156,7 +161,7 @@ df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all
 # write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
 
 # Set number of bootrstraps
-nboot = 200
+nboot <- 200
 ```
 
 

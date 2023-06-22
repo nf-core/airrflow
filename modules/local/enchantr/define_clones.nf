@@ -30,6 +30,7 @@ process DEFINE_CLONES {
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     val threshold
     path imgt_base
+    path repertoires_samplesheet
 
     output:
     path("*/*/*clone-pass.tsv"), emit: tab // sequence tsv in AIRR format
@@ -41,10 +42,17 @@ process DEFINE_CLONES {
     script:
     def args = task.ext.args ? asString(task.ext.args) : ''
     def thr = threshold.join("")
+    def input = ""
+    if (repertoires_samplesheet) {
+        input = repertoires_samplesheet
+    } else {
+        input = tabs.join(',')
+    }
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
-                                        report_params=list('input'='${tabs.join(',')}', \\
+                                        report_params=list('input'='${input}', \\
                                         'imgt_db'='${imgt_base}', \\
+                                        'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
                                         'force'=FALSE, \\
                                         'threshold'=${thr}, \\
