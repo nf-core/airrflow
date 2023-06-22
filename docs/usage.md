@@ -115,10 +115,10 @@ The required input file for processing raw BCR or TCR bulk targeted sequencing d
 
 An example samplesheet is
 
-| filename                                                 | species | subject_id | sample_id                         | tissue     | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
-| -------------------------------------------------------- | ------- | ---------- | --------------------------------- | ---------- | ---- | --- | -------------------- | ---------------- | ----------- |
-| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv              | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb            | PBMC       | NA   | NA  | 10x Genomics         | IG               | TRUE        |
-| bulk-Laserson-2014.fasta                                 | human   | PGP1       | PGP1                              | PBMC       | male | NA  | Laserson-2014        | IG               | FALSE       |
+| filename                                    | species | subject_id | sample_id              | tissue | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
+| ------------------------------------------- | ------- | ---------- | ---------------------- | ------ | ---- | --- | -------------------- | ---------------- | ----------- |
+| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb | PBMC   | NA   | NA  | 10x Genomics         | IG               | TRUE        |
+| bulk-Laserson-2014.fasta                    | human   | PGP1       | PGP1                   | PBMC   | male | NA  | Laserson-2014        | IG               | FALSE       |
 
 ## Supported AIRR metadata fields
 
