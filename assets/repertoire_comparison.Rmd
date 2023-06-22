@@ -160,14 +160,7 @@ col_select <- c(
   "junction",
   "pcr_target_locus"
 )
-i <- 0
-df_all <- dplyr::bind_rows(lapply(all_files,
-  function(x) {
-    i <<- i +1
-    message("Loading file #",i,":",x)
-    read_rearrangement(x, col_select=col_select)
-  })
-)
+df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
 
 # Remove underscores in these columns
 df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
