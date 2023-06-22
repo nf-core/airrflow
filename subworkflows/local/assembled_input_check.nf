@@ -3,6 +3,7 @@
  */
 
 include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
+include { SAMPLESHEET_CHECK as SAMPLESHEET_CHECK_ASSEMBLED } from '../../modules/local/samplesheet_check'
 
 workflow ASSEMBLED_INPUT_CHECK {
     take:
@@ -12,8 +13,7 @@ workflow ASSEMBLED_INPUT_CHECK {
     cloneby
 
     main:
-    // TODO: validate input should check that sample_ids are unique
-
+    SAMPLESHEET_CHECK_ASSEMBLED ( samplesheet )
     VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby ) //removed reassign
     ch_validated_input = VALIDATE_INPUT.out.validated_input
     ch_validated_input

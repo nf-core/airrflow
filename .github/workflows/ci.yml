@@ -48,7 +48,8 @@ jobs:
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
-        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled_hs", "test_assembled_mm"]
+        profile:
+          ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled_hs", "test_assembled_mm"]
       fail-fast: false
     steps:
       - name: Check out pipeline code

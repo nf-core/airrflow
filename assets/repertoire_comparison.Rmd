@@ -55,21 +55,10 @@ datadir <- "."
 Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
 The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
 
-```{r seq_numbers, echo=FALSE, warning=FALSE, results='asis'}
-read_table <- function(tab_file){
-        tab_seqs <- read.table(tab_file, header=TRUE, sep="\t", check.names = FALSE)
-        write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
-    }
-tryCatch( {read_table("./Table_sequences.tsv")} ,
-  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
-)
-
-```
-
-
 ```{r seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
 tryCatch( {
     tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
+    write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
 
     plot_table <- tidyr::pivot_longer(tab_seqs,
                                       cols=Sequences_R1:Igblast,
@@ -89,6 +78,8 @@ tryCatch( {
                   theme(axis.text.x= element_text(angle = 45))
 
     ggplotly(seqs_plot)
+
+
   },
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
 )
@@ -145,11 +136,7 @@ ggplotly(seqs_plot_assembled)
 # in the current folder
 all_files <- system(paste0("find '", datadir, "' -name '*clone-pass.tsv'"), intern=T)
 
-diversity_dir <- paste(outdir, "Diversity", sep="/")
-abundance_dir <- paste(outdir, "Abundance", sep="/")
 vfamily_dir <- paste(outdir, "V_family", sep="/")
-dir.create(diversity_dir)
-dir.create(abundance_dir)
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
@@ -160,28 +147,25 @@ col_select <- c(
   "junction",
   "pcr_target_locus"
 )
-i <- 0
-df_all <- dplyr::bind_rows(lapply(all_files,
-  function(x) {
-    i <<- i +1
-    message("Loading file #",i,":",x)
-    read_rearrangement(x, col_select=col_select)
-  })
-)
+df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
 
-# Remove underscores in these columns
-df_all$subject_id <- sapply(df_all$subject_id, function(x) str_replace(as.character(x), "_", ""))
-df_all$sample_id <- sapply(df_all$sample_id, function(x) str_replace(as.character(x), "_", ""))
+
+# Remove underscores in these columns (only needed if including clonal abundance and diversity)
+df_all$subject_id <- stringr::str_replace_all(df_all$subject_id, "_", "")
+df_all$sample_id <- stringr::str_replace_all(df_all$sample_id , "_", "")
 
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
 df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
 
-# Write table to file
-write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
+# Uncomment to save a table with all the sequencess across samples together
+# write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
 
 # Set number of bootrstraps
 nboot <- 200
 ```
+
+
+<!-- Uncomment to include Clonal abundance and clonal diversity in the repertoire comparison report
 
 # Clonal abundance
 
@@ -196,7 +180,15 @@ range of the bootstrap samples.
 
 All clonal abundance plots and tables with abundance values can be found under `repertoire_analysis/Abundance`.
 
-```{r clonal_abundance, echo=FALSE}
+-->
+
+```{r clonal_abundance, echo=FALSE, eval=FALSE}
+# Set line above to eval=TRUE to include clonal abundance
+diversity_dir <- paste(outdir, "Diversity", sep="/")
+abundance_dir <- paste(outdir, "Abundance", sep="/")
+dir.create(diversity_dir)
+dir.create(abundance_dir)
+
 abund <- estimateAbundance(df_all, group = "subj_locus", ci=0.95, nboot=nboot)
 abund@abundance$sample_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 abund@abundance$subject_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
@@ -220,12 +212,14 @@ p_ca
 
 ```
 
-```{r plot_abundance, include = FALSE}
+```{r plot_abundance, include = FALSE, eval=FALSE}
+# Set to eval=TRUE to include clonal abundance
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf"), device="pdf", width = 25, height = 10, units="cm")
 ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
 write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
 ```
 
+<!-- Uncomment to include Clonal diversity and clonal diversity in the repertoire comparison report
 
 # Clonal diversity
 
@@ -264,9 +258,10 @@ To correct for the different number of sequences in each of the samples, the Boo
 in which `r nboot` random bootstrap samples were taken, with size the number of sequences in the sample with less sequences (N).
 The solid line shows the mean Diversity of the bootstrap samples, whereas the transparent area shows the full Diversity
 range of the bootstrap samples.
+-->
 
-
-```{r clonal_diversity, echo = FALSE}
+```{r clonal_diversity, echo = FALSE, eval=FALSE}
+# Set line above to eval=TRUE to include clonal diversity
 sample_div <- alphaDiversity(abund, group="subj_locus", min_q=0, max_q=4, step_q=0.05,
                             ci=0.95, nboot=nboot)
 sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
@@ -285,11 +280,13 @@ div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
 
 div_p
 ```
-```{r plot_diversity, include = FALSE}
+```{r plot_diversity, include = FALSE, eval=FALSE}
+# Set to eval=TRUE to include clonal diversity
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
 ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
 write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversity_data_subject.tsv"), sep="\t", quote = F, row.names = F)
 ```
+
 
 # V gene usage
 

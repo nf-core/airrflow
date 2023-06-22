@@ -3,7 +3,20 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1] - 2023-06-05 "Protego"
+## [3.2.0dev] -
+
+### `Added`
+
+- [#268](https://github.com/nf-core/airrflow/pull/268) Added parameters for FindThreshold in `modules.config`.
+- [#268](https://github.com/nf-core/airrflow/pull/268) Validate samplesheet also for `assembled` samplesheet.
+
+### `Fixed`
+
+- [#268](https://github.com/nf-core/airrflow/pull/268) Allows for uppercase and lowercase locus in samplesheet `pcr_target_locus`.
+
+### `Dependencies`
+
+## [3.1.0] - 2023-06-05 "Protego"
 
 ### `Added`
 
