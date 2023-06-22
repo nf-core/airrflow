@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-- Added parameters for FindThreshold in `modules.config`.
+- [#268](https://github.com/nf-core/airrflow/pull/268) Added parameters for FindThreshold in `modules.config`.
+- [#268](https://github.com/nf-core/airrflow/pull/268) Validate samplesheet also for `assembled` samplesheet.
 
 ### `Fixed`
+
+- [#268](https://github.com/nf-core/airrflow/pull/268) Allows for uppercase and lowercase locus in samplesheet `pcr_target_locus`.
 
 ### `Dependencies`
 
