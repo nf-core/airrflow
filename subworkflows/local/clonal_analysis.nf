@@ -19,10 +19,16 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
+        ch_find_threshold_samplesheet =  ch_find_threshold
+                        .flatten()
+                        .map{ it -> it.getName().toString() }
+                        .dump(tag: 'ch_find_threshold_samplesheet')
+                        .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         FIND_CLONAL_THRESHOLD (
             ch_find_threshold,
-            ch_logo
+            ch_logo,
+            ch_find_threshold_samplesheet
         )
         ch_threshold = FIND_CLONAL_THRESHOLD.out.mean_threshold
         ch_versions = ch_versions.mix(FIND_CLONAL_THRESHOLD.out.versions)
@@ -39,10 +45,16 @@ workflow CLONAL_ANALYSIS {
 
         ch_find_threshold = ch_repertoire.map{ it -> it[1] }
                                         .collect()
+        ch_find_threshold_samplesheet =  ch_find_threshold
+                        .flatten()
+                        .map{ it -> it.getName().toString() }
+                        .dump(tag: 'ch_find_threshold_samplesheet')
+                        .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         REPORT_THRESHOLD (
             ch_find_threshold,
-            ch_logo
+            ch_logo,
+            ch_find_threshold_samplesheet
         )
         ch_versions = ch_versions.mix(REPORT_THRESHOLD.out.versions)
 
@@ -63,8 +75,10 @@ workflow CLONAL_ANALYSIS {
     DEFINE_CLONES_COMPUTE(
         ch_define_clones,
         clone_threshold.collect(),
-        ch_imgt.collect()
+        ch_imgt.collect(),
+        []
     )
+
     ch_versions = ch_versions.mix(DEFINE_CLONES_COMPUTE.out.versions)
     ch_logs = ch_logs.mix(DEFINE_CLONES_COMPUTE.out.logs)
 
@@ -76,10 +90,18 @@ workflow CLONAL_ANALYSIS {
 
     if (!params.skip_all_clones_report){
 
+        ch_all_repertoires_cloned_samplesheet = ch_all_repertoires_cloned.map{ it -> it[1] }
+                                        .collect()
+                                        .flatten()
+                                        .map{ it -> it.getName().toString() }
+                                        .dump(tag: 'ch_all_repertoires_cloned_samplesheet')
+                                        .collectFile(name: 'all_repertoires_cloned_samplesheet.txt', newLine: true)
+
         DEFINE_CLONES_REPORT(
             ch_all_repertoires_cloned,
             clone_threshold.collect(),
-            ch_imgt.collect()
+            ch_imgt.collect(),
+            ch_all_repertoires_cloned_samplesheet
         )
     }
 
