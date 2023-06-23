@@ -6,10 +6,10 @@ process REPORT_FILE_SIZE {
     label 'immcantation'
     label 'process_single'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    conda "bioconda::r-enchantr=0.1.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
 
     input:
     path logs
