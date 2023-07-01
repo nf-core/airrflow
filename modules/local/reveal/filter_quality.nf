@@ -3,16 +3,16 @@ process FILTER_QUALITY {
     label 'immcantation'
     label 'process_single'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    conda "bioconda::r-enchantr=0.1.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*quality-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*quality-pass.tsv"), optional:true, emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "versions.yml", emit: versions
 

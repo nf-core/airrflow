@@ -6,14 +6,15 @@ process REPORT_FILE_SIZE {
     label 'immcantation'
     label 'process_single'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    conda "bioconda::r-enchantr=0.1.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
 
     input:
     path logs
     path metadata
+    path logs_tabs
 
     output:
     path "*_report", emit: file_size
@@ -22,9 +23,8 @@ process REPORT_FILE_SIZE {
 
     script:
     """
-    echo "${logs.join('\n')}" > logs.txt
     Rscript -e "enchantr::enchantr_report('file_size', \\
-        report_params=list('input'='logs.txt', 'metadata'='${metadata}',\\
+        report_params=list('input'='${logs_tabs}', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
 
     echo "\"${task.process}\":" > versions.yml

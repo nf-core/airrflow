@@ -89,12 +89,16 @@ if (!is.null(opt$OUTPUT)) {
 } else {
     output_fn <- sub(".tsv$", "_quality-pass.tsv", basename(opt$REPERTOIRE))
 }
-write_rearrangement(db[filter_pass, ], file = output_fn)
+# don't write if empty
+if (sum(filter_pass)>0) {
+    write_rearrangement(db[filter_pass, ], file = output_fn)
+}
 
 # cat("     TOTAL_GROUPS> ", n_groups,  "\n", sep=" ", file = file.path(out_dir, log_verbose_name), append=TRUE)
 
 write("START> FilterQuality", stdout())
 write(paste0("FILE> ", basename(opt$REPERTOIRE)), stdout())
+# even if output file not written, because empty, keep track in log
 write(paste0("OUTPUT> ", basename(output_fn)), stdout())
 write(paste0("PASS> ", sum(filter_pass)), stdout())
 write(paste0("FAIL> ", sum(!filter_pass) + sum(filter_na)), stdout())

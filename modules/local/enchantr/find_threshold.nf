@@ -21,15 +21,16 @@ process FIND_THRESHOLD {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    conda "bioconda::r-enchantr=0.1.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
+        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
 
 
     input:
     path tab // sequence tsv in AIRR format
     path logo
+    path tabs_samplesheet
 
     output:
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
@@ -43,7 +44,7 @@ process FIND_THRESHOLD {
     def args = task.ext.args ? asString(task.ext.args) : ''
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='${tab.join(',')}',\\
+        report_params=list('input'='${tabs_samplesheet}',\\
             'cloneby'='${params.cloneby}',\\
             'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\

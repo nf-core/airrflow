@@ -25,7 +25,12 @@ jobs:
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
-        profile: ["test_assembled_immcantation_devel", "test_raw_immcantation_devel"]
+        profile:
+          [
+            "test_assembled_immcantation_devel_hs",
+            "test_assembled_immcantation_devel_mm",
+            "test_raw_immcantation_devel",
+          ]
       fail-fast: false
     steps:
       - name: Check out pipeline code
