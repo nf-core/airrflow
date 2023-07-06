@@ -76,7 +76,6 @@ do
         awk '/<pre>/{i++}/<\/pre>/{j++}{if(j==2){exit}}{if(i==2 && j==1 && $0!~"^<pre>"){print}}' $TMP_FILE > $FILE_NAME
 
         # Checking once that file exists and is not empty (checks IMGT server is online)
-        read file
         if [ -s "$FILE_NAME" ]
         then
             echo "IMGT Fasta file exists and is not empty"
