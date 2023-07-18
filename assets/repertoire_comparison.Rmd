@@ -149,7 +149,8 @@ col_select <- c(
 )
 df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
 
-# Remove underscores in these columns (only needed if including clonal abundance and diversity)
+
+# Remove underscores in these columns
 df_all$subject_id <- stringr::str_replace_all(df_all$subject_id, "_", "")
 df_all$sample_id <- stringr::str_replace_all(df_all$sample_id , "_", "")
 

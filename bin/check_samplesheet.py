@@ -46,7 +46,7 @@ def check_samplesheet(file_in, assembled):
     - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species, single_cell
     - sample ids are unique
     - samples from the same subject come from the same species
-    - pcr_target_locus is "IG" or "TR"
+    - pcr_target_locus is "IG"/"ig" or "TR"/"tr"
     - species is "human" or "mouse"
     """
 
