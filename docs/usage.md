@@ -115,7 +115,6 @@ The required input file for processing raw BCR or TCR bulk targeted sequencing d
 - `filename` for single-cell assembled data: path to `airr_rearrangement.tsv` file, for example the one generated when processing the 10x Genomics scBCRseq / scTCRseq with 10x Genomics cellranger `cellranger vdj` or `cellranger multi`. The field accepts any tsv tables following the [AIRR rearrangement Schema specification](https://docs.airr-community.org/en/stable/datarep/rearrangements.html). See [here](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/output/annotation#airr) for more details on the cellranger output.
 - `filename` for bulk assembled data: path to `sequences.fasta` file, containing the assembled and error-corrected reads.
 
-
 The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename`, `subject_id`, `species`, `tissue`, `single_cell`, `pcr_target_locus`, `sex`, `age` and `biomaterial_provider` are required.
 
 An example samplesheet is:
@@ -457,5 +456,3 @@ In most cases, you will only need to create a custom config as a one-off but if 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
-
