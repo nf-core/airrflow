@@ -13,8 +13,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Added clonal reports tables to final report folder.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Added processes to include sampleID to filename in assembled workflow to keep it unique.
 
-
-
 ### `Fixed`
 
 - [#268](https://github.com/nf-core/airrflow/pull/268) Allows for uppercase and lowercase locus in samplesheet `pcr_target_locus`.
