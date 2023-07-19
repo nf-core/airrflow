@@ -109,7 +109,6 @@ def check_samplesheet(file_in, assembled):
         for col, col_type in types_dict.items():
             tab[col] = tab[col].astype(col_type)
 
-
         # Check that all required columns for assembled and raw samplesheets are there, and do not contain whitespaces
         if assembled:
             for col in required_columns_assembled:
@@ -129,8 +128,8 @@ def check_samplesheet(file_in, assembled):
         else:
             if any(tab["single_cell"].tolist()):
                 print_error(
-                        "Some single cell column values are TRUE. The raw mode only accepts bulk samples. If processing single cell samples, please set the `--mode assembled` flag, and provide an AIRR rearrangement as input."
-                        )
+                    "Some single cell column values are TRUE. The raw mode only accepts bulk samples. If processing single cell samples, please set the `--mode assembled` flag, and provide an AIRR rearrangement as input."
+                )
 
             for col in required_columns_raw:
                 if col not in header:
