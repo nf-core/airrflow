@@ -15,7 +15,7 @@
 
 ## Introduction
 
-** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
+**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -87,7 +87,7 @@ First, ensure that the pipeline tests run on your infrastructure:
 nextflow run nf-core/airrflow -profile test,<docker/singularity/podman/shifter/charliecloud/conda/institute> --outdir <OUTDIR>
 ```
 
-To run on your data, prepare a tab-separated samplesheet with your input data. Depending on the input data type (bulk or single-cell, raw reads or assembled reads) the input samplesheet will vary. Please follow the [documentation on samplesheets](https://nf-co.re/airrflow/usage#input-samplesheet) for more details. An example samplesheet for running the pipeline on raw BCR / TCR sequencing data looks as follows:
+To run nf-core/airrflow with your data, prepare a tab-separated samplesheet with your input data. Depending on the input data type (bulk or single-cell, raw reads or assembled reads) the input samplesheet will vary. Please follow the [documentation on samplesheets](https://nf-co.re/airrflow/usage#input-samplesheet) for more details. An example samplesheet for running the pipeline on bulk BCR / TCR sequencing data in fastq format looks as follows:
 
 | sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell | intervention   | collection_time_point_relative | cell_subset  |
 | --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- | -------------- | ------------------------------ | ------------ |
@@ -96,27 +96,37 @@ To run on your data, prepare a tab-separated samplesheet with your input data. D
 
 Each row represents a sample with fastq files (paired-end).
 
-A typical command to run the pipeline is:
+A typical command to run the pipeline from **bulk raw fastq files** is:
 
 ```bash
 nextflow run nf-core/airrflow \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
---input samplesheet.tsv \
+--mode fastq \
+--input input_samplesheet.tsv \
 --library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
---max_memory 8.GB \
---max_cpus 8 \
+--umi_position R1 \
 --outdir ./results
 ```
+
+A typical command to run the pipeline from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
+
+```bash
+nextflow run nf-core/airrflow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--input input_samplesheet.tsv \
+--mode assembled \
+--outdir results
+```
+
+See the [usage documentation](https://nf-co.re/airrflow/usage) and the [parameter documentation](https://nf-co.re/airrflow/parameters) for more details on how to use the pipeline and all the available parameters.
 
 > **Warning:**
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
-
-For more details, please refer to the [usage documentation](https://nf-co.re/airrflow/usage) and the [parameter documentation](https://nf-co.re/airrflow/parameters).
 
 ## Pipeline output
 

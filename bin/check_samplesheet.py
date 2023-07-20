@@ -68,16 +68,16 @@ def check_samplesheet(file_in, assembled):
             "age",
         ]
         required_columns_assembled = [
-            "sample_id",
             "filename",
+            "sample_id",
             "subject_id",
             "species",
             "pcr_target_locus",
-            "single_cell",
             "sex",
             "tissue",
             "biomaterial_provider",
             "age",
+            "single_cell",
         ]
         no_whitespaces_raw = [
             "sample_id",
@@ -99,8 +99,15 @@ def check_samplesheet(file_in, assembled):
 
         ## Read header
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
+
         ## Read tab
         tab = pd.read_csv(file_in, sep="\t", header=0)
+
+        ## Set required columns as strings
+        types_dict = dict()
+        types_dict.update({col: str for col in required_columns_assembled[1:7]})
+        for col, col_type in types_dict.items():
+            tab[col] = tab[col].astype(col_type)
 
         # Check that all required columns for assembled and raw samplesheets are there, and do not contain whitespaces
         if assembled:
@@ -118,8 +125,12 @@ def check_samplesheet(file_in, assembled):
                             col, no_whitespaces_assembled
                         )
                     )
-
         else:
+            if any(tab["single_cell"].tolist()):
+                print_error(
+                    "Some single cell column values are TRUE. The raw mode only accepts bulk samples. If processing single cell samples, please set the `--mode assembled` flag, and provide an AIRR rearrangement as input."
+                )
+
             for col in required_columns_raw:
                 if col not in header:
                     print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))

@@ -10,12 +10,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#268](https://github.com/nf-core/airrflow/pull/268) Added parameters for FindThreshold in `modules.config`.
 - [#268](https://github.com/nf-core/airrflow/pull/268) Validate samplesheet also for `assembled` samplesheet.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Update to `EnchantR v0.1.3`.
+- [#266](https://github.com/nf-core/airrflow/pull/266) Added clonal reports tables to final report folder.
+- [#266](https://github.com/nf-core/airrflow/pull/266) Added processes to include sampleID to filename in assembled workflow to keep it unique.
 
 ### `Fixed`
 
 - [#268](https://github.com/nf-core/airrflow/pull/268) Allows for uppercase and lowercase locus in samplesheet `pcr_target_locus`.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Samplesheet only allows data from one species.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Introduced fix for a too long command with hundreds of datasets.
+- [#266](https://github.com/nf-core/airrflow/pull/266) Convert samplesheet required columns to strings when needed.
 
 ### `Dependencies`
 
