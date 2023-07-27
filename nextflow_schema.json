@@ -350,7 +350,7 @@
                 },
                 "igphyml": {
                     "type": "string",
-                    "default": "/usr/local/share/igphyml/src/igphyml",
+                    "default": "/usr/local/bin/igphyml",
                     "description": "Path to IgPhyml executable.",
                     "fa_icon": "fas fa-file"
                 },
