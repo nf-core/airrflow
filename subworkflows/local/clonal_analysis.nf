@@ -51,7 +51,7 @@ workflow CLONAL_ANALYSIS {
                         .dump(tag: 'ch_find_threshold_samplesheet')
                         .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
-        if !(params.skip_report_threshold){
+        if (!params.skip_report_threshold){
             REPORT_THRESHOLD (
                 ch_find_threshold,
                 ch_logo,
