@@ -51,13 +51,14 @@ workflow CLONAL_ANALYSIS {
                         .dump(tag: 'ch_find_threshold_samplesheet')
                         .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
-        REPORT_THRESHOLD (
-            ch_find_threshold,
-            ch_logo,
-            ch_find_threshold_samplesheet
-        )
-        ch_versions = ch_versions.mix(REPORT_THRESHOLD.out.versions)
-
+        if !(params.skip_report_threshold){
+            REPORT_THRESHOLD (
+                ch_find_threshold,
+                ch_logo,
+                ch_find_threshold_samplesheet
+            )
+            ch_versions = ch_versions.mix(REPORT_THRESHOLD.out.versions)
+        }
     }
 
     // prepare ch for define clones
