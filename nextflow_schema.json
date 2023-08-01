@@ -350,7 +350,7 @@
                 },
                 "igphyml": {
                     "type": "string",
-                    "default": "/usr/local/share/igphyml/src/igphyml",
+                    "default": "/usr/local/bin/igphyml",
                     "description": "Path to IgPhyml executable.",
                     "fa_icon": "fas fa-file"
                 },
@@ -363,6 +363,11 @@
                 "skip_all_clones_report": {
                     "type": "boolean",
                     "description": "Skip report of EnchantR DefineClones for all samples together.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_report_threshold": {
+                    "type": "boolean",
+                    "description": "Skip report of EnchantR FindThreshold for all samples together.",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },
