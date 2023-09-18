@@ -8,8 +8,8 @@ process VALIDATE_INPUT {
 
     conda "bioconda::r-enchantr=0.1.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
+        'docker.io/ssnn/suite:prerelease':
+        'docker.io/ssnn/suite:prerelease' }"
 
     input:
     file samplesheet
