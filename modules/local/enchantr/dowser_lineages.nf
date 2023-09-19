@@ -24,7 +24,7 @@ process DOWSER_LINEAGES {
     conda "bioconda::r-enchantr=0.1.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'docker.io/ssnn/suite:prerelease':
-        'docker.io/immcantation/suite:devel' }"
+        'docker.io/ssnn/suite:prerelease' }"
 
     input:
     tuple val(meta), path(tabs)
