@@ -51,6 +51,15 @@
                 "errorMessage": "Single cell must be provided as a TRUE/FALSE value."
             }
         },
-        "required": ["sample_id", "subject_id", "species", "pcr_target_locus", "tissue", "sex", "age", "biomaterial_provider" ]
+        "required": [
+            "sample_id",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+            "tissue",
+            "sex",
+            "age",
+            "biomaterial_provider"
+        ]
     }
 }
