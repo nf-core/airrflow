@@ -1,12 +1,18 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
+    PRINT PARAMS SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
 
-// Validate input parameters
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
+
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
 WorkflowAirrflow.initialise(params, log)
 
 // Check input path parameters to see if they exist
@@ -28,6 +34,8 @@ if (params.input) {
 
 ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo          = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 // Report files
 ch_report_rmd = Channel.fromPath(params.report_rmd, checkIfExists: true)
@@ -229,9 +237,12 @@ workflow AIRRFLOW {
         workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
+        methods_description    = WorkflowAirrflow.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description = Channel.value(methods_description)
+
         ch_multiqc_files = Channel.empty()
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.ifEmpty([]))
