@@ -390,7 +390,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
   - `*log`: Log of the process that will be parsed to generate a report.
   - `all_reps_dist_report`: Report
     - `tables/all_reps_threshold-mean.tsv`: Mean of all hamming distance thresholds of the
-    Junction regions as determined by Shazam.
+      Junction regions as determined by Shazam.
     - `tables/all_reps_threshold-summary.tsv`: Thresholds for each group of `--cloneby` samples.
 
 </details>
