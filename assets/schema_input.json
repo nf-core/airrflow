@@ -10,27 +10,27 @@
             "sample_id": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
+                "errorMessage": "Sample name must be provided and cannot contain spaces."
             },
             "subject_id": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Subject name must be provided and cannot contain spaces"
+                "errorMessage": "Subject name must be provided and cannot contain spaces."
             },
             "species": {
                 "type": "string",
                 "enum": ["mouse", "human"],
-                "errorMessage": "Species name must be provided and must be one of: mouse, human"
+                "errorMessage": "Species name must be provided and must be one of: mouse, human."
             },
             "pcr_target_locus": {
                 "type": "string",
-                "enum": ["TR", "IG"],
-                "errorMessage": "PCR target locus must be provided and must be one of: TR, IG"
+                "enum": ["TR", "IG", "ig", "tr", "Ig", "Tr"],
+                "errorMessage": "PCR target locus must be provided and must be one of: TR, IG."
             },
             "tissue": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Tissue name must be provided and cannot contain spaces"
+                "errorMessage": "Tissue name must be provided and cannot contain spaces."
             },
             "sex": {
                 "type": "string",
@@ -43,13 +43,12 @@
             },
             "biomaterial_provider": {
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Biomaterial provider must be provided and cannot contain spaces"
+                "errorMessage": "Biomaterial provider must be provided."
             },
             "single_cell": {
                 "type": "boolean",
                 "pattern": "^\\S+$",
-                "errorMessage": "Single cell must be provided as a TRUE/FALSE value"
+                "errorMessage": "Single cell must be provided as a TRUE/FALSE value."
             }
         },
         "required": ["sample_id", "subject_id", "species", "pcr_target_locus", "tissue", "sex", "age", "biomaterial_provider" ]
