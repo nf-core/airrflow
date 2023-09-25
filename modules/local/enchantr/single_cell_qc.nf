@@ -20,10 +20,12 @@ process SINGLE_CELL_QC {
     label 'immcantation'
     label 'process_medium'
 
-    conda "bioconda::r-enchantr=0.1.3"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/ssnn/suite:prerelease':
-        'docker.io/ssnn/suite:prerelease' }"
+        'docker.io/immcantation/airrflow:devel':
+        'docker.io/immcantation/airrflow:devel' }"
 
     input:
     path(tabs)
