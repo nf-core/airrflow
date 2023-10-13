@@ -56,6 +56,7 @@ process DEFINE_CLONES {
                                         'imgt_db'='${imgt_base}', \\
                                         'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
+                                        'outputby'='${params.cloneby}',
                                         'force'=FALSE, \\
                                         'threshold'=${thr}, \\
                                         'singlecell'='${params.singlecell}','outdir'=getwd(), \\
