@@ -85,8 +85,7 @@ def check_samplesheet(file_in, assembled):
             "filename_R2",
             "subject_id",
             "species",
-            "pcr_target_locus",
-            "tissue",
+            "pcr_target_locus"
         ]
         no_whitespaces_assembled = [
             "sample_id",
