@@ -38,7 +38,7 @@ process FIND_THRESHOLD {
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
-    path "all_reps_dist_report/tables/*_threshold-summary.tsv", emit: threshold_summary
+    path "all_reps_dist_report/tables/*_threshold-summary.tsv", emit: threshold_summary, optional:true
     path "all_reps_dist_report/tables/*_threshold-mean.tsv", emit: mean_threshold
     path "versions.yml", emit: versions
 
