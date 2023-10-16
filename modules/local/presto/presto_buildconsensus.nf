@@ -20,11 +20,14 @@ process PRESTO_BUILDCONSENSUS {
     path "versions.yml" , emit: versions
 
     script:
-    def barcode_field = params.cluster_sets ? "CLUSTER" : "BARCODE"
+    def barcode_field = params.cluster_sets ? 'CLUSTER' : 'BARCODE'
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
+    def args3 = task.ext.args3 ?: ''
     """
-    BuildConsensus.py -s $R1 --bf ${barcode_field} --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror $params.buildconsensus_maxerror --maxgap $params.buildconsensus_maxgap --outname ${meta.id}_R1 --log ${meta.id}_R1.log > ${meta.id}_command_log.txt
-    BuildConsensus.py -s $R2 --bf ${barcode_field} --nproc ${task.cpus} --pf PRIMER --prcons $params.primer_consensus --maxerror $params.buildconsensus_maxerror --maxgap $params.buildconsensus_maxgap --outname ${meta.id}_R2 --log ${meta.id}_R2.log >> ${meta.id}_command_log.txt
-    ParseLog.py -l ${meta.id}_R1.log ${meta.id}_R2.log -f ID BARCODE SEQCOUNT PRIMER PRCOUNT PRCONS PRFREQ CONSCOUNT
+    BuildConsensus.py -s $R1 --bf ${barcode_field} --nproc ${task.cpus} --pf PRIMER --prcons ${params.primer_consensus} --maxerror ${params.buildconsensus_maxerror} --maxgap ${params.buildconsensus_maxgap} ${args} --outname ${meta.id}_R1 --log ${meta.id}_R1.log > ${meta.id}_command_log.txt
+    BuildConsensus.py -s $R2 --bf ${barcode_field} --nproc ${task.cpus} --pf PRIMER --prcons ${params.primer_consensus} --maxerror ${params.buildconsensus_maxerror} --maxgap ${params.buildconsensus_maxgap} ${args2} --outname ${meta.id}_R2 --log ${meta.id}_R2.log >> ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}_R1.log ${meta.id}_R2.log -f ${args3}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

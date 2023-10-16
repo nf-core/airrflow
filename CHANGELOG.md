@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Update to `EnchantR v0.1.3`.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Added clonal reports tables to final report folder.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Added processes to include sampleID to filename in assembled workflow to keep it unique.
+- [#276](https://github.com/nf-core/airrflow/pull/276) Parametrize FindThreshold Report and Presto Buildconsensus UMI.
+- [#279](https://github.com/nf-core/airrflow/pull/279) Update to nf-core tools v2.10.
 
 ### `Fixed`
 
@@ -19,12 +21,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Samplesheet only allows data from one species.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Introduced fix for a too long command with hundreds of datasets.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Convert samplesheet required columns to strings when needed.
+- [#276](https://github.com/nf-core/airrflow/pull/266) Temporary fix for Dowser with singularity
 
 ### `Dependencies`
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| r-enchantr | 0.1.2       | 0.1.3       |
+| r-enchantr | 0.1.2       | 0.1.5       |
 
 ## [3.1.0] - 2023-06-05 "Protego"
 
