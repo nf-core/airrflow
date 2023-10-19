@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Added clonal reports tables to final report folder.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Added processes to include sampleID to filename in assembled workflow to keep it unique.
 - [#276](https://github.com/nf-core/airrflow/pull/276) Parametrize FindThreshold Report and Presto Buildconsensus UMI.
-- [#279](https://github.com/nf-core/airrflow/pull/279) Update to nf-core tools v2.10.
+- [#279](https://github.com/nf-core/airrflow/pull/281) Update to nf-core tools v2.10.
 
 ### `Fixed`
 
