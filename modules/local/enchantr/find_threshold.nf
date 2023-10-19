@@ -21,10 +21,12 @@ process FIND_THRESHOLD {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda "bioconda::r-enchantr=0.1.3"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
+        'docker.io/immcantation/airrflow:devel':
+        'docker.io/immcantation/airrflow:devel' }"
 
 
     input:
@@ -36,8 +38,8 @@ process FIND_THRESHOLD {
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
-    path "*_threshold-summary.tsv", emit: threshold_summary
-    path "*_threshold-mean.tsv", emit: mean_threshold
+    path "all_reps_dist_report/tables/*_threshold-summary.tsv", emit: threshold_summary, optional:true
+    path "all_reps_dist_report/tables/*_threshold-mean.tsv", emit: mean_threshold
     path "versions.yml", emit: versions
 
     script:

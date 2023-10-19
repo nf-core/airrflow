@@ -4,10 +4,12 @@ process COLLAPSE_DUPLICATES {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda "bioconda::r-enchantr=0.1.3"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.3--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.3--r42hdfd78af_0' }"
+        'docker.io/immcantation/airrflow:devel':
+        'docker.io/immcantation/airrflow:devel' }"
 
     input:
     tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
