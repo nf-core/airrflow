@@ -94,7 +94,6 @@ def check_samplesheet(file_in, assembled):
             "subject_id",
             "species",
             "pcr_target_locus",
-            "tissue",
         ]
 
         ## Read header
