@@ -17,8 +17,7 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Commented out as taking too long for big samplesheets
-//include { validateParameters; paramsHelp } from 'plugin/nf-validation'
+include { validateParameters; paramsHelp } from 'plugin/nf-validation'
 
 // Print help message if needed
 if (params.help) {
@@ -30,9 +29,9 @@ if (params.help) {
 }
 
 // Validate input parameters
-//if (params.validate_params) {
-//    validateParameters()
-//}
+if (params.validate_params) {
+   validateParameters()
+}
 
 WorkflowMain.initialise(workflow, params, log)
 
