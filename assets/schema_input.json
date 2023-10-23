@@ -29,8 +29,7 @@
             },
             "tissue": {
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Tissue name must be provided and cannot contain spaces."
+                "errorMessage": "Tissue name must be provided."
             },
             "sex": {
                 "type": "string",
