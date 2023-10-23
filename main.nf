@@ -17,7 +17,6 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Commented out as taking too long for big samplesheets
 include { validateParameters; paramsHelp } from 'plugin/nf-validation'
 
 // Print help message if needed
