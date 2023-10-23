@@ -4,7 +4,6 @@ include { UNZIP_DB as UNZIP_IMGT } from '../../modules/local/unzip_db'
 include { CHANGEO_ASSIGNGENES } from '../../modules/local/changeo/changeo_assigngenes'
 include { CHANGEO_MAKEDB } from '../../modules/local/changeo/changeo_makedb'
 include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_parsedb_split'
-include { IGBLAST_ASSIGNGENES } from '../../modules/local/igblast/igblast_assigngenes'
 // reveal
 include { FILTER_QUALITY  } from '../../modules/local/reveal/filter_quality'
 include { FILTER_JUNCTION_MOD3  } from '../../modules/local/reveal/filter_junction_mod3'
