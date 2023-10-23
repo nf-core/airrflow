@@ -33,7 +33,6 @@
             },
             "sex": {
                 "type": "string",
-                "pattern": "^\\S+$",
                 "errorMessage": "Sex must be provided, specify NA if unknown."
             },
             "age": {
