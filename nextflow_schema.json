@@ -45,7 +45,7 @@
                 },
                 "miairr": {
                     "type": "string",
-                    "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "default": "airrflow/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping",
                     "fa_icon": "fas fa-table"
                 }
@@ -286,14 +286,19 @@
                 "imgtdb_base": {
                     "type": "string",
                     "description": "Path to the cached IMGT database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
                 "igblast_base": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
+                },
+                "fetch_imgt": {
+                    "type": "boolean",
+                    "description": "Set this flag to fetch the IMGT reference data at runtime.",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 }
             },
             "fa_icon": "fas fa-edit"

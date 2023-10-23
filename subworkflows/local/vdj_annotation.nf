@@ -25,7 +25,7 @@ workflow VDJ_ANNOTATION {
     // TODO: this can take a long time, and the progress shows 0%. Would be
     // nice to have some better progress reporting.
     // And maybe run this as 2 separate steps, one for IMGT and one for IgBLAST?
-    if( params.igblast_base ){
+    if( !params.fetch_imgt ){
         if (params.igblast_base.endsWith(".zip")) {
             Channel.fromPath("${params.igblast_base}")
                     .ifEmpty{ error "IGBLAST DB not found: ${params.igblast_base}" }
@@ -40,7 +40,7 @@ workflow VDJ_ANNOTATION {
         }
     }
 
-    if( params.imgtdb_base ){
+    if( !params.fetch_imgt ){
         if (params.imgtdb_base.endsWith(".zip")) {
             Channel.fromPath("${params.imgtdb_base}")
                     .ifEmpty{ error "IMGTDB not found: ${params.imgtdb_base}" }
@@ -50,12 +50,12 @@ workflow VDJ_ANNOTATION {
             ch_versions = ch_versions.mix(UNZIP_IMGT.out.versions.ifEmpty(null))
         } else {
             Channel.fromPath("${params.imgtdb_base}")
-                .ifEmpty { error "IMGTDB not found: ${params.imgtdb_base}" }
+                .ifEmpty { error "IMGT DB not found: ${params.imgtdb_base}" }
                 .set { ch_imgt }
         }
     }
 
-    if (!params.igblast_base | !params.imgtdb_base) {
+    if (params.fetch_imgt) {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
