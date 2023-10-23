@@ -24,8 +24,8 @@ process SINGLE_CELL_QC {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:devel':
-        'docker.io/immcantation/airrflow:devel' }"
+        'docker.io/immcantation/airrflow:3.2.0':
+        'docker.io/immcantation/airrflow:3.2.0' }"
 
     input:
     path(tabs)

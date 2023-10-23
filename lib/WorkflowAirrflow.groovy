@@ -46,7 +46,6 @@ class WorkflowAirrflow {
 
     public static String toolCitationText(params) {
 
-        // TODO Optionally add in-text citation tools to this list.
         // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
         // Uncomment function in methodsDescriptionText to render in MultiQC report
         def citation_text = [
@@ -61,7 +60,6 @@ class WorkflowAirrflow {
 
     public static String toolBibliographyText(params) {
 
-        // TODO Optionally add bibliographic entries to this list.
         // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
         // Uncomment function in methodsDescriptionText to render in MultiQC report
         def reference_text = [
@@ -86,7 +84,7 @@ class WorkflowAirrflow {
         meta["tool_citations"] = ""
         meta["tool_bibliography"] = ""
 
-        // TODO Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
+        // Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
         //meta["tool_citations"] = toolCitationText(params).replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
         //meta["tool_bibliography"] = toolBibliographyText(params)
 
