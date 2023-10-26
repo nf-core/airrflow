@@ -236,7 +236,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#104](https://github.com/nf-core/bcellmagic/pull/104): Fix bug in pairseq barcode copy before consensus.
 - [#114](https://github.com/nf-core/bcellmagic/pull/114): Analysis not restricted to Ig heavy chains.
 - [#123](https://github.com/nf-core/bcellmagic/pull/123): Fix report Rmarkdown reading for running on AWS.
-- [#284](https://github.com/nf-core/bcellmagic/pull/284): Use cached IMGT and IgBlast reference data by default.
 
 ### `Dependencies`
 
