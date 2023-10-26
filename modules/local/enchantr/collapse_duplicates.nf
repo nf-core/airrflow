@@ -31,8 +31,7 @@ process COLLAPSE_DUPLICATES {
         'outname'='${meta.id}',\\
         'log'='${meta.id}_collapse_command_log'))"
 
-    mv enchantr ${meta.id}_collapse_report
-    sleep 60
+    cp enchantr ${meta.id}_collapse_report
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
