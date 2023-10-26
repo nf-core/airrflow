@@ -57,6 +57,7 @@ process FIND_THRESHOLD {
             'logo'='${logo}' ${args}))"
 
     mv enchantr all_reps_dist_report
+    sleep 60
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml

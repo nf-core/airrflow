@@ -30,6 +30,7 @@ process REPORT_FILE_SIZE {
         'outdir'=getwd()))"
 
     mv enchantr file_size_report
+    sleep 60
 
     echo "\"${task.process}\":" > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
