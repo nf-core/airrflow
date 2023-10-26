@@ -56,8 +56,9 @@ process FIND_THRESHOLD {
             'log'='all_reps_threshold_command_log',\\
             'logo'='${logo}' ${args}))"
 
+    cp -r enchantr all_reps_dist_report && rm -rf enchantr
+
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-    mv enchantr all_reps_dist_report
     """
 }
