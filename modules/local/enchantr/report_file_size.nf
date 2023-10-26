@@ -29,10 +29,10 @@ process REPORT_FILE_SIZE {
         report_params=list('input'='${logs_tabs}', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
 
-    mv enchantr file_size_report
-    sleep 60
+    cp -r enchantr file_size_report && rm -rf enchantr
 
     echo "\"${task.process}\":" > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
+
     """
 }

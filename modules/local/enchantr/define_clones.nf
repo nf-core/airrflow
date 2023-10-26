@@ -63,8 +63,7 @@ process DEFINE_CLONES {
                                         'nproc'=${task.cpus},\\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
-    mv enchantr '${meta.id}_clone_report'
-    sleep 60
+    cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml

@@ -30,8 +30,7 @@ process DETECT_CONTAMINATION {
         'outname'='cont-flag', \\
         'log'='all_reps_contamination_command_log'))"
 
-    mv enchantr all_reps_cont_report
-    sleep 60
+    cp -r enchantr all_reps_cont_report && rm -rf enchantr
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
