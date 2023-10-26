@@ -48,9 +48,9 @@ process DOWSER_LINEAGES {
                                         'nproc'=${task.cpus},\\
                                         'log'='${id_name}_dowser_command_log' ${args}))"
 
+    mv enchantr '${id_name}_dowser_report'
+
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-
-    mv enchantr '${id_name}_dowser_report'
     """
 }

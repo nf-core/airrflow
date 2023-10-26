@@ -81,7 +81,8 @@ workflow CLONAL_ANALYSIS {
     )
 
     ch_versions = ch_versions.mix(DEFINE_CLONES_COMPUTE.out.versions)
-    ch_logs = ch_logs.mix(DEFINE_CLONES_COMPUTE.out.logs)
+    // TODO: add clonal analysis logs to report file size
+    //ch_logs = ch_logs.mix(DEFINE_CLONES_COMPUTE.out.logs)
 
     // prepare ch for define clones all samples report
     DEFINE_CLONES_COMPUTE.out.tab

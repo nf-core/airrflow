@@ -32,9 +32,9 @@ process REMOVE_CHIMERIC {
         'outname'='${meta.id}', \\
         'log'='${meta.id}_chimeric_command_log'))"
 
+    mv enchantr ${meta.id}_chimera_report
+
     echo "\"${task.process}\":" > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-
-    mv enchantr ${meta.id}_chimera_report
     """
 }
