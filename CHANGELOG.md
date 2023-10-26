@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| r-enchantr | 0.1.2       | 0.1.7       |
+| r-enchantr | 0.1.2       | 0.1.9       |
 | r-alakazam | 1.2.1       | 1.3.0       |
 | r-shazam   | 1.1.0       | 1.2.0       |
 | r-dowser   | 1.2.0       | 2.0.0       |
