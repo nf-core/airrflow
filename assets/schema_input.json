@@ -57,7 +57,8 @@
             "tissue",
             "sex",
             "age",
-            "biomaterial_provider"
+            "biomaterial_provider",
+            "single_cell"
         ]
     }
 }
