@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Samplesheet only allows data from one species.
 - [#259](https://github.com/nf-core/airrflow/pull/259) Introduced fix for a too long command with hundreds of datasets.
 - [#266](https://github.com/nf-core/airrflow/pull/266) Convert samplesheet required columns to strings when needed.
-- [#276](https://github.com/nf-core/airrflow/pull/266) Temporary fix for Dowser with singularity
+- [#284](https://github.com/nf-core/bcellmagic/pull/284): Use cached IMGT and IgBlast reference data by default.
 
 ### `Dependencies`
 
