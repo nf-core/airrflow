@@ -21,29 +21,32 @@ process FIND_THRESHOLD {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'docker.io/immcantation/airrflow:3.2.0':
+        'docker.io/immcantation/airrflow:3.2.0' }"
 
 
     input:
     path tab // sequence tsv in AIRR format
     path logo
+    path tabs_samplesheet
 
     output:
     // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
-    path "*_threshold-summary.tsv", emit: threshold_summary
-    path "*_threshold-mean.tsv", emit: mean_threshold
+    path "all_reps_dist_report/tables/*_threshold-summary.tsv", emit: threshold_summary, optional:true
+    path "all_reps_dist_report/tables/*_threshold-mean.tsv", emit: mean_threshold
     path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ? asString(task.ext.args) : ''
     """
     Rscript -e "enchantr::enchantr_report('find_threshold', \\
-        report_params=list('input'='${tab.join(',')}',\\
+        report_params=list('input'='${tabs_samplesheet}',\\
             'cloneby'='${params.cloneby}',\\
             'crossby'='${params.crossby}',\\
             'singlecell'='${params.singlecell}',\\
@@ -53,8 +56,9 @@ process FIND_THRESHOLD {
             'log'='all_reps_threshold_command_log',\\
             'logo'='${logo}' ${args}))"
 
+    cp -r enchantr all_reps_dist_report && rm -rf enchantr
+
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-    mv enchantr all_reps_dist_report
     """
 }

@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/airrflow/master/assets/schema_input.json",
+    "title": "nf-core/airrflow pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample_id": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces."
+            },
+            "subject_id": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Subject name must be provided and cannot contain spaces."
+            },
+            "species": {
+                "type": "string",
+                "enum": ["mouse", "human"],
+                "errorMessage": "Species name must be provided and must be one of: mouse, human."
+            },
+            "pcr_target_locus": {
+                "type": "string",
+                "enum": ["TR", "IG", "ig", "tr", "Ig", "Tr"],
+                "errorMessage": "PCR target locus must be provided and must be one of: TR, IG."
+            },
+            "tissue": {
+                "type": "string",
+                "errorMessage": "Tissue name must be provided."
+            },
+            "sex": {
+                "type": "string",
+                "errorMessage": "Sex must be provided, specify NA if unknown."
+            },
+            "age": {
+                "type": "string",
+                "errorMessage": "Age must be provided, specify NA if unknown."
+            },
+            "biomaterial_provider": {
+                "type": "string",
+                "errorMessage": "Biomaterial provider must be provided."
+            },
+            "single_cell": {
+                "type": "boolean",
+                "pattern": "^\\S+$",
+                "errorMessage": "Single cell must be provided as a TRUE/FALSE value."
+            }
+        },
+        "required": [
+            "sample_id",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+            "tissue",
+            "sex",
+            "age",
+            "biomaterial_provider",
+            "single_cell"
+        ]
+    }
+}

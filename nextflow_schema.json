@@ -14,15 +14,19 @@
             "properties": {
                 "input": {
                     "type": "string",
-                    "mimetype": "text/tsv",
-                    "fa_icon": "fas fa-table",
-                    "description": "Path to a tsv file providing paths to the fastq files for each sample and the necessary metadata for the analysis.",
-                    "help_text": "The input file includes important sample metadata and the path to the R1 and R2 fastq files, and index read file (I), if available. Please check the usage docs on information on how to create the input samplesheet."
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.tsv$",
+                    "schema": "assets/schema_input.json",
+                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/airrflow/usage#samplesheet-input).",
+                    "fa_icon": "fas fa-file-csv"
                 },
                 "mode": {
                     "type": "string",
                     "default": "fastq",
-                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".ptions are: 'raw'",
+                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".",
                     "enum": ["fastq", "assembled"],
                     "fa_icon": "fas fa-terminal"
                 },
@@ -41,7 +45,7 @@
                 },
                 "miairr": {
                     "type": "string",
-                    "default": "bcellmagic/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "default": "airrflow/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping",
                     "fa_icon": "fas fa-table"
                 }
@@ -282,14 +286,19 @@
                 "imgtdb_base": {
                     "type": "string",
                     "description": "Path to the cached IMGT database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
                 "igblast_base": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "If it is not provided, the database will be newly downloaded.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
+                },
+                "fetch_imgt": {
+                    "type": "boolean",
+                    "description": "Set this flag to fetch the IMGT reference data at runtime.",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 }
             },
             "fa_icon": "fas fa-edit"
@@ -363,6 +372,11 @@
                 "skip_all_clones_report": {
                     "type": "boolean",
                     "description": "Skip report of EnchantR DefineClones for all samples together.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_report_threshold": {
+                    "type": "boolean",
+                    "description": "Skip report of EnchantR FindThreshold for all samples together.",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },
@@ -514,7 +528,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }
@@ -590,6 +604,7 @@
                 },
                 "multiqc_config": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
@@ -605,13 +620,6 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
-                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -619,12 +627,26 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "show_hidden_params": {
+                "validationShowHiddenParams": {
                     "type": "boolean",
                     "fa_icon": "far fa-eye-slash",
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                },
+                "validationFailUnrecognisedParams": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
+                    "hidden": true,
+                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
+                },
+                "validationLenientMode": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Validation of parameters in lenient more.",
+                    "hidden": true,
+                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }
             }
         }

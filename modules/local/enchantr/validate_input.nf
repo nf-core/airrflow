@@ -6,10 +6,12 @@ process VALIDATE_INPUT {
     label 'immcantation'
     label 'process_single'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'docker.io/immcantation/airrflow:3.2.0':
+        'docker.io/immcantation/airrflow:3.2.0' }"
 
     input:
     file samplesheet
@@ -25,6 +27,8 @@ process VALIDATE_INPUT {
     script:
     """
     Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','reassign'='${params.reassign}','miairr'='${miairr}','outdir'=getwd()))"
+
+    cp -r enchantr validate_input_report && rm -rf enchantr
 
     echo "\"${task.process}\":" > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml

@@ -5,10 +5,12 @@ process DETECT_CONTAMINATION {
     label 'immcantation'
 
 
-    conda "bioconda::r-enchantr=0.1.2"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'docker.io/immcantation/airrflow:3.2.0':
+        'docker.io/immcantation/airrflow:3.2.0' }"
 
     input:
     path(tabs)
@@ -28,8 +30,9 @@ process DETECT_CONTAMINATION {
         'outname'='cont-flag', \\
         'log'='all_reps_contamination_command_log'))"
 
+    cp -r enchantr all_reps_cont_report && rm -rf enchantr
+
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
-    mv enchantr all_reps_cont_report
     """
 }

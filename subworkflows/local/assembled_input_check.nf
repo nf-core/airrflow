@@ -3,6 +3,9 @@
  */
 
 include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
+include { SAMPLESHEET_CHECK as SAMPLESHEET_CHECK_ASSEMBLED } from '../../modules/local/samplesheet_check'
+include { RENAME_FILE as RENAME_FILE_FASTA } from '../../modules/local/rename_file'
+include { RENAME_FILE as RENAME_FILE_TSV } from '../../modules/local/rename_file'
 
 workflow ASSEMBLED_INPUT_CHECK {
     take:
@@ -12,8 +15,7 @@ workflow ASSEMBLED_INPUT_CHECK {
     cloneby
 
     main:
-    // TODO: validate input should check that sample_ids are unique
-
+    SAMPLESHEET_CHECK_ASSEMBLED ( samplesheet )
     VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby ) //removed reassign
     ch_validated_input = VALIDATE_INPUT.out.validated_input
     ch_validated_input
@@ -25,9 +27,12 @@ workflow ASSEMBLED_INPUT_CHECK {
             }
             .set{ ch_metadata }
 
+    ch_unique_fasta = RENAME_FILE_FASTA( ch_metadata.fasta )
+    ch_unique_tsv = RENAME_FILE_TSV( ch_metadata.tsv )
+
     emit:
-    ch_fasta = ch_metadata.fasta
-    ch_tsv = ch_metadata.tsv
+    ch_fasta = ch_unique_fasta
+    ch_tsv = ch_unique_tsv
     validated_input = ch_validated_input
     versions = VALIDATE_INPUT.out.versions
 }

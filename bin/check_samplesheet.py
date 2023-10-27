@@ -15,7 +15,8 @@ def parse_args(args=None):
     Epilog = "Example usage: python check_samplesheet.py <FILE_IN>"
 
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
-    parser.add_argument("FILE_IN", help="Input samplesheet file.")
+    parser.add_argument("file_in", help="Input samplesheet file.")
+    parser.add_argument("-a", "--assembled", help="Input samplesheet type", action="store_true", default=False)
     return parser.parse_args(args)
 
 
@@ -38,22 +39,22 @@ def print_error(error, context="Line", context_str=""):
     sys.exit(1)
 
 
-def check_samplesheet(file_in):
+def check_samplesheet(file_in, assembled):
     """
     This function checks that the samplesheet:
 
     - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species, single_cell
     - sample ids are unique
     - samples from the same subject come from the same species
-    - pcr_target_locus is "IG" or "TR"
+    - pcr_target_locus is "IG"/"ig" or "TR"/"tr"
     - species is "human" or "mouse"
     """
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
-        ## Check that required columns are present
+        # Defining minimum columns and required columns
         min_cols = 7
-        required_columns = [
+        required_columns_raw = [
             "sample_id",
             "filename_R1",
             "filename_R2",
@@ -66,22 +67,82 @@ def check_samplesheet(file_in):
             "biomaterial_provider",
             "age",
         ]
-        no_whitespaces = [
+        required_columns_assembled = [
+            "filename",
+            "sample_id",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+            "sex",
+            "tissue",
+            "biomaterial_provider",
+            "age",
+            "single_cell",
+        ]
+        no_whitespaces_raw = [
             "sample_id",
             "filename_R1",
             "filename_R2",
             "subject_id",
             "species",
             "pcr_target_locus",
-            "tissue",
         ]
+        no_whitespaces_assembled = [
+            "sample_id",
+            "filename",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+        ]
+
+        ## Read header
         header = [x.strip('"') for x in fin.readline().strip().split("\t")]
-        for col in required_columns:
-            if col not in header:
-                print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
-                print("Header is missing column {}".format(col))
-                print("Header must contain columns {}".format("\t".join(required_columns)))
-                raise IndexError("Header must contain columns {}".format("\t".join(required_columns)))
+
+        ## Read tab
+        tab = pd.read_csv(file_in, sep="\t", header=0)
+
+        ## Set required columns as strings
+        types_dict = dict()
+        types_dict.update({col: str for col in required_columns_assembled[1:7]})
+        for col, col_type in types_dict.items():
+            tab[col] = tab[col].astype(col_type)
+
+        # Check that all required columns for assembled and raw samplesheets are there, and do not contain whitespaces
+        if assembled:
+            for col in required_columns_assembled:
+                if col not in header:
+                    print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
+                    print("Header is missing column {}".format(col))
+                    print("Header must contain columns {}".format("\t".join(required_columns)))
+                    raise IndexError("Header must contain columns {}".format("\t".join(required_columns)))
+            for col in no_whitespaces_assembled:
+                values = tab[col].tolist()
+                if any([re.search(r"\s+", s) for s in values]):
+                    print_error(
+                        "The column {} contains values with whitespaces. Please ensure that there are no tabs, spaces or any other whitespaces in these columns as well: {}".format(
+                            col, no_whitespaces_assembled
+                        )
+                    )
+        else:
+            if any(tab["single_cell"].tolist()):
+                print_error(
+                    "Some single cell column values are TRUE. The raw mode only accepts bulk samples. If processing single cell samples, please set the `--mode assembled` flag, and provide an AIRR rearrangement as input."
+                )
+
+            for col in required_columns_raw:
+                if col not in header:
+                    print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
+                    print("Header is missing column {}".format(col))
+                    print("Header must contain columns {}".format("\t".join(required_columns)))
+                    raise IndexError("Header must contain columns {}".format("\t".join(required_columns)))
+            for col in no_whitespaces_raw:
+                values = tab[col].tolist()
+                if any([re.search(r"\s+", s) for s in values]):
+                    print_error(
+                        "The column {} contains values with whitespaces. Please ensure that there are no tabs, spaces or any other whitespaces in these columns as well: {}".format(
+                            col, no_whitespaces_raw
+                        )
+                    )
 
         ## Check that rows have the same fields as header, and at least the compulsory ones are provided
         for line_num, line in enumerate(fin):
@@ -103,7 +164,6 @@ def check_samplesheet(file_in):
                 )
 
         ## Check that sample ids are unique
-        tab = pd.read_csv(file_in, sep="\t", header=0)
         if len(tab["sample_id"]) != len(set(tab["sample_id"])):
             print_error(
                 "Sample IDs are not unique! The sample IDs in the input samplesheet should be unique for each sample."
@@ -111,7 +171,7 @@ def check_samplesheet(file_in):
 
         ## Check that pcr_target_locus is IG or TR
         for val in tab["pcr_target_locus"]:
-            if val not in ["IG", "TR"]:
+            if val.upper() not in ["IG", "TR"]:
                 print_error("pcr_target_locus must be one of: IG, TR.")
 
         ## Check that species is human or mouse
@@ -129,20 +189,10 @@ def check_samplesheet(file_in):
                     "The same subject_id cannot belong to different species! Check input file columns 'subject_id' and 'species'."
                 )
 
-        ## Check that values do not contain spaces in the no whitespaces columns
-        for col in no_whitespaces:
-            values = tab[col].tolist()
-            if any([re.search(r"\s+", s) for s in values]):
-                print_error(
-                    "The column {} contains values with whitespaces. Please ensure that there are no tabs, spaces or any other whitespaces in these columns as well: {}".format(
-                        col, no_whitespaces
-                    )
-                )
-
 
 def main(args=None):
     args = parse_args(args)
-    check_samplesheet(args.FILE_IN)
+    check_samplesheet(args.file_in, args.assembled)
 
 
 if __name__ == "__main__":

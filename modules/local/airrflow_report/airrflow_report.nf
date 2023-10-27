@@ -2,10 +2,12 @@ process AIRRFLOW_REPORT {
     tag "${meta.id}"
     label 'process_high'
 
-    conda "bioconda::r-enchantr=0.1.2"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
+    }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-enchantr:0.1.2--r42hdfd78af_0':
-        'biocontainers/r-enchantr:0.1.2--r42hdfd78af_0' }"
+        'docker.io/immcantation/airrflow:3.2.0':
+        'docker.io/immcantation/airrflow:3.2.0' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
@@ -26,6 +28,9 @@ process AIRRFLOW_REPORT {
     script:
     """
     execute_report.R --report_file ${repertoire_report}
+
+    mkdir repertoire_comparison/repertoires
+    cp *clone-pass.tsv repertoire_comparison/repertoires/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

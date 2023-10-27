@@ -3,7 +3,37 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1] - 2023-06-05 "Protego"
+## [3.2.0] - 2023-10-27 Expecto patronum
+
+### `Added`
+
+- [#268](https://github.com/nf-core/airrflow/pull/268) Added parameters for FindThreshold in `modules.config`.
+- [#268](https://github.com/nf-core/airrflow/pull/268) Validate samplesheet also for `assembled` samplesheet.
+- [#259](https://github.com/nf-core/airrflow/pull/259) Update to `EnchantR v0.1.3`.
+- [#266](https://github.com/nf-core/airrflow/pull/266) Added clonal reports tables to final report folder.
+- [#266](https://github.com/nf-core/airrflow/pull/266) Added processes to include sampleID to filename in assembled workflow to keep it unique.
+- [#276](https://github.com/nf-core/airrflow/pull/276) Parametrize FindThreshold Report and Presto Buildconsensus UMI.
+- [#281](https://github.com/nf-core/airrflow/pull/281) Update to nf-core tools v2.10.
+
+### `Fixed`
+
+- [#268](https://github.com/nf-core/airrflow/pull/268) Allows for uppercase and lowercase locus in samplesheet `pcr_target_locus`.
+- [#259](https://github.com/nf-core/airrflow/pull/259) Samplesheet only allows data from one species.
+- [#259](https://github.com/nf-core/airrflow/pull/259) Introduced fix for a too long command with hundreds of datasets.
+- [#266](https://github.com/nf-core/airrflow/pull/266) Convert samplesheet required columns to strings when needed.
+- [#284](https://github.com/nf-core/bcellmagic/pull/284): Use cached IMGT and IgBlast reference data by default.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| r-enchantr | 0.1.2       | 0.1.9       |
+| r-alakazam | 1.2.1       | 1.3.0       |
+| r-shazam   | 1.1.0       | 1.2.0       |
+| r-dowser   | 1.2.0       | 2.0.0       |
+| fastqc     | 0.11.9      | 0.12.1      |
+
+## [3.1.0] - 2023-06-05 "Protego"
 
 ### `Added`
 
@@ -195,7 +225,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#114](https://github.com/nf-core/bcellmagic/pull/114): Added Bcellmagic html report.
 - [#114](https://github.com/nf-core/bcellmagic/pull/114): Improved documentation on amplicon protocol support.
 - [#115](https://github.com/nf-core/bcellmagic/pull/115): Improved output file structure and documentation.
-- [#124](https://github.com/nf-core/bcellmagic/pull/124): Template update to nf-core tools v2.0.1
+- [#124](https://github.com/nf-core/bcellmagic/pull/124): Template update to nf-core tools v2.0.1.
 
 ### `Fixed`
 

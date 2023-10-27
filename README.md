@@ -4,18 +4,19 @@
 [![GitHub Actions Linting Status](https://github.com/nf-core/airrflow/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/airrflow)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23airrflow-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/airrflow)
 [![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
+[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-** nf-core/airrflow ** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
+**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -25,7 +26,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documenation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documentation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
@@ -76,10 +77,11 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 ## Usage
 
-> **Note**
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
+:::note
+If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
+to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
+with `-profile test` before running the workflow on actual data.
+:::
 
 First, ensure that the pipeline tests run on your infrastructure:
 
@@ -87,7 +89,7 @@ First, ensure that the pipeline tests run on your infrastructure:
 nextflow run nf-core/airrflow -profile test,<docker/singularity/podman/shifter/charliecloud/conda/institute> --outdir <OUTDIR>
 ```
 
-To run on your data, prepare a tab-separated samplesheet with your input data. Depending on the input data type (bulk or single-cell, raw reads or assembled reads) the input samplesheet will vary. Please follow the [documentation on samplesheets](https://nf-co.re/airrflow/usage#input-samplesheet) for more details. An example samplesheet for running the pipeline on raw BCR / TCR sequencing data looks as follows:
+To run nf-core/airrflow with your data, prepare a tab-separated samplesheet with your input data. Depending on the input data type (bulk or single-cell, raw reads or assembled reads) the input samplesheet will vary. Please follow the [documentation on samplesheets](https://nf-co.re/airrflow/usage#input-samplesheet) for more details. An example samplesheet for running the pipeline on bulk BCR / TCR sequencing data in fastq format looks as follows:
 
 | sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell | intervention   | collection_time_point_relative | cell_subset  |
 | --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- | -------------- | ------------------------------ | ------------ |
@@ -96,27 +98,42 @@ To run on your data, prepare a tab-separated samplesheet with your input data. D
 
 Each row represents a sample with fastq files (paired-end).
 
-A typical command to run the pipeline is:
+A typical command to run the pipeline from **bulk raw fastq files** is:
 
 ```bash
 nextflow run nf-core/airrflow \
+-r 3.2.0 \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
---input samplesheet.tsv \
+--mode fastq \
+--input input_samplesheet.tsv \
 --library_generation_method specific_pcr_umi \
 --cprimers CPrimers.fasta \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
---max_memory 8.GB \
---max_cpus 8 \
+--umi_position R1 \
 --outdir ./results
 ```
 
-> **Warning:**
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
-> provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+A typical command to run the pipeline from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
 
-For more details, please refer to the [usage documentation](https://nf-co.re/airrflow/usage) and the [parameter documentation](https://nf-co.re/airrflow/parameters).
+```bash
+nextflow run nf-core/airrflow \
+-r 3.2.0 \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--input input_samplesheet.tsv \
+--mode assembled \
+--outdir results
+```
+
+See the [usage documentation](https://nf-co.re/airrflow/usage) and the [parameter documentation](https://nf-co.re/airrflow/parameters) for more details on how to use the pipeline and all the available parameters.
+
+:::warning
+Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
+provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
+see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+:::
+
+For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/airrflow/usage) and the [parameter documentation](https://nf-co.re/airrflow/parameters).
 
 ## Pipeline output
 
