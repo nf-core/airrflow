@@ -14,7 +14,7 @@ process FILTER_QUALITY {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*quality-pass.tsv"), optional:true, emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*quality-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "versions.yml", emit: versions
 
