@@ -1,9 +1,13 @@
-include { CELLRANGER_MKVDJREF  } from '../../modules/local/cellranger/mkvdjref'
-include { CELLRANGER_VDJ    } from '../../modules/nf-core/cellranger/vdj/main'
+include { CELLRANGER_MKVDJREF                                           } from '../../modules/local/cellranger/mkvdjref'
+include { CELLRANGER_VDJ                                                } from '../../modules/nf-core/cellranger/vdj/main'
+include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
+include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
+
 
 workflow SC_RAW_INPUT {
 
     take:
+    ch_reads_single // meta, reads
     
 
     main:
@@ -24,12 +28,53 @@ workflow SC_RAW_INPUT {
         if (params.umi_length > 0)  {
             error "The transcript-specific primer, 5'-RACE, UMI library generation method does not require to set the UMI length, please provide a reference file instead or select another library method option."
         } 
-        if (params.sc_reference)  {
-            ch_sc_refence = Channel.fromPath(params.sc_reference, checkIfExists: true)
+        if (params.reference_10x)  {
+            ch_sc_refence = Channel.fromPath(params.reference_10x, checkIfExists: true)
         } else {
-            error "The transcript-specific primer, 5'-RACE, UMI library generation method requires to provide a reference file."
+            error "The transcript-specific primer, 5'-RACE, UMI library generation method requires you to provide a reference file."
         }
     }
+
+
+    CELLRANGER_VDJ ( 
+        ch_reads_single,
+        ch_sc_refence
+    )
+    ch_versions = ch_versions.mix(CELLRANGER_VDJ.out.versions)
+
+    ch_cellranger_out = CELLRANGER_VDJ.out.outs
+
+    ch_cellranger_out
+        .map { meta, out_files -> 
+                [ meta, out_files.find { it.endsWith("airr_rearrangement.tsv") }] 
+            }
+        .set { ch_cellranger_airr }
+
+    // TODO : add VALIDATE_INPUT Module
+    // this module requires input in csv format... Might need to create this in an extra module
+
+    // rename tsv file to unique name
+    RENAME_FILE_TSV( 
+                ch_cellranger_airr 
+            )
+
+    // convert airr tsv to fasta
+    CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
+                RENAME_FILE_TSV.out.file
+            )
+    
+    ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
+
+    emit:
+    versions = ch_versions
+    // complete cellranger output
+    cellranger_out = ch_cellranger_out
+    // cellranger output in airr format
+    cellranger_out_airr = ch_cellranger_airr
+    // cellranger output converted to FASTA format
+    
+
+
 
 
 }

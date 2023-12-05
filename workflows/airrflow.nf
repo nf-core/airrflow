@@ -105,14 +105,16 @@ workflow AIRRFLOW {
                 bulk:   meta.single_cell == 'false'
             }
             .set { ch_reads_split }
-        
-        ch_reads_split.bulk
-            .dump(tag: 'bulk')
-        ch_reads_split.single
-            .dump(tag: 'single')
+
+        // SC: Perform downstream analysis
+        SC_RAW_INPUT(
+            ch_reads_split.single
+        )
 
 
         // // Perform sequence assembly if input type is fastq
+        // // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
+
         // SEQUENCE_ASSEMBLY( ch_input )
 
         // ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
