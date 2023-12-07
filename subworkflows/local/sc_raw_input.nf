@@ -33,6 +33,8 @@ workflow SC_RAW_INPUT {
         } else {
             error "The transcript-specific primer, 5'-RACE, UMI library generation method requires you to provide a reference file."
         }
+    } else {
+        error "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."
     }
 
 
@@ -57,8 +59,10 @@ workflow SC_RAW_INPUT {
     RENAME_FILE_TSV( 
                 ch_cellranger_airr 
             )
+        .set { ch_renamed_tsv }
 
-    // convert airr tsv to fasta
+    
+    // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 RENAME_FILE_TSV.out.file
             )
@@ -68,13 +72,10 @@ workflow SC_RAW_INPUT {
     emit:
     versions = ch_versions
     // complete cellranger output
-    cellranger_out = ch_cellranger_out
+    outs = ch_cellranger_out
     // cellranger output in airr format
-    cellranger_out_airr = ch_cellranger_airr
+    airr = ch_cellranger_airr
     // cellranger output converted to FASTA format
-    
-
-
-
+    fasta = ch_fasta
 
 }

@@ -46,7 +46,6 @@ include { FASTQC                      } from '../../modules/nf-core/fastqc/main'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
 workflow SEQUENCE_ASSEMBLY {
 
     take:
