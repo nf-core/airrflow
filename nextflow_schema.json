@@ -699,6 +699,9 @@
             "$ref": "#/definitions/report_options"
         },
         {
+            "$ref": "#/definitions/single_cell_analysis_options"
+        },
+        {
             "$ref": "#/definitions/reference_genome_options"
         },
         {
