@@ -134,7 +134,7 @@ workflow AIRRFLOW {
             // Perform sequence assembly if input type is fastq from bulk sequencing data
             // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
 
-            SEQUENCE_ASSEMBLY( ch_reads_split.bulk )
+            SEQUENCE_ASSEMBLY( ch_input )
 
             ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
             ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
