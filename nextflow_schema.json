@@ -184,7 +184,6 @@
                 },
                 "adapter_fasta": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-file",
                     "description": "Fasta file with adapter sequences to be trimmed."
                 },
@@ -368,6 +367,10 @@
                             "type": "number",
                             "minimum": 0
                         }
+                    ],
+                    "type": [
+                        "string",
+                        "number"
                     ],
                     "default": "auto",
                     "fa_icon": "fab fa-pagelines",
