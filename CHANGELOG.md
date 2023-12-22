@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - Removed optional output from FilterQuality to not fail silently
+- clonal_threshold is validated to be 'auto' or number greater than zero
 
 ### `Dependencies`
 
