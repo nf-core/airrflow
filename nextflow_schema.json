@@ -61,7 +61,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-flask",
                     "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi"],
+                    "enum": ["dt_5p_race", "dt_5p_race_umi", "specific_pcr", "specific_pcr_umi"],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
                 },
                 "race_linker": {
@@ -167,7 +167,6 @@
                 },
                 "adapter_fasta": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-file",
                     "description": "Fasta file with adapter sequences to be trimmed."
                 },
@@ -235,7 +234,7 @@
                     "type": "string",
                     "default": "cut",
                     "description": "Masking mode for the pRESTO MaskPrimer step. Available: cut, mask, trim, tag.",
-                    "enum": ["cut", "mask", "trim", "tag"],
+                    "enum": ["cut", "mask", "tag", "trim"],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-mask"
                 },
@@ -335,6 +334,16 @@
             "default": "",
             "properties": {
                 "clonal_threshold": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "enum": ["auto"]
+                        },
+                        {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    ],
                     "type": ["string", "number"],
                     "default": "auto",
                     "fa_icon": "fab fa-pagelines",
