@@ -31,7 +31,7 @@ workflow VDJ_ANNOTATION {
                     .set { ch_igblast_zipped }
             UNZIP_IGBLAST( ch_igblast_zipped.collect() )
             ch_igblast = UNZIP_IGBLAST.out.unzipped
-            ch_versions = ch_versions.mix(UNZIP_IGBLAST.out.versions.ifEmpty(null))
+            ch_versions = ch_versions.mix(UNZIP_IGBLAST.out.versions)
         } else {
             Channel.fromPath("${params.igblast_base}")
                 .ifEmpty { error "IGBLAST DB not found: ${params.igblast_base}" }
@@ -46,7 +46,7 @@ workflow VDJ_ANNOTATION {
                     .set { ch_imgt_zipped }
             UNZIP_IMGT( ch_imgt_zipped.collect() )
             ch_imgt = UNZIP_IMGT.out.unzipped
-            ch_versions = ch_versions.mix(UNZIP_IMGT.out.versions.ifEmpty(null))
+            ch_versions = ch_versions.mix(UNZIP_IMGT.out.versions)
         } else {
             Channel.fromPath("${params.imgtdb_base}")
                 .ifEmpty { error "IMGT DB not found: ${params.imgtdb_base}" }
@@ -58,7 +58,7 @@ workflow VDJ_ANNOTATION {
         FETCH_DATABASES()
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_imgt = FETCH_DATABASES.out.imgt
-        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions)
     }
 
     CHANGEO_ASSIGNGENES (
@@ -67,7 +67,7 @@ workflow VDJ_ANNOTATION {
     )
 
     ch_logs = ch_logs.mix(CHANGEO_ASSIGNGENES.out.logs)
-    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_ASSIGNGENES.out.versions)
 
     CHANGEO_MAKEDB (
         CHANGEO_ASSIGNGENES.out.fasta,
@@ -75,7 +75,7 @@ workflow VDJ_ANNOTATION {
         ch_imgt.collect()
     )
     ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
-    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions)
 
     ch_assigned_tab = CHANGEO_MAKEDB.out.tab
     ch_assignment_logs = CHANGEO_MAKEDB.out.logs
@@ -88,25 +88,25 @@ workflow VDJ_ANNOTATION {
         ch_assigned_tab
     )
     ch_logs = ch_logs.mix(FILTER_QUALITY.out.logs)
-    ch_versions = ch_versions.mix(FILTER_QUALITY.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILTER_QUALITY.out.versions)
 
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT (
             FILTER_QUALITY.out.tab
         )
         ch_logs = ch_logs.mix(CHANGEO_PARSEDB_SPLIT.out.logs)
-        ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions)
 
         // Apply filter: junction length multiple of 3
         FILTER_JUNCTION_MOD3(
             CHANGEO_PARSEDB_SPLIT.out.tab
         )
         ch_logs = ch_logs.mix(FILTER_JUNCTION_MOD3.out.logs)
-        ch_versions = ch_versions.mix(FILTER_JUNCTION_MOD3.out.versions.ifEmpty(null))
-        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab.ifEmpty(null)
+        ch_versions = ch_versions.mix(FILTER_JUNCTION_MOD3.out.versions)
+        ch_repertoire = FILTER_JUNCTION_MOD3.out.tab
 
     } else {
-        ch_repertoire = FILTER_QUALITY.out.tab.ifEmpty(null)
+        ch_repertoire = FILTER_QUALITY.out.tab
     }
 
     ADD_META_TO_TAB(
@@ -114,7 +114,7 @@ workflow VDJ_ANNOTATION {
         ch_validated_samplesheet
     )
     ch_logs = ch_logs.mix(ADD_META_TO_TAB.out.logs)
-    ch_versions = ch_versions.mix(ADD_META_TO_TAB.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(ADD_META_TO_TAB.out.versions)
 
 
     emit:

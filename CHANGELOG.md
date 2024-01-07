@@ -7,12 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- Merge template updates nf-core/tools v2.11.1
+
 ### `Fixed`
 
 - Removed optional output from FilterQuality to not fail silently
 - clonal_threshold is validated to be 'auto' or number greater than zero
 
 ### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.14        | 1.18        |
 
 ## [3.2.0] - 2023-10-27 Expecto patronum
 

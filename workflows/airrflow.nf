@@ -118,14 +118,14 @@ workflow AIRRFLOW {
             params.collapseby,
             params.cloneby
         )
-        ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty([]) )
+        ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions )
 
         if (params.reassign) {
             CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 ASSEMBLED_INPUT_CHECK.out.ch_tsv
             )
             ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-            ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty([]))
+            ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions)
             ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
         } else {
             ch_fasta_from_tsv = Channel.empty()
@@ -155,7 +155,7 @@ workflow AIRRFLOW {
         ch_fasta,
         ch_validated_samplesheet.collect()
     )
-    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions.ifEmpty([]))
+    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions )
 
     // Split bulk and single cell repertoires
     ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
@@ -172,7 +172,7 @@ workflow AIRRFLOW {
         ch_repertoire_by_processing.bulk,
         VDJ_ANNOTATION.out.imgt.collect()
     )
-    ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty([]))
+    ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty(null) )
 
     ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
 
@@ -183,7 +183,7 @@ workflow AIRRFLOW {
     SINGLE_CELL_QC_AND_FILTERING(
         ch_repertoire_by_processing.single
     )
-    ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty([]) )
+    ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty(null) )
 
     // Mixing bulk and single cell channels for clonal analysis
     ch_repertoires_for_clones = ch_bulk_filtered
@@ -196,7 +196,7 @@ workflow AIRRFLOW {
         VDJ_ANNOTATION.out.imgt.collect(),
         ch_report_logo_img.collect().ifEmpty([])
     )
-    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty([]))
+    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
 
     if (!params.skip_report){
         REPERTOIRE_ANALYSIS_REPORTING(
@@ -244,8 +244,8 @@ workflow AIRRFLOW {
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.ifEmpty([]))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.collect().ifEmpty([]))
         ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_mqc.collect{it[1]}.ifEmpty([]))
 
         MULTIQC (
