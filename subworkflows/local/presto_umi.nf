@@ -9,6 +9,7 @@ include { FASTP                                          } from '../../modules/n
 //PRESTO
 include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI }      from '../../modules/local/presto/presto_filterseq'
 include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI }    from '../../modules/local/presto/presto_maskprimers'
+include { PRESTO_MASKPRIMERS_ALIGN }                            from '../../modules/local/presto/presto_maskprimers_align'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI }        from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI }    from '../../modules/local/presto/presto_clustersets'
 include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI }  from '../../modules/local/presto/presto_parse_cluster'
@@ -90,17 +91,30 @@ workflow PRESTO_UMI {
     PRESTO_FILTERSEQ_UMI ( GUNZIP_UMI.out.reads )
     ch_versions = ch_versions.mix(PRESTO_FILTERSEQ_UMI.out.versions)
 
-    // Mask primers
-    PRESTO_MASKPRIMERS_UMI (
-        PRESTO_FILTERSEQ_UMI.out.reads,
-        ch_cprimers.collect(),
-        ch_vprimers.collect()
-    )
-    ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_UMI.out.versions)
+    if (params.maskprimers_align) {
+        PRESTO_MASKPRIMERS_ALIGN(
+            PRESTO_FILTERSEQ_UMI.out.reads,
+            ch_cprimers.collect()
+        )
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_ALIGN.out.versions)
+        ch_maskprimers_reads = PRESTO_MASKPRIMERS_ALIGN.out.reads
+        ch_maskprimers_logs = PRESTO_MASKPRIMERS_ALIGN.out.logs
+    } else {
+        // Mask primers
+        PRESTO_MASKPRIMERS_UMI (
+            PRESTO_FILTERSEQ_UMI.out.reads,
+            ch_cprimers.collect(),
+            ch_vprimers.collect()
+        )
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_UMI.out.versions)
+        ch_maskprimers_reads = PRESTO_MASKPRIMERS_UMI.out.reads
+        ch_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs
+    }
+
 
     // Pre-consensus pair
     PRESTO_PAIRSEQ_UMI (
-        PRESTO_MASKPRIMERS_UMI.out.reads
+        ch_maskprimers_reads
     )
     ch_versions = ch_versions.mix(PRESTO_PAIRSEQ_UMI.out.versions)
 
@@ -186,7 +200,7 @@ workflow PRESTO_UMI {
     fastp_reads_html = FASTP.out.html.collect{ meta,html -> html }
     fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_UMI.out.zip
     presto_filterseq_logs = PRESTO_FILTERSEQ_UMI.out.logs
-    presto_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs.collect()
+    presto_maskprimers_logs = ch_maskprimers_logs.collect()
     presto_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs.collect()
     presto_clustersets_logs = ch_clustersets_logs
     presto_buildconsensus_logs = PRESTO_BUILDCONSENSUS_UMI.out.logs.collect()

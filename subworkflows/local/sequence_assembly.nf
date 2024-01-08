@@ -108,6 +108,8 @@ workflow SEQUENCE_ASSEMBLY {
             error "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else if (params.maskprimers_align) {
+            ch_vprimers_fasta = Channel.of([])
         } else {
             error "The oligo-dT 5'-RACE UMI library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
         }
@@ -124,6 +126,8 @@ workflow SEQUENCE_ASSEMBLY {
             error "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else if (params.maskprimers_align) {
+            ch_vprimers_fasta = Channel.of([])
         } else {
             error "The oligo-dT 5'-RACE library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
         }
@@ -145,7 +149,8 @@ workflow SEQUENCE_ASSEMBLY {
     if (params.index_file & params.umi_position == 'R2') {error "Please do not set `--umi_position` option if index file with UMIs is provided."}
     if (params.umi_length < 0) {error "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
     if (!params.index_file & params.umi_start != 0) {error "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
-
+    if (params.maskprimers_align & params.umi_position == 'R1') {error "The maskprimers align option is only supported with UMI barcodes in the R2 reads (reads containing V region)."}
+    if (params.maskprimers_align & params.cprimer_position == 'R2') {error "The maskprimers align option is only supported with Cprimers in the R1 reads (reads containing C region)."}
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
