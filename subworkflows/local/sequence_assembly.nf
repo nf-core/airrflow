@@ -50,7 +50,8 @@ include { FASTQC                      } from '../../modules/nf-core/fastqc/main'
 workflow SEQUENCE_ASSEMBLY {
 
     take:
-    ch_input // channel:
+    ch_input // channel: reads
+    ch_igblast
 
     main:
 
@@ -195,7 +196,8 @@ workflow SEQUENCE_ASSEMBLY {
             ch_reads,
             ch_cprimers_fasta,
             ch_vprimers_fasta,
-            ch_adapter_fasta
+            ch_adapter_fasta,
+            ch_igblast.collect()
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
         ch_presto_software = PRESTO_UMI.out.software

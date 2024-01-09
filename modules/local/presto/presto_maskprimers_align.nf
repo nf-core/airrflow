@@ -27,7 +27,7 @@ process PRESTO_MASKPRIMERS_ALIGN {
     -s $R1 \\
     -p ${cprimers} \\
     --maxlen ${params.primer_maxlen} \\
-    --maxerror ${params.primer_maxerror} \\
+    --maxerror ${params.primer_r1_maxerror} \\
     --mode ${params.primer_mask_mode} \\
     --skiprc \\
     --outname ${meta.id}_R1 \\
