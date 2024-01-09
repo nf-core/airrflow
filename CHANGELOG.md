@@ -7,12 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-- Merge template updates nf-core/tools v2.11.1
+- [#294](https://github.com/nf-core/airrflow/pull/294) Merge template updates nf-core/tools v2.11.1
 
 ### `Fixed`
 
-- Removed optional output from FilterQuality to not fail silently
-- clonal_threshold is validated to be 'auto' or number greater than zero
+- [#294](https://github.com/nf-core/airrflow/pull/294) Removed optional output from FilterQuality to not fail silently
+- [#293](https://github.com/nf-core/airrflow/pull/293) Clonal_threshold is validated to be 'auto' or number greater than zero
+- [#295](https://github.com/nf-core/airrflow/pull/295) Fixed airrflow report sequence plot and add path to clonal analysis reports.
 
 ### `Dependencies`
 
