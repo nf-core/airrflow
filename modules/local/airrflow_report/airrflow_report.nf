@@ -21,9 +21,6 @@ process AIRRFLOW_REPORT {
     path "versions.yml" , emit: versions
     path("repertoire_comparison"), emit: results_folder
     path("*.html"), emit: report_html
-    path(repertoire_report)
-    path(css)
-    path(logo)
 
     script:
     """
