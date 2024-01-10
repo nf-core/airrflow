@@ -3,12 +3,10 @@ process PRESTO_ASSEMBLEPAIRS_SEQUENTIAL {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    //TODO add igblast to container
-    conda "bioconda::presto=0.7.1 bioconda::igblast=1.19.0 conda-forge::wget=1.20.1"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/quay.io/biocontainers/mulled-v2-23ca863c1007648366380a118c1cb3c060379dc5:190133c91e389ba1df2063a4eb7dc43d9c926c50-0' :
-    //    'biocontainers/mulled-v2-23ca863c1007648366380a118c1cb3c060379dc5:190133c91e389ba1df2063a4eb7dc43d9c926c50-0' }"
-    container "docker.io/immcantation/suite:4.4.0"
+    conda "bioconda::presto=0.7.1 bioconda::igblast=1.21.0 conda-forge::wget=1.20.1 conda-forge::biopython=1.79"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-865ad74e0cfd6de39e9e3ade759d826fce726425:25073cb5e81f4a0dcd2f99ddd308510b3461df7e-0' :
+        'biocontainers/mulled-v2-865ad74e0cfd6de39e9e3ade759d826fce726425:25073cb5e81f4a0dcd2f99ddd308510b3461df7e-0' }"
 
     input:
     tuple val(meta), path(R1), path(R2) // reads in fastq format
