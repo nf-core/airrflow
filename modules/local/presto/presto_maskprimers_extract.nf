@@ -1,4 +1,4 @@
-process PRESTO_MASKPRIMERS_ALIGN {
+process PRESTO_MASKPRIMERS_EXTRACT {
     tag "$meta.id"
     label "process_high"
     label 'immcantation'
@@ -9,28 +9,26 @@ process PRESTO_MASKPRIMERS_ALIGN {
         'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(R1)
-    path(cprimers)
+    tuple val(meta), path(R2)
 
     output:
-    tuple val(meta), path("*_R1_primers-pass.fastq") , emit: reads
-    path "*_command_log_R1.txt", emit: logs
-    path "*_R1.log"
+    tuple val(meta), path("*_R2_primers-pass.fastq") , emit: reads
+    path "*_command_log_R2.txt", emit: logs
+    path "*_R2.log"
     path "*.tab", emit: log_tab
     path "versions.yml" , emit: versions
 
     script:
     """
-    MaskPrimers.py align --nproc ${task.cpus} \\
-    -s $R1 \\
-    -p ${cprimers} \\
-    --maxlen ${params.primer_maxlen} \\
-    --maxerror ${params.primer_r1_maxerror} \\
+    MaskPrimers.py extract --nproc ${task.cpus} \\
+    -s $R2 \\
+    --start ${params.umi_length} \\
+    --len ${params.primer_extract_len} \\
+    --barcode \\
     --mode ${params.primer_mask_mode} \\
-    --skiprc \\
-    --outname ${meta.id}_R1 \\
-    --log ${meta.id}_R1.log > ${meta.id}_command_log_R1.txt
-    ParseLog.py -l ${meta.id}_R1.log -f ID PRIMER ERROR
+    --outname ${meta.id}_R2 \\
+    --log ${meta.id}_R2.log >> ${meta.id}_command_log_R2.txt
+    ParseLog.py -l ${meta.id}_R2.log -f ID PRIMER ERROR
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
