@@ -105,14 +105,14 @@ for process in processes:
             with open(logfile, "r") as f:
                 for line in f:
                     if " START>" in line:
-                            s_code.append(logfile.split("/")[1].split("_command_log")[0])
-                            process_name.append(process)
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
+                        process_name.append(process)
                     elif "SEQUENCES>" in line:
-                            n_seqs.append(line.strip().removeprefix("SEQUENCES> "))
+                        n_seqs.append(line.strip().removeprefix("SEQUENCES> "))
                     elif "PASS>" in line:
-                            n_pass.append(line.strip().removeprefix("PASS> "))
+                        n_pass.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                            n_fail.append(line.strip().removeprefix("FAIL> "))
+                        n_fail.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
@@ -330,8 +330,6 @@ for process in processes:
         )
 
         df_process_list.append(df_process)
-
-
 
 
 # Tables provide extra info and help debugging
