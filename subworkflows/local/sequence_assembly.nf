@@ -85,6 +85,11 @@ workflow SEQUENCE_ASSEMBLY {
         if (params.umi_length < 2)  {
             error "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
         }
+        if (params.internal_cregion_sequences) {
+            ch_internal_cregion = Channel.fromPath(params.internal_cregion_sequences, checkIfExists: true)
+        } else {
+            ch_internal_cregion = Channel.of([])
+        }
     } else if (params.library_generation_method == 'specific_pcr') {
         if (params.vprimers)  {
             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
@@ -104,6 +109,9 @@ workflow SEQUENCE_ASSEMBLY {
         } else {
             params.umi_length = 0
         }
+        if (params.internal_cregion_sequences) {
+            error "Please do not set '--internal_cregion_sequences' when using the 'specific_pcr' library generation method without UMIs."
+        }
     } else if (params.library_generation_method == 'dt_5p_race_umi') {
         if (params.vprimers) {
             error "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
@@ -121,6 +129,11 @@ workflow SEQUENCE_ASSEMBLY {
         }
         if (params.umi_length < 2)  {
             error "The oligo-dT 5'-RACE UMI 'dt_5p_race_umi' library generation method requires specifying the '--umi_length' to a value greater than 1."
+        }
+        if (params.internal_cregion_sequences) {
+            ch_internal_cregion = Channel.fromPath(params.internal_cregion_sequences, checkIfExists: true)
+        } else {
+            ch_internal_cregion = Channel.of([])
         }
     } else if (params.library_generation_method == 'dt_5p_race') {
         if (params.vprimers) {
@@ -141,6 +154,9 @@ workflow SEQUENCE_ASSEMBLY {
             error "Please do not set a UMI length with the library preparation method oligo-dT 5'-RACE 'dt_5p_race'. Please specify instead a method that suports umi (e.g. 'dt_5p_race_umi')."
         } else {
             params.umi_length = 0
+        }
+        if (params.internal_cregion_sequences) {
+            error "Please do not set '--internal_cregion_sequences' when using the 'dt_5p_race' library generation method without UMIs."
         }
     } else {
         error "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."
@@ -197,6 +213,7 @@ workflow SEQUENCE_ASSEMBLY {
             ch_cprimers_fasta,
             ch_vprimers_fasta,
             ch_adapter_fasta,
+            ch_internal_cregion,
             ch_igblast.collect()
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta

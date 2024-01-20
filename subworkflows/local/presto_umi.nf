@@ -11,6 +11,7 @@ include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI }      from '../../modu
 include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI }    from '../../modules/local/presto/presto_maskprimers'
 include { PRESTO_MASKPRIMERS_ALIGN }                            from '../../modules/local/presto/presto_maskprimers_align'
 include { PRESTO_MASKPRIMERS_EXTRACT }                          from '../../modules/local/presto/presto_maskprimers_extract'
+include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_CREGION }    from '../../modules/local/presto/presto_maskprimers_align'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI }        from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI }    from '../../modules/local/presto/presto_clustersets'
 include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI }  from '../../modules/local/presto/presto_parse_cluster'
@@ -31,6 +32,7 @@ workflow PRESTO_UMI {
     ch_cprimers    // channel: [ cprimers.fasta ]
     ch_vprimers    // channel: [ vprimers.fasta ]
     ch_adapter_fasta // channel: [ adapters.fasta ]
+    ch_internal_cregion // channel: [ internal_cregions.fasta ]
     ch_igblast
 
     main:
@@ -102,7 +104,10 @@ workflow PRESTO_UMI {
                                             .map{ reads -> [reads[0], reads[2]] }.dump(tag: 'ch_reads_R2')
         PRESTO_MASKPRIMERS_ALIGN(
             ch_reads_R1,
-            ch_cprimers.collect()
+            ch_cprimers.collect(),
+            params.primer_maxlen,
+            params.primer_r1_maxerror,
+            params.primer_mask_mode
         )
         PRESTO_MASKPRIMERS_EXTRACT(
             ch_reads_R2
@@ -191,7 +196,18 @@ workflow PRESTO_UMI {
         ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_UMI.out.logs
     }
 
-
+    if (params.align_cregion) {
+        PRESTO_ALIGN_CREGION(
+            ch_assemblepairs_reads,
+            ch_internal_cregion.collect(),
+            params.cregion_maxlen,
+            params.cregion_maxerror,
+            params.cregion_mask_mode
+        )
+        ch_parseheaders_reads = PRESTO_ALIGN_CREGION.out.reads
+    } else {
+        ch_parseheaders_reads = ch_assemblepairs_reads
+    }
 
     // Generate QC stats after reads paired and filtered but before collapsed
     FASTQC_POSTASSEMBLY_UMI (
@@ -201,7 +217,7 @@ workflow PRESTO_UMI {
 
     // Combine UMI duplicate count
     PRESTO_PARSEHEADERS_COLLAPSE_UMI (
-        ch_assemblepairs_reads
+        ch_parseheaders_reads
     )
     ch_versions = ch_versions.mix(PRESTO_PARSEHEADERS_COLLAPSE_UMI.out.versions)
 
