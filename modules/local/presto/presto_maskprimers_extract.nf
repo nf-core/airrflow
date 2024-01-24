@@ -19,16 +19,18 @@ process PRESTO_MASKPRIMERS_EXTRACT {
     path "versions.yml" , emit: versions
 
     script:
+    def args = task.ext.args?: ''
+    def args2 = task.ext.args2?: ''
     """
     MaskPrimers.py extract --nproc ${task.cpus} \\
     -s $R2 \\
     --start ${params.umi_length} \\
     --len ${params.primer_extract_len} \\
-    --barcode \\
+    $args \\
     --mode ${params.primer_mask_mode} \\
     --outname ${meta.id}_R2 \\
     --log ${meta.id}_R2.log >> ${meta.id}_command_log_R2.txt
-    ParseLog.py -l ${meta.id}_R2.log -f ID PRIMER ERROR
+    ParseLog.py -l ${meta.id}_R2.log $args2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
