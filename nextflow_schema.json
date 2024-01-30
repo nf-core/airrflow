@@ -5,6 +5,22 @@
     "description": "B and T cell repertoire analysis pipeline with the Immcantation framework.",
     "type": "object",
     "definitions": {
+        "analysis_options": {
+            "title": "Analysis options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define which tools should be used for your run.",
+            "required": ["analysis_tool"],
+            "properties": {
+                "analysis_tool": {
+                    "type": "string",
+                    "default": "immcantation",
+                    "description": "Specify the bioinformatic tool to perform the analysis. Available options are \"immcantation\" and \"mixcr\".",
+                    "enum": ["immcantation", "mixcr"],
+                    "fa_icon": "fas fa-terminal"
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -66,7 +82,8 @@
                         "specific_pcr",
                         "dt_5p_race",
                         "dt_5p_race_umi",
-                        "specific_pcr_5p_race_umi"
+                        "specific_pcr_5p_race_umi",
+                        "mixcr"
                     ],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
                 },

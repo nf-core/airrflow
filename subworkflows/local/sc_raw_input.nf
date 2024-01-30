@@ -1,4 +1,3 @@
-include { CELLRANGER_MKVDJREF                                           } from '../../modules/local/cellranger/mkvdjref'
 include { CELLRANGER_VDJ                                                } from '../../modules/nf-core/cellranger/vdj/main'
 include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
