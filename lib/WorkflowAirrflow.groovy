@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the workflow/airrflow.nf in the nf-core/airrflow pipeline
+// This file holds several functions specific to the workflow/bcellmagic.nf in the nf-core/bcellmagic pipeline
 //
 
 import nextflow.Nextflow
@@ -11,13 +11,6 @@ class WorkflowAirrflow {
     // Check and validate parameters
     //
     public static void initialise(params, log) {
-
-        genomeExistsError(params, log)
-
-
-        if (!params.fasta) {
-            Nextflow.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
-        }
     }
 
     //
@@ -33,16 +26,16 @@ class WorkflowAirrflow {
                 for (param in group_params.keySet()) {
                     summary_section += "        <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
                 }
-                summary_section += "    </dl>\n"
+                summary_section += '    </dl>\n'
             }
         }
 
-        String yaml_file_text  = "id: '${workflow.manifest.name.replace('/','-')}-summary'\n"
+        String yaml_file_text  = "id: '${workflow.manifest.name.replace('/', '-')}-summary'\n"
         yaml_file_text        += "description: ' - this information is collected when the pipeline is started.'\n"
         yaml_file_text        += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
         yaml_file_text        += "section_href: 'https://github.com/${workflow.manifest.name}'\n"
         yaml_file_text        += "plot_type: 'html'\n"
-        yaml_file_text        += "data: |\n"
+        yaml_file_text        += 'data: |\n'
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
     }
@@ -53,7 +46,6 @@ class WorkflowAirrflow {
 
     public static String toolCitationText(params) {
 
-        // TODO nf-core: Optionally add in-text citation tools to this list.
         // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
         // Uncomment function in methodsDescriptionText to render in MultiQC report
         def citation_text = [
@@ -68,7 +60,6 @@ class WorkflowAirrflow {
 
     public static String toolBibliographyText(params) {
 
-        // TODO Optionally add bibliographic entries to this list.
         // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
         // Uncomment function in methodsDescriptionText to render in MultiQC report
         def reference_text = [
@@ -83,7 +74,7 @@ class WorkflowAirrflow {
         // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
         def meta = [:]
         meta.workflow = run_workflow.toMap()
-        meta["manifest_map"] = run_workflow.manifest.toMap()
+        meta['manifest_map'] = run_workflow.manifest.toMap()
 
         // Pipeline DOI
         meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
@@ -93,7 +84,7 @@ class WorkflowAirrflow {
         meta["tool_citations"] = ""
         meta["tool_bibliography"] = ""
 
-        // TODO Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
+        // Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
         //meta["tool_citations"] = toolCitationText(params).replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
         //meta["tool_bibliography"] = toolBibliographyText(params)
 
@@ -119,4 +110,5 @@ class WorkflowAirrflow {
             Nextflow.error(error_string)
         }
     }
+
 }

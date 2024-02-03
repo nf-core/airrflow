@@ -7,30 +7,58 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
+            "sample_id": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
+                "errorMessage": "Sample name must be provided and cannot contain spaces."
             },
-            "fastq_1": {
+            "subject_id": {
                 "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+$",
+                "errorMessage": "Subject name must be provided and cannot contain spaces."
             },
-            "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+            "species": {
+                "type": "string",
+                "enum": ["mouse", "human"],
+                "errorMessage": "Species name must be provided and must be one of: mouse, human."
+            },
+            "pcr_target_locus": {
+                "type": "string",
+                "enum": ["TR", "IG", "ig", "tr", "Ig", "Tr"],
+                "errorMessage": "PCR target locus must be provided and must be one of: TR, IG."
+            },
+            "tissue": {
+                "type": "string",
+                "errorMessage": "Tissue name must be provided."
+            },
+            "sex": {
+                "type": "string",
+                "errorMessage": "Sex must be provided, specify NA if unknown."
+            },
+            "age": {
+                "type": "string",
+                "errorMessage": "Age must be provided, specify NA if unknown."
+            },
+            "biomaterial_provider": {
+                "type": "string",
+                "errorMessage": "Biomaterial provider must be provided."
+            },
+            "single_cell": {
+                "type": "boolean",
+                "pattern": "^\\S+$",
+                "errorMessage": "Single cell must be provided as a TRUE/FALSE value."
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": [
+            "sample_id",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+            "tissue",
+            "sex",
+            "age",
+            "biomaterial_provider",
+            "single_cell"
+        ]
     }
 }

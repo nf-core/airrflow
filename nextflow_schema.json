@@ -17,10 +17,18 @@
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
+                    "pattern": "^\\S+\\.tsv$",
+                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/airrflow/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
+                },
+                "mode": {
+                    "type": "string",
+                    "default": "fastq",
+                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".",
+                    "enum": ["fastq", "assembled"],
+                    "fa_icon": "fas fa-terminal"
                 },
                 "outdir": {
                     "type": "string",
@@ -35,41 +43,419 @@
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
                 },
-                "multiqc_title": {
+                "miairr": {
                     "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
+                    "default": "airrflow/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "description": "Path to MiAIRR-BioSample mapping",
+                    "fa_icon": "fas fa-table"
                 }
             }
+        },
+        "protocol": {
+            "title": "Protocol",
+            "type": "object",
+            "description": "Experimental protocol used to generate the data",
+            "default": "",
+            "properties": {
+                "library_generation_method": {
+                    "type": "string",
+                    "fa_icon": "fas fa-flask",
+                    "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
+                    "enum": ["dt_5p_race", "dt_5p_race_umi", "specific_pcr", "specific_pcr_umi"],
+                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
+                },
+                "race_linker": {
+                    "type": "string",
+                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
+                    "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-flask"
+        },
+        "primer_handling": {
+            "title": "Primer handling",
+            "type": "object",
+            "description": "Define the primer region start and how to deal with the primer alignment.",
+            "default": "",
+            "properties": {
+                "vprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containinc the V-region primer sequences."
+                },
+                "cprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containing the C-region primer sequences."
+                },
+                "vprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of V region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna",
+                    "default": 0
+                },
+                "cprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of C region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna",
+                    "default": 0
+                },
+                "cprimer_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Indicate if C region primers are in the R1 or R2 reads.",
+                    "enum": ["R1", "R2"]
+                },
+                "primer_revpr": {
+                    "type": "boolean",
+                    "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
+        "umi_barcode_handling": {
+            "title": "UMI barcode handling",
+            "type": "object",
+            "description": "Define how UMI barcodes should be treated.",
+            "default": "",
+            "properties": {
+                "umi_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
+                    "help_text": "The pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter to R1 or R2, respectively.",
+                    "enum": ["R1", "R2"],
+                    "fa_icon": "fas fa-barcode"
+                },
+                "umi_length": {
+                    "type": "integer",
+                    "description": "UMI barcode length in nucleotides. Set to 0 if no UMIs present.",
+                    "fa_icon": "fas fa-barcode",
+                    "default": -1
+                },
+                "umi_start": {
+                    "type": "integer",
+                    "description": "UMI barcode start position in the index read.",
+                    "fa_icon": "fas fa-barcode",
+                    "default": 0
+                },
+                "index_file": {
+                    "type": "boolean",
+                    "description": "Indicate if UMI indices are recorded in a separate index file.",
+                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate Illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
+                    "fa_icon": "fas fa-barcode"
+                }
+            },
+            "help_text": "The pipeline requires indication of UMI barcode treatment (for identifying unique transcripts). These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter. If no UMI barcodes are present, specify `--umi_length = 0` to use the sans-UMI subworkflow.",
+            "fa_icon": "fas fa-barcode"
+        },
+        "adapter_trimming": {
+            "title": "Adapter trimming",
+            "type": "object",
+            "description": "Options for adapter trimming and read clipping",
+            "default": "",
+            "fa_icon": "fas fa-cut",
+            "properties": {
+                "trim_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to trim adapters in fastq reads with fastp.",
+                    "help_text": "By default adapters will be auto-detected, but adapter sequences can also be provided in a `fasta` file with the `--adapter_fasta` option.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "adapter_fasta": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Fasta file with adapter sequences to be trimmed."
+                },
+                "clip_r1": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 5' in R1 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "clip_r2": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 5' in R2 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "three_prime_clip_r1": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 3' in R1 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "three_prime_clip_r2": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 3' in R2 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "trim_nextseq": {
+                    "type": "boolean",
+                    "description": "Trim adapters specific for Nextseq sequencing",
+                    "fa_icon": "fas fa-cut"
+                },
+                "save_trimmed": {
+                    "type": "boolean",
+                    "description": "Option to save trimmed reads.",
+                    "fa_icon": "far fa-save"
+                }
+            }
+        },
+        "sequence_assembly_options": {
+            "title": "sequence assembly options",
+            "type": "object",
+            "description": "Options for the pRESTO sequence assembly processes",
+            "default": "",
+            "properties": {
+                "filterseq_q": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Quality threshold for pRESTO FilterSeq sequence filtering.",
+                    "fa_icon": "fas fa-filter"
+                },
+                "primer_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Maximum primer scoring error in the pRESTO MaskPrimer step for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-align-center"
+                },
+                "primer_consensus": {
+                    "type": "number",
+                    "default": 0.6,
+                    "description": "Maximum error for building the primer consensus in the pRESTO Buildconsensus step.",
+                    "fa_icon": "fas fa-align-center"
+                },
+                "primer_mask_mode": {
+                    "type": "string",
+                    "default": "cut",
+                    "description": "Masking mode for the pRESTO MaskPrimer step. Available: cut, mask, trim, tag.",
+                    "enum": ["cut", "mask", "tag", "trim"],
+                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
+                    "fa_icon": "fas fa-mask"
+                },
+                "buildconsensus_maxerror": {
+                    "type": "number",
+                    "default": 0.1,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum error for building the sequence consensus in the pRESTO BuildConsensus step."
+                },
+                "buildconsensus_maxgap": {
+                    "type": "number",
+                    "default": 0.5,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum gap for building the sequence consensus in the pRESTO BuildConsensus step."
+                },
+                "cluster_sets": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-layer-group",
+                    "description": "Cluster sequences by similarity regardless of any annotation with pRESTO ClusterSets and annotate the cluster ID additionally to the UMI barcode."
+                }
+            },
+            "fa_icon": "fas fa-align-center"
+        },
+        "vdj_annotation_options": {
+            "title": "VDJ annotation options",
+            "type": "object",
+            "description": "Options for the VDJ annotation processes.",
+            "default": "",
+            "properties": {
+                "reassign": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file.",
+                    "fa_icon": "fas fa-redo"
+                },
+                "productive_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Subset to productive  sequences.",
+                    "fa_icon": "fab fa-product-hunt"
+                },
+                "save_databases": {
+                    "type": "boolean",
+                    "description": "Save databases so you can use the cache in future runs.",
+                    "fa_icon": "fas fa-file-download"
+                },
+                "imgtdb_base": {
+                    "type": "string",
+                    "description": "Path to the cached IMGT database.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "fa_icon": "fas fa-database"
+                },
+                "igblast_base": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "fa_icon": "fas fa-database"
+                },
+                "fetch_imgt": {
+                    "type": "boolean",
+                    "description": "Set this flag to fetch the IMGT reference data at runtime.",
+                    "fa_icon": "fas fa-cloud-download-alt"
+                }
+            },
+            "fa_icon": "fas fa-edit"
+        },
+        "bulk_filtering_options": {
+            "title": "Bulk filtering options",
+            "type": "object",
+            "description": "Options for bulk sequence filtering after VDJ assignment.",
+            "default": "",
+            "properties": {
+                "collapseby": {
+                    "type": "string",
+                    "description": "Name of the field used to collapse duplicated sequences.",
+                    "fa_icon": "fas fa-compress-alt",
+                    "default": "sample_id"
+                },
+                "detect_contamination": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-search",
+                    "description": "Whether to run the process to detect contamination."
+                },
+                "remove_chimeric": {
+                    "type": "boolean",
+                    "description": "Whether to apply the chimera removal filter.",
+                    "fa_icon": "fas fa-minus-square"
+                }
+            },
+            "fa_icon": "fas fa-filter"
+        },
+        "clonal_analysis_options": {
+            "title": "Clonal analysis options",
+            "type": "object",
+            "description": "Define how the B-cell clonal trees should be calculated.",
+            "default": "",
+            "properties": {
+                "clonal_threshold": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "enum": ["auto"]
+                        },
+                        {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    ],
+                    "type": ["string", "number"],
+                    "default": "auto",
+                    "fa_icon": "fab fa-pagelines",
+                    "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
+                },
+                "skip_lineage": {
+                    "type": "boolean",
+                    "description": "Skip clonal lineage analysis and lineage tree plotting.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "cloneby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to identify clones.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "crossby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to identify external groups used to identify a clonal threshold.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "igphyml": {
+                    "type": "string",
+                    "default": "/usr/local/share/igphyml/src/igphyml",
+                    "description": "Path to IgPhyml executable.",
+                    "fa_icon": "fas fa-file"
+                },
+                "singlecell": {
+                    "type": "string",
+                    "default": "single_cell",
+                    "description": "Name of the field used to determine if a sample is single cell sequencing or not.",
+                    "fa_icon": "fas fa-border-all"
+                },
+                "skip_all_clones_report": {
+                    "type": "boolean",
+                    "description": "Skip report of EnchantR DefineClones for all samples together.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_report_threshold": {
+                    "type": "boolean",
+                    "description": "Skip report of EnchantR FindThreshold for all samples together.",
+                    "fa_icon": "fas fa-angle-double-right"
+                }
+            },
+            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
+            "fa_icon": "fab fa-pagelines"
+        },
+        "report_options": {
+            "title": "Report options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "report_rmd": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/repertoire_comparison.Rmd",
+                    "description": "Custom report Rmarkdown file.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_css": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core_style.css",
+                    "description": "Custom report style file in css format.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_logo": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core-airrflow_logo_light.png",
+                    "description": "Custom logo for the report.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_logo_img": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core-airrflow_logo_reports.png",
+                    "description": "Custom logo for the EnchantR reports.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "skip_report": {
+                    "type": "boolean",
+                    "description": "Skip repertoire analysis and report generation.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip multiqc report.",
+                    "fa_icon": "fas fa-angle-double-right"
+                }
+            },
+            "fa_icon": "far fa-file-code"
         },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
             "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
+            "description": "Options for the reference genome indices used to align reads.",
             "properties": {
-                "genome": {
+                "igenomes_base": {
                     "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
+                    "format": "directory-path",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "s3://ngi-igenomes/igenomes",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
+                    "default": true
                 }
             }
         },
@@ -115,18 +501,19 @@
                 },
                 "config_profile_url": {
                     "type": "string",
-                    "description": "Institutional config URL link.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true
                 }
             }
         },
         "max_job_request_options": {
             "title": "Max job request options",
             "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
+            "fa_icon": "fas fa-microchip",
             "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
             "properties": {
                 "max_cpus": {
                     "type": "integer",
@@ -197,6 +584,11 @@
                     "description": "Send plain-text email instead of HTML.",
                     "fa_icon": "fas fa-remove-format",
                     "hidden": true
+                },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature"
                 },
                 "max_multiqc_email_size": {
                     "type": "string",
@@ -271,6 +663,33 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/protocol"
+        },
+        {
+            "$ref": "#/definitions/primer_handling"
+        },
+        {
+            "$ref": "#/definitions/umi_barcode_handling"
+        },
+        {
+            "$ref": "#/definitions/adapter_trimming"
+        },
+        {
+            "$ref": "#/definitions/sequence_assembly_options"
+        },
+        {
+            "$ref": "#/definitions/vdj_annotation_options"
+        },
+        {
+            "$ref": "#/definitions/bulk_filtering_options"
+        },
+        {
+            "$ref": "#/definitions/clonal_analysis_options"
+        },
+        {
+            "$ref": "#/definitions/report_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

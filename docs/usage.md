@@ -6,68 +6,49 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+The nf-core/airrflow pipeline allows processing BCR and TCR targeted sequencing data from bulk and single-cell sequencing protocols. It performs sequence assembly, V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
 
-## Samplesheet input
-
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
-
-```bash
---input '[path to samplesheet file]'
-```
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
-### Full samplesheet
-
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
-```
-
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+![nf-core/airrflow overview](images/airrflow_workflow_overview.png)
 
 ## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+### Quickstart
+
+A typical command for running the pipeline for **bulk raw fastq files** is:
 
 ```bash
-nextflow run nf-core/airrflow --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/airrflow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--outdir results
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+A typical command for running the pipeline departing from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
+
+```bash
+nextflow run nf-core/airrflow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--input input_samplesheet.tsv \
+--mode assembled \
+--outdir results
+```
+
+Check the section [Input samplesheet](#input-samplesheet) below for instructions on how to create the samplesheet, and the [Supported library generation protocols](#supported-bulk-library-generation-methods-protocols) section below for examples on how to run the pipeline for different bulk sequencing protocols.
+For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
+The command above will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
-```bash
-work                # Directory containing the nextflow working files
-<OUTDIR>            # Finished results in specified location (defined with --outdir)
-.nextflow_log       # Log file from Nextflow
+```console
+work            # Directory containing the nextflow working files
+<OUTDIR>         # Finished results (configurable, see below)
+.nextflow_log   # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
@@ -96,7 +77,7 @@ genome: 'GRCh37'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
-### Updating the pipeline
+## Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
@@ -104,7 +85,7 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 nextflow pull nf-core/airrflow
 ```
 
-### Reproducibility
+## Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
@@ -112,11 +93,281 @@ First, go to the [nf-core/airrflow releases page](https://github.com/nf-core/air
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
-To further assist in reproducbility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
 :::tip
 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 :::
+
+## Input samplesheet
+
+### Fastq input samplesheet (bulk sequencing only)
+
+The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. An example samplesheet is:
+
+| sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell | intervention   | collection_time_point_relative | cell_subset  |
+| --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- | -------------- | ------------------------------ | ------------ |
+| sample01  | sample1_S8_L001_R1_001.fastq.gz | sample1_S8_L001_R2_001.fastq.gz | sample1_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
+| sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
+
+- `sample_id`: Sample ID assigned by submitter, unique within study.
+- `filename_R1`: path to fastq file with first mates of paired-end sequencing.
+- `filename_R2`: path to fastq file with second mates of paired-end sequencing.
+- `filename_I1` (optional): path to fastq with illumina index and UMI (unique molecular identifier) barcode.
+- `subject_id`: Subject ID assigned by submitter, unique within study.
+- `species`: species from which the sample was taken. Supported species are `human` and `mouse`.
+- `tissue`: tissue from which the sample was taken. E.g. `blood`, `PBMC`, `brain`.
+- `pcr_target_locus`: Designation of the target locus (`IG` or `TR`).
+- `biomaterial_provider`: Institution / research group that provided the samples.
+- `sex`: Subject biological sex (`female`, `male`, etc.).
+- `age`: Subject biological age.
+- `single_cell`: TRUE or FALSE. Fastq input samplesheet only supports a FALSE value.
+
+Other optional columns can be added. These columns will be available when building the contrasts for the repertoire comparison report. It is recommended that these columns also follow the AIRR nomenclature. Examples are:
+
+- `intervention`: Description of intervention.
+- `disease_diagnosis`: Diagnosis of subject.
+- `collection_time_point_relative`: Time point at which sample was taken, relative to `collection_time_point_reference` (e.g. 14d, 6 months, baseline).
+- `collection_time_point_reference`: Event in the study schedule to which `Sample collection time` relates to (e.g. primary vaccination, intervention start).
+- `cell_subset`: Commonly-used designation of isolated cell population.
+
+The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables generated by the pipeline.
+
+### Assembled input samplesheet (bulk or single-cell sequencing)
+
+The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename`, `subject_id`, `species`, `tissue`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. All fields are explained in the previous section, with the only difference being that there is only one `filename` column for the assembled input samplesheet. The provided file will be different from assembled single-cell or bulk data:
+
+- `filename` for single-cell assembled data: path to `airr_rearrangement.tsv` file, for example the one generated when processing the 10x Genomics scBCRseq / scTCRseq with 10x Genomics cellranger `cellranger vdj` or `cellranger multi`. The field accepts any tsv tables following the [AIRR rearrangement Schema specification](https://docs.airr-community.org/en/stable/datarep/rearrangements.html). See [here](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/output/annotation#airr) for more details on the cellranger output.
+- `filename` for bulk assembled data: path to `sequences.fasta` file, containing the assembled and error-corrected reads.
+
+The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename`, `subject_id`, `species`, `tissue`, `single_cell`, `pcr_target_locus`, `sex`, `age` and `biomaterial_provider` are required.
+
+An example samplesheet is:
+
+| filename                                    | species | subject_id | sample_id              | tissue | sex  | age | biomaterial_provider | pcr_target_locus | single_cell |
+| ------------------------------------------- | ------- | ---------- | ---------------------- | ------ | ---- | --- | -------------------- | ---------------- | ----------- |
+| sc5p_v2_hs_PBMC_1k_b_airr_rearrangement.tsv | human   | subject_x  | sc5p_v2_hs_PBMC_1k_5fb | PBMC   | NA   | NA  | 10x Genomics         | IG               | TRUE        |
+| bulk-Laserson-2014.fasta                    | human   | PGP1       | PGP1                   | PBMC   | male | NA  | Laserson-2014        | IG               | FALSE       |
+
+### Supported AIRR metadata fields
+
+nf-core/airrflow offers full support for the [AIRR standards 1.4](https://docs.airr-community.org/en/stable/datarep/metadata.html) metadata annotation. The minimum metadata fields that are needed by the pipeline are listed in the table below. Other non-mandatory AIRR fields can be provided in the input samplesheet, which will be available for reporting and introducing comparisons among repertoires.
+
+| AIRR field                | Type               | Parameter Name                | Description                                           |
+| ------------------------- | ------------------ | ----------------------------- | ----------------------------------------------------- |
+| sample_id                 | Samplesheet column |                               | Sample ID assigned by submitter, unique within study  |
+| subject_id                | Samplesheet column |                               | Subject ID assigned by submitter, unique within study |
+| species                   | Samplesheet column |                               | Subject species                                       |
+| tissue                    | Samplesheet column |                               | Sample tissue                                         |
+| pcr_target_locus          | Samplesheet column |                               | Designation of the target locus (IG or TR)            |
+| sex                       | Samplesheet column |                               | Subject sex                                           |
+| age                       | Samplesheet column |                               | Subject age                                           |
+| biomaterial_provider      | Samplesheet column |                               | Name of sample biomaterial provider                   |
+| library_generation_method | Parameter          | `--library_generation_method` | Generic type of library generation                    |
+
+## Supported bulk library generation methods (protocols)
+
+When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
+The following table matches the library generation methods as described in the [AIRR metadata annotation guidelines](https://docs.airr-community.org/en/stable/miairr/metadata_guidelines.html#library-generation-method) to the value that can be provided to the `--library_generation_method` parameter.
+
+| Library generation methods (AIRR) | Description                                                                                | Name in pipeline | Commercial protocols                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- | ----------------------------------------- |
+| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |                                           |
+| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |                                           |
+| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |                                           |
+| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   | TAKARA SMARTer TCR v2, TAKARA SMARTer BCR |
+| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |                                           |
+| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |                                           |
+| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |                                           |
+| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |                                           |
+| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |                                           |
+| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |                                           |
+
+### Multiplex specific PCR (with or without UMI)
+
+This sequencing type requires setting `--library_generation_method specific_pcr_umi` if UMI barcodes were used, or `--library_generation_method specific_pcr` if no UMI barcodes were used (sans-umi). If the option without UMI barcodes is selected, the UMI length will be set automatically to 0.
+
+It is required to provide the sequences for the V-region primers as well as the C-region primers used in the specific PCR amplification. Some examples of UMI and barcode configurations are provided. Depending on the position of the C-region primer, V-region primers and UMI barcodes, there are several possibilities detailed in the following subsections.
+
+#### R1 read contains C primer (and UMI barcode)
+
+The `--cprimer_position` and `--umi_position` (if UMIs are used) parameters need to be set to R1 (this is the default).
+If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero). Set `--cprimer_position R1` (this is the default).
+
+![nf-core/airrflow](images/Primers_R1_UMI_C.png)
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--cprimer_start 0 \
+--cprimer_position R1 \
+--outdir ./results
+```
+
+If UMIs are not used:
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--cprimer_start 0 \
+--cprimer_position R1 \
+--outdir ./results
+```
+
+#### R1 read contains V primer (and UMI barcode)
+
+The `--umi_position` parameter needs to be set to R1 (if UMIs are used), and `--cprimer_position` to `R2`.
+If there are extra bases between the UMI barcode and V primer, specify the number of bases with the `--vprimer_start` parameter (default zero).
+
+![nf-core/airrflow](images/Primers_R1_UMI_V.png)
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R1 \
+--vprimer_start 0 \
+--cprimer_position R2 \
+--outdir ./results
+```
+
+If UMIs are not used:
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--vprimer_start 0 \
+--cprimer_position R2 \
+--outdir results
+```
+
+#### R2 read contains C primer (and UMI barcode)
+
+The `--umi_position` and `--cprimer_position` parameters need to be set to R2.
+If there are extra bases between the UMI barcode and C primer, specify the number of bases with the `--cprimer_start` parameter (default zero).
+
+![nf-core/airrflow](images/Primers_R1_V.png)
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers CPrimers.fasta \
+--vprimers VPrimers.fasta \
+--umi_length 12 \
+--umi_position R2 \
+--cprimer_start 0 \
+--cprimer_position R2 \
+--outdir ./results
+```
+
+#### UMI barcode is provided in the index file
+
+If the UMI barcodes are provided in an additional index file, please provide it in the column `filename_I1` in the input samplesheet and additionally set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+
+For example:
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_pcr_umi \
+--cprimers Cprimers.fasta \
+--vprimers Vprimers.fasta \
+--cprimer_position R1 \
+--index_file \
+--umi_length 12 \
+--umi_start 6 \
+--outdir ./results
+```
+
+### dT-Oligo RT and 5'RACE PCR
+
+This sequencing type requires setting `--library_generation_method race_5p_umi` or `--library_generation_method race_5p_umi` if UMIs are not being employed, and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run airrflow to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
+
+#### Takara Bio SMARTer Human BCR
+
+The read configuration when sequenicng with the TAKARA Bio SMARTer Human BCR protocol is the following:
+
+![nf-core/airrflow](images/TAKARA_RACE_BCR.png)
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method dt_5p_race_umi \
+--cprimers CPrimers.fasta \
+--race_linker linker.fasta \
+--umi_length 12 \
+--umi_position R2 \
+--cprimer_start 7 \
+--cprimer_position R1 \
+--outdir ./results
+```
+
+#### Takara Bio SMARTer Human TCR v2
+
+The read configuration when sequencing with the Takara Bio SMARTer Human TCR v2 protocol is the following:
+
+![nf-core/airrflow](images/TAKARA_RACE_TCR.png)
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method dt_5p_race_umi \
+--cprimers CPrimers.fasta \
+--race_linker linker.fasta \
+--umi_length 12 \
+--umi_position R2 \
+--cprimer_start 5 \
+--cprimer_position R1 \
+--outdir ./results
+```
+
+For this protocol, the takara linkers are:
+
+```txt
+>takara-linker
+GTAC
+```
+
+And the C-region primers are:
+
+```txt
+>TRAC
+CAGGGTCAGGGTTCTGGATATN
+>TRBC
+GGAACACSTTKTTCAGGTCCTC
+>TRDC
+GTTTGGTATGAGGCTGACTTCN
+>TRGC
+CATCTGCATCAAGTTGTTTATC
+```
+
+## UMI barcode handling
+
+Unique Molecular Identifiers (UMIs) enable the quantification of BCR or TCR abundance in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
+The UMI indices are random nucleotide sequences of a pre-determined length that are added to the sequencing libraries before any PCR amplification steps, for example as part of the primer sequences.
+
+The UMI barcodes are typically read from an index file but sometimes can be provided at the start of the R1 or R2 reads:
+
+- UMIs in the index file: if the UMI barcodes are provided in an additional index file, set the `--index_file` parameter. Specify the UMI barcode length with the `--umi_length` parameter. You can optionally specify the UMI start position in the index sequence with the `--umi_start` parameter (the default is 0).
+
+- UMIs in R1 or R2 reads: if the UMIs are contained within the R1 or R2 reads, set the `--umi_position` parameter to `R1` or `R2`, respectively. Specify the UMI barcode length with the `--umi_length` parameter.
+
+- No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
 ## Core Nextflow arguments
 
@@ -179,7 +430,7 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases you may wish to change which container or conda environment a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version maybe out of date.
+In some cases you may wish to change which container or conda environment a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version may be out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -196,14 +447,6 @@ In most cases, you will only need to create a custom config as a one-off but if 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
-## Azure Resource Requests
-
-To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
-We recommend providing a compute `params.vm_type` of `Standard_D16_v3` VMs by default but these options can be changed if required.
-
-Note that the choice of VM size depends on your quota and the overall workload during the analysis.
-For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
 
 ## Running in the background
 
