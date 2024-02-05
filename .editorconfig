@@ -32,3 +32,11 @@ indent_size = unset
 
 [/assets/*.Rmd]
 indent_size = unset
+
+# ignore Readme
+[README.md]
+indent_style = unset
+
+# ignore python
+[*.{py}]
+indent_style = unset
