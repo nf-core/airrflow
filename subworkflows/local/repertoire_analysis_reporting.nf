@@ -71,7 +71,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     AIRRFLOW_REPORT(
         ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
-        REPORT_FILE_SIZE.out.table.ifEmpty([]),
+        REPORT_FILE_SIZE.out.table.collect().ifEmpty([]),
         ch_report_rmd,
         ch_report_css,
         ch_report_logo

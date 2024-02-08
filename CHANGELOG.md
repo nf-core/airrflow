@@ -3,15 +3,24 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.2.1dev] -
+## [3.3.0dev] -
 
 ### `Added`
 
+- [#294](https://github.com/nf-core/airrflow/pull/294) Merge template updates nf-core/tools v2.11.1
+
 ### `Fixed`
 
-- Removed optional output from FilterQuality to not fail silently
+- [#294](https://github.com/nf-core/airrflow/pull/294) Removed optional output from FilterQuality to not fail silently
+- [#293](https://github.com/nf-core/airrflow/pull/293) Clonal_threshold is validated to be 'auto' or number greater than zero
+- [#295](https://github.com/nf-core/airrflow/pull/295) Fixed airrflow report sequence plot and add path to clonal analysis reports.
 
 ### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.14        | 1.18        |
+| enchantr   | 0.9.0       | 0.10.0      |
 
 ## [3.2.0] - 2023-10-27 Expecto patronum
 

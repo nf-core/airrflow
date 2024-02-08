@@ -45,7 +45,7 @@
                 },
                 "miairr": {
                     "type": "string",
-                    "default": "airrflow/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "default": "${projectDir}/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping",
                     "fa_icon": "fas fa-table"
                 }
@@ -167,7 +167,6 @@
                 },
                 "adapter_fasta": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-file",
                     "description": "Fasta file with adapter sequences to be trimmed."
                 },
@@ -235,7 +234,7 @@
                     "type": "string",
                     "default": "cut",
                     "description": "Masking mode for the pRESTO MaskPrimer step. Available: cut, mask, trim, tag.",
-                    "enum": ["cut", "mask", "trim", "tag"],
+                    "enum": ["cut", "mask", "tag", "trim"],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-mask"
                 },
@@ -335,6 +334,16 @@
             "default": "",
             "properties": {
                 "clonal_threshold": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "enum": ["auto"]
+                        },
+                        {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    ],
                     "type": ["string", "number"],
                     "default": "auto",
                     "fa_icon": "fab fa-pagelines",

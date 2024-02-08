@@ -1,5 +1,9 @@
-# ![nf-core/airrflow](docs/images/nf-core-airrflow_logo_light.png#gh-light-mode-only) ![nf-core/airrflow](docs/images/nf-core-airrflow_logo_dark.png#gh-dark-mode-only)
-
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/nf-core-airrflow_logo_dark.png">
+    <img alt="nf-core/airrflow" src="docs/images/nf-core-airrflow_logo_light.png">
+  </picture>
+</h1>
 [![GitHub Actions CI Status](https://github.com/nf-core/airrflow/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+CI%22)
 [![GitHub Actions Linting Status](https://github.com/nf-core/airrflow/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
@@ -77,11 +81,8 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 ## Usage
 
-:::note
-If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-with `-profile test` before running the workflow on actual data.
-:::
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, ensure that the pipeline tests run on your infrastructure:
 
@@ -143,11 +144,17 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/airrflow was written by [Gisela Gabernet](https://github.com/ggabernet), [Susanna Marquez](https://github.com/ssnn-airr), [Alexander Peltzer](@apeltzer) and [Simon Heumos](@subwaystation).
+nf-core/airrflow was originally written by:
 
-Further contributors to the pipeline are:
+- [Gisela Gabernet](https://github.com/ggabernet)
+- [Susanna Marquez](https://github.com/ssnn-airr)
+- [Alexander Peltzer](@apeltzer)
+- [Simon Heumos](@subwaystation)
 
-- [@dladd](https://github.com/dladd)
+We thank the following people for their extensive assistance in the development of the pipeline:
+
+- [David Ladd](https://github.com/dladd)
+- [Friederike Hanssen](https://github.com/ggabernet/friederikehanssen)
 
 ## Contributions and Support
 
@@ -157,9 +164,17 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
+If you use nf-core/airrflow for your analysis, please cite the preprint as follows:
 
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+> **nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework**
+>
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole Jensen, David Ladd, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein.
+>
+> BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
+
+The specific pipeline version it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
+
+Please also cite all the tools that are being used by the pipeline. An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 You can cite the `nf-core` publication as follows:
 
