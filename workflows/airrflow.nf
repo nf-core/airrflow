@@ -107,7 +107,7 @@ workflow AIRRFLOW {
             .set { ch_reads_split }
 
         // SC:Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
-        if (params.library_generation_method in ["specific_pcr_5p_race_umi"]) {
+        if (params.library_generation_method in ["sc_10x_genomics"]) {
             SC_RAW_INPUT(
                 ch_reads_split.single
             )
