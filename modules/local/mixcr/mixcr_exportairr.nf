@@ -32,6 +32,7 @@ process MIXCR_MIXCREXPORTAIRR {
     }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def clns_file = clns.size() > 1 ? clns.first() : clns // for sc input 2 clns are provided which create the same airr file. So, we take the first one.
     """
     # activate license
     if [ \${MIXCR_LICENSE:-"unset"} != "unset" ]; then
@@ -40,7 +41,7 @@ process MIXCR_MIXCREXPORTAIRR {
     fi
     
     mixcr exportAirr \\
-        ${clns} \\
+        ${clns_file} \\
         ${prefix}.airr.tsv \\
         $args
 

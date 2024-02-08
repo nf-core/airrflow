@@ -24,7 +24,7 @@ process MIXCR_MIXCR {
     tuple val(meta), path('*.vdjca'), emit: vdjca
     tuple val(meta), path('*.txt'), emit: txt
     tuple val(meta), path('*.tsv'), emit: tsv
-    tuple val(meta), path('*clones_*.tsv'), emit: clones_tsv
+    tuple val(meta), path('*clones*.tsv'), emit: clones_tsv
     path "versions.yml"           , emit: versions
 
     when:

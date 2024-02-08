@@ -24,8 +24,6 @@ workflow MIXCR_FLOW {
 
     main:
 
-    ch_reads_bulk.dump(tag: "ch_reads_bulk")
-
     ch_versions = Channel.empty()
 
     // // FETCH DATABASES
@@ -84,26 +82,26 @@ workflow MIXCR_FLOW {
     ch_versions = ch_versions.mix(MIXCR_MIXCREXPORTAIRR.out.versions.first())
 
     // QC
-    MIXCR_MIXCRQCALIGN ( 
+    MIXCR_MIXCRQCALIGN (
         MIXCR_MIXCR.out.clns,
-        file(params.imgt_mixcr) // it doesnt directly use the imgt db, but it needs it in the right directory anyway
+        file(params.imgt_mixcr) 
         )
     ch_versions = ch_versions.mix(MIXCR_MIXCRQCALIGN.out.versions.first())
 
     MIXCR_MIXCRQCCOVERAGE ( 
         MIXCR_MIXCR.out.vdjca,
-        file(params.imgt_mixcr) // it doesnt directly use the imgt db, but it needs it in the right directory anyway
+        file(params.imgt_mixcr) 
         )
     ch_versions = ch_versions.mix(MIXCR_MIXCRQCCOVERAGE.out.versions.first())
 
     MIXCR_MIXCRQCCHAINUSAGE ( 
         MIXCR_MIXCR.out.clns,
-        file(params.imgt_mixcr) // it doesnt directly use the imgt db, but it needs it in the right directory anyway
+        file(params.imgt_mixcr) 
         )
     ch_versions = ch_versions.mix(MIXCR_MIXCRQCCHAINUSAGE.out.versions.first())
 
 
-    // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
+    // convert airr tsv to fasta
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 MIXCR_MIXCREXPORTAIRR.out.mixcr_airr
             )

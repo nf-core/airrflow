@@ -2,6 +2,8 @@ include { CELLRANGER_VDJ                                                } from '
 include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 
+include { MIXCR_FLOW                    } from './mixcr_flow'
+
 
 workflow SC_RAW_INPUT {
 
@@ -37,7 +39,7 @@ workflow SC_RAW_INPUT {
     }
 
 
-    CELLRANGER_VDJ ( 
+    CELLRANGER_VDJ (
         ch_reads_single,
         ch_sc_refence
     )
@@ -60,13 +62,22 @@ workflow SC_RAW_INPUT {
             )
         .set { ch_renamed_tsv }
 
+    if (params.kit) {
+        MIXCR_FLOW(
+            ch_reads_single
+        )
+        ch_versions = ch_versions.mix(MIXCR_FLOW.out.versions)
+    }
+
     
-    // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
+    // convert airr tsv to fasta
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 RENAME_FILE_TSV.out.file
             )
     
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
+
+    RENAME_FILE.out.file.dump(tag:"file")
 
     emit:
     versions = ch_versions

@@ -130,202 +130,201 @@ workflow AIRRFLOW {
             ch_fastp_json                        = Channel.empty()
             ch_fastqc_postassembly_mqc           = Channel.empty()
         }
-    }
-    //     // SC: Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
-    //     if (params.library_generation_method in ["specific_pcr_5p_race_umi"]) {
-    //         SC_RAW_INPUT(
-    //             ch_reads_split.single
-    //         )
-    //         ch_fasta                    = SC_RAW_INPUT.out.fasta
-    //         ch_versions                 = ch_versions.mix(SC_RAW_INPUT.out.versions)
-    //         ch_cellranger_airr          = SC_RAW_INPUT.out.airr
-    //         ch_cellranger_out           = SC_RAW_INPUT.out.outs
+        // SC: Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
+        if (params.library_generation_method in ["specific_pcr_5p_race_umi"]) {
+            SC_RAW_INPUT(
+                ch_reads_split.single
+            )
+            ch_fasta                    = SC_RAW_INPUT.out.fasta
+            ch_versions                 = ch_versions.mix(SC_RAW_INPUT.out.versions)
+            ch_cellranger_airr          = SC_RAW_INPUT.out.airr
+            ch_cellranger_out           = SC_RAW_INPUT.out.outs
 
-    //         ch_validated_samplesheet = FASTQ_INPUT_CHECK.out.samplesheet.collect()
+            ch_validated_samplesheet = FASTQ_INPUT_CHECK.out.samplesheet.collect()
             
-    //         ch_presto_filterseq_logs             = Channel.empty()
-    //         ch_presto_maskprimers_logs           = Channel.empty()
-    //         ch_presto_pairseq_logs               = Channel.empty()
-    //         ch_presto_clustersets_logs           = Channel.empty()
-    //         ch_presto_buildconsensus_logs        = Channel.empty()
-    //         ch_presto_postconsensus_pairseq_logs = Channel.empty()
-    //         ch_presto_assemblepairs_logs         = Channel.empty()
-    //         ch_presto_collapseseq_logs           = Channel.empty()
-    //         ch_presto_splitseq_logs              = Channel.empty()
-    //         ch_fastp_html                        = Channel.empty()
-    //         ch_fastp_json                        = Channel.empty()
-    //         ch_fastqc_postassembly_mqc           = Channel.empty()
-    //     } else if (!(params.library_generation_method in ["specific_pcr_5p_race_umi", "mixcr"])) {
-    //         // Perform sequence assembly if input type is fastq from bulk sequencing data
-    //         // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
+            ch_presto_filterseq_logs             = Channel.empty()
+            ch_presto_maskprimers_logs           = Channel.empty()
+            ch_presto_pairseq_logs               = Channel.empty()
+            ch_presto_clustersets_logs           = Channel.empty()
+            ch_presto_buildconsensus_logs        = Channel.empty()
+            ch_presto_postconsensus_pairseq_logs = Channel.empty()
+            ch_presto_assemblepairs_logs         = Channel.empty()
+            ch_presto_collapseseq_logs           = Channel.empty()
+            ch_presto_splitseq_logs              = Channel.empty()
+            ch_fastp_html                        = Channel.empty()
+            ch_fastp_json                        = Channel.empty()
+            ch_fastqc_postassembly_mqc           = Channel.empty()
+        } else if (!(params.library_generation_method in ["specific_pcr_5p_race_umi", "mixcr"])) {
+            // Perform sequence assembly if input type is fastq from bulk sequencing data
+            // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
 
-    //         SEQUENCE_ASSEMBLY( ch_input )
+            SEQUENCE_ASSEMBLY( ch_input )
 
-    //         ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
-    //         ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
-    //         ch_fastp_html               = SEQUENCE_ASSEMBLY.out.fastp_reads_html
-    //         ch_fastp_json               = SEQUENCE_ASSEMBLY.out.fastp_reads_json
-    //         ch_fastqc_postassembly_mqc  = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
-    //         ch_validated_samplesheet    = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
+            ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
+            ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
+            ch_fastp_html               = SEQUENCE_ASSEMBLY.out.fastp_reads_html
+            ch_fastp_json               = SEQUENCE_ASSEMBLY.out.fastp_reads_json
+            ch_fastqc_postassembly_mqc  = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+            ch_validated_samplesheet    = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
 
-    //         ch_presto_filterseq_logs        = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
-    //         ch_presto_maskprimers_logs      = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
-    //         ch_presto_pairseq_logs          = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
-    //         ch_presto_clustersets_logs      = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
-    //         ch_presto_buildconsensus_logs   = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
-    //         ch_presto_postconsensus_pairseq_logs = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
-    //         ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
-    //         ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
-    //         ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
-    //     }
+            ch_presto_filterseq_logs        = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
+            ch_presto_maskprimers_logs      = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
+            ch_presto_pairseq_logs          = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
+            ch_presto_clustersets_logs      = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
+            ch_presto_buildconsensus_logs   = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
+            ch_presto_postconsensus_pairseq_logs = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
+            ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
+            ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
+            ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+        }
 
-    // } else if ( params.mode == "assembled" ) {
+    } else if ( params.mode == "assembled" ) {
 
-    //     ASSEMBLED_INPUT_CHECK (
-    //         ch_input,
-    //         params.miairr,
-    //         params.collapseby,
-    //         params.cloneby
-    //     )
-    //     ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty([]) )
+        ASSEMBLED_INPUT_CHECK (
+            ch_input,
+            params.miairr,
+            params.collapseby,
+            params.cloneby
+        )
+        ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions.ifEmpty([]) )
 
-    //     if (params.reassign) {
-    //         CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
-    //             ASSEMBLED_INPUT_CHECK.out.ch_tsv
-    //         )
-    //         ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-    //         ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty([]))
-    //         ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
-    //     } else {
-    //         ch_fasta_from_tsv = Channel.empty()
-    //     }
+        if (params.reassign) {
+            CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
+                ASSEMBLED_INPUT_CHECK.out.ch_tsv
+            )
+            ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
+            ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions.ifEmpty([]))
+            ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+        } else {
+            ch_fasta_from_tsv = Channel.empty()
+        }
 
-    //     ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
-    //     ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
+        ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
+        ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
 
-    //     ch_presto_filterseq_logs             = Channel.empty()
-    //     ch_presto_maskprimers_logs           = Channel.empty()
-    //     ch_presto_pairseq_logs               = Channel.empty()
-    //     ch_presto_clustersets_logs           = Channel.empty()
-    //     ch_presto_buildconsensus_logs        = Channel.empty()
-    //     ch_presto_postconsensus_pairseq_logs = Channel.empty()
-    //     ch_presto_assemblepairs_logs         = Channel.empty()
-    //     ch_presto_collapseseq_logs           = Channel.empty()
-    //     ch_presto_splitseq_logs              = Channel.empty()
-    //     ch_fastp_html                        = Channel.empty()
-    //     ch_fastp_json                        = Channel.empty()
-    //     ch_fastqc_postassembly_mqc           = Channel.empty()
+        ch_presto_filterseq_logs             = Channel.empty()
+        ch_presto_maskprimers_logs           = Channel.empty()
+        ch_presto_pairseq_logs               = Channel.empty()
+        ch_presto_clustersets_logs           = Channel.empty()
+        ch_presto_buildconsensus_logs        = Channel.empty()
+        ch_presto_postconsensus_pairseq_logs = Channel.empty()
+        ch_presto_assemblepairs_logs         = Channel.empty()
+        ch_presto_collapseseq_logs           = Channel.empty()
+        ch_presto_splitseq_logs              = Channel.empty()
+        ch_fastp_html                        = Channel.empty()
+        ch_fastp_json                        = Channel.empty()
+        ch_fastqc_postassembly_mqc           = Channel.empty()
 
-    // } else {
-    //     error "Mode parameter value not valid."
-    // }
-    // // Perform V(D)J annotation and filtering
-    // VDJ_ANNOTATION(
-    //     ch_fasta,
-    //     ch_validated_samplesheet.collect()
-    // )
-    // ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions.ifEmpty([]))
+    } else {
+        error "Mode parameter value not valid."
+    }
+    // Perform V(D)J annotation and filtering
+    VDJ_ANNOTATION(
+        ch_fasta,
+        ch_validated_samplesheet.collect()
+    )
+    ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions.ifEmpty([]))
 
-    // // Split bulk and single cell repertoires
-    // ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
-    //     .branch { it ->
-    //         single: it[0].single_cell == 'true'
-    //         bulk:   it[0].single_cell == 'false'
-    //     }
+    // Split bulk and single cell repertoires
+    ch_repertoire_by_processing = VDJ_ANNOTATION.out.repertoire
+        .branch { it ->
+            single: it[0].single_cell == 'true'
+            bulk:   it[0].single_cell == 'false'
+        }
 
-    // // Bulk: Assign germlines and filtering
-    // ch_repertoire_by_processing.bulk
-    //     .dump(tag: 'bulk')
+    // Bulk: Assign germlines and filtering
+    ch_repertoire_by_processing.bulk
+        .dump(tag: 'bulk')
 
-    // BULK_QC_AND_FILTER(
-    //     ch_repertoire_by_processing.bulk,
-    //     VDJ_ANNOTATION.out.imgt.collect()
-    // )
-    // ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty([]))
+    BULK_QC_AND_FILTER(
+        ch_repertoire_by_processing.bulk,
+        VDJ_ANNOTATION.out.imgt.collect()
+    )
+    ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions.ifEmpty([]))
 
-    // ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
+    ch_bulk_filtered = BULK_QC_AND_FILTER.out.repertoires
 
-    // // Single cell: QC and filtering
-    // ch_repertoire_by_processing.single
-    //     .dump(tag: 'single')
+    // Single cell: QC and filtering
+    ch_repertoire_by_processing.single
+        .dump(tag: 'single')
 
-    // SINGLE_CELL_QC_AND_FILTERING(
-    //     ch_repertoire_by_processing.single
-    // )
-    // ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty([]) )
+    SINGLE_CELL_QC_AND_FILTERING(
+        ch_repertoire_by_processing.single
+    )
+    ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions.ifEmpty([]) )
 
-    // // Mixing bulk and single cell channels for clonal analysis
-    // ch_repertoires_for_clones = ch_bulk_filtered
-    //                                 .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
-    //                                 .dump(tag: 'sc bulk mix')
+    // Mixing bulk and single cell channels for clonal analysis
+    ch_repertoires_for_clones = ch_bulk_filtered
+                                    .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
+                                    .dump(tag: 'sc bulk mix')
 
-    // // Clonal analysis
-    // CLONAL_ANALYSIS(
-    //     ch_repertoires_for_clones,
-    //     VDJ_ANNOTATION.out.imgt.collect(),
-    //     ch_report_logo_img.collect().ifEmpty([])
-    // )
-    // ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty([]))
+    // Clonal analysis
+    CLONAL_ANALYSIS(
+        ch_repertoires_for_clones,
+        VDJ_ANNOTATION.out.imgt.collect(),
+        ch_report_logo_img.collect().ifEmpty([])
+    )
+    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions.ifEmpty([]))
 
-    // if (!params.skip_report){
-    //     REPERTOIRE_ANALYSIS_REPORTING(
-    //         ch_presto_filterseq_logs.collect().ifEmpty([]),
-    //         ch_presto_maskprimers_logs.collect().ifEmpty([]),
-    //         ch_presto_pairseq_logs.collect().ifEmpty([]),
-    //         ch_presto_clustersets_logs.collect().ifEmpty([]),
-    //         ch_presto_buildconsensus_logs.collect().ifEmpty([]),
-    //         ch_presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
-    //         ch_presto_assemblepairs_logs.collect().ifEmpty([]),
-    //         ch_presto_collapseseq_logs.collect().ifEmpty([]),
-    //         ch_presto_splitseq_logs.collect().ifEmpty([]),
-    //         ch_reassign_logs.collect().ifEmpty([]),
-    //         VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
-    //         VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
-    //         BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
-    //         SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
-    //         CLONAL_ANALYSIS.out.logs.collect().ifEmpty([]),
-    //         CLONAL_ANALYSIS.out.repertoire,
-    //         ch_input.collect(),
-    //         ch_report_rmd.collect(),
-    //         ch_report_css.collect(),
-    //         ch_report_logo.collect(),
-    //         ch_validated_samplesheet.collect()
-    //     )
-    // }
-    // ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
-    // ch_versions.dump(tag: "channel_versions")
+    if (!params.skip_report){
+        REPERTOIRE_ANALYSIS_REPORTING(
+            ch_presto_filterseq_logs.collect().ifEmpty([]),
+            ch_presto_maskprimers_logs.collect().ifEmpty([]),
+            ch_presto_pairseq_logs.collect().ifEmpty([]),
+            ch_presto_clustersets_logs.collect().ifEmpty([]),
+            ch_presto_buildconsensus_logs.collect().ifEmpty([]),
+            ch_presto_postconsensus_pairseq_logs.collect().ifEmpty([]),
+            ch_presto_assemblepairs_logs.collect().ifEmpty([]),
+            ch_presto_collapseseq_logs.collect().ifEmpty([]),
+            ch_presto_splitseq_logs.collect().ifEmpty([]),
+            ch_reassign_logs.collect().ifEmpty([]),
+            VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
+            VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
+            BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
+            SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
+            CLONAL_ANALYSIS.out.logs.collect().ifEmpty([]),
+            CLONAL_ANALYSIS.out.repertoire,
+            ch_input.collect(),
+            ch_report_rmd.collect(),
+            ch_report_css.collect(),
+            ch_report_logo.collect(),
+            ch_validated_samplesheet.collect()
+        )
+    }
+    ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
+    ch_versions.dump(tag: "channel_versions")
     
-    // // Software versions
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
+    // Software versions
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 
     
-    // // MODULE: MultiQC
+    // MODULE: MultiQC
     
-    // if (!params.skip_multiqc) {
-    //     workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
-    //     ch_workflow_summary = Channel.value(workflow_summary)
+    if (!params.skip_multiqc) {
+        workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    //     methods_description    = WorkflowAirrflow.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    //     ch_methods_description = Channel.value(methods_description)
+        methods_description    = WorkflowAirrflow.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description = Channel.value(methods_description)
 
-    //     ch_multiqc_files = Channel.empty()
-    //     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    //     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    //     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    //     ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.ifEmpty([]))
-    //     ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.ifEmpty([]))
-    //     ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_mqc.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_files = Channel.empty()
+        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_html.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastp_json.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_postassembly_mqc.collect{it[1]}.ifEmpty([]))
 
-    //     MULTIQC (
-    //         ch_multiqc_files.collect(),
-    //         ch_multiqc_config.collect(),
-    //         ch_multiqc_custom_config.collect().ifEmpty([]),
-    //         ch_report_logo.collect().ifEmpty([])
-    //     )
-    //     multiqc_report = MULTIQC.out.report.toList()
-    // }
+        MULTIQC (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.collect(),
+            ch_multiqc_custom_config.collect().ifEmpty([]),
+            ch_report_logo.collect().ifEmpty([])
+        )
+        multiqc_report = MULTIQC.out.report.toList()
+    }
 
 }
 
