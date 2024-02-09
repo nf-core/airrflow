@@ -103,7 +103,7 @@ workflow AIRRFLOW {
             ch_cellranger_out                       = SC_RAW_INPUT.out.outs
 
             ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
-            
+
             ch_presto_filterseq_logs                = Channel.empty()
             ch_presto_maskprimers_logs              = Channel.empty()
             ch_presto_pairseq_logs                  = Channel.empty()
