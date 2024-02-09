@@ -123,13 +123,7 @@ def check_samplesheet(file_in, assembled):
                             col, no_whitespaces_assembled
                         )
                     )
-        ## commented out because single cell raw analysis is supported now
-        # else:
-        #     if any(tab["single_cell"].tolist()):
-        #         print_error(
-        #             "Some single cell column values are TRUE. The raw mode only accepts bulk samples. If processing single cell samples, please set the `--mode assembled` flag, and provide an AIRR rearrangement as input."
-        #         )
-
+        else:
             for col in required_columns_raw:
                 if col not in header:
                     print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
