@@ -75,7 +75,7 @@ workflow SC_RAW_INPUT {
 
         ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
 
-    // TODO: here you can add support for MiXCR sc protocols. 
+    // TODO: here you can add support for MiXCR sc protocols.
 
     } else {
         error "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."

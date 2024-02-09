@@ -260,9 +260,9 @@ workflow AIRRFLOW {
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    
+
     // MODULE: MultiQC
-    
+
     if (!params.skip_multiqc) {
         workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
