@@ -92,44 +92,30 @@ workflow AIRRFLOW {
 
     if ( params.mode == "fastq" ) {
 
-        // check the samplesheet to distinguish between bulk and single cell
-        FASTQ_INPUT_CHECK(ch_input)
-        ch_versions = ch_versions.mix(FASTQ_INPUT_CHECK.out.versions)
-
-        ch_reads = FASTQ_INPUT_CHECK.out.reads
-
-        // Split bulk and single cell repertoires
-        ch_reads
-            .branch { meta, reads ->
-                single: meta.single_cell == 'true'
-                bulk:   meta.single_cell == 'false'
-            }
-            .set { ch_reads_split }
-
         // SC:Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
-        if (params.library_generation_method in ["sc_10x_genomics"]) {
+        if (params.sc_raw) {
             SC_RAW_INPUT(
-                ch_reads_split.single
+                ch_input
             )
-            ch_fasta                    = SC_RAW_INPUT.out.fasta
-            ch_versions                 = ch_versions.mix(SC_RAW_INPUT.out.versions)
-            ch_cellranger_airr          = SC_RAW_INPUT.out.airr
-            ch_cellranger_out           = SC_RAW_INPUT.out.outs
+            ch_fasta                                = SC_RAW_INPUT.out.fasta
+            ch_versions                             = ch_versions.mix(SC_RAW_INPUT.out.versions)
+            ch_cellranger_airr                      = SC_RAW_INPUT.out.airr
+            ch_cellranger_out                       = SC_RAW_INPUT.out.outs
 
-            ch_validated_samplesheet = FASTQ_INPUT_CHECK.out.samplesheet.collect()
+            ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
             
-            ch_presto_filterseq_logs             = Channel.empty()
-            ch_presto_maskprimers_logs           = Channel.empty()
-            ch_presto_pairseq_logs               = Channel.empty()
-            ch_presto_clustersets_logs           = Channel.empty()
-            ch_presto_buildconsensus_logs        = Channel.empty()
-            ch_presto_postconsensus_pairseq_logs = Channel.empty()
-            ch_presto_assemblepairs_logs         = Channel.empty()
-            ch_presto_collapseseq_logs           = Channel.empty()
-            ch_presto_splitseq_logs              = Channel.empty()
-            ch_fastp_html                        = Channel.empty()
-            ch_fastp_json                        = Channel.empty()
-            ch_fastqc_postassembly_mqc           = Channel.empty()
+            ch_presto_filterseq_logs                = Channel.empty()
+            ch_presto_maskprimers_logs              = Channel.empty()
+            ch_presto_pairseq_logs                  = Channel.empty()
+            ch_presto_clustersets_logs              = Channel.empty()
+            ch_presto_buildconsensus_logs           = Channel.empty()
+            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+            ch_presto_assemblepairs_logs            = Channel.empty()
+            ch_presto_collapseseq_logs              = Channel.empty()
+            ch_presto_splitseq_logs                 = Channel.empty()
+            ch_fastp_html                           = Channel.empty()
+            ch_fastp_json                           = Channel.empty()
+            ch_fastqc_postassembly_mqc              = Channel.empty()
         } else {
             // Perform sequence assembly if input type is fastq from bulk sequencing data
             // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
