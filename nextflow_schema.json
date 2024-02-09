@@ -403,9 +403,15 @@
                     "description": "Path to the reference directory required by cellranger.",
                     "help_text": "See for [IMGT](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt) or [default](https://www.10xgenomics.com/support/software/cell-ranger/downloads).",
                     "fa_icon": "fas fa-database"
+                },
+                "sc_raw": {
+                    "type": "boolean",
+                    "description": "Must be given when raw single cell data should be run.",
+                    "help_text": "Must be given when raw single cell data should be run.",
+                    "fa_icon": "fas fa-database"
                 }
             },
-            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
+            "help_text": "Options for running raw single cell data.",
             "fa_icon": "fab fa-pagelines"
         },
         "report_options": {
@@ -709,6 +715,9 @@
         },
         {
             "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/single_cell_analysis_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"

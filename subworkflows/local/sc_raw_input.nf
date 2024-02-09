@@ -92,5 +92,4 @@ workflow SC_RAW_INPUT {
     // cellranger output converted to FASTA format
     fasta = ch_fasta
     samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
-
 }
