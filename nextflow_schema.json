@@ -400,7 +400,7 @@
             "properties": {
                 "reference_10x": {
                     "type": "string",
-                    "description": "Path to the reference directory required by cellranger.",
+                    "description": "Path to the reference directory required by cellranger. Can either be directory or tar.gz.",
                     "help_text": "See for [IMGT](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt) or [default](https://www.10xgenomics.com/support/software/cell-ranger/downloads).",
                     "fa_icon": "fas fa-database"
                 },

@@ -1,5 +1,5 @@
-include { CELLRANGER_MKVDJREF                                           } from '../../modules/local/cellranger/mkvdjref'
 include { CELLRANGER_VDJ                                                } from '../../modules/nf-core/cellranger/vdj/main'
+include { UNZIP_CELLRANGERDB                                            } from '../../modules/local/unzip_cellrangerdb'
 include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
@@ -39,7 +39,15 @@ workflow SC_RAW_INPUT {
             error "The transcript-specific primer, 5'-RACE, UMI library generation method does not require to set the UMI length, please provide a reference file instead or select another library method option."
         }
         if (params.reference_10x)  {
-            ch_sc_refence = Channel.fromPath(params.reference_10x, checkIfExists: true)
+            // necessary to allow tar.gz files as input so that tests can run
+            if (params.reference_10x.endsWith(".tar.gz")){
+                UNZIP_CELLRANGERDB(
+                    params.reference_10x
+                )
+                UNZIP_CELLRANGERDB.out.unzipped.set { ch_sc_reference }
+            } else {
+                ch_sc_reference = Channel.fromPath(params.reference_10x, checkIfExists: true)
+            }
         } else {
             error "The transcript-specific primer, 5'-RACE, UMI library generation method requires you to provide a reference file."
         }
@@ -47,7 +55,7 @@ workflow SC_RAW_INPUT {
         // run cellranger vdj
         CELLRANGER_VDJ (
         ch_reads,
-        ch_sc_refence
+        ch_sc_reference
         )
         ch_versions = ch_versions.mix(CELLRANGER_VDJ.out.versions)
 
