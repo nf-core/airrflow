@@ -50,7 +50,8 @@ include { FASTQC                      } from '../../modules/nf-core/fastqc/main'
 workflow SEQUENCE_ASSEMBLY {
 
     take:
-    ch_input // channel:
+    ch_input // channel: reads
+    ch_igblast
 
     main:
 
@@ -84,6 +85,11 @@ workflow SEQUENCE_ASSEMBLY {
         if (params.umi_length < 2)  {
             error "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
         }
+        if (params.internal_cregion_sequences) {
+            ch_internal_cregion = Channel.fromPath(params.internal_cregion_sequences, checkIfExists: true)
+        } else {
+            ch_internal_cregion = Channel.of([])
+        }
     } else if (params.library_generation_method == 'specific_pcr') {
         if (params.vprimers)  {
             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
@@ -103,11 +109,16 @@ workflow SEQUENCE_ASSEMBLY {
         } else {
             params.umi_length = 0
         }
+        if (params.internal_cregion_sequences) {
+            error "Please do not set '--internal_cregion_sequences' when using the 'specific_pcr' library generation method without UMIs."
+        }
     } else if (params.library_generation_method == 'dt_5p_race_umi') {
         if (params.vprimers) {
             error "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else if (params.maskprimers_align) {
+            ch_vprimers_fasta = Channel.of([])
         } else {
             error "The oligo-dT 5'-RACE UMI library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
         }
@@ -119,11 +130,18 @@ workflow SEQUENCE_ASSEMBLY {
         if (params.umi_length < 2)  {
             error "The oligo-dT 5'-RACE UMI 'dt_5p_race_umi' library generation method requires specifying the '--umi_length' to a value greater than 1."
         }
+        if (params.internal_cregion_sequences) {
+            ch_internal_cregion = Channel.fromPath(params.internal_cregion_sequences, checkIfExists: true)
+        } else {
+            ch_internal_cregion = Channel.of([])
+        }
     } else if (params.library_generation_method == 'dt_5p_race') {
         if (params.vprimers) {
             error "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
+        } else if (params.maskprimers_align) {
+            ch_vprimers_fasta = Channel.of([])
         } else {
             error "The oligo-dT 5'-RACE library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
         }
@@ -137,6 +155,9 @@ workflow SEQUENCE_ASSEMBLY {
         } else {
             params.umi_length = 0
         }
+        if (params.internal_cregion_sequences) {
+            error "Please do not set '--internal_cregion_sequences' when using the 'dt_5p_race' library generation method without UMIs."
+        }
     } else {
         error "The provided library generation method is not supported. Please check the docs for `--library_generation_method`."
     }
@@ -145,7 +166,8 @@ workflow SEQUENCE_ASSEMBLY {
     if (params.index_file & params.umi_position == 'R2') {error "Please do not set `--umi_position` option if index file with UMIs is provided."}
     if (params.umi_length < 0) {error "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
     if (!params.index_file & params.umi_start != 0) {error "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
-
+    if (params.maskprimers_align & params.umi_position == 'R1') {error "The maskprimers align option is only supported with UMI barcodes in the R2 reads (reads containing V region)."}
+    if (params.maskprimers_align & params.cprimer_position == 'R2') {error "The maskprimers align option is only supported with Cprimers in the R1 reads (reads containing C region)."}
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -190,7 +212,9 @@ workflow SEQUENCE_ASSEMBLY {
             ch_reads,
             ch_cprimers_fasta,
             ch_vprimers_fasta,
-            ch_adapter_fasta
+            ch_adapter_fasta,
+            ch_internal_cregion,
+            ch_igblast.collect()
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
         ch_presto_software = PRESTO_UMI.out.software

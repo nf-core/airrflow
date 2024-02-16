@@ -54,6 +54,7 @@ include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '.
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
+include { DATABASES                     } from '../subworkflows/local/databases'
 include { SEQUENCE_ASSEMBLY             } from '../subworkflows/local/sequence_assembly'
 include { ASSEMBLED_INPUT_CHECK         } from '../subworkflows/local/assembled_input_check'
 include { VDJ_ANNOTATION                } from '../subworkflows/local/vdj_annotation'
@@ -88,10 +89,16 @@ workflow AIRRFLOW {
     ch_versions = Channel.empty()
     ch_reassign_logs = Channel.empty()
 
+    // Download or fetch databases
+    DATABASES()
+
     if ( params.mode == "fastq" ) {
 
         // Perform sequence assembly if input type is fastq
-        SEQUENCE_ASSEMBLY( ch_input )
+        SEQUENCE_ASSEMBLY(
+            ch_input,
+            DATABASES.out.igblast.collect()
+        )
 
         ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
         ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
@@ -153,7 +160,9 @@ workflow AIRRFLOW {
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(
         ch_fasta,
-        ch_validated_samplesheet.collect()
+        ch_validated_samplesheet.collect(),
+        DATABASES.out.igblast.collect(),
+        DATABASES.out.imgt.collect()
     )
     ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions )
 
