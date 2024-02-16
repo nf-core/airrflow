@@ -29,7 +29,7 @@ nextflow run nf-core/airrflow \
 --outdir results
 ```
 
-You can optionally set a protocol profile if you're running the pipeline with data from one of the supported profiles. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protcol-profiles). An example command running the NEBNext UMI protocol profile with docker containers is:
+You can optionally set a protocol profile if you're running the pipeline with data from one of the supported profiles. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles). An example command running the NEBNext UMI protocol profile with docker containers is:
 
 ```bash
 nextflow run nf-core/airrflow \
