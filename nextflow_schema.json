@@ -459,12 +459,6 @@
                     "description": "Path to the reference directory required by cellranger. Can either be directory or tar.gz.",
                     "help_text": "See for [IMGT](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt) or [default](https://www.10xgenomics.com/support/software/cell-ranger/downloads).",
                     "fa_icon": "fas fa-database"
-                },
-                "sc_raw": {
-                    "type": "boolean",
-                    "description": "Must be given when raw single cell data should be run.",
-                    "help_text": "Must be given when raw single cell data should be run.",
-                    "fa_icon": "fas fa-database"
                 }
             },
             "help_text": "Options for running raw single cell data.",
