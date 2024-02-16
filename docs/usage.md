@@ -29,6 +29,16 @@ nextflow run nf-core/airrflow \
 --outdir results
 ```
 
+You can optionally set a protocol profile if you're running the pipeline with data from one of the supported profiles. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles). An example command running the NEBNext UMI protocol profile with docker containers is:
+
+```bash
+nextflow run nf-core/airrflow \
+-profile nebnext_umi,docker \
+--mode fastq \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
 A typical command for running the pipeline departing from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
 
 ```bash
@@ -164,6 +174,76 @@ nf-core/airrflow offers full support for the [AIRR standards 1.4](https://docs.a
 | age                       | Samplesheet column |                               | Subject age                                           |
 | biomaterial_provider      | Samplesheet column |                               | Name of sample biomaterial provider                   |
 | library_generation_method | Parameter          | `--library_generation_method` | Generic type of library generation                    |
+
+## Supported protocol profiles
+
+### NEBNext Immune Sequencing Kit
+
+- [New England Biolabs NEBNext Immune sequencing kit](https://www.neb.com/en-us/products/e6320-nebnext-immune-sequencing-kit-human#Product%20Information)
+
+You can use the `nebnext_umi_bcr` or `nebnext_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the NEB Immune Profiling kit. An example using docker containers for the analysis is:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile nebnext_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
+This profile executes the commands based on the pRESTO pre-set pipeline [presto-abseq.sh](https://bitbucket.org/kleinstein/immcantation/src/master/pipelines/presto-abseq.sh). A summary of the performed steps is:
+
+- Filter sequences by base quality.
+- Score and mask the provided R1 primers and R2 template switch oligo. Primer defaults are taken from the [Immcantation repository](https://bitbucket.org/kleinstein/immcantation/src/master/protocols/AbSeq/).
+- Pair sequences, build UMI consensus sequence.
+- Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
+- Align and annotate the internal C Region (for the BCR specific protocol) for a more specific isotype annotation.
+- Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
+
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile nebnext_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--cprimers <path/to/constant_region_primers> \
+--internal_cregion_sequences <path/to/internal_cregion_sequences> \
+--outdir results
+```
+
+### Clontech / Takara SMARTer Human BCR Profiling kit
+
+- [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
+
+You can use the `clontech_umi_bcr` or `clontech_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile clontech_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
+This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://bitbucket.org/kleinstein/immcantation/src/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
+
+- Filter sequences by base quality.
+- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://bitbucket.org/kleinstein/immcantation/src/master/protocols/Universal/).
+- Identify the primers sequences and UMI (12 nt length) in the R2 reads.
+- Pair sequences, build UMI consensus sequence.
+- Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
+- Align and annotate the C Region sequences.
+- Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
+
+After the sequence assembly steps, the remaining steps are common for all protocols.
+
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile clontech_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--cprimers <path/to/reverse_complemented_universal_Cregion_sequences> \
+--outdir results
+```
 
 ## Supported bulk library generation methods (protocols)
 

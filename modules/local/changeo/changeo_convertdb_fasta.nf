@@ -13,7 +13,7 @@ process CHANGEO_CONVERTDB_FASTA {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*.fasta"), emit: fasta // sequence tsv in AIRR format
+    tuple val(meta), path("*.fasta"), emit: fasta // sequence in fasta format
     path "versions.yml" , emit: versions
     path "*_command_log.txt" , emit: logs
 

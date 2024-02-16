@@ -218,17 +218,11 @@
                     "description": "Quality threshold for pRESTO FilterSeq sequence filtering.",
                     "fa_icon": "fas fa-filter"
                 },
-                "primer_maxerror": {
-                    "type": "number",
-                    "default": 0.2,
-                    "description": "Maximum primer scoring error in the pRESTO MaskPrimer step for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-align-center"
-                },
                 "primer_consensus": {
                     "type": "number",
                     "default": 0.6,
                     "description": "Maximum error for building the primer consensus in the pRESTO Buildconsensus step.",
-                    "fa_icon": "fas fa-align-center"
+                    "fa_icon": "fas fa-align-left"
                 },
                 "primer_mask_mode": {
                     "type": "string",
@@ -253,8 +247,70 @@
                 "cluster_sets": {
                     "type": "boolean",
                     "default": true,
-                    "fa_icon": "fas fa-layer-group",
+                    "fa_icon": "fas fa-align-center",
                     "description": "Cluster sequences by similarity regardless of any annotation with pRESTO ClusterSets and annotate the cluster ID additionally to the UMI barcode."
+                },
+                "primer_r1_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "fa_icon": "fas fa-align-left",
+                    "description": "Maximum allowed error for R1 primer alignment."
+                },
+                "primer_r2_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "fa_icon": "fas fa-align-right",
+                    "description": "Maximum allowed error for R2 primer alignment."
+                },
+                "maskprimers_align": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Align primers instead of scoring them. Used for protocols without primer fixed positions."
+                },
+                "primer_extract_len": {
+                    "type": "integer",
+                    "default": 0,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Length of the extracted primers with MaskPrimer extract."
+                },
+                "primer_maxlen": {
+                    "type": "integer",
+                    "default": 50,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed primer length when aligning the primers."
+                },
+                "assemblepairs_sequential": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Use AssemblePairs sequential instead of AssemblePairs align when assembling read pairs."
+                },
+                "align_cregion": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Align internal C-region for a more precise isotype characterization."
+                },
+                "internal_cregion_sequences": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Provide internal C-region sequences for a more precise C-region characterization. Then also set the `align_cregion` flag."
+                },
+                "cregion_maxlen": {
+                    "type": "integer",
+                    "default": 100,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed length when aligning the internal C-region."
+                },
+                "cregion_maxerror": {
+                    "type": "number",
+                    "default": 0.3,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed error when aligning the internal C-region."
+                },
+                "cregion_mask_mode": {
+                    "type": "string",
+                    "default": "tag",
+                    "fa_icon": "fas fa-mask",
+                    "description": "Mask mode for C-region alignment."
                 }
             },
             "fa_icon": "fas fa-align-center"

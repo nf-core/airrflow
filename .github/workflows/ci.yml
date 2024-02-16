@@ -57,6 +57,8 @@ jobs:
             "test_assembled_hs",
             "test_assembled_mm",
             "test_10x_sc",
+            "test_clontech_umi",
+            "test_nebnext_umi",
           ]
       fail-fast: false
     steps:

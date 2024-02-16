@@ -54,6 +54,7 @@ include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '.
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
+include { DATABASES                     } from '../subworkflows/local/databases'
 include { SEQUENCE_ASSEMBLY             } from '../subworkflows/local/sequence_assembly'
 include { ASSEMBLED_INPUT_CHECK         } from '../subworkflows/local/assembled_input_check'
 include { VDJ_ANNOTATION                } from '../subworkflows/local/vdj_annotation'
@@ -90,6 +91,9 @@ workflow AIRRFLOW {
     ch_versions = Channel.empty()
     ch_reassign_logs = Channel.empty()
 
+    // Download or fetch databases
+    DATABASES()
+
     if ( params.mode == "fastq" ) {
 
         // SC:Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
@@ -120,7 +124,10 @@ workflow AIRRFLOW {
             // Perform sequence assembly if input type is fastq from bulk sequencing data
             // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
 
-            SEQUENCE_ASSEMBLY( ch_input )
+            SEQUENCE_ASSEMBLY(
+                ch_input,
+                DATABASES.out.igblast.collect()
+            )
 
             ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
             ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
@@ -138,7 +145,7 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
             ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
             ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
-        }
+       }
 
     } else if ( params.mode == "assembled" ) {
 
@@ -183,7 +190,9 @@ workflow AIRRFLOW {
     // Perform V(D)J annotation and filtering
     VDJ_ANNOTATION(
         ch_fasta,
-        ch_validated_samplesheet.collect()
+        ch_validated_samplesheet.collect(),
+        DATABASES.out.igblast.collect(),
+        DATABASES.out.imgt.collect()
     )
     ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions )
 
