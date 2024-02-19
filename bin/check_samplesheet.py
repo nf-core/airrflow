@@ -160,9 +160,12 @@ def check_samplesheet(file_in, assembled):
 
         ## Check that sample ids are unique
         if len(tab["sample_id"]) != len(set(tab["sample_id"])):
-            print_error(
-                "Sample IDs are not unique! The sample IDs in the input samplesheet should be unique for each sample."
-            )
+            if assembled:
+                print_error(
+                    "Sample IDs are not unique! The sample IDs in the input samplesheet should be unique for each sample."
+                )
+            else:
+                print("WARNING: Sample IDs are not unique! FastQs with the same sample ID will be merged.")
 
         ## Check that pcr_target_locus is IG or TR
         for val in tab["pcr_target_locus"]:
