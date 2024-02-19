@@ -145,7 +145,7 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
             ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
             ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
-       }
+        }
 
     } else if ( params.mode == "assembled" ) {
 
