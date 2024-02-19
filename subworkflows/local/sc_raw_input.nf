@@ -27,15 +27,15 @@ workflow SC_RAW_INPUT {
 
     // validate library generation method parameter
     if (params.vprimers) {
-        error "The transcript-specific primer, 5'-RACE, UMI library generation method does not require V-region primers, please provide a reference file instead or select another library method option."
+        error "The single-cell 10X genomics library generation method does not require V-region primers, please provide a reference file instead or select another library method option."
     } else if (params.race_linker) {
-        error "The transcript-specific primer, 5'-RACE, UMI library generation method does not require the --race_linker parameter, please provide a reference file instead or select another library method option."
+        error "The single-cell 10X genomics library generation method does not require the --race_linker parameter, please provide a reference file instead or select another library method option."
     }
     if (params.cprimers)  {
-        error "The transcript-specific primer, 5'-RACE, UMI library generation method does not require C-region primers, please provide a reference file instead or select another library method option."
+        error "The single-cell 10X genomics library generation method does not require C-region primers, please provide a reference file instead or select another library method option."
     }
     if (params.umi_length > 0)  {
-        error "The transcript-specific primer, 5'-RACE, UMI library generation method does not require to set the UMI length, please provide a reference file instead or select another library method option."
+        error "The single-cell 10X genomics library generation method does not require to set the UMI length, please provide a reference file instead or select another library method option."
     }
     if (params.reference_10x)  {
         // necessary to allow tar.gz files as input so that tests can run
@@ -48,7 +48,7 @@ workflow SC_RAW_INPUT {
             ch_sc_reference = Channel.fromPath(params.reference_10x, checkIfExists: true)
         }
     } else {
-        error "The transcript-specific primer, 5'-RACE, UMI library generation method requires you to provide a reference file."
+        error "The single-cell 10X genomics library generation method requires you to provide a reference file."
     }
 
     // run cellranger vdj
@@ -83,6 +83,7 @@ workflow SC_RAW_INPUT {
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
 
     // TODO: here you can add support for MiXCR sc protocols.
+
 
     emit:
     versions = ch_versions
