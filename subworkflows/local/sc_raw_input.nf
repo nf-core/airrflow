@@ -53,8 +53,8 @@ workflow SC_RAW_INPUT {
 
     // run cellranger vdj
     CELLRANGER_VDJ (
-    ch_reads,
-    ch_sc_reference
+        ch_reads,
+        ch_sc_reference.collect()
     )
     ch_versions = ch_versions.mix(CELLRANGER_VDJ.out.versions)
 
