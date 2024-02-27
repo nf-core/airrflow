@@ -97,10 +97,12 @@ workflow AIRRFLOW {
     if ( params.mode == "fastq" ) {
 
         // SC:Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
-        if (params.sc_raw) {
+        if (params.library_generation_method == "sc_10x_genomics") {
+
             SC_RAW_INPUT(
                 ch_input
             )
+
             ch_fasta                                = SC_RAW_INPUT.out.fasta
             ch_versions                             = ch_versions.mix(SC_RAW_INPUT.out.versions)
             ch_cellranger_airr                      = SC_RAW_INPUT.out.airr
@@ -122,8 +124,6 @@ workflow AIRRFLOW {
             ch_fastqc_postassembly_mqc              = Channel.empty()
         } else {
             // Perform sequence assembly if input type is fastq from bulk sequencing data
-            // TODO make this part run from ch_reads_split.bulk! -> other input, FASTQ_INPUT_CHECK is not needed then anymore
-
             SEQUENCE_ASSEMBLY(
                 ch_input,
                 DATABASES.out.igblast.collect()
@@ -145,7 +145,7 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
             ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
             ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
-       }
+        }
 
     } else if ( params.mode == "assembled" ) {
 
