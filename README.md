@@ -125,14 +125,20 @@ nextflow run nf-core/airrflow \
 A typical command to run the pipeline from **single cell raw fastq files** is:
 
 ```bash
-nextflow run nf-core/airrflow \
--r dev \
+nextflow run nf-core/airrflow -r dev \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --mode fastq \
 --input input_samplesheet.tsv \
 --library_generation_method sc_10x_genomics \
+--reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
 --outdir ./results
 ```
+
+#### 10xGenomics reference
+10xGenomics requires a reference. This can be provided using the `--reference_10x` parameter.
+
+- The 10xGenomics reference can be downloaded from the [download page](https://www.10xgenomics.com/support/software/cell-ranger/downloads)
+- To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt). 
 
 A typical command to run the pipeline from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
 
