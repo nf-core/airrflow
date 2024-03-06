@@ -165,17 +165,14 @@ An example samplesheet is:
 | sample01  | sample1_S1_L001_R1_001.fastq.gz | sample1_S1_L001_R2_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
 | sample02  | sample2_S1_L001_R1_001.fastq.gz | sample2_S1_L001_R2_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
 
-
->FASTQ files must confirm the 10xGenomics cellranger naming conventions<br>
->**`[SAMPLE-NAME]`_S1_L00`[LANE-NUMBER]` _`[READ-TYPE]`_001.fastq.gz**
+> FASTQ files must confirm the 10xGenomics cellranger naming conventions<br> >**`[SAMPLE-NAME]`_S1_L00`[LANE-NUMBER]` _`[READ-TYPE]`\_001.fastq.gz**
 >
->Read type is one of
->- `I1`: Sample index read (optional)
->- `I2`: Sample index read (optional)
->- `R1`: Read 1
->- `R2`: Read 2
-
-
+> Read type is one of
+>
+> - `I1`: Sample index read (optional)
+> - `I2`: Sample index read (optional)
+> - `R1`: Read 1
+> - `R2`: Read 2
 
 ### Assembled input samplesheet (bulk or single-cell sequencing)
 
@@ -487,16 +484,15 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 
 When processing single cell sequencing data departing from raw `fastq` reads, currently only a `--library_generation_method` to support 10xGenomics data is available.
 
-| Library generation methods | Description                                                                                | Name in pipeline | Commercial protocols                      |
-| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- | ----------------------------------------- |
-| RT(RHP)+PCR                       | sequencing data produced from Chromium single cell 5'V(D)J libraries containing cellular barcodes and UMIs. | sc_10x_genomics    | 10xGenomics |
+| Library generation methods | Description                                                                                                 | Name in pipeline | Commercial protocols |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------- | -------------------- |
+| RT(RHP)+PCR                | sequencing data produced from Chromium single cell 5'V(D)J libraries containing cellular barcodes and UMIs. | sc_10x_genomics  | 10xGenomics          |
 
 ### 10xGenomics
 
 This sequencing type requires setting `--library_generation_method sc_10x_genomics`.
-The `cellranger vdj` automatically uses the Chromium cellular barcodes and UMIs to perform sequence assembly, paired clonotype calling and to assemble V(D)J transcripts per cell. 
+The `cellranger vdj` automatically uses the Chromium cellular barcodes and UMIs to perform sequence assembly, paired clonotype calling and to assemble V(D)J transcripts per cell.
 Examples are provided below to run airrflow to process 10xGenomics raw FASTQ data.
-
 
 ```bash
 nextflow run nf-core/airrflow -r dev \
@@ -509,10 +505,11 @@ nextflow run nf-core/airrflow -r dev \
 ```
 
 #### 10xGenomics reference
+
 10xGenomics requires a reference. This can be provided using the `--reference_10x` parameter.
 
 - The 10xGenomics reference can be downloaded from the [download page](https://www.10xgenomics.com/support/software/cell-ranger/downloads)
-- To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt). 
+- To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt).
 
 ## Core Nextflow arguments
 

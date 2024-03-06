@@ -35,6 +35,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
 1. QC and sequence assembly
+
 - Bulk
   - Raw read quality control, adapter trimming and clipping (`Fastp`).
   - Filter sequences by base quality (`pRESTO FilterSeq`).
@@ -52,7 +53,6 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
     - Annotate contigs
     - Call cells
     - Generate clonotypes
-
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
@@ -133,7 +133,6 @@ nextflow run nf-core/airrflow -r dev \
 --reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
 --outdir ./results
 ```
-
 
 A typical command to run the pipeline from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
 
