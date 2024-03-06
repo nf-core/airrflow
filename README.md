@@ -122,7 +122,7 @@ nextflow run nf-core/airrflow \
 --outdir ./results
 ```
 
-A typical command to run the pipeline from **single cell raw fastq files** is:
+A typical command to run the pipeline from **single cell raw fastq files** (10X genomics) is:
 
 ```bash
 nextflow run nf-core/airrflow -r dev \
