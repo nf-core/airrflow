@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#294](https://github.com/nf-core/airrflow/pull/294) Merge template updates nf-core/tools v2.11.1
 - [#299](https://github.com/nf-core/airrflow/pull/299) Add profile for common NEB and TAKARA protocols
-- Add possibility to merge multi-lane samples when starting from fastq files
+- [#289](https://github.com/nf-core/airrflow/pull/289) Add possibility to merge multi-lane samples when starting from fastq files
+- [#289](https://github.com/nf-core/airrflow/pull/289) Add possibility to run cellranger for scVDJseq data
 
 ### `Fixed`
 
