@@ -124,11 +124,6 @@ def check_samplesheet(file_in, assembled):
                         )
                     )
         else:
-            if any(tab["single_cell"].tolist()):
-                print_error(
-                    "Some single cell column values are TRUE. The raw mode only accepts bulk samples. If processing single cell samples, please set the `--mode assembled` flag, and provide an AIRR rearrangement as input."
-                )
-
             for col in required_columns_raw:
                 if col not in header:
                     print("ERROR: Please check samplesheet header: {} ".format(",".join(header)))
@@ -165,9 +160,12 @@ def check_samplesheet(file_in, assembled):
 
         ## Check that sample ids are unique
         if len(tab["sample_id"]) != len(set(tab["sample_id"])):
-            print_error(
-                "Sample IDs are not unique! The sample IDs in the input samplesheet should be unique for each sample."
-            )
+            if assembled:
+                print_error(
+                    "Sample IDs are not unique! The sample IDs in the input samplesheet should be unique for each sample."
+                )
+            else:
+                print("WARNING: Sample IDs are not unique! FastQs with the same sample ID will be merged.")
 
         ## Check that pcr_target_locus is IG or TR
         for val in tab["pcr_target_locus"]:
