@@ -103,7 +103,7 @@ A typical command to run the pipeline from **bulk raw fastq files** is:
 
 ```bash
 nextflow run nf-core/airrflow \
--r 3.2.0 \
+-r <release> \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --mode fastq \
 --input input_samplesheet.tsv \
@@ -119,7 +119,7 @@ A typical command to run the pipeline from **single-cell AIRR rearrangement tabl
 
 ```bash
 nextflow run nf-core/airrflow \
--r 3.2.0 \
+-r <release> \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --input input_samplesheet.tsv \
 --mode assembled \
