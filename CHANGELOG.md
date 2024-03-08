@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | ---------- | ----------- | ----------- |
 | multiqc    | 1.14        | 1.18        |
 | enchantr   | 0.1.9       | 0.1.11      |
+| igblast    | 1.19.0      | 1.22.0      |
 
 ## [3.2.0] - 2023-10-27 Expecto patronum
 
