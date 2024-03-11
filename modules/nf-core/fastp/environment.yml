@@ -1,7 +1,7 @@
-name: custom_dumpsoftwareversions
+name: fastp
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::multiqc=1.20
+  - bioconda::fastp=0.23.4
