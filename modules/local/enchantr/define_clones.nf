@@ -56,11 +56,13 @@ process DEFINE_CLONES {
                                         'imgt_db'='${imgt_base}', \\
                                         'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
-                                        'outputby'='${params.cloneby}',
+                                        'outputby'='${params.cloneby}', \\
                                         'force'=FALSE, \\
                                         'threshold'=${thr}, \\
-                                        'singlecell'='${params.singlecell}','outdir'=getwd(), \\
-                                        'nproc'=${task.cpus},\\
+                                        'singlecell'='${params.singlecell}', \\
+                                        'outdir'=getwd(), \\
+                                        'isotype_column'='${params.isotype_column}', \\
+                                        'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
     cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr
