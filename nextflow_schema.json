@@ -354,6 +354,13 @@
                     "type": "boolean",
                     "description": "Set this flag to fetch the IMGT reference data at runtime.",
                     "fa_icon": "fas fa-cloud-download-alt"
+                },
+                "isotype_column": {
+                    "type": "string",
+                    "description": "Set the column in the AIRR rearrangement file that isotype information should be gathered from.",
+                    "default": "c_call",
+                    "fa_icon": "fas fa-border-all",
+                    "help_text": "Default is the `c_call` column. For bulk protocols one can use the c_primers or cregion columns (check `align_cregion`). The primer or cregions fasta file header need to contain the strings `IGHA`, `IGHD`, `IGHG`... for the isotypes to be properly parsed. This will be used for plotting mutation frequency by isotype in the clonal analysis report."
                 }
             },
             "fa_icon": "fas fa-edit"
