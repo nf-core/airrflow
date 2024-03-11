@@ -20,7 +20,7 @@
 
 ## Introduction
 
-**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
+**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, single-cell VDJ sequencing using the 10xGenomics libraries, or assembled reads (bulk or single-cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -34,18 +34,25 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
-1. QC and sequence assembly (bulk only)
+1. QC and sequence assembly
 
-- Raw read quality control, adapter trimming and clipping (`Fastp`).
-- Filter sequences by base quality (`pRESTO FilterSeq`).
-- Mask amplicon primers (`pRESTO MaskPrimers`).
-- Pair read mates (`pRESTO PairSeq`).
-- For UMI-based sequencing:
-  - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
-  - Build consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
-- Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
-- Remove and annotate read duplicates (`pRESTO CollapseSeq`).
-- Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
+- Bulk
+  - Raw read quality control, adapter trimming and clipping (`Fastp`).
+  - Filter sequences by base quality (`pRESTO FilterSeq`).
+  - Mask amplicon primers (`pRESTO MaskPrimers`).
+  - Pair read mates (`pRESTO PairSeq`).
+  - For UMI-based sequencing:
+    - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
+    - Build consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
+  - Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
+  - Remove and annotate read duplicates (`pRESTO CollapseSeq`).
+  - Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
+- single cell
+  - cellranger vdj
+    - Assemble contigs
+    - Annotate contigs
+    - Call cells
+    - Generate clonotypes
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
@@ -112,6 +119,18 @@ nextflow run nf-core/airrflow \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R1 \
+--outdir ./results
+```
+
+A typical command to run the pipeline from **single cell raw fastq files** (10X genomics) is:
+
+```bash
+nextflow run nf-core/airrflow -r dev \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method sc_10x_genomics \
+--reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
 --outdir ./results
 ```
 

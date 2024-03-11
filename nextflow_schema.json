@@ -61,8 +61,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-flask",
                     "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": ["dt_5p_race", "dt_5p_race_umi", "specific_pcr", "specific_pcr_umi"],
-                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
+                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi", "sc_10x_genomics"],
+                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
                 },
                 "race_linker": {
                     "type": "string",
@@ -455,6 +455,22 @@
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
             "fa_icon": "fab fa-pagelines"
         },
+        "single_cell_analysis_options": {
+            "title": "Single cell analysis options",
+            "type": "object",
+            "description": "Options specific for raw single cell input.",
+            "default": "",
+            "properties": {
+                "reference_10x": {
+                    "type": "string",
+                    "description": "Path to the reference directory required by cellranger. Can either be directory or tar.gz.",
+                    "help_text": "See for [IMGT](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt) or [default](https://www.10xgenomics.com/support/software/cell-ranger/downloads).",
+                    "fa_icon": "fas fa-database"
+                }
+            },
+            "help_text": "Options for running raw single cell data.",
+            "fa_icon": "fab fa-pagelines"
+        },
         "report_options": {
             "title": "Report options",
             "type": "object",
@@ -756,6 +772,9 @@
         },
         {
             "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/single_cell_analysis_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"

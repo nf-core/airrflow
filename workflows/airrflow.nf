@@ -62,6 +62,8 @@ include { BULK_QC_AND_FILTER            } from '../subworkflows/local/bulk_qc_an
 include { SINGLE_CELL_QC_AND_FILTERING  } from '../subworkflows/local/single_cell_qc_and_filtering'
 include { CLONAL_ANALYSIS               } from '../subworkflows/local/clonal_analysis'
 include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire_analysis_reporting'
+include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
+include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,28 +96,56 @@ workflow AIRRFLOW {
 
     if ( params.mode == "fastq" ) {
 
-        // Perform sequence assembly if input type is fastq
-        SEQUENCE_ASSEMBLY(
-            ch_input,
-            DATABASES.out.igblast.collect()
-        )
+        // SC:Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
+        if (params.library_generation_method == "sc_10x_genomics") {
 
-        ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
-        ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
-        ch_fastp_html               = SEQUENCE_ASSEMBLY.out.fastp_reads_html
-        ch_fastp_json               = SEQUENCE_ASSEMBLY.out.fastp_reads_json
-        ch_fastqc_postassembly_mqc  = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
-        ch_validated_samplesheet    = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
+            SC_RAW_INPUT(
+                ch_input
+            )
 
-        ch_presto_filterseq_logs        = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
-        ch_presto_maskprimers_logs      = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
-        ch_presto_pairseq_logs          = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
-        ch_presto_clustersets_logs      = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
-        ch_presto_buildconsensus_logs   = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
-        ch_presto_postconsensus_pairseq_logs = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
-        ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
-        ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
-        ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+            ch_fasta                                = SC_RAW_INPUT.out.fasta
+            ch_versions                             = ch_versions.mix(SC_RAW_INPUT.out.versions)
+            ch_cellranger_airr                      = SC_RAW_INPUT.out.airr
+            ch_cellranger_out                       = SC_RAW_INPUT.out.outs
+
+            ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
+
+            ch_presto_filterseq_logs                = Channel.empty()
+            ch_presto_maskprimers_logs              = Channel.empty()
+            ch_presto_pairseq_logs                  = Channel.empty()
+            ch_presto_clustersets_logs              = Channel.empty()
+            ch_presto_buildconsensus_logs           = Channel.empty()
+            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+            ch_presto_assemblepairs_logs            = Channel.empty()
+            ch_presto_collapseseq_logs              = Channel.empty()
+            ch_presto_splitseq_logs                 = Channel.empty()
+            ch_fastp_html                           = Channel.empty()
+            ch_fastp_json                           = Channel.empty()
+            ch_fastqc_postassembly_mqc              = Channel.empty()
+        } else {
+            // Perform sequence assembly if input type is fastq from bulk sequencing data
+            SEQUENCE_ASSEMBLY(
+                ch_input,
+                DATABASES.out.igblast.collect()
+            )
+
+            ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
+            ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
+            ch_fastp_html               = SEQUENCE_ASSEMBLY.out.fastp_reads_html
+            ch_fastp_json               = SEQUENCE_ASSEMBLY.out.fastp_reads_json
+            ch_fastqc_postassembly_mqc  = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+            ch_validated_samplesheet    = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
+
+            ch_presto_filterseq_logs        = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
+            ch_presto_maskprimers_logs      = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
+            ch_presto_pairseq_logs          = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
+            ch_presto_clustersets_logs      = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
+            ch_presto_buildconsensus_logs   = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
+            ch_presto_postconsensus_pairseq_logs = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
+            ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
+            ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
+            ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+        }
 
     } else if ( params.mode == "assembled" ) {
 
@@ -239,9 +269,9 @@ workflow AIRRFLOW {
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    //
+
     // MODULE: MultiQC
-    //
+
     if (!params.skip_multiqc) {
         workflow_summary    = WorkflowAirrflow.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
