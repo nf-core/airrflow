@@ -3,8 +3,6 @@
  */
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
-//TODO: when enchantr supports input samplesheet from raw sequencing, update code here to commented one.
-//include { VALIDATE_INPUT } from '../../modules/local/enchantr/validate_input'
 
 workflow FASTQ_INPUT_CHECK {
     take:
@@ -16,17 +14,6 @@ workflow FASTQ_INPUT_CHECK {
         .splitCsv ( header:true, sep:'\t' )
         .map { create_fastq_channels(it) }
         .set { ch_reads }
-    // VALIDATE_INPUT(
-    //     samplesheet,
-    //     params.miairr,
-    //     params.collapseby,
-    //     params.cloneby
-    // )
-
-    // VALIDATE_INPUT.out.validated_input
-    //                     .splitCsv(header: true, sep:'\t')
-    //                     .map { get_meta(it) }
-    //                     .set{ ch_reads }
 
     emit:
     reads = ch_reads // channel: [ val(meta), [ reads ] ]

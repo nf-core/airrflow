@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.3.0dev] -
+## [3.3.0] -
 
 ### `Added`
 
@@ -21,7 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | multiqc    | 1.14        | 1.18        |
-| enchantr   | 0.9.0       | 0.10.0      |
+| enchantr   | 0.1.9       | 0.1.11      |
+| igblast    | 1.19.0      | 1.22.0      |
 
 ## [3.2.0] - 2023-10-27 Expecto patronum
 
