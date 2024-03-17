@@ -5,6 +5,7 @@
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 include { CAT_FASTQ } from '../../modules/nf-core/cat/fastq/main'
 
+
 workflow FASTQ_INPUT_CHECK {
     take:
     samplesheet // file: /path/to/samplesheet.tsv
@@ -25,6 +26,7 @@ workflow FASTQ_INPUT_CHECK {
                     return [ meta, fastqs.flatten() ]
         }
         .set { ch_reads }
+
     ch_versions = SAMPLESHEET_CHECK.out.versions
 
     // Merge multi-lane sample fastq for protocols except for 10x genomics (cellranger handles multi-fastq per sample)

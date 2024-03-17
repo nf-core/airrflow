@@ -16,7 +16,7 @@ output:
 
 
 ---
-title: "Repertoire analysis"
+title: "Airrflow results summary report"
 subtitle: "Interactive summary report produced by the nf-core/airrflow pipeline"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
@@ -48,7 +48,7 @@ datadir <- "."
 
 ```
 
-# Airrflow results
+# AIRR repertoire results
 
 The repertoires per subject after clonal analysis can be found in the
 subdirectory [clonal_analysis/define_clones/all_reps_clone_report/repertoires](clonal_analysis/define_clones/all_reps_clone_report/repertoires).
@@ -98,7 +98,7 @@ tryCatch( {
 )
 ```
 
-## Filtering and clonal analysis steps
+## V(D)J gene assignment and QC
 
 Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
 The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
