@@ -27,8 +27,8 @@ workflow FASTQ_INPUT_CHECK {
         .set { ch_reads }
     ch_versions = SAMPLESHEET_CHECK.out.versions
 
-    // Merge multi-lane sample fastq for protocols except for 10x genomics (cellranger handles multi-fastq per sample)
-    if (params.library_generation_method == 'sc_10x_genomics') {
+    // Merge multi-lane sample fastq for protocols except for 10x genomics, trust4 (cellranger handles multi-fastq per sample)
+    if (params.library_generation_method == 'sc_10x_genomics' || params.library_generation_method == 'trust4')  {
 
         ch_merged_reads = ch_reads.single.mix( ch_reads.multiple )
 
@@ -82,8 +82,28 @@ def create_fastq_channels(LinkedHashMap col) {
             error "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${col.filename_I1}"
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2), file(col.filename_I1) ] ]
-    } else {
+    }
+    if (params.library_generation_method == "trust4") {
+        if (params.barcode_read == "R1") {
 
+            meta.barcode_read = file(col.filename_R1).name
+        }
+        else if (params.barcode_read == "R2") {
+            meta.barcode_read = file(col.filename_R2).name
+        }
+        if (params.umi_position == "R1") {
+            meta.umi_position = file(col.filename_R1).name
+        }
+        else if (params.umi_position == "R2") {
+            meta.umi_position = file(col.filename_R2).name
+        }
+        else if (params.umi_position == "") {
+            meta.umi_position = null 
+        } else {
+            error "ERROR: UMI read must be specified as either R1 or R2!"
+        }
+        array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
+    } else {
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
         if (params.index_file) {
             error "ERROR: --index_file was provided but the index file path is not specified in the samplesheet!"
