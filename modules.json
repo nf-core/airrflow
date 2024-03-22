@@ -20,11 +20,6 @@
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
-                        "installed_by": ["modules"]
-                    },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
