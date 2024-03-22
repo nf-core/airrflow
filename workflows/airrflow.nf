@@ -17,10 +17,10 @@ ch_multiqc_logo          = params.multiqc_logo   ? Channel.fromPath( params.mult
 ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 // Report files
-ch_report_rmd = Channel.fromPath(params.report_rmd, checkIfExists: true)
-ch_report_css = Channel.fromPath(params.report_css, checkIfExists: true)
-ch_report_logo = Channel.fromPath(params.report_logo, checkIfExists: true)
-ch_report_logo_img = Channel.fromPath(params.report_logo_img, checkIfExists: true)
+ch_report_rmd       = Channel.fromPath(params.report_rmd, checkIfExists: true)
+ch_report_css       = Channel.fromPath(params.report_css, checkIfExists: true)
+ch_report_logo      = Channel.fromPath(params.report_logo, checkIfExists: true)
+ch_report_logo_img  = Channel.fromPath(params.report_logo_img, checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,7 +53,7 @@ include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_inpu
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -113,22 +113,21 @@ workflow AIRRFLOW {
                     DATABASES.out.igblast.collect()
                 )
 
-                ch_fasta                    = SEQUENCE_ASSEMBLY.out.fasta
-                ch_versions                 = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
-                ch_fastp_html               = SEQUENCE_ASSEMBLY.out.fastp_reads_html
-                ch_fastp_json               = SEQUENCE_ASSEMBLY.out.fastp_reads_json
-                ch_fastqc_postassembly_mqc  = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
-                ch_validated_samplesheet    = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
-
-                ch_presto_filterseq_logs        = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
-                ch_presto_maskprimers_logs      = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
-                ch_presto_pairseq_logs          = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
-                ch_presto_clustersets_logs      = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
-                ch_presto_buildconsensus_logs   = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
-                ch_presto_postconsensus_pairseq_logs = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
-                ch_presto_assemblepairs_logs    = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
-                ch_presto_collapseseq_logs      = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
-                ch_presto_splitseq_logs         = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+                ch_fasta                                = SEQUENCE_ASSEMBLY.out.fasta
+                ch_versions                             = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
+                ch_fastp_html                           = SEQUENCE_ASSEMBLY.out.fastp_reads_html
+                ch_fastp_json                           = SEQUENCE_ASSEMBLY.out.fastp_reads_json
+                ch_fastqc_postassembly_mqc              = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
+                ch_validated_samplesheet                = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
+                ch_presto_filterseq_logs                = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
+                ch_presto_maskprimers_logs              = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
+                ch_presto_pairseq_logs                  = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
+                ch_presto_clustersets_logs              = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
+                ch_presto_buildconsensus_logs           = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
+                ch_presto_postconsensus_pairseq_logs    = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
+                ch_presto_assemblepairs_logs            = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
+                ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
+                ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
             }
 
         } else if ( params.mode == "assembled" ) {
