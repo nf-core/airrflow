@@ -38,7 +38,6 @@ include { PRESTO_SANS_UMI             } from '../../subworkflows/local/presto_sa
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../../modules/nf-core/fastqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -189,7 +188,7 @@ workflow SEQUENCE_ASSEMBLY {
             ch_adapter_fasta
         )
         ch_presto_fasta = PRESTO_SANS_UMI.out.fasta
-        ch_presto_software = PRESTO_SANS_UMI.out.software
+        ch_presto_software = PRESTO_SANS_UMI.out.versions
         ch_fastp_reads_html = PRESTO_SANS_UMI.out.fastp_reads_html
         ch_fastp_reads_json = PRESTO_SANS_UMI.out.fastp_reads_json
         ch_fastqc_postassembly = PRESTO_SANS_UMI.out.fastqc_postassembly_gz
@@ -216,7 +215,7 @@ workflow SEQUENCE_ASSEMBLY {
             ch_igblast.collect()
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
-        ch_presto_software = PRESTO_UMI.out.software
+        ch_presto_software = PRESTO_UMI.out.versions
         ch_fastp_reads_html = PRESTO_UMI.out.fastp_reads_html
         ch_fastp_reads_json = PRESTO_UMI.out.fastp_reads_json
         ch_fastqc_postassembly = PRESTO_UMI.out.fastqc_postassembly_gz
