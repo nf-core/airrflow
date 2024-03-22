@@ -120,6 +120,7 @@ workflow PRESTO_UMI {
         )
 
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_EXTRACT.out.versions)
         // Merge again R1 and R2 by sample ID.
         ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_ALIGN.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R1')
         ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_EXTRACT.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R2')
@@ -227,6 +228,7 @@ workflow PRESTO_UMI {
             params.cregion_mask_mode
         )
         ch_parseheaders_reads = PRESTO_ALIGN_CREGION.out.reads
+        ch_versions = ch_versions.mix(PRESTO_ALIGN_CREGION.out.versions)
     } else {
         ch_parseheaders_reads = ch_assemblepairs_reads
     }
@@ -298,7 +300,7 @@ workflow PRESTO_UMI {
 
     emit:
     fasta = PRESTO_SPLITSEQ_UMI.out.fasta
-    software = ch_versions
+    versions = ch_versions
     fastp_reads_json = FASTP.out.json.collect{ meta,json -> json }
     fastp_reads_html = FASTP.out.html.collect{ meta,html -> html }
     fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_UMI.out.zip

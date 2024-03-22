@@ -192,7 +192,7 @@ If you use nf-core/airrflow for your analysis, please cite the preprint as follo
 >
 > BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
 
-The specific pipeline version it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
+The specific pipeline version using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
 
 Please also cite all the tools that are being used by the pipeline. An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

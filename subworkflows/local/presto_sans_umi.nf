@@ -93,7 +93,7 @@ workflow PRESTO_SANS_UMI {
 
     emit:
     fasta = PRESTO_SPLITSEQ_SANS_UMI.out.fasta
-    software = ch_versions
+    versions = ch_versions
     fastp_reads_json = FASTP.out.json.collect{ meta,json -> json }
     fastp_reads_html = FASTP.out.html.collect{ meta,html -> html }
     fastqc_postassembly_gz = FASTQC_POSTASSEMBLY_SANS_UMI.out.zip
