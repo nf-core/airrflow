@@ -180,13 +180,21 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
             "Tools used in the workflow included:",
+            "pRESTO (Vander Heiden et al. 2014),",
+            "IgBLAST (Ye et al. 2013),",
+            "Alakazam (Stern et al. 2014),",
+            "Shazam (Gupta et al. 2015),",
+            "Change-O (Gupta et al. 2015),",
+            "SCOPer (Gupta et al. 2017, Nouri et al. 2018),",
+            "Dowser (Hoehn et al. 2022),",
+            "IgPhyML (Hoehn et al. 2019)",
             "FastQC (Andrews 2010),",
             "MultiQC (Ewels et al. 2016)",
+            "Fastp (Chen et al. 2018),",
             "."
         ].join(' ').trim()
 
@@ -194,12 +202,22 @@ def toolCitationText() {
 }
 
 def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
+    // Add bibliographic entries to this list.
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
             "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+            "<li>Chen S, Zhou Y, Chen Y, Gu J. (2018) fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics, 34(17), i884-i890. doi: 10.1093/bioinformatics/bty560</li>",
+            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047-3048. doi: /10.1093/bioinformatics/btw354.</li>",
+            "<li>Gupta NT, Vander Heiden JA, Uduman M, Gadala-Maria D, Yaari G, Kleinstein SH. (2015) Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data. Bioinformatics, 31(20), 3356-3358. doi: 10.1093/bioinformatics/btv359.</li>",
+            "<li>Gupta NT, Adams K, Briggs A, Timberlake S, Vigneault F, Kleinstein S (2017). “Hierarchical clustering can identify B cell clones with high confidence in Ig repertoire sequencing data.” The Journal of Immunology, 2489-2499.</li>",
+            "<li>Hoehn KB, Van der Heiden JA, Zhou JQ, Lunter, G, Pybus, OG, & Kleinstein SH. (2019) Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination. PNAS, 116(45) 22664-22672. https://www.pnas.org/doi/10.1073/pnas.1906020116</li>",
+            "<li>Hoehn K, Pybus O, Kleinstein S (2022). “Phylogenetic analysis of migration, differentiation, and class switching in B cells.” PLoS Computational Biology. https://doi.org/10.1371/journal.pcbi.1009885.</li>"
+            "<li>Nouri N, Kleinstein S (2018). “A spectral clustering-based method for identifying clones from high-throughput B cell repertoire sequencing data.” Bioinformatics, i341-i349.</li>",
+            "<li>Stern JN, Yaari G, Vander Heiden JA, Church G, Donahue WF, Hintzen RQ, ... O'Connor, K.C. . (2014) B cells populating the multiple sclerosis brain mature in the draining cervical lymph nodes. Sci Transl Med, 6(248), 248ra107. doi: 10.1126/scitranslmed.aaa3822.</li>",
+            "<li>Vander Heiden, J. A., Yaari, G., Uduman, M., Stern, J. N. H., O'Connor, K. C., Hafler, D. A., … Kleinstein, S. H. (2014). pRESTO: a toolkit for processing high-throughput sequencing raw reads of lymphocyte receptor repertoires. Bioinformatics, 30(13), 1930–1932.</li>",
+            "<li>Ye J, Ma N, Madden TL, Ostell JM. (2013). IgBLAST: an immunoglobulin variable domain sequence analysis tool. Nucleic Acids Res. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3692102/.</li>"
+
         ].join(' ').trim()
 
     return reference_text
@@ -219,9 +237,9 @@ def methodsDescriptionText(mqc_methods_yaml) {
     meta["tool_citations"] = ""
     meta["tool_bibliography"] = ""
 
-    // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
-    // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
-    // meta["tool_bibliography"] = toolBibliographyText()
+    // Tool citations
+    meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+    meta["tool_bibliography"] = toolBibliographyText()
 
 
     def methods_text = mqc_methods_yaml.text
