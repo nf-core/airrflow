@@ -1,5 +1,11 @@
 # nf-core/airrflow: Citations
 
+## [nf-core/airrflow](https://doi.org/10.1101/2024.01.18.576147)
+
+> **nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework**
+>
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole Jensen, David Ladd, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
+
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
 > Ewels PA, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. The nf-core framework for community-curated bioinformatics pipelines. Nat Biotechnol. 2020 Mar;38(3):276-278. doi: 10.1038/s41587-020-0439-x. PubMed PMID: 32055031.
@@ -46,13 +52,13 @@
 
   > Hoehn K, Van der Heiden J, Zhou J, Lunter G, Pybus O, Kleinstein S (2019). “Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination.” PNAS.
 
-- [TIgGER](https://doi.org/10.1073/pnas.1417683112)
+- [IgBLAST](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3692102/)
 
-  > Gadala-maria, D., Yaari, G., Uduman, M., & Kleinstein, S. H. (2015). Automated analysis of high-throughput B-cell sequencing data reveals a high frequency of novel immunoglobulin V gene segment alleles. Proceedings of the National Academy of Sciences, 112(8), 1–9.
+  > Ye J, Ma N, Madden TL, Ostell JM. (2013). IgBLAST: an immunoglobulin variable domain sequence analysis tool. Nucleic Acids Res.
 
 - [Fastp](https://doi.org/10.1093/bioinformatics/bty560)
 
-  > Shifu Chen, Yanqing Zhou, Yaru Chen, Jia Gu, fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics. 2018 Sept 1; 34(17):i884–i890. doi: 10.1093/bioinformatics/bty560.
+  > Shifu Chen, Yanqing Zhou, Yaru Chen, Jia Gu, fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics. 2018 Sept 1; 34(17), i884–i890. doi: 10.1093/bioinformatics/bty560.
 
 - [pRESTO](https://doi.org/10.1093/bioinformatics/btu138)
 
@@ -60,7 +66,7 @@
 
 - [SHazaM, Change-O](https://doi.org/10.1093/bioinformatics/btv359)
 
-  > Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data: Table 1. Bioinformatics, 31(20), 3356–3358.
+  > Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data. Bioinformatics, 31(20), 3356–3358.
 
 - [Alakazam](https://doi.org/10.1126/scitranslmed.3008879)
 
@@ -80,11 +86,7 @@
 
 - [IgPhyML](https://www.pnas.org/doi/10.1073/pnas.1906020116)
 
-  > Hoehn K, Van der Heiden J, Zhou J, Lunter G, Pybus O, Kleinstein S (2019). “Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination.” PNAS.
-
-- [TIgGER](https://doi.org/10.1073/pnas.1417683112)
-
-  > Gadala-maria, D., Yaari, G., Uduman, M., & Kleinstein, S. H. (2015). Automated analysis of high-throughput B-cell sequencing data reveals a high frequency of novel immunoglobulin V gene segment alleles. Proceedings of the National Academy of Sciences, 112(8), 1–9.
+  > Hoehn K, Van der Heiden J, Zhou J, Lunter G, Pybus O, Kleinstein S (2019). “Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination. PNAS, 116(45) 22664-22672."
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 

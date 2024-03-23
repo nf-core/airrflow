@@ -1,14 +1,19 @@
-# ![nf-core/airrflow](docs/images/nf-core-airrflow_logo_light.png#gh-light-mode-only) ![nf-core/airrflow](docs/images/nf-core-airrflow_logo_dark.png#gh-dark-mode-only)
-
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/nf-core-airrflow_logo_dark.png">
+    <img alt="nf-core/airrflow" src="docs/images/nf-core-airrflow_logo_light.png">
+  </picture>
+</h1>
 [![GitHub Actions CI Status](https://github.com/nf-core/airrflow/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+CI%22)
 [![GitHub Actions Linting Status](https://github.com/nf-core/airrflow/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/airrflow/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
+[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/airrflow)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/airrflow)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23airrflow-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/airrflow)
 [![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
 [![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
@@ -16,7 +21,7 @@
 
 ## Introduction
 
-**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, or assembled reads (bulk or single cell).
+**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, single-cell VDJ sequencing using the 10xGenomics libraries, or assembled reads (bulk or single-cell).
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -30,18 +35,25 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
-1. QC and sequence assembly (bulk only)
+1. QC and sequence assembly
 
-- Raw read quality control, adapter trimming and clipping (`Fastp`).
-- Filter sequences by base quality (`pRESTO FilterSeq`).
-- Mask amplicon primers (`pRESTO MaskPrimers`).
-- Pair read mates (`pRESTO PairSeq`).
-- For UMI-based sequencing:
-  - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
-  - Build consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
-- Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
-- Remove and annotate read duplicates (`pRESTO CollapseSeq`).
-- Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
+- Bulk
+  - Raw read quality control, adapter trimming and clipping (`Fastp`).
+  - Filter sequences by base quality (`pRESTO FilterSeq`).
+  - Mask amplicon primers (`pRESTO MaskPrimers`).
+  - Pair read mates (`pRESTO PairSeq`).
+  - For UMI-based sequencing:
+    - Cluster sequences according to similarity (optional for insufficient UMI diversity) (`pRESTO ClusterSets`).
+    - Build consensus of sequences with the same UMI barcode (`pRESTO BuildConsensus`).
+  - Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
+  - Remove and annotate read duplicates (`pRESTO CollapseSeq`).
+  - Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
+- single cell
+  - cellranger vdj
+    - Assemble contigs
+    - Annotate contigs
+    - Call cells
+    - Generate clonotypes
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
@@ -77,11 +89,8 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 ## Usage
 
-:::note
-If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-with `-profile test` before running the workflow on actual data.
-:::
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, ensure that the pipeline tests run on your infrastructure:
 
@@ -102,7 +111,7 @@ A typical command to run the pipeline from **bulk raw fastq files** is:
 
 ```bash
 nextflow run nf-core/airrflow \
--r 3.2.0 \
+-r <release> \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --mode fastq \
 --input input_samplesheet.tsv \
@@ -114,11 +123,23 @@ nextflow run nf-core/airrflow \
 --outdir ./results
 ```
 
+A typical command to run the pipeline from **single cell raw fastq files** (10X genomics) is:
+
+```bash
+nextflow run nf-core/airrflow -r dev \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method sc_10x_genomics \
+--reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
+--outdir ./results
+```
+
 A typical command to run the pipeline from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
 
 ```bash
 nextflow run nf-core/airrflow \
--r 3.2.0 \
+-r <release> \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --input input_samplesheet.tsv \
 --mode assembled \
@@ -143,11 +164,17 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/airrflow was written by [Gisela Gabernet](https://github.com/ggabernet), [Susanna Marquez](https://github.com/ssnn-airr), [Alexander Peltzer](@apeltzer) and [Simon Heumos](@subwaystation).
+nf-core/airrflow was originally written by:
 
-Further contributors to the pipeline are:
+- [Gisela Gabernet](https://github.com/ggabernet)
+- [Susanna Marquez](https://github.com/ssnn-airr)
+- [Alexander Peltzer](@apeltzer)
+- [Simon Heumos](@subwaystation)
 
-- [@dladd](https://github.com/dladd)
+We thank the following people for their extensive assistance in the development of the pipeline:
+
+- [David Ladd](https://github.com/dladd)
+- [Friederike Hanssen](https://github.com/ggabernet/friederikehanssen)
 
 ## Contributions and Support
 
@@ -157,9 +184,17 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
+If you use nf-core/airrflow for your analysis, please cite the preprint as follows:
 
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+> **nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework**
+>
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole Jensen, David Ladd, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein.
+>
+> BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
+
+The specific pipeline version using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
+
+Please also cite all the tools that are being used by the pipeline. An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 You can cite the `nf-core` publication as follows:
 

@@ -23,7 +23,7 @@ workflow BULK_QC_AND_FILTER {
             ch_imgt.collect()
         )
         ch_logs = ch_logs.mix(CHANGEO_CREATEGERMLINES.out.logs)
-        ch_versions = ch_versions.mix(CHANGEO_CREATEGERMLINES.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(CHANGEO_CREATEGERMLINES.out.versions)
 
         // Remove chimera
         REMOVE_CHIMERIC(
@@ -31,7 +31,7 @@ workflow BULK_QC_AND_FILTER {
             ch_imgt.collect()
         )
         ch_logs = ch_logs.mix(REMOVE_CHIMERIC.out.logs)
-        ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions)
         ch_bulk_chimeric_pass = REMOVE_CHIMERIC.out.tab
 
 
@@ -51,14 +51,14 @@ workflow BULK_QC_AND_FILTER {
             .collect()
         )
         ch_logs = ch_logs.mix(DETECT_CONTAMINATION.out.logs)
-        ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(DETECT_CONTAMINATION.out.versions)
     }
 
     COLLAPSE_DUPLICATES(
         ch_bulk_chimeric_pass
     )
 
-    ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES.out.versions)
     ch_logs = ch_logs.mix(COLLAPSE_DUPLICATES.out.logs)
 
     emit:

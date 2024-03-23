@@ -30,7 +30,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     main:
     ch_versions = Channel.empty()
 
-    if (params.mode == "fastq") {
+    if (params.mode == "fastq" && !params.library_generation_method in ["sc_10x_genomics"]) {
         PARSE_LOGS(
             ch_presto_filterseq_logs,
             ch_presto_maskprimers_logs,
@@ -71,7 +71,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     AIRRFLOW_REPORT(
         ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
-        REPORT_FILE_SIZE.out.table.ifEmpty([]),
+        REPORT_FILE_SIZE.out.table.collect().ifEmpty([]),
         ch_report_rmd,
         ch_report_css,
         ch_report_logo

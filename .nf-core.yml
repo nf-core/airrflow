@@ -3,4 +3,12 @@ lint:
     - conf/igenomes.config
   multiqc_config:
     - report_comment
+  nextflow_config:
+    - config_defaults:
+        - params.miairr
+        - params.report_rmd
+        - params.report_css
+        - params.report_logo
+        - params.report_logo_img
+        - params.config_profile_url
 repository_type: pipeline

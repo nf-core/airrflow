@@ -10,7 +10,8 @@
             "sample_id": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces."
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id"]
             },
             "subject_id": {
                 "type": "string",

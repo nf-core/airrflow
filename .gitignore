@@ -11,3 +11,5 @@ package-lock.json
 .idea/
 nf-params.json
 .vscode/
+tests/
+test_flow/
