@@ -23,7 +23,7 @@ workflow RNASEQ_INPUT {
 
     ch_reads = FASTQ_INPUT_CHECK.out.reads
 
-    // validate library generation method parameter
+    // validate library generation method parameteç
     if (params.vprimers) {
         error "The TRUST4 library generation method does not require V-region primers, please provide a reference file instead or select another library method option."
     } else if (params.race_linker) {
@@ -41,9 +41,6 @@ workflow RNASEQ_INPUT {
     }
     if (!params.coord_fasta) {
         error "Please provide a reference file for the TRUST4 library generation method."
-    }
-    if (!params.read_format) {
-        error "Please provide a a read-format as seen in the TRUST4 docs for the TRUST4 library generation method."
     }
 
 

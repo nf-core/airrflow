@@ -99,8 +99,6 @@ def create_fastq_channels(LinkedHashMap col) {
         }
         else if (params.umi_position == "") {
             meta.umi_position = null 
-        } else {
-            error "ERROR: UMI read must be specified as either R1 or R2!"
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     } else {
