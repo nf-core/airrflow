@@ -7,14 +7,14 @@ process FILTER_QUALITY {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:3.2.0':
-        'docker.io/immcantation/airrflow:3.2.0' }"
+        'docker.io/immcantation/airrflow:3.3.0':
+        'docker.io/immcantation/airrflow:3.3.0' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*quality-pass.tsv"), optional:true, emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*quality-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "versions.yml", emit: versions
 

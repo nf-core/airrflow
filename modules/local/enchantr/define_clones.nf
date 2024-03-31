@@ -25,8 +25,8 @@ process DEFINE_CLONES {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:3.2.0':
-        'docker.io/immcantation/airrflow:3.2.0' }"
+        'docker.io/immcantation/airrflow:3.3.0':
+        'docker.io/immcantation/airrflow:3.3.0' }"
 
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
@@ -56,11 +56,13 @@ process DEFINE_CLONES {
                                         'imgt_db'='${imgt_base}', \\
                                         'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
-                                        'outputby'='${params.cloneby}',
+                                        'outputby'='${params.cloneby}', \\
                                         'force'=FALSE, \\
                                         'threshold'=${thr}, \\
-                                        'singlecell'='${params.singlecell}','outdir'=getwd(), \\
-                                        'nproc'=${task.cpus},\\
+                                        'singlecell'='${params.singlecell}', \\
+                                        'outdir'=getwd(), \\
+                                        'isotype_column'='${params.isotype_column}', \\
+                                        'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
     cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr

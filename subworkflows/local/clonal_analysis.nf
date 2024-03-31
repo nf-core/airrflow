@@ -105,6 +105,7 @@ workflow CLONAL_ANALYSIS {
             ch_imgt.collect(),
             ch_all_repertoires_cloned_samplesheet
         )
+        ch_versions = DEFINE_CLONES_REPORT.out.versions
     }
 
     // prepare ch for dowser lineages

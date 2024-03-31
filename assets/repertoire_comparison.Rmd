@@ -16,7 +16,7 @@ output:
 
 
 ---
-title: "Repertoire analysis"
+title: "Airrflow results summary report"
 subtitle: "Interactive summary report produced by the nf-core/airrflow pipeline"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
@@ -47,6 +47,19 @@ dir.create(seq_dir)
 datadir <- "."
 
 ```
+
+# AIRR repertoire results
+
+The repertoires per subject after clonal analysis can be found in the
+subdirectory [clonal_analysis/define_clones/all_reps_clone_report/repertoires](clonal_analysis/define_clones/all_reps_clone_report/repertoires).
+
+Additionally, html reports summarizing the results are provided:
+
+- Report summarizing the clonal threshold found per each specified cloning group [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
+- Report summarizing the repertoire properties for all the samples [clonal_analysis/define_clones/all_reps_clone_report/index.html](clonal_analysis/define_clones/all_reps_clone_report/index.html).
+- Report summarizing the lineage trees for each specified cloning group [clonal_analysis/dowser_lineages/](clonal_analysis/dowser_lineages/).
+
+A full description of the pipeline results can be found on the Output section of the [nf-core/airrflow website](https://nf-co.re/airrflow).
 
 # Number of sequences
 
@@ -85,7 +98,7 @@ tryCatch( {
 )
 ```
 
-## Filtering and clonal analysis steps
+## V(D)J gene assignment and QC
 
 Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
 The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
@@ -97,11 +110,11 @@ if (any(is.na(tab_seqs_assembled$sample_id))) {
   tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$file_0, function(x) unlist(strsplit(as.character(x), "_"))[1])
 }
 
-dat <- tidyr::pivot_wider(tab_seqs_assembled,
-                          id_cols=sample_id,
-                          names_from=task,
-                          values_from=to_num_seqs)
-dat <- dat %>% dplyr::relocate(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+dat <- tab_seqs_assembled %>%
+        tidyr::pivot_wider(id_cols=sample_id,
+                            names_from=task,
+                            values_from=to_num_seqs)
+dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
 
@@ -112,12 +125,17 @@ write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t"
 
 ```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
 
-tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes-igblast", "MakeDB-igblast",
-                                                                    "FilterQuality",
-                                                          "ParseDb-split", "FilterJunctionMod3", "AddMetadata",
-                                                          "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
-                                                          "ClonePass"))
-tab_seqs_assembled <- tab_seqs_assembled[!grepl("productive-F",tab_seqs_assembled$to_name),]
+tab_seqs_assembled <- tab_seqs_assembled %>%
+        filter( !grepl("-fail.tsv", to_name) ) %>%
+        filter( !grepl("productive-F.tsv", to_name) ) %>%
+        dplyr::filter( task %in% c("sample_id","AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
+                                "RemoveChimeric","CollapseDuplicates","ClonePass"))
+
+tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                                        "ParseDb-split", "FilterJunctionMod3", "AddMetadata", "SingleCellQC",
+                                                        "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
+                                                        "ClonePass"))
 
 seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
                     aes(x=task, y=to_num_seqs, group=sample_id)) +
