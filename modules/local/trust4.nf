@@ -13,14 +13,16 @@ process TRUST4 {
     tuple val(meta3), path(vdj_reference)
     
     output:
-    tuple val(meta), path("*.tsv")              , emit: tsv
-    tuple val(meta), path("*_airr.tsv")         , emit: airr_files
-    tuple val(meta), path("${meta.id}_airr.tsv") , emit: airr_tsv
-    tuple val(meta), path("*_report.tsv")       , emit: report_tsv
-    tuple val(meta), path("*.fa")               , emit: fasta
-    tuple val(meta), path("*.out")              , emit: out
-    tuple val(meta), path("*.fq")               , emit: fq
-    path "versions.yml"                         , emit: versions
+    tuple val(meta), path("*.tsv")                          , emit: tsv
+    tuple val(meta), path("*_airr.tsv")                     , emit: airr_files
+    tuple val(meta), path("${meta.id}_airr.tsv")            , emit: airr_tsv
+    tuple val(meta), path("${meta.id}_barcode_airr.tsv")    , emit: barcode_airr
+    tuple val(meta), path("*_report.tsv")                   , emit: report_tsv
+    tuple val(meta), path("*.fa")                           , emit: fasta
+    tuple val(meta), path("*.out")                          , emit: out
+    tuple val(meta), path("*.fq")                           , emit: fq
+    tuple val(meta), path("**")                             , emit: outs
+    path "versions.yml"                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
