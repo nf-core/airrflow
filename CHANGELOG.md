@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.3.1] - 2024-04-11 Confringo hotfix
 
+### `Added`
+
+- [#319](https://github.com/nf-core/airrflow/pull/319) Added AIRR compliance badge
+
+### `Fixed`
+
 - [#319](https://github.com/nf-core/airrflow/pull/319) Fix test full profile and nebnext_umi_tcr profile.
 
 ## [3.3.0] - 2024-03-31 Confringo
