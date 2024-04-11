@@ -64,7 +64,7 @@ workflow RNASEQ_INPUT {
     )
 
     ch_trust4_out = TRUST4.out.out
-    //ch_trust4_airr = TRUST4.out.airr_tsv
+    // ch_trust4_airr = TRUST4.out.airr_tsv
     ch_trust4_airr = TRUST4.out.barcode_airr
 
     ch_trust4_airr.view()
