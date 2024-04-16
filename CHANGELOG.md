@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - [#319](https://github.com/nf-core/airrflow/pull/319) Fix test full profile and nebnext_umi_tcr profile.
+- [#321](https://github.com/nf-core/airrflow/pull/321) Label Dowser tips by isotype instead of c_call by default.
 
 ## [3.3.0] - 2024-03-31 Confringo
 
