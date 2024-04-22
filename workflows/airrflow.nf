@@ -119,15 +119,15 @@ workflow AIRRFLOW {
                 ch_fastp_json                           = SEQUENCE_ASSEMBLY.out.fastp_reads_json
                 ch_fastqc_postassembly_mqc              = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
                 ch_validated_samplesheet                = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
-                ch_presto_filterseq_logs                = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs
-                ch_presto_maskprimers_logs              = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs
-                ch_presto_pairseq_logs                  = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs
-                ch_presto_clustersets_logs              = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs
-                ch_presto_buildconsensus_logs           = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs
-                ch_presto_postconsensus_pairseq_logs    = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs
-                ch_presto_assemblepairs_logs            = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs
-                ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs
-                ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs
+                ch_presto_filterseq_logs                = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs.ifEmpty([])
+                ch_presto_maskprimers_logs              = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs.ifEmpty([])
+                ch_presto_pairseq_logs                  = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs.ifEmpty([])
+                ch_presto_clustersets_logs              = SEQUENCE_ASSEMBLY.out.presto_clustersets_logs.ifEmpty([])
+                ch_presto_buildconsensus_logs           = SEQUENCE_ASSEMBLY.out.presto_buildconsensus_logs.ifEmpty([])
+                ch_presto_postconsensus_pairseq_logs    = SEQUENCE_ASSEMBLY.out.presto_postconsensus_pairseq_logs.ifEmpty([])
+                ch_presto_assemblepairs_logs            = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs.ifEmpty([])
+                ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.ifEmpty([])
+                ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.ifEmpty([])
             }
 
         } else if ( params.mode == "assembled" ) {
