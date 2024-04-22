@@ -114,7 +114,7 @@ workflow CLONAL_ANALYSIS {
         .map { it -> [ [id: "${it.baseName}".replaceFirst("__clone-pass", "")], it ] }
         .set{ch_repertoires_cloned}
 
-    if (!params.skip_lineage){
+    if (params.lineage_trees){
         DOWSER_LINEAGES(
             ch_repertoires_cloned
         )
