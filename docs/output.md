@@ -245,7 +245,7 @@ generate a `.fasta` file from the rearrangement table.
 
 </details>
 
-Assign genes with Igblast, using the IMGT database is performed by the [AssignGenes](https://changeo.readthedocs.io/en/stable/examples/igblast.html#running-igblast) command of the Change-O tool from the Immcantation Framework.
+Assign genes with Igblast, using the a germline reference is performed by the [AssignGenes](https://changeo.readthedocs.io/en/stable/examples/igblast.html#running-igblast) command of the Change-O tool from the Immcantation Framework.
 
 ### Make database from assigned genes
 
@@ -482,7 +482,7 @@ Parsing the logs from the previous processes. Summary of the number of sequences
 
 Copy of the downloaded IMGT database by the process `fetch_databases`, used for the gene assignment step.
 
-If databases are provided with `--imgtdb_base` and `--igblast_base` this folder will not be present.
+If databases are provided with `--reference_fasta` and `--reference_igblast` this folder will not be present.
 
 ## MultiQC
 

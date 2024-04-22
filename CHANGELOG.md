@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `--skip_lineage_trees` is now deprecated in favor of `--lineage_trees`. Lineage trees are skipped by default.
 - `--igphyml` parameter is deprecated in favor of `--lineage_tree_exec`. All lineage tree building software part of Dowser are now supported.
+- `--igblast_base` is deprecated in favor of `--reference_igblast`.
+- `--imgtdb_base` is depracated in favor of `--reference_fasta`.
 
 ## [3.3.0] - 2024-03-31 Confringo
 

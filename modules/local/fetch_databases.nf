@@ -10,7 +10,7 @@ process FETCH_DATABASES {
 
     output:
     path("igblast_base"), emit: igblast
-    path("imgtdb_base"), emit: imgt
+    path("imgtdb_base"), emit: reference_fasta
     path "versions.yml" , emit: versions
     path("igblast_base/database/imgt_human_ig_v.ndb"), emit: igblast_human_ig_v
     path("igblast_base/database/imgt_human_ig_d.ndb"), emit: igblast_human_ig_d
