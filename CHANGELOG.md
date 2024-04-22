@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#321](https://github.com/nf-core/airrflow/pull/321) Label Dowser tips by isotype instead of c_call by default.
 - [#322](https://github.com/nf-core/airrflow/pull/322) Use RAxML as the default builder for dowser.
 
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.11      | 0.1.14      |
+
+
 ## [3.3.0] - 2024-03-31 Confringo
 
 ### `Added`

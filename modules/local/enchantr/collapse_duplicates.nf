@@ -8,8 +8,8 @@ process COLLAPSE_DUPLICATES {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:3.3.0':
-        'docker.io/immcantation/airrflow:3.3.0' }"
+        'docker.io/immcantation/airrflow:3.3.1':
+        'docker.io/immcantation/airrflow:3.3.1' }"
 
     input:
     tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
