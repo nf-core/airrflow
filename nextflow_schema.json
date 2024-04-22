@@ -429,11 +429,18 @@
                     "description": "Name of the field used to identify external groups used to identify a clonal threshold.",
                     "fa_icon": "fab fa-pagelines"
                 },
-                "igphyml": {
+                "lineage_tree_builder": {
                     "type": "string",
-                    "default": "/usr/local/share/igphyml/src/igphyml",
-                    "description": "Path to IgPhyml executable.",
-                    "fa_icon": "fas fa-file"
+                    "default": "raxml",
+                    "description": "Lineage tree software to use to build trees within Dowser. If you change the default, also set the `lineage_tree_exec` parameter.",
+                    "enum": ["raxml", "igphyml"],
+                    "fa_icon": "fas fa-pagelines"
+                },
+                "lineage_tree_exec": {
+                    "type": "string",
+                    "default": "/usr/local/bin/raxml-ng",
+                    "description": "Path to lineage tree building executable.",
+                    "fa_icon": "fas fa-pagelines"
                 },
                 "singlecell": {
                     "type": "string",

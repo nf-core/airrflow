@@ -43,7 +43,8 @@ process DOWSER_LINEAGES {
     """
     Rscript -e "enchantr::enchantr_report('dowser_lineage', \\
                                         report_params=list('input'='${tabs}', \\
-                                        'exec'='${params.igphyml}', \\
+                                        'build'='${params.lineage_tree_builder}' \\
+                                        'exec'='${params.lineage_tree_exec}', \\
                                         'outdir'=getwd(), \\
                                         'nproc'=${task.cpus},\\
                                         'log'='${id_name}_dowser_command_log' ${args}))"
