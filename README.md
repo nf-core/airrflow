@@ -81,8 +81,8 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 4. Clonal analysis (bulk and single-cell)
 
 - Find threshold for clone definition (`SHazaM`, `EnchantR`).
-- Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
-- Build lineage trees (`SCOPer`, `IgphyML`, `EnchantR`).
+- Create germlines and define clones, repertoire analysis (`SCOPer`, `EnchantR`).
+- Build lineage trees (`Dowser`, `IgphyML`, `RAxML`, `EnchantR`).
 
 5. Repertoire analysis and reporting
 
