@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | ---------- | ----------- | ----------- |
 | enchantr   | 0.1.11      | 0.1.14      |
 
-
 ## [3.3.0] - 2024-03-31 Confringo
 
 ### `Added`
