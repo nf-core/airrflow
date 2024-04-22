@@ -125,6 +125,16 @@ nextflow run nf-core/airrflow \
 --outdir ./results
 ```
 
+For common **bulk sequencing protocols** we provide pre-set profiles that specify primers, UMI length, etc for common commercially available sequencing protocols. Please check the [Supported protocol profiles](#supported-protocol-profiles) for a full list of available profiles. An example command running the NEBNext UMI protocol profile with docker containers is:
+
+```bash
+nextflow run nf-core/airrflow \
+-profile nebnext_umi,docker \
+--mode fastq \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
 A typical command to run the pipeline from **single cell raw fastq files** (10X genomics) is:
 
 ```bash
