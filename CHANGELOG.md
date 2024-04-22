@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.3.1] - 2024-04-11 Confringo hotfix
+## [4.0] - 2024-04-22 Ascendio
 
 ### `Added`
 
@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | enchantr   | 0.1.11      | 0.1.14      |
+
+### `Deprecated parameters`
+
+- `--skip_lineage_trees` is now deprecated in favor of `--lineage_trees`. Lineage trees are skipped by default.
+- `--igphyml` parameter is deprecated in favor of `--lineage_tree_exec`. All lineage tree building software part of Dowser are now supported.
 
 ## [3.3.0] - 2024-03-31 Confringo
 

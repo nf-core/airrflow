@@ -9,8 +9,8 @@ process REMOVE_CHIMERIC {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:3.3.1':
-        'docker.io/immcantation/airrflow:3.3.1' }"
+        'docker.io/immcantation/airrflow:4.4.0':
+        'docker.io/immcantation/airrflow:4.4.0' }"
 
 
     input:
