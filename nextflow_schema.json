@@ -338,16 +338,16 @@
                     "description": "Save databases so you can use the cache in future runs.",
                     "fa_icon": "fas fa-file-download"
                 },
-                "imgtdb_base": {
+                "reference_fasta": {
                     "type": "string",
-                    "description": "Path to the cached IMGT database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "description": "Path to the germline reference fasta.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
-                "igblast_base": {
+                "reference_igblast": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
                 "fetch_imgt": {
@@ -412,9 +412,9 @@
                     "fa_icon": "fab fa-pagelines",
                     "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
                 },
-                "skip_lineage": {
+                "lineage_trees": {
                     "type": "boolean",
-                    "description": "Skip clonal lineage analysis and lineage tree plotting.",
+                    "description": "Perform clonal lineage tree analysis.",
                     "fa_icon": "fas fa-angle-double-right"
                 },
                 "cloneby": {
@@ -429,11 +429,18 @@
                     "description": "Name of the field used to identify external groups used to identify a clonal threshold.",
                     "fa_icon": "fab fa-pagelines"
                 },
-                "igphyml": {
+                "lineage_tree_builder": {
                     "type": "string",
-                    "default": "/usr/local/share/igphyml/src/igphyml",
-                    "description": "Path to IgPhyml executable.",
-                    "fa_icon": "fas fa-file"
+                    "default": "raxml",
+                    "description": "Lineage tree software to use to build trees within Dowser. If you change the default, also set the `lineage_tree_exec` parameter.",
+                    "enum": ["raxml", "igphyml"],
+                    "fa_icon": "fas fa-pagelines"
+                },
+                "lineage_tree_exec": {
+                    "type": "string",
+                    "default": "/usr/local/bin/raxml-ng",
+                    "description": "Path to lineage tree building executable.",
+                    "fa_icon": "fas fa-pagelines"
                 },
                 "singlecell": {
                     "type": "string",

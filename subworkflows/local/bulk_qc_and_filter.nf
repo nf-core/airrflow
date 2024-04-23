@@ -7,7 +7,7 @@ workflow BULK_QC_AND_FILTER {
 
     take:
     ch_repertoire // tuple [meta, repertoire_tab]
-    ch_imgt
+    ch_reference_fasta
 
     main:
 
@@ -20,7 +20,7 @@ workflow BULK_QC_AND_FILTER {
         // Create germlines (not --cloned)
         CHANGEO_CREATEGERMLINES(
             ch_repertoire,
-            ch_imgt.collect()
+            ch_reference_fasta.collect()
         )
         ch_logs = ch_logs.mix(CHANGEO_CREATEGERMLINES.out.logs)
         ch_versions = ch_versions.mix(CHANGEO_CREATEGERMLINES.out.versions)
@@ -28,7 +28,7 @@ workflow BULK_QC_AND_FILTER {
         // Remove chimera
         REMOVE_CHIMERIC(
             CHANGEO_CREATEGERMLINES.out.tab,
-            ch_imgt.collect()
+            ch_reference_fasta.collect()
         )
         ch_logs = ch_logs.mix(REMOVE_CHIMERIC.out.logs)
         ch_versions = ch_versions.mix(REMOVE_CHIMERIC.out.versions)
