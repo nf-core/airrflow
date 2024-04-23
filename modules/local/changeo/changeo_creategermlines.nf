@@ -11,7 +11,7 @@ process CHANGEO_CREATEGERMLINES {
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
-    path(imgt_base) // imgt db
+    path(reference_fasta) // reference fasta
 
     output:
     tuple val(meta), path("*germ-pass.tsv"), emit: tab
@@ -22,7 +22,7 @@ process CHANGEO_CREATEGERMLINES {
     def args = task.ext.args ?: ''
     """
     CreateGermlines.py -d ${tab} \\
-    -r ${imgt_base}/${meta.species}/vdj/ \\
+    -r ${reference_fasta}/${meta.species}/vdj/ \\
     -g dmask --format airr \\
     --log ${meta.id}.log --outname ${meta.id} $args > ${meta.id}_create-germlines_command_log.txt
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL

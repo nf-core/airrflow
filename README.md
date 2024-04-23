@@ -59,7 +59,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
-- Assign gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Assign gene segments with `IgBlast` using a germline reference (`Change-O AssignGenes`).
 - Annotate alignments in AIRR format (`Change-O MakeDB`)
 - Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
 - Filter productive sequences (`Change-O ParseDB split`)

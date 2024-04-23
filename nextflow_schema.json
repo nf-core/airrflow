@@ -338,16 +338,16 @@
                     "description": "Save databases so you can use the cache in future runs.",
                     "fa_icon": "fas fa-file-download"
                 },
-                "imgtdb_base": {
+                "reference_fasta": {
                     "type": "string",
-                    "description": "Path to the cached IMGT database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "description": "Path to the germline reference fasta.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
-                "igblast_base": {
+                "reference_igblast": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
                 "fetch_imgt": {

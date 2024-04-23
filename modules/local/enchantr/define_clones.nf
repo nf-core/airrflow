@@ -31,7 +31,7 @@ process DEFINE_CLONES {
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     val threshold
-    path imgt_base
+    path reference_fasta
     path repertoires_samplesheet
 
     output:
@@ -53,7 +53,7 @@ process DEFINE_CLONES {
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${input}', \\
-                                        'imgt_db'='${imgt_base}', \\
+                                        'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
                                         'outputby'='${params.cloneby}', \\

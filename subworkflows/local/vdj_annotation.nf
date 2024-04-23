@@ -13,7 +13,7 @@ workflow VDJ_ANNOTATION {
     ch_fasta // [meta, fasta]
     ch_validated_samplesheet
     ch_igblast
-    ch_imgt
+    ch_reference_fasta
 
     main:
     ch_versions = Channel.empty()
@@ -30,7 +30,7 @@ workflow VDJ_ANNOTATION {
     CHANGEO_MAKEDB (
         CHANGEO_ASSIGNGENES.out.fasta,
         CHANGEO_ASSIGNGENES.out.blast,
-        ch_imgt.collect()
+        ch_reference_fasta.collect()
     )
     ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
     ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions)
@@ -78,8 +78,8 @@ workflow VDJ_ANNOTATION {
     emit:
     versions = ch_versions
     repertoire = ADD_META_TO_TAB.out.tab
-    imgt = ch_imgt
-    igblast = ch_igblast
+    reference_fasta = ch_reference_fasta
+    reference_igblast = ch_igblast
     changeo_makedb_logs = ch_assignment_logs
     logs = ch_logs
 

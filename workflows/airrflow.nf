@@ -175,7 +175,7 @@ workflow AIRRFLOW {
             ch_fasta,
             ch_validated_samplesheet.collect(),
             DATABASES.out.igblast.collect(),
-            DATABASES.out.imgt.collect()
+            DATABASES.out.reference_fasta.collect()
         )
         ch_versions = ch_versions.mix( VDJ_ANNOTATION.out.versions )
 
@@ -192,7 +192,7 @@ workflow AIRRFLOW {
 
         BULK_QC_AND_FILTER(
             ch_repertoire_by_processing.bulk,
-            VDJ_ANNOTATION.out.imgt.collect()
+            VDJ_ANNOTATION.out.reference_fasta.collect()
         )
         ch_versions = ch_versions.mix( BULK_QC_AND_FILTER.out.versions )
 
@@ -215,7 +215,7 @@ workflow AIRRFLOW {
         // Clonal analysis
         CLONAL_ANALYSIS(
             ch_repertoires_for_clones,
-            VDJ_ANNOTATION.out.imgt.collect(),
+            VDJ_ANNOTATION.out.reference_fasta.collect(),
             ch_report_logo_img.collect().ifEmpty([])
         )
         ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
