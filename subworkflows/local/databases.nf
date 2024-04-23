@@ -1,6 +1,6 @@
 include { FETCH_DATABASES } from '../../modules/local/fetch_databases'
 include { UNZIP_DB as UNZIP_IGBLAST } from '../../modules/local/unzip_db'
-include { UNZIP_DB as UNZIP_FASTA } from '../../modules/local/unzip_db'
+include { UNZIP_DB as UNZIP_REFERENCE_FASTA } from '../../modules/local/unzip_db'
 
 workflow DATABASES {
 
@@ -30,9 +30,9 @@ workflow DATABASES {
             Channel.fromPath("${params.reference_fasta}")
                     .ifEmpty{ error "IMGTDB not found: ${params.reference_fasta}" }
                     .set { ch_reference_fasta_zipped }
-            UNZIP_FASTA( ch_reference_fasta_zipped.collect() )
-            ch_reference_fasta = UNZIP_FASTA.out.unzipped
-            ch_versions = ch_versions.mix(UNZIP_FASTA.out.versions)
+            UNZIP_REFERENCE_FASTA( ch_reference_fasta_zipped.collect() )
+            ch_reference_fasta = UNZIP_REFERENCE_FASTA.out.unzipped
+            ch_versions = ch_versions.mix(UNZIP_REFERENCE_FASTA.out.versions)
         } else {
             Channel.fromPath("${params.reference_fasta}")
                 .ifEmpty { error "IMGT DB not found: ${params.reference_fasta}" }
