@@ -5,7 +5,7 @@ include { CHANGEO_PARSEDB_SPLIT } from '../../modules/local/changeo/changeo_pars
 include { FILTER_QUALITY  } from '../../modules/local/reveal/filter_quality'
 include { FILTER_JUNCTION_MOD3  } from '../../modules/local/reveal/filter_junction_mod3'
 include { ADD_META_TO_TAB  } from '../../modules/local/reveal/add_meta_to_tab'
-
+include { ADD_AMINOACIDPROPERTIES_TO_TAB } from '../../modules/local/reveal/add_aminoAcidProperties_to_tab'
 
 workflow VDJ_ANNOTATION {
 
@@ -73,11 +73,17 @@ workflow VDJ_ANNOTATION {
     )
     ch_logs = ch_logs.mix(ADD_META_TO_TAB.out.logs)
     ch_versions = ch_versions.mix(ADD_META_TO_TAB.out.versions)
+    ch_meta = ADD_META_TO_TAB.out.tab
 
+    ADD_AMINOACIDPROPERTIES_TO_TAB(
+        ch_meta
+    )
+    ch_logs = ch_logs.mix(ADD_AMINOACIDPROPERTIES_TO_TAB.out.logs)
+    ch_versions = ch_versions.mix(ADD_AMINOACIDPROPERTIES_TO_TAB.out.versions)
 
     emit:
     versions = ch_versions
-    repertoire = ADD_META_TO_TAB.out.tab
+    repertoire = repertoire = ADD_AMINOACIDPROPERTIES_TO_TAB.out.tab
     reference_fasta = ch_reference_fasta
     reference_igblast = ch_igblast
     changeo_makedb_logs = ch_assignment_logs
