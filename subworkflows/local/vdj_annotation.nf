@@ -83,7 +83,7 @@ workflow VDJ_ANNOTATION {
 
     emit:
     versions = ch_versions
-    repertoire = repertoire = ADD_AMINOACIDPROPERTIES_TO_TAB.out.tab
+    repertoire = ADD_AMINOACIDPROPERTIES_TO_TAB.out.tab
     reference_fasta = ch_reference_fasta
     reference_igblast = ch_igblast
     changeo_makedb_logs = ch_assignment_logs
