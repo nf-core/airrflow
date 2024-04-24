@@ -22,7 +22,7 @@ process ADD_AMINOACIDPROPERTIES_TO_TAB {
 
     script:
     """
-    add_aminoAcidProperties.R --repertoire ${tab} --outname ${meta.id} > ${meta.id}_add-aap_command_log.txt
+    add_aminoAcidProperties.R --repertoire ${tab} --outname ${meta.id}_aap-pass.tsv > ${meta.id}_add-aap_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
