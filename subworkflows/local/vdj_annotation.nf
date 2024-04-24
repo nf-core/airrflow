@@ -77,7 +77,7 @@ workflow VDJ_ANNOTATION {
     ADD_AMINOACIDPROPERTIES_TO_TAB(
         ADD_META_TO_TAB.out.tab
     )
-    ch_logs = ch_logs.mix(ADD_AMINOACIDPROPERTIES_TO_TAB.out.logs)
+
     ch_versions = ch_versions.mix(ADD_AMINOACIDPROPERTIES_TO_TAB.out.versions)
 
     emit:
