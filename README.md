@@ -19,6 +19,7 @@
 [![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
 [![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![AIRR compliant](https://img.shields.io/static/v1?label=AIRR-C%20sw-tools%20v1&message=compliant&color=008AFF&labelColor=000000&style=plastic)](https://docs.airr-community.org/en/stable/swtools/airr_swtools_standard.html)
 
 ## Introduction
 
@@ -32,7 +33,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documentation](https://nf-co.re/airrflow/usage) for more details on the supported protocols.
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documentation](https://nf-co.re/airrflow/usage) for more details on the supported protocols. The pipeline has been certified as [AIRR compliant](https://docs.airr-community.org/en/stable/swtools/airr_swtools_compliant.html) by the AIRR community, which means that it is compatible with downstream analysis tools also supporting this format.
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
@@ -58,7 +59,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 
 2. V(D)J annotation and filtering (bulk and single-cell)
 
-- Assign gene segments with `IgBlast` using the IMGT database (`Change-O AssignGenes`).
+- Assign gene segments with `IgBlast` using a germline reference (`Change-O AssignGenes`).
 - Annotate alignments in AIRR format (`Change-O MakeDB`)
 - Filter by alignment quality (locus matching v_call chain, min 200 informative positions, max 10% N nucleotides)
 - Filter productive sequences (`Change-O ParseDB split`)
@@ -80,8 +81,8 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 4. Clonal analysis (bulk and single-cell)
 
 - Find threshold for clone definition (`SHazaM`, `EnchantR`).
-- Create germlines and define clones, repertoire analysis (`Change-O`, `EnchantR`).
-- Build lineage trees (`SCOPer`, `IgphyML`, `EnchantR`).
+- Create germlines and define clones, repertoire analysis (`SCOPer`, `EnchantR`).
+- Build lineage trees (`Dowser`, `IgphyML`, `RAxML`, `EnchantR`).
 
 5. Repertoire analysis and reporting
 
@@ -122,6 +123,16 @@ nextflow run nf-core/airrflow \
 --umi_length 12 \
 --umi_position R1 \
 --outdir ./results
+```
+
+For common **bulk sequencing protocols** we provide pre-set profiles that specify primers, UMI length, etc for common commercially available sequencing protocols. Please check the [Supported protocol profiles](#supported-protocol-profiles) for a full list of available profiles. An example command running the NEBNext UMI protocol profile with docker containers is:
+
+```bash
+nextflow run nf-core/airrflow \
+-profile nebnext_umi,docker \
+--mode fastq \
+--input input_samplesheet.tsv \
+--outdir results
 ```
 
 A typical command to run the pipeline from **single cell raw fastq files** (10X genomics) is:

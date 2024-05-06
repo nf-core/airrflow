@@ -32,41 +32,9 @@
 
   > Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data: Table 1. Bioinformatics, 31(20), 3356–3358.
 
-- [Alakazam](https://doi.org/10.1126/scitranslmed.3008879)
-
-  > Stern, J. N. H., Yaari, G., Vander Heiden, J. A., Church, G., Donahue, W. F., Hintzen, R. Q., … O’Connor, K. C. (2014). B cells populating the multiple sclerosis brain mature in the draining cervical lymph nodes. Science Translational Medicine, 6(248).
-
-- [SCOPer](https://doi.org/10.1093/bioinformatics/bty235)
-
-  > Nouri N, Kleinstein S (2018). “A spectral clustering-based method for identifying clones from high-throughput B cell repertoire sequencing data.” Bioinformatics, i341-i349.
-
-  > Nouri N, Kleinstein S (2020). “Somatic hypermutation analysis for improved identification of B cell clonal families from next-generation sequencing data.” PLOS Computational Biology, 16(6), e1007977.
-
-  > Gupta N, Adams K, Briggs A, Timberlake S, Vigneault F, Kleinstein S (2017). “Hierarchical clustering can identify B cell clones with high confidence in Ig repertoire sequencing data.” The Journal of Immunology, 2489-2499.
-
-- [Dowser](https://doi.org/10.1371/journal.pcbi.1009885)
-
-  > Hoehn K, Pybus O, Kleinstein S (2022). “Phylogenetic analysis of migration, differentiation, and class switching in B cells.” PLoS Computational Biology.
-
-- [IgPhyML](https://www.pnas.org/doi/10.1073/pnas.1906020116)
-
-  > Hoehn K, Van der Heiden J, Zhou J, Lunter G, Pybus O, Kleinstein S (2019). “Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination.” PNAS.
-
 - [IgBLAST](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3692102/)
 
   > Ye J, Ma N, Madden TL, Ostell JM. (2013). IgBLAST: an immunoglobulin variable domain sequence analysis tool. Nucleic Acids Res.
-
-- [Fastp](https://doi.org/10.1093/bioinformatics/bty560)
-
-  > Shifu Chen, Yanqing Zhou, Yaru Chen, Jia Gu, fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics. 2018 Sept 1; 34(17), i884–i890. doi: 10.1093/bioinformatics/bty560.
-
-- [pRESTO](https://doi.org/10.1093/bioinformatics/btu138)
-
-  > Vander Heiden, J. A., Yaari, G., Uduman, M., Stern, J. N. H., O’Connor, K. C., Hafler, D. A., … Kleinstein, S. H. (2014). pRESTO: a toolkit for processing high-throughput sequencing raw reads of lymphocyte receptor repertoires. Bioinformatics, 30(13), 1930–1932.
-
-- [SHazaM, Change-O](https://doi.org/10.1093/bioinformatics/btv359)
-
-  > Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data. Bioinformatics, 31(20), 3356–3358.
 
 - [Alakazam](https://doi.org/10.1126/scitranslmed.3008879)
 
@@ -87,6 +55,10 @@
 - [IgPhyML](https://www.pnas.org/doi/10.1073/pnas.1906020116)
 
   > Hoehn K, Van der Heiden J, Zhou J, Lunter G, Pybus O, Kleinstein S (2019). “Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination. PNAS, 116(45) 22664-22672."
+
+- [RAxML](10.1093/bioinformatics/btu033)
+
+  > Stamatakis A. (2014) RAxML version 8: a tool for phylogenetic analysis and post-analysis of large phylogenies. Bioinformatics, 30(9): 1312-1313.
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 

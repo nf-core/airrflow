@@ -3,6 +3,31 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0] - 2024-04-22 Ascendio
+
+### `Added`
+
+- [#319](https://github.com/nf-core/airrflow/pull/319) Added AIRR compliance badge
+
+### `Fixed`
+
+- [#319](https://github.com/nf-core/airrflow/pull/319) Fix test full profile and nebnext_umi_tcr profile.
+- [#321](https://github.com/nf-core/airrflow/pull/321) Label Dowser tips by isotype instead of c_call by default.
+- [#322](https://github.com/nf-core/airrflow/pull/322) Use RAxML as the default builder for dowser. Skip lineage trees by default.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.11      | 0.1.14      |
+
+### `Deprecated parameters`
+
+- `--skip_lineage_trees` is now deprecated in favor of `--lineage_trees`. Lineage trees are skipped by default.
+- `--igphyml` parameter is deprecated in favor of `--lineage_tree_exec`. All lineage tree building software part of Dowser are now supported.
+- `--igblast_base` is deprecated in favor of `--reference_igblast`.
+- `--imgtdb_base` is depracated in favor of `--reference_fasta`.
+
 ## [3.3.0] - 2024-03-31 Confringo
 
 ### `Added`
