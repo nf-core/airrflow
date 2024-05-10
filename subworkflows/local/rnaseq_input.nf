@@ -60,6 +60,7 @@ workflow RNASEQ_INPUT {
     ch_rename_fastq = FASTP.out.reads.map { meta, reads -> [meta, reads[0], reads[1]] }
     ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
+    // need to rename to input names in case barcodes are present
     RENAME_FASTQ_TRUST4(
         ch_rename_fastq,
         ch_rename_original
@@ -109,6 +110,9 @@ workflow RNASEQ_INPUT {
 
     emit:
     versions = ch_versions
+    // fastp
+    fastp_reads_json = FASTP.out.json.collect{ meta,json -> json }
+    fastp_reads_html = FASTP.out.html.collect{ meta,html -> html }
     // complete trust4 output
     outs = ch_trust4_out
     // trust4 airr file

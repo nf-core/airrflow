@@ -19,6 +19,5 @@ process RENAME_FASTQ_TRUST4 {
     """
     mv ${R1} ${orig_r1}
     mv ${R2} ${orig_r2}
-
     """
 }

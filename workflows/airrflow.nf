@@ -128,8 +128,8 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs            = Channel.empty()
             ch_presto_collapseseq_logs              = Channel.empty()
             ch_presto_splitseq_logs                 = Channel.empty()
-            ch_fastp_html                           = Channel.empty()
-            ch_fastp_json                           = Channel.empty()
+            ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
+            ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
             ch_fastqc_postassembly_mqc              = Channel.empty()
         }
         else {
