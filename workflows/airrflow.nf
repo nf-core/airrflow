@@ -110,6 +110,7 @@ workflow AIRRFLOW {
         
         }  else if (params.library_generation_method == "trust4") {
             // Extract VDJ sequences from "general" RNA seq data using TRUST4
+
             RNASEQ_INPUT (
                 ch_input
             )

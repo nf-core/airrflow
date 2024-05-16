@@ -27,7 +27,8 @@ workflow RNASEQ_INPUT {
 
     ch_reads = FASTQ_INPUT_CHECK.out.reads
 
-    // validate library generation method parameteç
+
+    // validate library generation method parameters
     if (params.vprimers) {
         error "The TRUST4 library generation method does not require V-region primers, please provide a reference file instead or select another library method option."
     } else if (params.race_linker) {
@@ -40,11 +41,16 @@ workflow RNASEQ_INPUT {
         error "TRUST4 library generation method does not require to set the UMI length, please provide a reference file instead or select another library method option."
     }
     if (params.reference_10x)  {
-        // necessary to allow tar.gz files as input so that tests can run
         error "The TRUST4 library generation method does not require this reference, please provide a compliant reference file instead or select another library method option."
     }
     if (!params.coord_fasta) {
         error "Please provide a reference file for the TRUST4 library generation method."
+    }
+    else {
+        ch_reads.map {
+            meta, reads -> [meta, file(params.coord_fasta)]
+        }
+        .set { ch_coord_fasta }
     }
 
     // Fastp
@@ -68,33 +74,33 @@ workflow RNASEQ_INPUT {
 
     ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads
 
-    ch_reads_fastp_filtered.view()
-
-
-    ch_reads_fastp_filtered.map{ meta, read_1, read_2  ->
-        [ meta, [], [read_1, read_2] ] }
-    .set { ch_reads_trust4 }
-
-    // ch_reads_new.view()
-
-    // if (params.vdj_reference != null) {
-    //     ch_vdjref = Channel.of([[], file(params.vdj_reference)])
-    // }
-    // else {
-    //     ch_vdjref = Channel.of([[], []])
-    // }
+    // create trust4 input
+    ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
 
     TRUST4(
         ch_reads_trust4,
-        Channel.of([[], file(params.coord_fasta)]),
-        Channel.of([[], []])
+        ch_coord_fasta,
+        Channel.of([[], []]).collect()
     )
 
-    ch_trust4_out = TRUST4.out.out
-    // ch_trust4_airr = TRUST4.out.airr_tsv
-    ch_trust4_airr = TRUST4.out.barcode_airr
+    ch_trust4_out = TRUST4.out.outs
 
-    ch_trust4_airr.view()
+    // check whether input is sc or bulk and extract respective airr file for downstream processing
+    ch_trust4_out
+        .branch {
+            meta, out_files ->
+                bulk : meta["single_cell"] == "false"
+                    return [ meta, out_files.find { it.endsWith("${meta.id}_airr.tsv") } ]
+                sc : meta["single_cell"] == "true"
+                    return [ meta, out_files.find { it.endsWith("${meta.id}_barcode_airr.tsv") } ]
+        }
+        .set { ch_trust4_airr_file }
+
+    
+    // create channel with airr file
+    ch_trust4_airr_file.bulk.mix ( ch_trust4_airr_file.sc ).set { ch_trust4_airr }
+        
+    
     // rename tsv file to unique name
     RENAME_FILE_TSV(
                 ch_trust4_airr
@@ -108,6 +114,7 @@ workflow RNASEQ_INPUT {
 
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
 
+
     emit:
     versions = ch_versions
     // fastp
@@ -120,4 +127,5 @@ workflow RNASEQ_INPUT {
     // trust4 output converted to FASTA format
     fasta = ch_fasta
     samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
+    
 }
