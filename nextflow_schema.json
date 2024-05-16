@@ -130,7 +130,6 @@
             "properties": {
                 "umi_position": {
                     "type": "string",
-                    "default": "R1",
                     "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
                     "help_text": "The pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter to R1 or R2, respectively.",
                     "enum": ["R1", "R2"],

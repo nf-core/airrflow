@@ -511,7 +511,6 @@ nextflow run nf-core/airrflow -r dev \
 - The 10xGenomics reference can be downloaded from the [download page](https://www.10xgenomics.com/support/software/cell-ranger/downloads)
 - To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt).
 
-
 ## Supported unselected RNA-seq based methods
 
 nf-core/airrflow supports unselected bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow. <br>
@@ -547,8 +546,8 @@ nextflow run nf-core/airrfow \
 --outdir results
 ```
 
-* If UMI's are present, the read containing them must be specified using the `--umi_position` parameter.
-* The `--read_format` parameter can be used to specify the Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data))
+- If UMI's are present, the read containing them must be specified using the `--umi_position` parameter.
+- The `--read_format` parameter can be used to specify the Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data))
 
 #### Reference file
 
