@@ -100,7 +100,7 @@ def create_fastq_channels(LinkedHashMap col) {
             meta.umi_position = file(col.filename_R2).name
         }
         else if (params.umi_position == "") {
-            meta.umi_position = null 
+            meta.umi_position = null
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     } else {
