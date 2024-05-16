@@ -65,7 +65,7 @@ workflow SC_RAW_INPUT {
                 [ meta, out_files.find { it.endsWith("airr_rearrangement.tsv") } ]
             }
         .set { ch_cellranger_airr }
-    
+
     // TODO : add VALIDATE_INPUT Module
     // this module requires input in csv format... Might need to create this in an extra module
 

@@ -62,7 +62,7 @@ workflow RNASEQ_INPUT {
         save_merged
     )
     ch_versions = ch_versions.mix(FASTP.out.versions)
-    
+
     ch_rename_fastq = FASTP.out.reads.map { meta, reads -> [meta, reads[0], reads[1]] }
     ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
@@ -96,11 +96,11 @@ workflow RNASEQ_INPUT {
         }
         .set { ch_trust4_airr_file }
 
-    
+
     // create channel with airr file
     ch_trust4_airr_file.bulk.mix ( ch_trust4_airr_file.sc ).set { ch_trust4_airr }
-        
-    
+
+
     // rename tsv file to unique name
     RENAME_FILE_TSV(
                 ch_trust4_airr
@@ -127,5 +127,5 @@ workflow RNASEQ_INPUT {
     // trust4 output converted to FASTA format
     fasta = ch_fasta
     samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
-    
+
 }

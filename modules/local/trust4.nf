@@ -11,7 +11,7 @@ process TRUST4 {
     tuple val(meta), path(bam), path(reads)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(vdj_reference)
-    
+
     output:
     tuple val(meta), path("*.tsv")                          , emit: tsv
     tuple val(meta), path("*_airr.tsv")                     , emit: airr_files

@@ -107,7 +107,7 @@ workflow AIRRFLOW {
             ch_fastp_html                           = Channel.empty()
             ch_fastp_json                           = Channel.empty()
             ch_fastqc_postassembly_mqc              = Channel.empty()
-        
+
         }  else if (params.library_generation_method == "trust4") {
             // Extract VDJ sequences from "general" RNA seq data using TRUST4
 
