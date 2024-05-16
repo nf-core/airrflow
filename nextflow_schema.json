@@ -487,9 +487,9 @@
             "fa_icon": "fab fa-pagelines"
         },
         "rnaseq_based_analysis_options": {
-            "title": "RNA seq based analysis options",
+            "title": "Unselected RNA-seq based analysis options",
             "type": "object",
-            "description": "Options specific for raw RNA seq input.",
+            "description": "Options specific for raw unselected RNA-seq input.",
             "default": "",
             "properties": {
                 "barcode_read": {
