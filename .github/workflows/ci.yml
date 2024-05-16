@@ -62,6 +62,7 @@ jobs:
             "test_10x_sc",
             "test_clontech_umi",
             "test_nebnext_umi",
+            "test_rnaseq_bulk",
           ]
       fail-fast: false
     steps:
