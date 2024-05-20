@@ -16,6 +16,6 @@ process RENAME_FILE {
 
     script:
     """
-    mv ${file} ${meta.id}_${file.name}
+    mv ${file} ${meta.id}.${file.extension}
     """
 }
