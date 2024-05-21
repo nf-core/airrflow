@@ -36,9 +36,30 @@ process TRUST4 {
     // separate forward from reverse pairs
     def (forward, reverse) = reads.collate(2).transpose()
     def paired_end_mode = reads && (meta.single_end == false) ? "-1 ${forward[0]} -2 ${reverse[0]}" : ''
-    def barcode = meta.barcode_read ? "--barcode ${meta.barcode_read}" : ''
     def readFormat = params.read_format ? "--readFormat ${params.read_format}" : ''
-    def umi_position = meta.umi_position ? "--UMI ${meta.umi_position}" : ''
+    def barcode = ''
+    if (meta.barcode_read) {
+        if (meta.barcode_read == "R1") {
+            barcode = "--barcode ${forward[0]}"
+        } else if (meta.barcode_read == "R2") {
+            barcode = "--barcode ${reverse[0]}"
+        }
+    }
+    else {
+        barcode = ''
+    }
+    
+    def umi_position = ''
+    if (meta.umi_position) {
+        if (meta.umi_position == "R1") {
+            umi_position = "--UMI ${forward[0]}"
+        } else if (meta.umi_position == "R2") {
+            umi_position = "--UMI ${reverse[0]}"
+        }
+    }
+    else {
+        umi_position = ''
+    }
 
     """
     run-trust4 \\

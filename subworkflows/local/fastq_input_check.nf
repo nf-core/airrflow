@@ -86,28 +86,15 @@ def create_fastq_channels(LinkedHashMap col) {
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2), file(col.filename_I1) ] ]
     }
     if (params.library_generation_method == "trust4") {
-        if (params.barcode_read == "R1") {
-
-            meta.barcode_read = file(col.filename_R1).name
-        }
-        else if (params.barcode_read == "R2") {
-            meta.barcode_read = file(col.filename_R2).name
-        }
-        if (params.umi_position == "R1") {
-            meta.umi_position = file(col.filename_R1).name
-        }
-        else if (params.umi_position == "R2") {
-            meta.umi_position = file(col.filename_R2).name
-        }
-        else if (params.umi_position == "") {
+        meta.barcode_read = params.barcode_read
+        if (params.umi_position == "") {
             meta.umi_position = null
+        } else {
+            meta.umi_position = params.umi_position
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     } else {
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
-        if (params.index_file) {
-            error "ERROR: --index_file was provided but the index file path is not specified in the samplesheet!"
-        }
     }
     return array
 }

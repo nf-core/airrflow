@@ -3,7 +3,7 @@ include { FASTQ_INPUT_CHECK                                             } from '
 include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTP                                                         } from '../../modules/nf-core/fastp/main'
-include { RENAME_FASTQ_TRUST4                                           } from '../../modules/local/rename_fastq_trust4'
+include { RENAME_FASTQ as RENAME_FASTQ_TRUST4                           } from '../../modules/local/rename_fastq'
 
 
 
@@ -64,18 +64,21 @@ workflow RNASEQ_INPUT {
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     ch_rename_fastq = FASTP.out.reads.map { meta, reads -> [meta, reads[0], reads[1]] }
-    ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
+    // ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
     // need to rename to input names in case barcodes are present
     RENAME_FASTQ_TRUST4(
         ch_rename_fastq,
-        ch_rename_original
     )
 
     ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads
 
+    ch_reads_fastp_filtered.view()
+
+
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
+
 
     TRUST4(
         ch_reads_trust4,
