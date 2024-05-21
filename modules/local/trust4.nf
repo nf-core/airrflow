@@ -48,7 +48,6 @@ process TRUST4 {
     else {
         barcode = ''
     }
-    
     def umi_position = ''
     if (meta.umi_position) {
         if (meta.umi_position == "R1") {
