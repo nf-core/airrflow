@@ -76,9 +76,6 @@ workflow RNASEQ_INPUT {
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
 
-    ch_reads_trust4.view()
-
-
     TRUST4(
         ch_reads_trust4,
         ch_coord_fasta,
