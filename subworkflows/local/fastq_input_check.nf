@@ -87,10 +87,10 @@ def create_fastq_channels(LinkedHashMap col) {
     }
     if (params.library_generation_method == "trust4") {
         meta.barcode_read = params.barcode_read
-        if (params.umi_position == "") {
-            meta.umi_position = null
+        if (params.umi_read == "") {
+            meta.umi_read = null
         } else {
-            meta.umi_position = params.umi_position
+            meta.umi_read = params.umi_read
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     } else {

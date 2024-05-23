@@ -1,6 +1,5 @@
 include { TRUST4                                                        } from '../../modules/local/trust4'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
-include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTP                                                         } from '../../modules/nf-core/fastp/main'
 include { RENAME_FASTQ as RENAME_FASTQ_TRUST4                           } from '../../modules/local/rename_fastq'
@@ -66,7 +65,7 @@ workflow RNASEQ_INPUT {
     ch_rename_fastq = FASTP.out.reads.map { meta, reads -> [meta, reads[0], reads[1]] }
     // ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
-    // need to rename to input names in case barcodes are present
+    // rename fastp output
     RENAME_FASTQ_TRUST4(
         ch_rename_fastq,
     )
@@ -76,6 +75,8 @@ workflow RNASEQ_INPUT {
 
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
+
+    ch_reads_trust4.view()
 
 
     TRUST4(
@@ -102,15 +103,9 @@ workflow RNASEQ_INPUT {
     ch_trust4_airr_file.bulk.mix ( ch_trust4_airr_file.sc ).set { ch_trust4_airr }
 
 
-    // rename tsv file to unique name
-    RENAME_FILE_TSV(
-                ch_trust4_airr
-            )
-        .set { ch_renamed_tsv }
-
     // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
-                RENAME_FILE_TSV.out.file
+                ch_trust4_airr
             )
 
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta

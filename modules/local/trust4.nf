@@ -48,16 +48,16 @@ process TRUST4 {
     else {
         barcode = ''
     }
-    def umi_position = ''
-    if (meta.umi_position) {
-        if (meta.umi_position == "R1") {
-            umi_position = "--UMI ${forward[0]}"
-        } else if (meta.umi_position == "R2") {
-            umi_position = "--UMI ${reverse[0]}"
+    def umi_read = ''
+    if (meta.umi_read) {
+        if (meta.umi_read == "R1") {
+            umi_read = "--UMI ${forward[0]}"
+        } else if (meta.umi_read == "R2") {
+            umi_read = "--UMI ${reverse[0]}"
         }
     }
     else {
-        umi_position = ''
+        umi_read = ''
     }
 
     """
@@ -67,7 +67,7 @@ process TRUST4 {
         ${paired_end_mode} \\
         ${barcode} \\
         ${readFormat} \\
-        ${umi_position} \\
+        ${umi_read} \\
         -t $task.cpus \\
         -f ${fasta} \\
         -o ${prefix} \\

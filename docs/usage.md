@@ -540,7 +540,7 @@ nextflow run nf-core/airrfow \
 --mode fastq \
 --input input_samplesheet.tsv \
 --library_generation_method trust4 \
---umi_position R1 \
+--umi_read R1 \
 --read_format bc:0:15,um:16:27
 --coord_fasta reference/IMGT+C.fa \
 --outdir results
