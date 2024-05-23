@@ -496,7 +496,8 @@
                     "type": "string",
                     "description": "Specifies which read holds the barcodes",
                     "enum": ["R1", "R2"],
-                    "fa_icon": "fas fa-terminal"
+                    "fa_icon": "fas fa-terminal",
+                    "help_text": "file containing the barcodes"
                 },
                 "umi_read": {
                     "type": "string",
