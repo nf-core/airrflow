@@ -85,8 +85,7 @@ workflow AIRRFLOW {
             if (params.library_generation_method == "sc_10x_genomics") {
 
                 SC_RAW_INPUT(
-                    ch_input,
-                    DATABASES.out.reference_fasta.collect()
+                    ch_input
                 )
 
                 ch_fasta                                = SC_RAW_INPUT.out.fasta
@@ -113,7 +112,8 @@ workflow AIRRFLOW {
             // Extract VDJ sequences from "general" RNA seq data using TRUST4
 
             RNASEQ_INPUT (
-                ch_input
+                ch_input,
+                DATABASES.out.reference_fasta.collect()
             )
 
             ch_fasta                                = RNASEQ_INPUT.out.fasta
