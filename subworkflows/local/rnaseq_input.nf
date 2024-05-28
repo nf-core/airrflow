@@ -1,3 +1,4 @@
+include { PREPARE_TRUST4_REFERENCE                                      } from '../../modules/local/prepare_trust4_reference'
 include { TRUST4                                                        } from '../../modules/local/trust4'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
@@ -10,7 +11,7 @@ workflow RNASEQ_INPUT {
 
     take:
     ch_input
-    ch_reference_fasta
+    ch_igblast_reference
 
     main:
 
@@ -43,15 +44,6 @@ workflow RNASEQ_INPUT {
     if (params.reference_10x)  {
         error "The TRUST4 library generation method does not require this reference, please provide a compliant reference file instead or select another library method option."
     }
-    if (!params.coord_fasta) {
-        error "Please provide a reference file for the TRUST4 library generation method."
-    }
-    else {
-        ch_reads.map {
-            meta, reads -> [meta, file(params.coord_fasta)]
-        }
-        .set { ch_coord_fasta }
-    }
 
     // Fastp
     save_merged = false
@@ -70,16 +62,18 @@ workflow RNASEQ_INPUT {
         ch_rename_fastq
     )
 
-    ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads
+    ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads.dump(tag: "fastp_filtered")
 
     PREPARE_TRUST4_REFERENCE(
-        ch_reference_fasta,
-        ch_reads_fastp_filtered
+        ch_reads_fastp_filtered,
+        ch_igblast_reference
     )
 
 
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
+
+    PREPARE_TRUST4_REFERENCE.out.trust4_reference.dump(tag: "trust4_reference")
 
     TRUST4(
         ch_reads_trust4,

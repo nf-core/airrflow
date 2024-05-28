@@ -511,12 +511,6 @@
                     "description": "Specifies where in the read the barcodes and UMIs can be found.",
                     "help_text": "For further information see the TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data).",
                     "fa_icon": "fas fa-terminal"
-                },
-                "coord_fasta": {
-                    "type": "string",
-                    "description": "path to the fasta file coordinate and sequence of V/D/J/C genes.",
-                    "help_text": "For further information see the TRUST4 [docs](https://github.com/liulab-dfci/TRUST4).",
-                    "fa_icon": "fas fa-database"
                 }
             },
             "help_text": "Options for running raw RNA seq data.",

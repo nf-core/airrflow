@@ -9,7 +9,7 @@ process TRUST4 {
 
     input:
     tuple val(meta), path(bam), path(reads)
-    tuple val(meta2), path(fasta)
+    path(fasta)
     tuple val(meta3), path(vdj_reference)
 
     output:

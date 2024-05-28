@@ -526,7 +526,6 @@ nextflow run nf-core/airrfow \
 --mode fastq \
 --input input_samplesheet.tsv \
 --library_generation_method trust4 \
---coord_fasta reference/IMGT+C.fa \
 --outdir results
 ```
 
@@ -541,18 +540,12 @@ nextflow run nf-core/airrfow \
 --input input_samplesheet.tsv \
 --library_generation_method trust4 \
 --umi_read R1 \
---read_format bc:0:15,um:16:27
---coord_fasta reference/IMGT+C.fa \
+--read_format bc:0:15,um:16:27 \
 --outdir results
 ```
 
 - If UMI's are present, the read containing them must be specified using the `--umi_position` parameter.
 - The `--read_format` parameter can be used to specify the Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data))
-
-#### Reference file
-
-TRUST4 requires a reference. This can provided using the `--coord_fasta` parameter.
-The reference fasta can be downloaded from IMGT and created using [TRUST4](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#build-custom-vjc-gene-database-files-for--f-and---ref)
 
 ## Core Nextflow arguments
 

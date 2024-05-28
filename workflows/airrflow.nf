@@ -113,7 +113,7 @@ workflow AIRRFLOW {
 
             RNASEQ_INPUT (
                 ch_input,
-                DATABASES.out.reference_fasta.collect()
+                DATABASES.out.igblast.collect()
             )
 
             ch_fasta                                = RNASEQ_INPUT.out.fasta

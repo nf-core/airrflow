@@ -8,16 +8,16 @@ process PREPARE_TRUST4_REFERENCE {
         'biocontainers/trust4:1.0.13--h43eeafb_0' }"
 
     input:
-    tuple val(meta), path(reads)
-    path(reference_fasta)
+    tuple val(meta), path(R1), path(R2)
+    path(reference_igblast)
 
     output:
     path("trust4_reference.fa") , emit: trust4_reference
 
     script:
     """
-    cat ${reference_fasta}/${meta.species.toLowerCase()}/vdj/*.fasta \\
-    ${reference_fasta}/${meta.species.toLowerCase()}/constant/*.fasta > trust4_reference.fa
+    cat ${reference_igblast}/fasta/imgt_${meta.species.toLowerCase()}_*.fasta \\
+    ${reference_igblast}/fasta/imgt_${meta.species.toLowerCase()}_*.fasta >> trust4_reference.fa
     """
 
 
