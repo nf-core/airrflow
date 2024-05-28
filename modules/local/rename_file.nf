@@ -12,10 +12,10 @@ process RENAME_FILE {
     tuple val(meta), path(file)
 
     output:
-    tuple val(meta), path("${meta.id}_${file.name}")  , emit: file
+    tuple val(meta), path("${meta.id}.${file.extension}")  , emit: file
 
     script:
     """
-    mv ${file} ${meta.id}_${file.name}
+    mv ${file} ${meta.id}.${file.extension}
     """
 }
