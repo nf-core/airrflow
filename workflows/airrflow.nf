@@ -85,7 +85,8 @@ workflow AIRRFLOW {
             if (params.library_generation_method == "sc_10x_genomics") {
 
                 SC_RAW_INPUT(
-                    ch_input
+                    ch_input,
+                    DATABASES.out.reference_fasta.collect()
                 )
 
                 ch_fasta                                = SC_RAW_INPUT.out.fasta

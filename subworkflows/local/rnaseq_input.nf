@@ -10,6 +10,7 @@ workflow RNASEQ_INPUT {
 
     take:
     ch_input
+    ch_reference_fasta
 
     main:
 
@@ -63,14 +64,18 @@ workflow RNASEQ_INPUT {
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     ch_rename_fastq = FASTP.out.reads.map { meta, reads -> [meta, reads[0], reads[1]] }
-    // ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
 
     // rename fastp output
     RENAME_FASTQ_TRUST4(
-        ch_rename_fastq,
+        ch_rename_fastq
     )
 
     ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads
+
+    PREPARE_TRUST4_REFERENCE(
+        ch_reference_fasta,
+        ch_reads_fastp_filtered
+    )
 
 
     // create trust4 input
@@ -78,7 +83,7 @@ workflow RNASEQ_INPUT {
 
     TRUST4(
         ch_reads_trust4,
-        ch_coord_fasta,
+        PREPARE_TRUST4_REFERENCE.out.trust4_reference,
         Channel.of([[], []]).collect()
     )
 
@@ -100,7 +105,7 @@ workflow RNASEQ_INPUT {
     ch_trust4_airr_file.bulk.mix ( ch_trust4_airr_file.sc ).set { ch_trust4_airr }
 
 
-    // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
+    // convert airr tsv to fasta
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 ch_trust4_airr
             )
