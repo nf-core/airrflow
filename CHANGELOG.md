@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| biopython  | 1.71        | 1.81        |
+
 ## [4.0] - 2024-04-22 Ascendio
 
 ### `Added`
