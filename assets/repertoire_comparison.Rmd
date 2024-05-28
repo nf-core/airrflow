@@ -106,8 +106,9 @@ The full table can be found under [Table_sequences_assembled](repertoire_compari
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
 
+# Splitting on last underscore for sample_id
 if (any(is.na(tab_seqs_assembled$sample_id))) {
-  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$file_0, function(x) unlist(strsplit(as.character(x), "_"))[1])
+  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$file_0, function(x) unlist(strsplit(as.character(x), "_\\s*(?=[^_]+$)", perl=TRUE))[1])
 }
 
 dat <- tab_seqs_assembled %>%
