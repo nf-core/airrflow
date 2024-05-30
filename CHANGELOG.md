@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | biopython  | 1.71        | 1.81        |
+| enchantr   | 0.1.15      | 0.1.16      |
+| presto     | 0.7.1       | 0.7.2       |
+| scoper     | 1.2.1       | 1.3.0       |
+| dowser     | 1.2.0       | 2.1.0       |
+| igphyml    | 1.1.5       | 2.0.0       |
+
 
 ## [4.0] - 2024-04-22 Ascendio
 
