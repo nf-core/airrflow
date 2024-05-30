@@ -14,7 +14,16 @@ The nf-core/airrflow pipeline allows processing BCR and TCR targeted sequencing 
 
 ### Quickstart
 
-A typical command for running the pipeline for **bulk raw fastq files** is:
+A typical command for running the pipeline for **bulk raw fastq files** using available pre-set protocol profiles is shown below. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles).
+
+```bash
+nextflow run nf-core/airrflow \
+-profile nebnext_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
+It is also possible to process custom sequencing protocols with custom primers by manually specifying the primers, UMI length (if available) and position:
 
 ```bash
 nextflow run nf-core/airrflow \
@@ -26,16 +35,6 @@ nextflow run nf-core/airrflow \
 --vprimers VPrimers.fasta \
 --umi_length 12 \
 --umi_position R1 \
---outdir results
-```
-
-You can optionally set a protocol profile if you're running the pipeline with data from one of the supported profiles. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles). An example command running the NEBNext UMI protocol profile with docker containers is:
-
-```bash
-nextflow run nf-core/airrflow \
--profile nebnext_umi,docker \
---mode fastq \
---input input_samplesheet.tsv \
 --outdir results
 ```
 
@@ -93,7 +92,6 @@ with `params.yaml` containing:
 ```yaml
 input: './samplesheet.csv'
 outdir: './results/'
-genome: 'GRCh37'
 <...>
 ```
 
@@ -230,18 +228,29 @@ This profile executes the commands based on the pRESTO pre-set pipeline [presto-
 - Align and annotate the internal C Region (for the BCR specific protocol) for a more specific isotype annotation.
 - Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers:
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers. Here an example using the mouse IG primers on the Immcantation Bitbucket repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
 -profile nebnext_umi_bcr,docker \
 --input input_samplesheet.tsv \
---cprimers <path/to/constant_region_primers> \
---internal_cregion_sequences <path/to/internal_cregion_sequences> \
+--cprimers https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_R1_Mouse_IG_Primers.fasta \
+--internal_cregion_sequences https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_Mouse_IG_InternalCRegion.fasta \
 --outdir results
 ```
 
-### Clontech / Takara SMARTer Human BCR Profiling kit
+And similarly for TCR libraries:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile nebnext_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_R1_Mouse_TR_Primers.fasta \
+--internal_cregion_sequences https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_Mouse_TR_InternalCRegion.fasta \
+--outdir results
+```
+
+### Clontech / Takara SMARTer Human BCR/TCR Profiling kit
 
 - [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
 
@@ -266,13 +275,23 @@ This profile executes the sequence assembly commands based on the pRESTO pre-set
 
 After the sequence assembly steps, the remaining steps are common for all protocols.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences:
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here an example using the mouse IG primers on the Immcantation Bitbucket repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
 -profile clontech_umi_bcr,docker \
 --input input_samplesheet.tsv \
---cprimers <path/to/reverse_complemented_universal_Cregion_sequences> \
+--cprimers https://bitbucket.org/kleinstein/immcantation/raw/c98269b194e9c6262fe3b098be3600ba7f64b85c/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
+--outdir results
+```
+
+And for TCR data:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile clontech_umi_tcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://bitbucket.org/kleinstein/immcantation/raw/c98269b194e9c6262fe3b098be3600ba7f64b85c/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
 --outdir results
 ```
 
@@ -281,18 +300,18 @@ nextflow run nf-core/airrflow -r <release> \
 When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
 The following table matches the library generation methods as described in the [AIRR metadata annotation guidelines](https://docs.airr-community.org/en/stable/miairr/metadata_guidelines.html#library-generation-method) to the value that can be provided to the `--library_generation_method` parameter.
 
-| Library generation methods (AIRR) | Description                                                                                | Name in pipeline | Commercial protocols                      |
-| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- | ----------------------------------------- |
-| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |                                           |
-| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |                                           |
-| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |                                           |
-| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   | TAKARA SMARTer TCR v2, TAKARA SMARTer BCR |
-| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |                                           |
-| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |                                           |
-| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |                                           |
-| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |                                           |
-| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |                                           |
-| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |                                           |
+| Library generation methods (AIRR) | Description                                                                                | Name in pipeline |
+| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- |
+| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |
+| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |
+| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |
+| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   |
+| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |
+| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |
+| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |
+| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |
+| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |
+| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |
 
 ### Multiplex specific PCR (with or without UMI)
 
@@ -403,68 +422,6 @@ nextflow run nf-core/airrflow -profile docker \
 --umi_length 12 \
 --umi_start 6 \
 --outdir ./results
-```
-
-### dT-Oligo RT and 5'RACE PCR
-
-This sequencing type requires setting `--library_generation_method race_5p_umi` or `--library_generation_method race_5p_umi` if UMIs are not being employed, and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run airrflow to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
-
-#### Takara Bio SMARTer Human BCR
-
-The read configuration when sequencing with the TAKARA Bio SMARTer Human BCR protocol is the following:
-
-![nf-core/airrflow](images/TAKARA_RACE_BCR.png)
-
-```bash
-nextflow run nf-core/airrflow -profile docker \
---input samplesheet.tsv \
---library_generation_method dt_5p_race_umi \
---cprimers CPrimers.fasta \
---race_linker linker.fasta \
---umi_length 12 \
---umi_position R2 \
---cprimer_start 7 \
---cprimer_position R1 \
---outdir ./results
-```
-
-#### Takara Bio SMARTer Human TCR v2
-
-The read configuration when sequencing with the Takara Bio SMARTer Human TCR v2 protocol is the following:
-
-![nf-core/airrflow](images/TAKARA_RACE_TCR.png)
-
-```bash
-nextflow run nf-core/airrflow -profile docker \
---input samplesheet.tsv \
---library_generation_method dt_5p_race_umi \
---cprimers CPrimers.fasta \
---race_linker linker.fasta \
---umi_length 12 \
---umi_position R2 \
---cprimer_start 5 \
---cprimer_position R1 \
---outdir ./results
-```
-
-For this protocol, the takara linkers are:
-
-```txt
->takara-linker
-GTAC
-```
-
-And the C-region primers are:
-
-```txt
->TRAC
-CAGGGTCAGGGTTCTGGATATN
->TRBC
-GGAACACSTTKTTCAGGTCCTC
->TRDC
-GTTTGGTATGAGGCTGACTTCN
->TRGC
-CATCTGCATCAAGTTGTTTATC
 ```
 
 ## UMI barcode handling
