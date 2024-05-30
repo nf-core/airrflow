@@ -251,7 +251,6 @@ nextflow run nf-core/airrflow -r <release> \
 --outdir results
 ```
 
-
 ### Clontech / Takara SMARTer Human BCR/TCR Profiling kit
 
 - [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
