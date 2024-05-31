@@ -6,9 +6,7 @@ process ADD_META_TO_TAB {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:4.1.0':
-        'docker.io/immcantation/airrflow:4.1.0' }"
+    container "docker.io/immcantation/airrflow:4.1.0"
 
     cache 'deep' // Without 'deep' this process would run when using -resume
 
