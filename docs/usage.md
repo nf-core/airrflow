@@ -228,7 +228,7 @@ This profile executes the commands based on the pRESTO pre-set pipeline [presto-
 - Align and annotate the internal C Region (for the BCR specific protocol) for a more specific isotype annotation.
 - Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers. Here an example using the mouse IG primers on the Immcantation Bitbucket repository:
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers. Here is an example using the mouse IG primers from the Immcantation Bitbucket repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
