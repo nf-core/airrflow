@@ -3,6 +3,26 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] -
+
+### `Added`
+
+- [#335](https://github.com/nf-core/airrflow/pull/319) Update to nf-core template 2.14.1
+
+### `Fixed`
+
+- [#335](https://github.com/nf-core/airrflow/pull/335) Fix report number of sequences per sample plots.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| biopython  | 1.71        | 1.81        |
+| enchantr   | 0.1.15      | 0.1.16      |
+| scoper     | 1.2.1       | 1.3.0       |
+| dowser     | 1.2.0       | 2.1.0       |
+| igphyml    | 1.1.5       | 2.0.0       |
+
 ## [4.0] - 2024-04-22 Ascendio
 
 ### `Added`

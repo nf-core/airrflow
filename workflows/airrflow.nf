@@ -248,12 +248,16 @@ workflow AIRRFLOW {
         ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
         ch_versions.dump(tag: "channel_versions")
 
-        //
-        // Collate and save software versions
-        //
-        softwareVersionsToYAML(ch_versions)
-            .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
-            .set { ch_collated_versions }
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
 
         // MODULE: MultiQC
@@ -280,9 +284,11 @@ workflow AIRRFLOW {
                 ch_report_logo.toList()
             )
             multiqc_report = MULTIQC.out.report.toList()
+        } else {
+            multiqc_report = Channel.empty()
         }
     emit:
-        multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+        multiqc_report = multiqc_report // channel: /path/to/multiqc_report.html
         versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
