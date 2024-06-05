@@ -29,8 +29,8 @@ workflow FASTQ_INPUT_CHECK {
 
     ch_versions = SAMPLESHEET_CHECK.out.versions
 
-    // Merge multi-lane sample fastq for protocols except for 10x genomics (cellranger handles multi-fastq per sample)
-    if (params.library_generation_method == 'sc_10x_genomics') {
+    // Merge multi-lane sample fastq for protocols except for 10x genomics, trust4 (cellranger handles multi-fastq per sample)
+    if (params.library_generation_method == 'sc_10x_genomics' || params.library_generation_method == 'trust4')  {
 
         ch_merged_reads = ch_reads.single.mix( ch_reads.multiple )
 
@@ -84,12 +84,13 @@ def create_fastq_channels(LinkedHashMap col) {
             error "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${col.filename_I1}"
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2), file(col.filename_I1) ] ]
-    } else {
-
+    }
+    if (params.library_generation_method == "trust4") {
+        meta.barcode_read = params.barcode_read
+        meta.umi_read = params.umi_read
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
-        if (params.index_file) {
-            error "ERROR: --index_file was provided but the index file path is not specified in the samplesheet!"
-        }
+    } else {
+        array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     }
     return array
 }
