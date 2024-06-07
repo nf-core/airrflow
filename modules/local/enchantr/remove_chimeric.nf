@@ -8,14 +8,12 @@ process REMOVE_CHIMERIC {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:3.2.0':
-        'docker.io/immcantation/airrflow:3.2.0' }"
+    container "docker.io/immcantation/airrflow:4.1.0"
 
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
-    path(imgt_base)
+    path(reference_fasta)
 
     output:
     tuple val(meta), path("*chimera-pass.tsv"), emit: tab // sequence tsv in AIRR format

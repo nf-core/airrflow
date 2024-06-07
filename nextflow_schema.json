@@ -32,9 +32,9 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
+                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.tsv$",
-                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/airrflow/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
@@ -61,7 +61,7 @@
                 },
                 "miairr": {
                     "type": "string",
-                    "default": "airrflow/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "default": "${projectDir}/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping",
                     "fa_icon": "fas fa-table"
                 }
@@ -77,15 +77,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-flask",
                     "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": [
-                        "specific_pcr_umi",
-                        "specific_pcr",
-                        "dt_5p_race",
-                        "dt_5p_race_umi",
-                        "specific_pcr_5p_race_umi",
-                        "mixcr"
-                    ],
-                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers."
+                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi", "sc_10x_genomics"],
+                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
                 },
                 "race_linker": {
                     "type": "string",
@@ -190,7 +183,6 @@
                 },
                 "adapter_fasta": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-file",
                     "description": "Fasta file with adapter sequences to be trimmed."
                 },
@@ -242,23 +234,17 @@
                     "description": "Quality threshold for pRESTO FilterSeq sequence filtering.",
                     "fa_icon": "fas fa-filter"
                 },
-                "primer_maxerror": {
-                    "type": "number",
-                    "default": 0.2,
-                    "description": "Maximum primer scoring error in the pRESTO MaskPrimer step for the C and/or V region primers identification.",
-                    "fa_icon": "fas fa-align-center"
-                },
                 "primer_consensus": {
                     "type": "number",
                     "default": 0.6,
                     "description": "Maximum error for building the primer consensus in the pRESTO Buildconsensus step.",
-                    "fa_icon": "fas fa-align-center"
+                    "fa_icon": "fas fa-align-left"
                 },
                 "primer_mask_mode": {
                     "type": "string",
                     "default": "cut",
                     "description": "Masking mode for the pRESTO MaskPrimer step. Available: cut, mask, trim, tag.",
-                    "enum": ["cut", "mask", "trim", "tag"],
+                    "enum": ["cut", "mask", "tag", "trim"],
                     "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
                     "fa_icon": "fas fa-mask"
                 },
@@ -277,8 +263,70 @@
                 "cluster_sets": {
                     "type": "boolean",
                     "default": true,
-                    "fa_icon": "fas fa-layer-group",
+                    "fa_icon": "fas fa-align-center",
                     "description": "Cluster sequences by similarity regardless of any annotation with pRESTO ClusterSets and annotate the cluster ID additionally to the UMI barcode."
+                },
+                "primer_r1_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "fa_icon": "fas fa-align-left",
+                    "description": "Maximum allowed error for R1 primer alignment."
+                },
+                "primer_r2_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "fa_icon": "fas fa-align-right",
+                    "description": "Maximum allowed error for R2 primer alignment."
+                },
+                "maskprimers_align": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Align primers instead of scoring them. Used for protocols without primer fixed positions."
+                },
+                "primer_extract_len": {
+                    "type": "integer",
+                    "default": 0,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Length of the extracted primers with MaskPrimer extract."
+                },
+                "primer_maxlen": {
+                    "type": "integer",
+                    "default": 50,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed primer length when aligning the primers."
+                },
+                "assemblepairs_sequential": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Use AssemblePairs sequential instead of AssemblePairs align when assembling read pairs."
+                },
+                "align_cregion": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Align internal C-region for a more precise isotype characterization."
+                },
+                "internal_cregion_sequences": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Provide internal C-region sequences for a more precise C-region characterization. Then also set the `align_cregion` flag."
+                },
+                "cregion_maxlen": {
+                    "type": "integer",
+                    "default": 100,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed length when aligning the internal C-region."
+                },
+                "cregion_maxerror": {
+                    "type": "number",
+                    "default": 0.3,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed error when aligning the internal C-region."
+                },
+                "cregion_mask_mode": {
+                    "type": "string",
+                    "default": "tag",
+                    "fa_icon": "fas fa-mask",
+                    "description": "Mask mode for C-region alignment."
                 }
             },
             "fa_icon": "fas fa-align-center"
@@ -306,22 +354,29 @@
                     "description": "Save databases so you can use the cache in future runs.",
                     "fa_icon": "fas fa-file-download"
                 },
-                "imgtdb_base": {
+                "reference_fasta": {
                     "type": "string",
-                    "description": "Path to the cached IMGT database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "description": "Path to the germline reference fasta.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
-                "igblast_base": {
+                "reference_igblast": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom IMGT reference database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
                     "fa_icon": "fas fa-database"
                 },
                 "fetch_imgt": {
                     "type": "boolean",
                     "description": "Set this flag to fetch the IMGT reference data at runtime.",
                     "fa_icon": "fas fa-cloud-download-alt"
+                },
+                "isotype_column": {
+                    "type": "string",
+                    "description": "Set the column in the AIRR rearrangement file that isotype information should be gathered from.",
+                    "default": "c_call",
+                    "fa_icon": "fas fa-border-all",
+                    "help_text": "Default is the `c_call` column. For bulk protocols one can use the c_primers or cregion columns (check `align_cregion`). The primer or cregions fasta file header need to contain the strings `IGHA`, `IGHD`, `IGHG`... for the isotypes to be properly parsed. This will be used for plotting mutation frequency by isotype in the clonal analysis report."
                 }
             },
             "fa_icon": "fas fa-edit"
@@ -358,14 +413,24 @@
             "default": "",
             "properties": {
                 "clonal_threshold": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "enum": ["auto"]
+                        },
+                        {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    ],
                     "type": ["string", "number"],
                     "default": "auto",
                     "fa_icon": "fab fa-pagelines",
                     "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
                 },
-                "skip_lineage": {
+                "lineage_trees": {
                     "type": "boolean",
-                    "description": "Skip clonal lineage analysis and lineage tree plotting.",
+                    "description": "Perform clonal lineage tree analysis.",
                     "fa_icon": "fas fa-angle-double-right"
                 },
                 "cloneby": {
@@ -380,11 +445,18 @@
                     "description": "Name of the field used to identify external groups used to identify a clonal threshold.",
                     "fa_icon": "fab fa-pagelines"
                 },
-                "igphyml": {
+                "lineage_tree_builder": {
                     "type": "string",
-                    "default": "/usr/local/share/igphyml/src/igphyml",
-                    "description": "Path to IgPhyml executable.",
-                    "fa_icon": "fas fa-file"
+                    "default": "raxml",
+                    "description": "Lineage tree software to use to build trees within Dowser. If you change the default, also set the `lineage_tree_exec` parameter.",
+                    "enum": ["raxml", "igphyml"],
+                    "fa_icon": "fas fa-pagelines"
+                },
+                "lineage_tree_exec": {
+                    "type": "string",
+                    "default": "/usr/local/bin/raxml-ng",
+                    "description": "Path to lineage tree building executable.",
+                    "fa_icon": "fas fa-pagelines"
                 },
                 "singlecell": {
                     "type": "string",
@@ -414,12 +486,12 @@
             "properties": {
                 "reference_10x": {
                     "type": "string",
-                    "description": "Path to the reference directory required by cellranger.",
+                    "description": "Path to the reference directory required by cellranger. Can either be directory or tar.gz.",
                     "help_text": "See for [IMGT](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt) or [default](https://www.10xgenomics.com/support/software/cell-ranger/downloads).",
                     "fa_icon": "fas fa-database"
                 }
             },
-            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
+            "help_text": "Options for running raw single cell data.",
             "fa_icon": "fab fa-pagelines"
         },
         "report_options": {
@@ -686,6 +758,13 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/",
+                    "hidden": true
                 }
             }
         }
@@ -726,6 +805,9 @@
         },
         {
             "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/single_cell_analysis_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"

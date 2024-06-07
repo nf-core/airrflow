@@ -61,8 +61,12 @@ if (!("INPUTID" %in% names(opt))) {
 # Read metadata file
 metadata <- read.csv(opt$METADATA, sep = "\t", header = TRUE, stringsAsFactors = F)
 
+# Merging samples over multiple lanes introduces multi-rows per sample
+# We expect only one row per sample
 metadata <- metadata %>%
-    filter(sample_id == opt$INPUTID)
+    dplyr::filter(sample_id == opt$INPUTID) %>%
+    dplyr::select(!starts_with("filename_")) %>%
+    dplyr::distinct()
 
 if (nrow(metadata) != 1) {
     stop("Expecting nrow(metadata) == 1; nrow(metadata) == ", nrow(metadata), " found")
@@ -81,10 +85,7 @@ internal_fields <-
         "id",
         "filetype",
         "valid_single_cell",
-        "valid_pcr_target_locus",
-        "filename_R1",
-        "filename_R2",
-        "filename_I1"
+        "valid_pcr_target_locus"
     )
 metadata <- metadata[, !colnames(metadata) %in% internal_fields]
 

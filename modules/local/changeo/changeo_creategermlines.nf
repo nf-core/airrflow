@@ -4,14 +4,14 @@ process CHANGEO_CREATEGERMLINES {
     label 'immcantation'
 
 
-    conda "bioconda::changeo=1.3.0 bioconda::igblast=1.19.0 conda-forge::wget=1.20.1"
+    conda "bioconda::changeo=1.3.0 bioconda::igblast=1.22.0 conda-forge::wget=1.20.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:00534555924705cdf2f7ac48b4b8b4083527ca58-1' :
-        'biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:00534555924705cdf2f7ac48b4b8b4083527ca58-1' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:a9ee25632c9b10bbb012da76e6eb539acca8f9cd-1' :
+        'biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:a9ee25632c9b10bbb012da76e6eb539acca8f9cd-1' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
-    path(imgt_base) // imgt db
+    path(reference_fasta) // reference fasta
 
     output:
     tuple val(meta), path("*germ-pass.tsv"), emit: tab
@@ -22,7 +22,7 @@ process CHANGEO_CREATEGERMLINES {
     def args = task.ext.args ?: ''
     """
     CreateGermlines.py -d ${tab} \\
-    -r ${imgt_base}/${meta.species}/vdj/ \\
+    -r ${reference_fasta}/${meta.species}/vdj/ \\
     -g dmask --format airr \\
     --log ${meta.id}.log --outname ${meta.id} $args > ${meta.id}_create-germlines_command_log.txt
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL

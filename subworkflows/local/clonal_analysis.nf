@@ -7,7 +7,7 @@ include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
 workflow CLONAL_ANALYSIS {
     take:
     ch_repertoire
-    ch_imgt
+    ch_reference_fasta
     ch_logo
 
     main:
@@ -76,7 +76,7 @@ workflow CLONAL_ANALYSIS {
     DEFINE_CLONES_COMPUTE(
         ch_define_clones,
         clone_threshold.collect(),
-        ch_imgt.collect(),
+        ch_reference_fasta.collect(),
         []
     )
 
@@ -102,9 +102,10 @@ workflow CLONAL_ANALYSIS {
         DEFINE_CLONES_REPORT(
             ch_all_repertoires_cloned,
             clone_threshold.collect(),
-            ch_imgt.collect(),
+            ch_reference_fasta.collect(),
             ch_all_repertoires_cloned_samplesheet
         )
+        ch_versions = DEFINE_CLONES_REPORT.out.versions
     }
 
     // prepare ch for dowser lineages
@@ -113,7 +114,7 @@ workflow CLONAL_ANALYSIS {
         .map { it -> [ [id: "${it.baseName}".replaceFirst("__clone-pass", "")], it ] }
         .set{ch_repertoires_cloned}
 
-    if (!params.skip_lineage){
+    if (params.lineage_trees){
         DOWSER_LINEAGES(
             ch_repertoires_cloned
         )

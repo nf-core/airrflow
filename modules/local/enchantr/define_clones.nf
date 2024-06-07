@@ -24,14 +24,12 @@ process DEFINE_CLONES {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:3.2.0':
-        'docker.io/immcantation/airrflow:3.2.0' }"
+    container "docker.io/immcantation/airrflow:4.1.0"
 
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     val threshold
-    path imgt_base
+    path reference_fasta
     path repertoires_samplesheet
 
     output:
@@ -53,14 +51,16 @@ process DEFINE_CLONES {
     """
     Rscript -e "enchantr::enchantr_report('define_clones', \\
                                         report_params=list('input'='${input}', \\
-                                        'imgt_db'='${imgt_base}', \\
+                                        'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
                                         'cloneby'='${params.cloneby}', \\
-                                        'outputby'='${params.cloneby}',
+                                        'outputby'='${params.cloneby}', \\
                                         'force'=FALSE, \\
                                         'threshold'=${thr}, \\
-                                        'singlecell'='${params.singlecell}','outdir'=getwd(), \\
-                                        'nproc'=${task.cpus},\\
+                                        'singlecell'='${params.singlecell}', \\
+                                        'outdir'=getwd(), \\
+                                        'isotype_column'='${params.isotype_column}', \\
+                                        'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
     cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr

@@ -3,15 +3,74 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.2.1dev] -
+## [4.1.0] -
 
 ### `Added`
 
+- [#335](https://github.com/nf-core/airrflow/pull/319) Update to nf-core template 2.14.1
+
 ### `Fixed`
 
-- Removed optional output from FilterQuality to not fail silently
+- [#335](https://github.com/nf-core/airrflow/pull/335) Fix report number of sequences per sample plots.
 
 ### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| biopython  | 1.71        | 1.81        |
+| enchantr   | 0.1.15      | 0.1.16      |
+| scoper     | 1.2.1       | 1.3.0       |
+| dowser     | 1.2.0       | 2.1.0       |
+| igphyml    | 1.1.5       | 2.0.0       |
+
+## [4.0] - 2024-04-22 Ascendio
+
+### `Added`
+
+- [#319](https://github.com/nf-core/airrflow/pull/319) Added AIRR compliance badge
+
+### `Fixed`
+
+- [#319](https://github.com/nf-core/airrflow/pull/319) Fix test full profile and nebnext_umi_tcr profile.
+- [#321](https://github.com/nf-core/airrflow/pull/321) Label Dowser tips by isotype instead of c_call by default.
+- [#322](https://github.com/nf-core/airrflow/pull/322) Use RAxML as the default builder for dowser. Skip lineage trees by default.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.11      | 0.1.14      |
+
+### `Deprecated parameters`
+
+- `--skip_lineage_trees` is now deprecated in favor of `--lineage_trees`. Lineage trees are skipped by default.
+- `--igphyml` parameter is deprecated in favor of `--lineage_tree_exec`. All lineage tree building software part of Dowser are now supported.
+- `--igblast_base` is deprecated in favor of `--reference_igblast`.
+- `--imgtdb_base` is depracated in favor of `--reference_fasta`.
+
+## [3.3.0] - 2024-03-31 Confringo
+
+### `Added`
+
+- [#294](https://github.com/nf-core/airrflow/pull/294) Merge template updates nf-core/tools v2.11.1
+- [#299](https://github.com/nf-core/airrflow/pull/299) Add profile for common NEB and TAKARA protocols
+- [#289](https://github.com/nf-core/airrflow/pull/289) Add possibility to merge multi-lane samples when starting from fastq files
+- [#289](https://github.com/nf-core/airrflow/pull/289) Add possibility to run cellranger for scVDJseq data
+
+### `Fixed`
+
+- [#294](https://github.com/nf-core/airrflow/pull/294) Removed optional output from FilterQuality to not fail silently
+- [#293](https://github.com/nf-core/airrflow/pull/293) Clonal_threshold is validated to be 'auto' or number greater than zero
+- [#295](https://github.com/nf-core/airrflow/pull/295) Fixed airrflow report sequence plot and add path to clonal analysis reports
+- [#310](https://github.com/nf-core/airrflow/pull/310) Bump versions to 3.3.0, update containers and software versions
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.19        | 1.21        |
+| enchantr   | 0.1.9       | 0.1.11      |
+| igblast    | 1.19.0      | 1.22.0      |
 
 ## [3.2.0] - 2023-10-27 Expecto patronum
 
