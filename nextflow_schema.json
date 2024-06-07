@@ -77,7 +77,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-flask",
                     "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi", "sc_10x_genomics"],
+                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi", "sc_10x_genomics", "mixcr"],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
                 },
                 "race_linker": {
