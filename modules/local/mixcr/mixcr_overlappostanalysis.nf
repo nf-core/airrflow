@@ -1,4 +1,4 @@
-process MIXCR_IND_POSTANALYSIS {
+process MIXCR_OVERLAP_POSTANALYSIS {
     tag "$meta.id"
     label 'process_medium'
 
@@ -14,11 +14,12 @@ process MIXCR_IND_POSTANALYSIS {
     val(weight_function)
     val(productive)
     val(drop_outliers)
+    val(criteria)
 
 
     output:
     tuple val(meta), path('*')      , emit: outs
-    tuple val(meta), path('*.json') , emit: mixcr_ind_json    
+    tuple val(meta), path('*.json') , emit: mixcr_overlap_json    
 
     path "versions.yml"           , emit: versions
 
@@ -35,6 +36,7 @@ process MIXCR_IND_POSTANALYSIS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def productive_only = productive ? '--only-productive' : ''
     def drop_outliers = drop_outliers ? '--drop-outliers' : ''
+    def criteria_pick = criteria ? "--criteria '${criteria}'" : ''
     """
     # activate license
     if [ \${MIXCR_LICENSE:-"unset"} != "unset" ]; then
@@ -42,13 +44,14 @@ process MIXCR_IND_POSTANALYSIS {
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
 
-    mixcr postanalysis individual \\
+    mixcr postanalysis overlap \\
         --default-downsampling ${downsampling} \\
         --default-weight-function ${weight_function} \\
         ${productive_only} \\
         ${drop_outliers} \\
+        ${criteria_pick} \\
         ${clns} \\
-        ${prefix}.individual_postanalysis.json \\
+        ${prefix}.overlap_postanalysis.json \\
         $args \\
 
 

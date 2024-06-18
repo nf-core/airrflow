@@ -2,9 +2,9 @@ include { CELLRANGER_VDJ                                                } from '
 include { UNZIP_CELLRANGERDB                                            } from '../../modules/local/unzip_cellrangerdb'
 include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
+include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 
 include { MIXCR_FLOW                    } from './mixcr_flow'
-include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 
 
 workflow SC_RAW_INPUT {
@@ -93,8 +93,6 @@ workflow SC_RAW_INPUT {
     ch_versions = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions
 
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-
-    RENAME_FILE.out.file.dump(tag:"file")
 
     emit:
     versions = ch_versions

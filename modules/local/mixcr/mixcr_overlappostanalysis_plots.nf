@@ -1,4 +1,4 @@
-process MIXCR_IND_POSTANALYSIS {
+process MIXCR_OVERLAP_PLOTS {
     tag "$meta.id"
     label 'process_medium'
 
@@ -9,18 +9,12 @@ process MIXCR_IND_POSTANALYSIS {
         'ghcr.io/milaboratory/mixcr/mixcr:4.6.0' }"
 
     input:
-    tuple val(meta), path(clns)
-    val(downsampling)
-    val(weight_function)
-    val(productive)
-    val(drop_outliers)
-
+    tuple val(meta), path(mixcr_overlap_json)
 
     output:
-    tuple val(meta), path('*')      , emit: outs
-    tuple val(meta), path('*.json') , emit: mixcr_ind_json    
+    tuple val(meta), path('*')  , emit: outs
 
-    path "versions.yml"           , emit: versions
+    path "versions.yml"         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,8 +27,6 @@ process MIXCR_IND_POSTANALYSIS {
 
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def productive_only = productive ? '--only-productive' : ''
-    def drop_outliers = drop_outliers ? '--drop-outliers' : ''
     """
     # activate license
     if [ \${MIXCR_LICENSE:-"unset"} != "unset" ]; then
@@ -42,15 +34,12 @@ process MIXCR_IND_POSTANALYSIS {
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
 
-    mixcr postanalysis individual \\
-        --default-downsampling ${downsampling} \\
-        --default-weight-function ${weight_function} \\
-        ${productive_only} \\
-        ${drop_outliers} \\
-        ${clns} \\
-        ${prefix}.individual_postanalysis.json \\
-        $args \\
+    mixcr exportPlots overlap \\
+        ${mixcr_overlap_json} \\
+        ${prefix}.overlap.pdf 
 
+
+    
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

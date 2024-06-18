@@ -5,22 +5,6 @@
     "description": "B and T cell repertoire analysis pipeline with the Immcantation framework.",
     "type": "object",
     "definitions": {
-        "analysis_options": {
-            "title": "Analysis options",
-            "type": "object",
-            "fa_icon": "fas fa-terminal",
-            "description": "Define which tools should be used for your run.",
-            "required": ["analysis_tool"],
-            "properties": {
-                "analysis_tool": {
-                    "type": "string",
-                    "default": "immcantation",
-                    "description": "Specify the bioinformatic tool to perform the analysis. Available options are \"immcantation\" and \"mixcr\".",
-                    "enum": ["immcantation", "mixcr"],
-                    "fa_icon": "fas fa-terminal"
-                }
-            }
-        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -493,6 +477,83 @@
             },
             "help_text": "Options for running raw single cell data.",
             "fa_icon": "fab fa-pagelines"
+        },
+        "mixcr_options": {
+            "title": "MiXCR options",
+            "type": "object",
+            "description": "Options for the MiXCR VDJ assignment and postprocessing processes.",
+            "default": "",
+            "properties": {
+                "imgt_mixcr": {
+                    "type": "string",
+                    "description": "FILL THIS.",
+                    "help_text": "FILL THIS.",
+                    "fa_icon": "fas fa-database"
+                },
+                "kit": {
+                    "type": "string",
+                    "description": "MiXCR preset (FILL FURTHER!)",
+                    "help_text": "FILL THIS.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_postanalysis": {
+                    "type": "boolean",
+                    "description": "Run MiXCR post analysis.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_downsampling": {
+                    "type": "string",
+                    "description": "Choose downsampling method.",
+                    "help_text": "Default downsampling method to normalize the cloneset. See [MiXCR docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#downsampling) for details.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_weightfunction": {
+                    "type": "string",
+                    "description": "Choose weight function.",
+                    "help_text": "Default clonotype weight function. See [MiXCR docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#weight-functions) for details.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_productive_only": {
+                    "type": "string",
+                    "default": true,
+                    "description": "Filter out non-productive sequencs for individual postprocessing.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_drop_outliers": {
+                    "type": "string",
+                    "default": false,
+                    "description": "Drop outliers below downsampling value as defined in `mixcr_downsampling` individual postprocessing.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_overlap_criteria": {
+                    "type": "string",
+                    "default": "CDR3|AA|V|J",
+                    "description": "Defines the rules to treat clones as equal.",
+                    "help_text": "Defines the rules to treat clones as equal. Allows to specify gene feature for overlap (nt or AA) and optionally use V/J hits. Default: Overlap by AA CDR3 and V and J. See [docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#command-line-options_1) for help.",
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_diversity_plottype": {
+                    "type": "string",
+                    "default": "boxplot",
+                    "description": "Plot type to plot diversity in.",
+                    "enum": ["boxplot", "boxplot-bindot", "boxplot-jitter", "violin", "violin-bindot", "barplot", "barplot-stacked", "lineplot", "lineplot-jitter", "lineplot-bindot", "scatter"],
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_statistical_method": {
+                    "type": "string",
+                    "default": "Wilcoxon",
+                    "description": "Statistical test method used when plotting diversity and cdr3 metrics.",
+                    "enum": ["Wilcoxon", "ANOVA", "TTest", "KruskalWallis", "KolmogorovSmirnov"],
+                    "fa_icon": "CHOOSE"
+                },
+                "mixcr_p_adjust_method": {
+                    "type": "string",
+                    "default": "Holm",
+                    "description": "Method to adjust p-values when plotting diversity and cdr3 metrics.",
+                    "enum": ["Holm","BenjaminHochberg", "BenjaminYekutieli", "Bonferroni", "Hochberg", "Hommel", "none"],
+                    "fa_icon": "CHOOSE"
+                }
+            }
         },
         "report_options": {
             "title": "Report options",

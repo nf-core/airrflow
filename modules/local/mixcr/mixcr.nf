@@ -4,11 +4,6 @@ process MIXCR_MIXCR {
 
     secret 'MIXCR_LICENSE'
 
-    // TODO nf-core: List required Conda package(s).
-    //               Software MUST be pinned to channel (i.e. "bioconda"), version (i.e. "1.10").
-    //               For Conda, the build (i.e. "h9402c20_2") must be EXCLUDED to support installation on different operating systems.
-    // TODO check if you can use their conda for conda
-    //conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'ghcr.io/milaboratory/mixcr/mixcr:4.6.0':
         'ghcr.io/milaboratory/mixcr/mixcr:4.6.0' }"
@@ -19,13 +14,14 @@ process MIXCR_MIXCR {
     val(kit)
 
     output:
-    tuple val(meta), path('*.json'), emit: json
-    tuple val(meta), path('*.clns'), emit: clns
-    tuple val(meta), path('*.vdjca'), emit: vdjca
-    tuple val(meta), path('*.txt'), emit: txt
-    tuple val(meta), path('*.tsv'), emit: tsv
-    tuple val(meta), path('*clones*.tsv'), emit: clones_tsv
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path('*.json')         , emit: json
+    tuple val(meta), path('*.clns')         , emit: clns
+    tuple val(meta), path('*.vdjca')        , emit: vdjca
+    tuple val(meta), path('*.txt')          , emit: txt
+    tuple val(meta), path('*.tsv')          , emit: tsv
+    tuple val(meta), path('*clones*.tsv')   , emit: clones_tsv
+    tuple val(meta), path('*')              , emit: outs
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
