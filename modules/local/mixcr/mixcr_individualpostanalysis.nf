@@ -14,6 +14,7 @@ process MIXCR_IND_POSTANALYSIS {
     val(weight_function)
     val(productive)
     val(drop_outliers)
+    path(imgt_json) // imgt db
 
 
     output:

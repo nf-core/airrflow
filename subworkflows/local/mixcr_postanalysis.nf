@@ -32,7 +32,8 @@ workflow MIXCR_POSTANALYSIS {
         params.mixcr_downsampling,
         params.mixcr_weightfunction,
         params.mixcr_productive_only,
-        params.mixcr_drop_outliers
+        params.mixcr_drop_outliers,
+        file(params.imgt_mixcr)
     )
 
     ch_mixcr_ind_json = MIXCR_IND_POSTANALYSIS.out.mixcr_ind_json
@@ -50,7 +51,8 @@ workflow MIXCR_POSTANALYSIS {
         params.mixcr_weightfunction,
         params.mixcr_productive_only,
         params.mixcr_drop_outliers,
-        params.mixcr_overlap_criteria
+        params.mixcr_overlap_criteria,
+        file(params.imgt_mixcr)
     )
 
     ch_mixcr_overlap_json = MIXCR_OVERLAP_POSTANALYSIS.out.mixcr_overlap_json

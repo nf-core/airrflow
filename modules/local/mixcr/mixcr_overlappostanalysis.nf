@@ -15,6 +15,7 @@ process MIXCR_OVERLAP_POSTANALYSIS {
     val(productive)
     val(drop_outliers)
     val(criteria)
+    path(imgt_json) // imgt db
 
 
     output:
