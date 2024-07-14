@@ -13,8 +13,8 @@ process CHANGEO_PARSEDB_SPLIT {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*productive-T.tsv"), emit: tab // sequence tsv in AIRR format
-    tuple val(meta), path("*productive-F.tsv"), emit: unproductive
+    tuple val(meta), path("*productive-T.tsv"), emit: tab //sequence tsv in AIRR format
+    tuple val(meta), path("*productive-F.tsv"), emit: unproductive, optional: true //optional non-productive sequences
     path("*_command_log.txt"), emit: logs //process logs
     path "versions.yml" , emit: versions
 
