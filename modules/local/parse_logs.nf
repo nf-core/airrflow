@@ -18,7 +18,7 @@ process PARSE_LOGS {
     path('assemble_pairs/*') //PRESTO_ASSEMBLEPAIRS logs
     path('deduplicates/*') //PRESTO_COLLAPSESEQ logs
     path('filter_representative_2/*') //PRESTO_SPLITSEQ logs
-    path('igblast/*') //CHANGEO_PARSEDB_SELECT logs
+    path('igblast/*') //CHANGEO_MAKEDB logs
     path('metadata.tsv') //METADATA
 
     output:
