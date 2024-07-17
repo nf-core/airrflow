@@ -1,6 +1,7 @@
 include { PREPARE_TRUST4_REFERENCE                                      } from '../../modules/local/prepare_trust4_reference'
 include { TRUST4                                                        } from '../../modules/nf-core/trust4/main'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
+include { CHANGEO_PARSEDB_SELECT_LOCUS                                  } from '../../modules/local/changeo/changeo_parsedb_select_locus'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTP                                                         } from '../../modules/nf-core/fastp/main'
 include { RENAME_FASTQ as RENAME_FASTQ_TRUST4                           } from '../../modules/local/rename_fastq'
@@ -106,10 +107,13 @@ workflow RNASEQ_INPUT {
     // create channel with airr file
     ch_trust4_airr_file.bulk.mix ( ch_trust4_airr_file.sc ).set { ch_trust4_airr }
 
+    // select only provided locus
+    CHANGEO_PARSEDB_SELECT_LOCUS(ch_trust4_airr)
+
 
     // convert airr tsv to fasta
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
-                ch_trust4_airr
+                CHANGEO_PARSEDB_SELECT_LOCUS.out.tab
             )
 
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
