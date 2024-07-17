@@ -158,12 +158,12 @@ It is possible to provide several fastq files per sample (e.g. sequenced over di
 The required input file for processing raw BCR or TCR single cell targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. Any other columns you add will be available in the final repertoire file as extra metadata fields. You can refer to the bulk fastq input section for documentation on the individual columns.
 An example samplesheet is:
 
-| sample_id | filename_R1                     | filename_R2                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell |
-| --------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- |
-| sample01  | sample01_S1_L001_R1_001.fastq.gz | sample01_S1_L001_R2_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | TRUE       |
-| sample02  | sample02_S1_L001_R1_001.fastq.gz | sample02_S1_L001_R2_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | TRUE       |
+| sample_id | filename_R1                      | filename_R2                      | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell |
+| --------- | -------------------------------- | -------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- |
+| sample01  | sample01_S1_L001_R1_001.fastq.gz | sample01_S1_L001_R2_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | TRUE        |
+| sample02  | sample02_S1_L001_R1_001.fastq.gz | sample02_S1_L001_R2_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | TRUE        |
 
-> FASTQ files must conform with the 10xGenomics cellranger naming conventions with the same sample name as provided in the sample_id column <br> >**`[SAMPLE-NAME]`_ S`[CHIP-NUMBER]`_ L00`[LANE-NUMBER]`_`[R1/R2]`\_001.fastq.gz**
+> FASTQ files must conform with the 10xGenomics cellranger naming conventions with the same sample name as provided in the sample*id column <br> >\*\*`[SAMPLE-NAME]`* S`[CHIP-NUMBER]`_ L00`[LANE-NUMBER]`_`[R1/R2]`\_001.fastq.gz\*\*
 >
 > Read type is one of
 >
