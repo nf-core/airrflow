@@ -84,13 +84,11 @@ def create_fastq_channels(LinkedHashMap col) {
             error "ERROR: Please check input samplesheet -> Index read FastQ file does not exist!\n${col.filename_I1}"
         }
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2), file(col.filename_I1) ] ]
-    }
-    if (params.library_generation_method == "trust4") {
-        meta.barcode_read = params.barcode_read
-        meta.umi_read = params.umi_read
-        array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
     } else {
         array = [ meta, [ file(col.filename_R1), file(col.filename_R2) ] ]
+        if (params.index_file) {
+            error "ERROR: Index file path was provided but the index file path is not specified in the samplesheet!"
+        }
     }
     return array
 }

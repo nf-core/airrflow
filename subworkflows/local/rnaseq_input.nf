@@ -79,8 +79,8 @@ workflow RNASEQ_INPUT {
     ch_reads_trust4.dump(tag: "trust4_input")
 
     // create barcode and umi channels for nf-core trust4 module
-    barcode_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 ->  [meta, meta.barcode_read] }
-    umi_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, meta.umi_read] }
+    barcode_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 ->  [meta, params.barcode_read] }
+    umi_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, params.umi_read] }
 
     TRUST4(
         ch_reads_trust4,

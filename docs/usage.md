@@ -177,7 +177,7 @@ It is possible to provide several fastq files per sample (e.g. sequenced over di
 ### Fastq input samplesheet (untargeted bulk or sc RNA sequencing)
 
 When running the untargeted protocol, BCR or TCR sequences will be extracted from the untargeted bulk or single-cell RNA sequencing with tools such as [TRUST4](https://github.com/liulab-dfci/TRUST4).
-The required input file is the same as for the [Fastq bulk AIRR samplesheet](#fastq-input-samplesheet-bulk-airr-sequencing).
+The required input file is the same as for the [Fastq bulk AIRR samplesheet](#fastq-input-samplesheet-bulk-airr-sequencing) or [Fastq single-cell AIRR samplesheet](#fastq-input-samplesheet-single-cell-sequencing) depending on the input data type (bulk RNAseq or single-cell RNAseq).
 
 ### Assembled input samplesheet (bulk or single-cell sequencing)
 
