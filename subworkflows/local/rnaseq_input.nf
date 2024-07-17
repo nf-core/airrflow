@@ -1,5 +1,5 @@
 include { PREPARE_TRUST4_REFERENCE                                      } from '../../modules/local/prepare_trust4_reference'
-include { TRUST4                                                        } from '../../modules/local/trust4'
+include { TRUST4                                                        } from '../../modules/nf-core/trust4/main'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTP                                                         } from '../../modules/nf-core/fastp/main'
@@ -75,10 +75,18 @@ workflow RNASEQ_INPUT {
 
     PREPARE_TRUST4_REFERENCE.out.trust4_reference.dump(tag: "trust4_reference")
 
+    ch_reads_trust4.dump(tag: "trust4_input")
+
+    // create barcode and umi channels for nf-core trust4 module
+    barcode_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 ->  [meta, meta.barcode_read] }
+    umi_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, meta.umi_read] }
+
     TRUST4(
         ch_reads_trust4,
         PREPARE_TRUST4_REFERENCE.out.trust4_reference,
-        Channel.of([[], []]).collect()
+        Channel.of([[], []]).collect(),
+        barcode_channel,
+        umi_channel
     )
 
     ch_trust4_out = TRUST4.out.outs
