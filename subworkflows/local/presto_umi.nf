@@ -10,6 +10,7 @@ include { FASTP                                          } from '../../modules/n
 include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI     }    from '../../modules/local/presto/presto_filterseq'
 include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI   }    from '../../modules/local/presto/presto_maskprimers'
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_PRIMERS   }    from '../../modules/local/presto/presto_maskprimers_align'
+include { PRESTO_MASKPRIMERS_ALIGN_TRIM as PRESTO_ALIGN_TRIM   }    from '../../modules/local/presto/presto_maskprimers_align_trim'
 include { PRESTO_MASKPRIMERS_EXTRACT                         }    from '../../modules/local/presto/presto_maskprimers_extract'
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_CREGION   }    from '../../modules/local/presto/presto_maskprimers_align'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI       }    from '../../modules/local/presto/presto_pairseq'
@@ -36,6 +37,7 @@ workflow PRESTO_UMI {
     ch_reads       // channel: [ val(meta), [ reads ] ]
     ch_cprimers    // channel: [ cprimers.fasta ]
     ch_vprimers    // channel: [ vprimers.fasta ]
+    ch_umilinker   // channel: [ umi_linker.fasta ]
     ch_adapter_fasta // channel: [ adapters.fasta ]
     ch_internal_cregion // channel: [ internal_cregions.fasta ]
     ch_igblast
@@ -135,7 +137,30 @@ workflow PRESTO_UMI {
         ch_for_clustersets = PRESTO_PAIRSEQ_ALIGN.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_ALIGN.out.logs
 
-    } else {
+    } if (params.library_generation_method == 'specific_5p_race_umi') {
+        // trim any sequence in R1 that is before UMI pattern-race linker sequence
+        PRESTO_ALIGN_TRIM(
+            ch_reads_R1,
+            ch_umilinker.collect()
+        )
+        PRESTO_MASKPRIMERS_UMI (
+            PRESTO_ALIGN_TRIM.out.reads,
+            ch_cprimers.collect(),
+            ch_vprimers.collect()
+        )
+        
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_UMI.out.versions)
+        ch_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs
+
+        // Pre-consensus pair
+        PRESTO_PAIRSEQ_UMI (
+            PRESTO_MASKPRIMERS_UMI.out.reads
+        )
+        ch_versions = ch_versions.mix(PRESTO_PAIRSEQ_UMI.out.versions)
+        ch_for_clustersets = PRESTO_PAIRSEQ_UMI.out.reads
+        ch_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs
+
+        } else {
 
         PRESTO_MASKPRIMERS_UMI (
             PRESTO_FILTERSEQ_UMI.out.reads,
