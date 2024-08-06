@@ -13,7 +13,7 @@ process PRESTO_MASKPRIMERS_ALIGN_TRIM {
     path(umi_linker)
 
     output:
-    tuple val(meta), path("*_R1_primers-pass.fastq") , emit: reads
+    tuple val(meta), path("*_trim_R1_primers-pass.fastq") , emit: reads
     path "*_command_log_R1.txt", emit: logs
     path "*_R1.log"
     path "*.tab", emit: log_tab
@@ -28,7 +28,7 @@ process PRESTO_MASKPRIMERS_ALIGN_TRIM {
     -p ${umi_linker} \\
     --mode trim \\
     $args \\
-    --outname ${meta.id}_R1 \\
+    --outname ${meta.id}_trim_R1 \\
     --log ${meta.id}_R1.log > ${meta.id}_command_log_R1.txt
     ParseLog.py -l ${meta.id}_R1.log $args2
 

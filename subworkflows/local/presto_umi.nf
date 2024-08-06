@@ -137,14 +137,25 @@ workflow PRESTO_UMI {
         ch_for_clustersets = PRESTO_PAIRSEQ_ALIGN.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_ALIGN.out.logs
 
-    } if (params.library_generation_method == 'specific_5p_race_umi') {
+    } else if (params.library_generation_method == 'specific_5p_race_umi') {
+
+        ch_reads_R1 = PRESTO_FILTERSEQ_UMI.out.reads
+                                            .map{ reads -> [reads[0], reads[1]] }.dump(tag: 'ch_reads_R1')
+
         // trim any sequence in R1 that is before UMI pattern-race linker sequence
         PRESTO_ALIGN_TRIM(
             ch_reads_R1,
             ch_umilinker.collect()
         )
+
+        // Merge again R1 and R2 by sample ID.
+        ch_maskprimers_trim_reads_R1 = PRESTO_ALIGN_TRIM.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_trim_reads_R1')
+        ch_filterseq_umi_reads_R2 = PRESTO_FILTERSEQ_UMI.out.reads.map{ reads -> [reads[0].id, reads[0], reads[2]]}.dump(tag: 'ch_filterseq_umi_reads_R2')
+        ch_reads_for_maskprimers_umi = ch_maskprimers_trim_reads_R1.join(ch_filterseq_umi_reads_R2)
+                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_reads_for_maskprimers_umi')
+
         PRESTO_MASKPRIMERS_UMI (
-            PRESTO_ALIGN_TRIM.out.reads,
+            ch_reads_for_maskprimers_umi,
             ch_cprimers.collect(),
             ch_vprimers.collect()
         )
@@ -160,7 +171,7 @@ workflow PRESTO_UMI {
         ch_for_clustersets = PRESTO_PAIRSEQ_UMI.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs
 
-        } else {
+    } else {
 
         PRESTO_MASKPRIMERS_UMI (
             PRESTO_FILTERSEQ_UMI.out.reads,

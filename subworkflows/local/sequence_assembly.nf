@@ -238,6 +238,7 @@ workflow SEQUENCE_ASSEMBLY {
             ch_reads,
             ch_cprimers_fasta,
             ch_vprimers_fasta,
+            ch_umilinker_fasta,
             ch_adapter_fasta,
             ch_internal_cregion,
             ch_igblast.collect()
