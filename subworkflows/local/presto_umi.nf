@@ -21,6 +21,7 @@ include { PRESTO_BUILDCONSENSUS as  PRESTO_BUILDCONSENSUS_UMI}    from '../../mo
 include { PRESTO_BUILDCONSENSUS as PRESTO_BUILDCONSENSUS_ALIGN }  from '../../modules/local/presto/presto_buildconsensus'
 include { PRESTO_POSTCONSENSUS_PAIRSEQ as PRESTO_POSTCONSENSUS_PAIRSEQ_UMI }    from '../../modules/local/presto/presto_postconsensus_pairseq'
 include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_UMI }    from '../../modules/local/presto/presto_assemblepairs'
+include { PRESTO_ASSEMBLEPAIRS_JOIN  as  PRESTO_ASSEMBLEPAIRS_JOIN_UMI }    from '../../modules/local/presto/presto_assemblepairs_join'
 include { PRESTO_ASSEMBLEPAIRS_SEQUENTIAL                    }    from '../../modules/local/presto/presto_assemblepairs_sequential'
 include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_COLLAPSE_UMI } from '../../modules/local/presto/presto_parseheaders'
 include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_CREGION } from '../../modules/local/presto/presto_parseheaders'
@@ -244,6 +245,31 @@ workflow PRESTO_UMI {
         ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_SEQUENTIAL.out.versions)
         ch_assemblepairs_reads = PRESTO_ASSEMBLEPAIRS_SEQUENTIAL.out.reads
         ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_SEQUENTIAL.out.logs
+    } else if (params.assemblepairs_join) {
+        // Assemble read pairs align and get failed reads
+        PRESTO_ASSEMBLEPAIRS_UMI (
+            PRESTO_POSTCONSENSUS_PAIRSEQ_UMI.out.reads
+        )
+        
+
+        // Merge R1 failed, R2 failed and assemblepairs pass reads by sample ID.
+        ch_assemblepairs_fail_reads = PRESTO_ASSEMBLEPAIRS_UMI.out.reads_fail.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_assemblepairs_fail_reads')
+        
+        ch_assemblepairs_pass_reads = PRESTO_ASSEMBLEPAIRS_UMI.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_assemblepairs_pass_reads')
+        
+        ch_reads_for_assemblepairs_join_umi = ch_assemblepairs_fail_reads.join(ch_assemblepairs_pass_reads)
+                                                        .map{ it -> [it[1], it[2][0], it[2][1], it[4]] }.dump(tag: 'ch_reads_for_assemblepairs_join_umi')
+        
+        // rescue no overlapping reads
+        PRESTO_ASSEMBLEPAIRS_JOIN_UMI (
+            ch_reads_for_assemblepairs_join_umi
+        )
+        
+        ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.versions)
+        ch_assemblepairs_reads = PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.reads
+        ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.logs
+        
+
     } else {
         // Assemble read pairs align
         PRESTO_ASSEMBLEPAIRS_UMI (
