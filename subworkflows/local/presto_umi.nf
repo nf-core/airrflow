@@ -267,9 +267,11 @@ workflow PRESTO_UMI {
         
         ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.versions)
         ch_assemblepairs_reads = PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.reads
-        ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.logs
-        
 
+
+        // not include number of rescue reads 
+        ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_UMI.out.logs
+        
     } else {
         // Assemble read pairs align
         PRESTO_ASSEMBLEPAIRS_UMI (
