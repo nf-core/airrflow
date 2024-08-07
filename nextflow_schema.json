@@ -316,6 +316,7 @@
                 "assemblepairs_join": {
                     "type": "boolean",
                     "fa_icon": "fas fa-align-center",
+                    "default": false,
                     "description": "Use AssemblePairs join after AssemblePairs align to rescue non-overlapping reads by concatening them by their ends."
                 },
                 "align_cregion": {
