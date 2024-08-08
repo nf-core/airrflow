@@ -437,6 +437,27 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 
 - No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
+### 5’-RACE where R1 not starting directly by UMI 
+
+This sequencing type requires setting `--library_generation_method specific_5p_race_umi`.
+
+A fasta file containing the UMI + race linker sequence pattern is required to locate and trim the sequence upstream of the UMI.
+
+```bash
+nextflow run nf-core/airrflow -profile docker \
+--input samplesheet.tsv \
+--library_generation_method specific_5p_race_umi \
+--cprimers Cprimers.fasta \
+--race_linker linker.fasta \
+--umi_linker umi_pattern.fasta \
+--umi_position R1 \
+--umi_length 18 \
+--cprimer_start 0 \
+--cprimer_position R2  
+--outdir ./results
+```
+
+
 ## Supported single cell library generation methods (protocols)
 
 When processing single cell sequencing data departing from raw `fastq` reads, currently only a `--library_generation_method` to support 10xGenomics data is available.
