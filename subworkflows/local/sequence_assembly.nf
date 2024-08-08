@@ -67,6 +67,7 @@ workflow SEQUENCE_ASSEMBLY {
 
     // Validate library generation method parameter
     if (params.library_generation_method == 'specific_pcr_umi'){
+        ch_umilinker_fasta = Channel.of([])
         if (params.vprimers)  {
             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
         } else {
@@ -89,6 +90,7 @@ workflow SEQUENCE_ASSEMBLY {
             ch_internal_cregion = Channel.of([])
         }
     } else if (params.library_generation_method == 'specific_pcr') {
+        ch_umilinker_fasta = Channel.of([])
         if (params.vprimers)  {
             ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
         } else {
@@ -111,6 +113,7 @@ workflow SEQUENCE_ASSEMBLY {
             error "Please do not set '--internal_cregion_sequences' when using the 'specific_pcr' library generation method without UMIs."
         }
     } else if (params.library_generation_method == 'dt_5p_race_umi') {
+        ch_umilinker_fasta = Channel.of([])
         if (params.vprimers) {
             error "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
@@ -134,6 +137,7 @@ workflow SEQUENCE_ASSEMBLY {
             ch_internal_cregion = Channel.of([])
         }
     } else if (params.library_generation_method == 'dt_5p_race') {
+        ch_umilinker_fasta = Channel.of([])
         if (params.vprimers) {
             error "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
