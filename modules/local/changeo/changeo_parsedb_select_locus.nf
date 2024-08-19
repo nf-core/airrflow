@@ -1,4 +1,4 @@
-process CHANGEO_PARSEDB_SELECT {
+process CHANGEO_PARSEDB_SELECT_LOCUS {
     tag "$meta.id"
     label 'process_low'
     label 'immcantation'
@@ -18,25 +18,21 @@ process CHANGEO_PARSEDB_SELECT {
     path "versions.yml" , emit: versions
 
     script:
-    def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
     if (meta.locus.toUpperCase() == 'IG'){
         """
-        ParseDb.py select -d $tab $args --outname ${meta.id} > ${meta.id}_select_command_log.txt
+        ParseDb.py select -d $tab -f locus -u "IG[HKL]" --regex --outname ${meta.id} > ${meta.id}_select_command_log.txt
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
-            igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
             changeo: \$( ParseDb.py --version | awk -F' '  '{print \$2}' )
         END_VERSIONS
         """
     } else if (meta.locus.toUpperCase() == 'TR'){
         """
-        ParseDb.py select -d $tab $args2 --outname ${meta.id} > "${meta.id}_command_log.txt"
+        ParseDb.py select -d $tab -f locus -u "TR[ABDG]" --regex --outname ${meta.id} > "${meta.id}_command_log.txt"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
-            igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
             changeo: \$( ParseDb.py --version | awk -F' '  '{print \$2}' )
         END_VERSIONS
         """
