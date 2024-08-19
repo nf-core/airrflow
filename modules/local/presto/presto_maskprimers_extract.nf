@@ -10,6 +10,9 @@ process PRESTO_MASKPRIMERS_EXTRACT {
 
     input:
     tuple val(meta), path(R2)
+    val(extract_start),
+    val(extract_length),
+    val(extract_mode)
 
     output:
     tuple val(meta), path("*_R2_primers-pass.fastq") , emit: reads
@@ -24,10 +27,10 @@ process PRESTO_MASKPRIMERS_EXTRACT {
     """
     MaskPrimers.py extract --nproc ${task.cpus} \\
     -s $R2 \\
-    --start ${params.umi_length} \\
-    --len ${params.primer_extract_len} \\
+    --start ${extract_start} \\
+    --len ${extract_length} \\
     $args \\
-    --mode ${params.primer_mask_mode} \\
+    --mode ${extract_mode} \\
     --outname ${meta.id}_R2 \\
     --log ${meta.id}_R2.log >> ${meta.id}_command_log_R2.txt
     ParseLog.py -l ${meta.id}_R2.log $args2
