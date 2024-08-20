@@ -12,10 +12,13 @@ include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI            }    from 
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_PRIMERS            }    from '../../modules/local/presto/presto_maskprimers_align'
 include { PRESTO_MASKPRIMERS_EXTRACT as PRESTO_MASKPRIMERS_EXTRACT    }    from '../../modules/local/presto/presto_maskprimers_extract'
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_CREGION            }    from '../../modules/local/presto/presto_maskprimers_align'
-include { PRESTO_MASKPRIMERS_EXTRACT_R1 as PRESTO_MASKPRIMERS_EXTRACT }    from '../../modules/local/presto/presto_maskprimers_extract'
-include { PRESTO_MASKPRIMERS_EXTRACT_R2 as PRESTO_MASKPRIMERS_EXTRACT }    from '../../modules/local/presto/presto_maskprimers_extract'
+include { PRESTO_MASKPRIMERS_SCORE as PRESTO_MASKPRIMERS_SCORE_UMI_R1 }    from '../../modules/local/presto/presto_maskprimers_score'
+include { PRESTO_MASKPRIMERS_SCORE as PRESTO_MASKPRIMERS_SCORE_UMI_R2 }    from '../../modules/local/presto/presto_maskprimers_score'
+include { PRESTO_MASKPRIMERS_EXTRACT as PRESTO_MASKPRIMERS_EXTRACT_R1 }    from '../../modules/local/presto/presto_maskprimers_extract'
+include { PRESTO_MASKPRIMERS_EXTRACT as PRESTO_MASKPRIMERS_EXTRACT_R2 }    from '../../modules/local/presto/presto_maskprimers_extract'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI                }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_ALIGN              }    from '../../modules/local/presto/presto_pairseq'
+include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_EXTRACT            }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI            }    from '../../modules/local/presto/presto_clustersets'
 include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI          }    from '../../modules/local/presto/presto_parse_cluster'
 include { PRESTO_BUILDCONSENSUS as  PRESTO_BUILDCONSENSUS_UMI         }    from '../../modules/local/presto/presto_buildconsensus'
@@ -117,11 +120,16 @@ workflow PRESTO_UMI {
             params.primer_r1_maxerror,
             params.primer_r1_mask_mode
         )
+
+        def r2_suffix = "R2"
+        def barcode = true
         PRESTO_MASKPRIMERS_EXTRACT(
             ch_reads_R2,
             params.umi_length,
             params.primer_r2_extract_len,
-            params.primer_r2_mask_mode
+            params.primer_r2_mask_mode,
+            barcode,
+            r2_suffix
         )
 
         ch_versions = ch_versions.mix(PRESTO_ALIGN_PRIMERS.out.versions)
@@ -140,26 +148,85 @@ workflow PRESTO_UMI {
         ch_for_clustersets = PRESTO_PAIRSEQ_ALIGN.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_ALIGN.out.logs
 
-    // } else if (params.maskprimers_extract){
+    } else if (params.maskprimers_extract){
 
-    //     ch_reads_R1 = PRESTO_FILTERSEQ_UMI.out.reads
-    //                                         .map{ reads -> [reads[0], reads[1]] }.dump(tag: 'ch_reads_R1')
-    //     ch_reads_R2 = PRESTO_FILTERSEQ_UMI.out.reads
-    //                                         .map{ reads -> [reads[0], reads[2]] }.dump(tag: 'ch_reads_R2')
+        ch_reads_R1 = PRESTO_FILTERSEQ_UMI.out.reads
+                                            .map{ reads -> [reads[0], reads[1]] }.dump(tag: 'ch_reads_R1')
+        ch_reads_R2 = PRESTO_FILTERSEQ_UMI.out.reads
+                                            .map{ reads -> [reads[0], reads[2]] }.dump(tag: 'ch_reads_R2')
 
-    //     if (cprimer_position == "R1")
-    //         PRESTO_MASKPRIMERS_EXTRACT(
-    //             ch_reads_R1,
-    //             params.umi_length,
-    //             params.primer_r1_extract_len,
-    //             params.primer_r1_mask_mode
-    //         )
-    //     }
+        if (params.cprimer_position == "R1"){
+            def barcode_R1 = (params.index_file | params.umi_position == 'R1') ? true : false
+            def cprimer_start = (params.index_file | params.umi_position == 'R1') ? "${params.umi_length + params.cprimer_start}" : "${params.cprimer_start}"
+            def suffix_R1 = "R1"
+            PRESTO_MASKPRIMERS_EXTRACT_R1(
+                ch_reads_R1,
+                cprimer_start,
+                params.primer_r1_extract_len,
+                params.primer_r1_mask_mode,
+                barcode_R1,
+                suffix_R1
+            )
 
-    //     PRESTO_MASKPRIMERS_EXTRACT(
-    //         ch_reads_R2
-    //     )
+            def barcode_R2 = (params.umi_position == "R2") ? true : false
+            def vprimer_start = (params.umi_position == "R2") ? "${params.umi_length + params.vprimer_start}" : "${params.vprimer_start}"
+            def suffix_R2 = "R2"
 
+            PRESTO_MASKPRIMERS_EXTRACT_R2(
+                ch_reads_R2,
+                vprimer_start,
+                params.primer_r2_extract_len,
+                params.primer_r2_mask_mode,
+                barcode_R2,
+                suffix_R2
+            )
+        } else if (params.cprimer_position == "R2") {
+            def barcode_R1 = (params.index_file | params.umi_position == 'R1') ? true : false
+            def vprimer_start = (params.index_file | params.umi_position == 'R1') ? "${params.umi_length + params.vprimer_start}" : "${params.vprimer_start}"
+            def suffix_R1 = "R1"
+            PRESTO_MASKPRIMERS_EXTRACT_R1(
+                ch_reads_R1,
+                vprimer_start,
+                params.primer_r1_extract_len,
+                params.primer_r1_mask_mode,
+                barcode_R1,
+                suffix_R1
+            )
+
+            def barcode_R2 = (params.umi_position == "R2") ? true : false
+            def cprimer_start = (params.umi_position == "R2") ? "${params.umi_length + params.cprimer_start}" : "${params.cprimer_start}"
+            def suffix_R2 = "R2"
+
+            PRESTO_MASKPRIMERS_EXTRACT_R2(
+                ch_reads_R2,
+                cprimer_start,
+                params.primer_r2_extract_len,
+                params.primer_r2_mask_mode,
+                barcode_R2,
+                suffix_R2
+            )
+        } else {
+            error "Error in determining cprimer position. Please choose R1 or R2."
+        }
+
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_EXTRACT_R1.out.versions)
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_EXTRACT_R2.out.versions)
+
+        // Merge again R1 and R2 by sample ID.
+        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_EXTRACT_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R1')
+        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_EXTRACT_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R2')
+        ch_maskprimers_reads = ch_maskprimers_reads_R1.join(ch_maskprimers_reads_R2)
+                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_maskprimers_reads_after_remerge')
+
+        ch_maskprimers_logs = PRESTO_MASKPRIMERS_EXTRACT_R1.out.logs
+        ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_EXTRACT_R2.out.logs)
+
+        PRESTO_PAIRSEQ_EXTRACT(
+            ch_maskprimers_reads
+        )
+        ch_versions  = ch_versions.mix(PRESTO_PAIRSEQ_EXTRACT.out.versions)
+        ch_for_clustersets = PRESTO_PAIRSEQ_EXTRACT.out.reads
+        ch_pairseq_logs = PRESTO_PAIRSEQ_EXTRACT.out.logs
 
     }  else {
 
@@ -177,49 +244,62 @@ workflow PRESTO_UMI {
                                             .map{ reads -> [reads[0], reads[2]] }.dump(tag: 'ch_reads_R2')
         def suffix_R1 = "R1"
         def suffix_R2 = "R2"
+        def revpr_R1 = false
         if (params.cprimer_position == "R1") {
-            def barcode_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
-            def barcode_R2 = (params.umi_position == "R2") ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
+            def barcode_R1 = (params.index_file | params.umi_position == 'R1') ? "${params.umi_length + params.cprimer_start}" : "${params.cprimer_start}"
+            def cprimer_start = (params.index_file | params.umi_position == 'R1') ? "${params.umi_length + params.cprimer_start}" : "${params.cprimer_start}"
             PRESTO_MASKPRIMERS_SCORE_UMI_R1(
                 ch_reads_R1,
                 ch_cprimers.collect(),
+                cprimer_start,
                 barcode_R1,
                 params.primer_r1_maxerror,
                 params.primer_r1_mask_mode,
-                params.revpr,
+                revpr_R1,
                 suffix_R1
             )
+
+            def barcode_R2 = (params.umi_position == "R2") ? "${params.umi_length + params.vprimer_start}" : "${params.vprimer_start}"
+            def vprimer_start = (params.umi_position == "R2") ? "${params.umi_length + params.vprimer_start}" : "${params.vprimer_start}"
             PRESTO_MASKPRIMERS_SCORE_UMI_R2(
                 ch_reads_R2,
                 ch_vprimers.collect(),
+                vprimer_start,
                 barcode_R2,
                 params.primer_r2_maxerror,
                 params.primer_r2_mask_mode,
+                params.primer_revpr,
                 suffix_R2
             )
         } else if (params.cprimer_position == "R2") {
-            def barcode_R1 = (params.index_file | params.umi_position == 'R1') ? "--start ${params.umi_length + params.vprimer_start} --barcode" : "--start ${params.vprimer_start}"
-            def barcode_R2 = (params.umi_position == "R2") ? "--start ${params.umi_length + params.cprimer_start} --barcode" : "--start ${params.cprimer_start}"
+            def barcode_R1 = (params.index_file | params.umi_position == 'R1') ? true : false
+            def vprimer_start = (params.index_file | params.umi_position == 'R1') ? "${params.umi_length + params.vprimer_start}" : "${params.vprimer_start}"
             PRESTO_MASKPRIMERS_SCORE_UMI_R1(
                 ch_reads_R1,
                 ch_vprimers.collect(),
+                vprimer_start,
                 barcode_R1,
                 params.primer_r1_maxerror,
                 params.primer_r1_mask_mode,
-                params.revpr,
+                revpr_R1,
                 suffix_R1
             )
+            def barcode_R2 = (params.umi_position == "R2") ? true : false
+            def cprimer_start = (params.umi_position == "R2") ? "${params.umi_length + params.cprimer_start}" : "${params.cprimer_start}"
+
             PRESTO_MASKPRIMERS_SCORE_UMI_R2(
                 ch_reads_R2,
                 ch_cprimers.collect(),
+                cprimer_start,
                 barcode_R2,
                 params.primer_r2_maxerror,
                 params.primer_r2_mask_mode,
+                params.primer_revpr,
                 suffix_R2
             )
-        } else (
+        } else {
             error "Error in determining cprimer position. Please choose R1 or R2."
-        )
+        }
 
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_SCORE_UMI_R1.out.versions)
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_SCORE_UMI_R2.out.versions)

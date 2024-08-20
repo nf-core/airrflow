@@ -1,4 +1,4 @@
-process PRESTO_MASKPRIMERS {
+process PRESTO_MASKPRIMERS_SCORE {
     tag "$meta.id"
     label "process_high"
     label 'immcantation'
@@ -11,6 +11,7 @@ process PRESTO_MASKPRIMERS {
     input:
     tuple val(meta), path(read)
     path(primers)
+    val(primer_start)
     val(barcode)
     val(primer_maxerror)
     val(primer_mask_mode)
@@ -19,17 +20,30 @@ process PRESTO_MASKPRIMERS {
 
     output:
     tuple val(meta), path("*_primers-pass.fastq"), emit: reads
-    path "*_command_log.txt", emit: logs
+    path "*.txt", emit: logs
     path "*.log"
     path "*.tab", emit: log_tab
     path "versions.yml" , emit: versions
 
 
     script:
-    def revpr = params.reverse_primers ? '--revpr' : ''
+    def args = task.ext.args?: ''
+    def args2 = task.ext.args2?: ''
+    def revpr = reverse_primers ? '--revpr' : ''
+    def barcode = barcode ? '--barcode' : ''
     """
-    MaskPrimers.py score --nproc ${task.cpus} -s $read -p ${primers} $barcode $revpr --maxerror ${primer_maxerror} --mode ${primer_mask_mode} --outname ${meta.id}_${suffix} --log ${meta.id}_${suffix}.log > ${meta.id}_${suffix}_command_log.txt
-    ParseLog.py -l *.log -f ID PRIMER ERROR
+    MaskPrimers.py score \\
+    --nproc ${task.cpus} \\
+    -s $read \\
+    -p ${primers} \\
+    --maxerror ${primer_maxerror} \\
+    --mode ${primer_mask_mode} \\
+    --start ${primer_start} \\
+    $barcode $revpr \\
+    $args \\
+    --outname ${meta.id}_${suffix} \\
+    --log ${meta.id}_${suffix}.log > ${meta.id}_command_log_${suffix}.txt
+    ParseLog.py -l *.log $args2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

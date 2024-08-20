@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Written by David Ladd and released under the MIT license (2020).
+# Written by David Ladd, Gisela Gabernet and released under the MIT license (2020).
 
 # log_parsing_no-umi.py
 # Parsing log files for each of the steps for QC analysis.
@@ -23,7 +23,7 @@ processes = [
 df_process_list = []
 
 for process in processes:
-    find = subprocess.check_output(["find", process, "-name", "*command_log.txt"])
+    find = subprocess.check_output(["find", process, "-name", "*command_log*"])
     log_files = find.decode().split("\n")
     log_files = list(filter(None, log_files))
 
@@ -59,49 +59,67 @@ for process in processes:
 
         df_process_list.append(df_process)
 
-    elif process in ["mask_primers", "filter_by_sequence_quality"]:
+    if process in ["filter_by_sequence_quality"]:
         s_code = []
-        output_file = []
-        seqs_R1 = []
-        seqs_R2 = []
-        pass_R1 = []
-        pass_R2 = []
-        fail_R1 = []
-        fail_R2 = []
+        pass_pairs = []
+        fail_pairs = []
         process_name = []
 
         for logfile in log_files:
-            c = 0
             with open(logfile, "r") as f:
-                # print(f.read())
                 for line in f:
                     if " START>" in line:
-                        if c < 1:
-                            s_code.append(logfile.split("/")[1].split("_command_log")[0])
-                            process_name.append(process)
-                    elif "SEQUENCES>" in line:
-                        if c < 1:
-                            seqs_R1.append(line.strip().removeprefix("SEQUENCES> "))
-                        else:
-                            seqs_R2.append(line.strip().removeprefix("SEQUENCES> "))
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
+                        process_name.append(process)
                     elif "PASS>" in line:
-                        if c < 1:
-                            pass_R1.append(line.strip().removeprefix("PASS> "))
-                        else:
-                            pass_R2.append(line.strip().removeprefix("PASS> "))
+                        pass_pairs.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
-                        if c < 1:
-                            fail_R1.append(line.strip().removeprefix("FAIL> "))
-                            c += 1
-                        else:
-                            fail_R2.append(line.strip().removeprefix("FAIL> "))
+                        fail_pairs.append(line.strip().removeprefix("FAIL> "))
 
         df_process = pd.DataFrame.from_dict(
             {
                 "Sample": s_code,
-                "start_R1": seqs_R1,
-                "pass_R1": pass_R1,
-                "fail_R1": fail_R1,
+                "pass_pairs": pass_pairs,
+                "fail_pairs": fail_pairs,
+                "process": process_name,
+            }
+        )
+
+        df_process_list.append(df_process)
+
+    elif process in ["mask_primers"]:
+        s_code = []
+        s_readtype = []
+        output_file = []
+        n_seqs = []
+        n_pass = []
+        n_fail = []
+        process_name = []
+
+        for logfile in log_files:
+            if "_R1" in logfile:
+                s_readtype.append("R1")
+            elif "_R2" in logfile:
+                s_readtype.append("R2")
+            with open(logfile, "r") as f:
+                for line in f:
+                    if " START>" in line:
+                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
+                        process_name.append(process)
+                    elif "SEQUENCES>" in line:
+                        n_seqs.append(line.strip().removeprefix("SEQUENCES> "))
+                    elif "PASS>" in line:
+                        n_pass.append(line.strip().removeprefix("PASS> "))
+                    elif "FAIL>" in line:
+                        n_fail.append(line.strip().removeprefix("FAIL> "))
+
+        df_process = pd.DataFrame.from_dict(
+            {
+                "Sample": s_code,
+                "readtype": s_readtype,
+                "start": n_seqs,
+                "pass": n_pass,
+                "fail": n_fail,
                 "process": process_name,
             }
         )
@@ -282,21 +300,11 @@ colnames = [
     "Sequences",
     "Assemble_pairs",
     "Filtered_quality",
-    "Mask_primers",
+    "Mask_primers_R1",
+    "Mask_primers_R2",
     "Unique",
     "Representative_2",
     "Igblast",
-]
-
-values = [
-    df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_pairs"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-    df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_R1"].tolist(),
-    df_process_list[3].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
 ]
 
 # Tables provide extra info and help debugging
@@ -315,6 +323,18 @@ df_process_list[1].to_csv(
 df_process_list[2].to_csv(path_or_buf="Table_all_details_mask_primers.tsv", sep="\t", header=True, index=False)
 df_process_list[3].to_csv(path_or_buf="Table_all_details_deduplicate.tsv", sep="\t", header=True, index=False)
 df_process_list[4].to_csv(path_or_buf="Table_all_details_igblast.tsv", sep="\t", header=True, index=False)
+
+values = [
+    df_process_list[0].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "start_pairs"].tolist(),
+    df_process_list[0].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+    df_process_list[1].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
+    df_process_list[2].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R1"].tolist(),
+    df_process_list[2].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R2"].tolist(),
+    df_process_list[3].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+]
 
 final_table = dict(zip(colnames, values))
 print(final_table)

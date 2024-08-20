@@ -369,8 +369,7 @@ if args.cluster_sets:
 
 colnames = [
     "Sample",
-    "Sequences_R1",
-    "Sequences_R2",
+    "Sequences",
     "Filtered_quality_R1",
     "Filtered_quality_R2",
     "Mask_primers_R1",
@@ -388,7 +387,6 @@ print(df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", column
 values = [
     df_process_list[2].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
     df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["start"]["R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["start"]["R2"].tolist(),
     df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R1"].tolist(),
     df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R2"].tolist(),
     df_process_list[1].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R1"].tolist(),

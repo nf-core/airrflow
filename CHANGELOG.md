@@ -3,7 +3,24 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.1.0] -
+## [4.2.0] - dev
+
+### `Added`
+
+- [#334](https://github.com/nf-core/airrflow/pull/334) Added TRUST4 support.
+- Added option to extract V and C primers when sequence is unknown.
+
+### `Fixed`
+
+- Avoid saving pRESTO intermediate fastq files in results directory.
+- Simplified pRESTO Maskprimers score and Maskprimers extract processes.
+
+### `Dependencies`
+
+### `Deprecated parameters`
+
+
+## [4.1.0] - Avenseguim
 
 ### `Added`
 

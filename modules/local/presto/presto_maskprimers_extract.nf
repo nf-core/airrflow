@@ -9,31 +9,36 @@ process PRESTO_MASKPRIMERS_EXTRACT {
         'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(R2)
-    val(extract_start),
-    val(extract_length),
+    tuple val(meta), path(read)
+    val(extract_start)
+    val(extract_length)
     val(extract_mode)
+    val(barcode)
+    val(suffix)
 
     output:
-    tuple val(meta), path("*_R2_primers-pass.fastq") , emit: reads
-    path "*_command_log_R2.txt", emit: logs
-    path "*_R2.log"
+    tuple val(meta), path("*_primers-pass.fastq") , emit: reads
+    path "*.txt", emit: logs
+    path "*.log"
     path "*.tab", emit: log_tab
     path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args?: ''
     def args2 = task.ext.args2?: ''
+    def barcode = barcode ? '--barcode' : ''
     """
-    MaskPrimers.py extract --nproc ${task.cpus} \\
-    -s $R2 \\
+    MaskPrimers.py extract \\
+    --nproc ${task.cpus} \\
+    -s $read \\
     --start ${extract_start} \\
     --len ${extract_length} \\
+    $barcode \\
     $args \\
     --mode ${extract_mode} \\
-    --outname ${meta.id}_R2 \\
-    --log ${meta.id}_R2.log >> ${meta.id}_command_log_R2.txt
-    ParseLog.py -l ${meta.id}_R2.log $args2
+    --outname ${meta.id}_${suffix} \\
+    --log ${meta.id}_${suffix}.log >> ${meta.id}_command_log_${suffix}.txt
+    ParseLog.py -l *.log $args2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
