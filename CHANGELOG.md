@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#344](https://github.com/nf-core/airrflow/pull/344) Avoid saving pRESTO intermediate fastq files in results directory.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Simplified pRESTO Maskprimers score and Maskprimers extract processes.
-- Fix clustersets approach, consider both reads clusters annotation.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Fix clustersets approach, consider both reads clusters annotation.
 
 ### `Dependencies`
 
