@@ -19,10 +19,12 @@ include { PRESTO_MASKPRIMERS_EXTRACT as PRESTO_MASKPRIMERS_EXTRACT_R2 }    from 
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI                }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_ALIGN              }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_EXTRACT            }    from '../../modules/local/presto/presto_pairseq'
+include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_CLUSTERSETS        }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI            }    from '../../modules/local/presto/presto_clustersets'
 include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI          }    from '../../modules/local/presto/presto_parse_cluster'
 include { PRESTO_BUILDCONSENSUS as  PRESTO_BUILDCONSENSUS_UMI         }    from '../../modules/local/presto/presto_buildconsensus'
 include { PRESTO_BUILDCONSENSUS as PRESTO_BUILDCONSENSUS_ALIGN        }    from '../../modules/local/presto/presto_buildconsensus'
+include { PRESTO_BUILDCONSENSUS as PRESTO_BUILDCONSENSUS_EXTRACT      }    from '../../modules/local/presto/presto_buildconsensus'
 include { PRESTO_POSTCONSENSUS_PAIRSEQ as PRESTO_POSTCONSENSUS_PAIRSEQ_UMI }    from '../../modules/local/presto/presto_postconsensus_pairseq'
 include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_UMI          }    from '../../modules/local/presto/presto_assemblepairs'
 include { PRESTO_ASSEMBLEPAIRS_SEQUENTIAL                             }    from '../../modules/local/presto/presto_assemblepairs_sequential'
@@ -143,7 +145,11 @@ workflow PRESTO_UMI {
         ch_maskprimers_logs = PRESTO_ALIGN_PRIMERS.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_EXTRACT.out.logs)
 
-        PRESTO_PAIRSEQ_ALIGN( ch_maskprimers_reads )
+        def barcode_position = (params.umi_position == "R1" | params.index_file) ? "R1" : "R2"
+        PRESTO_PAIRSEQ_ALIGN(
+            ch_maskprimers_reads,
+            barcode_position
+        )
         ch_versions  = ch_versions.mix(PRESTO_PAIRSEQ_ALIGN.out.versions)
         ch_for_clustersets = PRESTO_PAIRSEQ_ALIGN.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_ALIGN.out.logs
@@ -221,22 +227,16 @@ workflow PRESTO_UMI {
         ch_maskprimers_logs = PRESTO_MASKPRIMERS_EXTRACT_R1.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_EXTRACT_R2.out.logs)
 
+        def barcode_position = (params.umi_position == "R1" | params.index_file) ? "R1" : "R2"
         PRESTO_PAIRSEQ_EXTRACT(
-            ch_maskprimers_reads
+            ch_maskprimers_reads,
+            barcode_position
         )
         ch_versions  = ch_versions.mix(PRESTO_PAIRSEQ_EXTRACT.out.versions)
         ch_for_clustersets = PRESTO_PAIRSEQ_EXTRACT.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_EXTRACT.out.logs
 
     }  else {
-
-        // PRESTO_MASKPRIMERS_UMI (
-        //     PRESTO_FILTERSEQ_UMI.out.reads,
-        //     ch_cprimers.collect(),
-        //     ch_vprimers.collect()
-        // )
-        // ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_UMI.out.versions)
-        // ch_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs
 
         ch_reads_R1 = PRESTO_FILTERSEQ_UMI.out.reads
                                             .map{ reads -> [reads[0], reads[1]] }.dump(tag: 'ch_reads_R1')
@@ -314,8 +314,10 @@ workflow PRESTO_UMI {
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_SCORE_UMI_R2.out.logs)
 
         // Pre-consensus pair
+        def barcode_position = (params.umi_position == "R1" | params.index_file) ? "R1" : "R2"
         PRESTO_PAIRSEQ_UMI (
-            ch_maskprimers_reads
+            ch_maskprimers_reads,
+            barcode_position
         )
 
         ch_versions = ch_versions.mix(PRESTO_PAIRSEQ_UMI.out.versions)
@@ -337,8 +339,17 @@ workflow PRESTO_UMI {
             PRESTO_CLUSTERSETS_UMI.out.reads
         )
         ch_versions = ch_versions.mix(PRESTO_PARSE_CLUSTER_UMI.out.versions)
-        ch_for_buildconsensus = PRESTO_PARSE_CLUSTER_UMI.out.reads
         ch_clustersets_logs = PRESTO_CLUSTERSETS_UMI.out.logs.collect()
+
+        // Combining the split cluster+UMI combination
+        def barcode_position = "clustersets"
+        PRESTO_PAIRSEQ_CLUSTERSETS (
+            PRESTO_PARSE_CLUSTER_UMI.out.reads,
+            barcode_position
+        )
+        ch_versions = ch_versions.mix(PRESTO_PAIRSEQ_CLUSTERSETS.out.versions)
+
+        ch_for_buildconsensus = PRESTO_PAIRSEQ_CLUSTERSETS.out.reads
 
     } else {
         ch_for_buildconsensus = ch_for_clustersets
@@ -347,13 +358,23 @@ workflow PRESTO_UMI {
 
     // Build consensus of sequences with same UMI barcode
     if (params.maskprimers_align) {
+        // Only consider CREGION primer frequency when building consensus
         PRESTO_BUILDCONSENSUS_ALIGN (
             ch_for_buildconsensus
         )
         ch_versions = ch_versions.mix(PRESTO_BUILDCONSENSUS_ALIGN.out.versions)
         ch_postconsensus = PRESTO_BUILDCONSENSUS_ALIGN.out.reads
         ch_buildconsensus_logs = PRESTO_BUILDCONSENSUS_ALIGN.out.logs
+    } else if (params.maskprimers_extract) {
+        // Do not consider primers when building consensus
+        PRESTO_BUILDCONSENSUS_EXTRACT(
+            ch_for_buildconsensus
+        )
+        ch_versions = ch_versions.mix(PRESTO_BUILDCONSENSUS_EXTRACT.out.versions)
+        ch_postconsensus = PRESTO_BUILDCONSENSUS_EXTRACT.out.reads
+        ch_buildconsensus_logs = PRESTO_BUILDCONSENSUS_EXTRACT.out.logs
     } else {
+        // Consider both primers frequency when building consensus
         PRESTO_BUILDCONSENSUS_UMI (
             ch_for_buildconsensus
         )
@@ -416,6 +437,7 @@ workflow PRESTO_UMI {
 
     // Annotate primer fields and collapse duplicates
     if (params.maskprimers_align) {
+
         // Rename primer field to CREGION
         PRESTO_PARSEHEADERS_CREGION (
             PRESTO_PARSEHEADERS_COLLAPSE_UMI.out.reads
@@ -430,7 +452,18 @@ workflow PRESTO_UMI {
         ch_collapsed = PRESTO_COLLAPSESEQ_ALIGN.out.reads
         ch_collapse_logs = PRESTO_COLLAPSESEQ_ALIGN.out.logs
 
+    } else if (params.maskprimers_extract) {
+
+        // Do not annotate primers
+        PRESTO_COLLAPSESEQ_UMI (
+            PRESTO_PARSEHEADERS_COLLAPSE_UMI.out.reads
+        )
+        ch_versions = ch_versions.mix(PRESTO_COLLAPSESEQ_UMI.out.versions)
+        ch_collapsed = PRESTO_COLLAPSESEQ_UMI.out.reads
+        ch_collapse_logs = PRESTO_COLLAPSESEQ_UMI.out.logs
+
     } else {
+
         // Annotate primers in C_PRIMER and V_PRIMER field
         PRESTO_PARSEHEADERS_PRIMERS_UMI (
             PRESTO_PARSEHEADERS_COLLAPSE_UMI.out.reads
