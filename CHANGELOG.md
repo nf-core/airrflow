@@ -8,13 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 - [#334](https://github.com/nf-core/airrflow/pull/334) Added TRUST4 support.
-- [#344](https://github.com/nf-core/airrflow/pull/344) Added option to extract V and C primers when sequence is unknown.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Added option to remove V and C primer region when sequence is unknown.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Added option to save non-productive sequences
 
 ### `Fixed`
 
 - [#344](https://github.com/nf-core/airrflow/pull/344) Avoid saving pRESTO intermediate fastq files in results directory.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Simplified pRESTO Maskprimers score and Maskprimers extract processes.
+- Fix clustersets approach, consider both reads clusters annotation.
 
 ### `Dependencies`
 
