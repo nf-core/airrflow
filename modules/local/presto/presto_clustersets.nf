@@ -19,10 +19,12 @@ process PRESTO_CLUSTERSETS {
     path("versions.yml"), emit: versions
 
     script:
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     """
-    ClusterSets.py set --nproc ${task.cpus} -s $R1 --outname ${meta.id}_R1 --exec vsearch --log ${meta.id}_R1.log > ${meta.id}_command_log.txt
-    ClusterSets.py set --nproc ${task.cpus} -s $R2 --outname ${meta.id}_R2 --exec vsearch --log ${meta.id}_R2.log >> ${meta.id}_command_log.txt
-    ParseLog.py -l ${meta.id}_R1.log ${meta.id}_R2.log -f ID BARCODE SEQCOUNT CLUSTERS
+    ClusterSets.py set --nproc ${task.cpus} -s $R1 --outname ${meta.id}_R1 $args --log ${meta.id}_R1.log > ${meta.id}_command_log.txt
+    ClusterSets.py set --nproc ${task.cpus} -s $R2 --outname ${meta.id}_R2 $args --log ${meta.id}_R2.log >> ${meta.id}_command_log.txt
+    ParseLog.py -l ${meta.id}_R1.log ${meta.id}_R2.log $args2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
