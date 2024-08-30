@@ -67,18 +67,23 @@ workflow SEQUENCE_ASSEMBLY {
 
     // Validate library generation method parameter
     if (params.library_generation_method == 'specific_pcr_umi'){
-        if (params.vprimers)  {
-            ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
+        if (!params.maskprimers_extract){
+            if (params.vprimers)  {
+                ch_vprimers_fasta = Channel.fromPath(params.vprimers, checkIfExists: true)
+            } else {
+                error "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr_umi' library generation method."
+            }
+            if (params.cprimers)  {
+                ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
+            } else {
+                error "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr_umi' library generation method."
+            }
+            if (params.race_linker)  {
+                error "Please do not set '--race_linker' when using the 'specific_pcr_umi' library generation method."
+            }
         } else {
-            error "Please provide a V-region primers fasta file with the '--vprimers' option when using the 'specific_pcr_umi' library generation method."
-        }
-        if (params.cprimers)  {
-            ch_cprimers_fasta = Channel.fromPath(params.cprimers, checkIfExists: true)
-        } else {
-            error "Please provide a C-region primers fasta file with the '--cprimers' option when using the 'specific_pcr_umi' library generation method."
-        }
-        if (params.race_linker)  {
-            error "Please do not set '--race_linker' when using the 'specific_pcr_umi' library generation method."
+            ch_vprimers_fasta = Channel.of([])
+            ch_cprimers_fasta = Channel.of([])
         }
         if (params.umi_length < 2)  {
             error "The 'specific_pcr_umi' library generation method requires setting the '--umi_length' to a value greater than 1."
