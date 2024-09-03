@@ -17,8 +17,7 @@ process PRESTO_MASKPRIMERS_ALIGN {
 
     output:
     tuple val(meta), path("*_R1_primers-pass.fastq") , emit: reads
-    path "*_command_log_R1.txt", emit: logs
-    path "*_R1.log"
+    path "*_command_log_R1.txt", emit: logss
     path "*.tab", emit: log_tab
     path "versions.yml" , emit: versions
 

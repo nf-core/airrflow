@@ -14,7 +14,6 @@ process PRESTO_CLUSTERSETS {
     output:
     tuple val(meta), path("*_R1_cluster-pass.fastq"), path("*_R2_cluster-pass.fastq"), emit: reads
     path "*_command_log.txt", emit: logs
-    path "*.log"
     path "*.tab", emit: log_tab
     path("versions.yml"), emit: versions
 
