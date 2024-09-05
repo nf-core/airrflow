@@ -504,12 +504,14 @@ nextflow run nf-core/airrfow \
 --input input_samplesheet.tsv \
 --library_generation_method trust4 \
 --umi_read R1 \
+--barcode_read R1 \
 --read_format bc:0:15,um:16:27 \
 --outdir results
 ```
 
-- If UMI's are present, the read containing them must be specified using the `--umi_position` parameter.
-- The `--read_format` parameter can be used to specify the Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data))
+- If UMI's are present, the read containing them must be specified using the `--umi_read` parameter.
+- The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNAseq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
+
 
 ## Core Nextflow arguments
 
