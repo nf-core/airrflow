@@ -57,15 +57,18 @@ workflow PRESTO_SANS_UMI {
     // Mask primers
     def suffix_FWD = "R1"
     def suffix_REV = "R2"
+    def barcode_R1 = false
+    def barcode_R2 = false
     ch_reads = PRESTO_FILTERSEQ_POSTASSEMBLY_SANS_UMI.out.reads
     if (params.cprimer_position == "R1") {
-        def start_FWD = "--start ${params.cprimer_start}"
-        def start_REV = "--start ${params.vprimer_start}"
+        def start_FWD = "${params.cprimer_start}"
+        def start_REV = "${params.vprimer_start}"
         def revpr_FWD = false
         PRESTO_MASKPRIMERS_SCORE_SANSUMI_FWD(
             ch_reads,
             ch_cprimers.collect(),
             start_FWD,
+            barcode_R1,
             params.primer_r1_maxerror,
             params.primer_r1_mask_mode,
             revpr_FWD,
@@ -75,14 +78,15 @@ workflow PRESTO_SANS_UMI {
             PRESTO_MASKPRIMERS_SCORE_SANSUMI_FWD.out.reads,
             ch_vprimers.collect(),
             start_REV,
+            barcode_R2,
             params.primer_r2_maxerror,
             params.primer_r2_mask_mode,
             params.primer_revpr,
             suffix_REV
         )
     } else if (params.cprimer_position == "R2") {
-        def start_FWD = "--start ${params.vprimer_start}"
-        def start_REV = "--start ${params.cprimer_start}"
+        def start_FWD = "${params.vprimer_start}"
+        def start_REV = "${params.cprimer_start}"
         def revpr_FWD = false
 
         PRESTO_MASKPRIMERS_SCORE_SANSUMI_FWD(
