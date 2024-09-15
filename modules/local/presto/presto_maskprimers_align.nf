@@ -10,14 +10,15 @@ process PRESTO_MASKPRIMERS_ALIGN {
 
     input:
     tuple val(meta), path(R1)
-    path(cprimers)
+    path(primers)
     val(max_len)
     val(max_error)
     val(mask_mode)
+    val(suffix)
 
     output:
-    tuple val(meta), path("*_R1_primers-pass.fastq") , emit: reads
-    path "*_command_log_R1.txt", emit: logss
+    tuple val(meta), path("*_primers-pass.fastq") , emit: reads
+    path "*.txt", emit: logs
     path "*.tab", emit: log_tab
     path "versions.yml" , emit: versions
 
@@ -27,13 +28,13 @@ process PRESTO_MASKPRIMERS_ALIGN {
     """
     MaskPrimers.py align --nproc ${task.cpus} \\
     -s $R1 \\
-    -p ${cprimers} \\
+    -p ${primers} \\
     --maxlen ${max_len} \\
     --maxerror ${max_error} \\
     --mode ${mask_mode} \\
     $args \\
-    --outname ${meta.id}_R1 \\
-    --log ${meta.id}_R1.log > ${meta.id}_command_log_R1.txt
+    --outname ${meta.id}_${suffix} \\
+    --log ${meta.id}_R1.log > ${meta.id}_command_log_${suffix}.txt
     ParseLog.py -l ${meta.id}_R1.log $args2
 
     cat <<-END_VERSIONS > versions.yml
