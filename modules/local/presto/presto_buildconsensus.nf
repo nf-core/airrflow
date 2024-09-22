@@ -14,8 +14,6 @@ process PRESTO_BUILDCONSENSUS {
     output:
     tuple val(meta), path("*_R1_consensus-pass.fastq"), path("*_R2_consensus-pass.fastq"), emit: reads
     path("*_command_log.txt"), emit: logs
-    path("*_R1.log")
-    path("*_R2.log")
     path("*.tab"), emit: log_tab
     path "versions.yml" , emit: versions
 

@@ -16,7 +16,6 @@ process PRESTO_MASKPRIMERS_POSTASSEMBLY {
     output:
     tuple val(meta), path("*REV_primers-pass.fastq") , emit: reads
     path "*command_log.txt", emit: logs
-    path "*.log"
     path "*.tab", emit: log_tab
     path "versions.yml" , emit: versions
 

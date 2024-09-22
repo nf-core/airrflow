@@ -51,6 +51,11 @@ workflow PRESTO_UMI {
 
     ch_versions = Channel.empty()
 
+    // Validate params
+    if (params.maskprimers_align & params.umi_position == 'R1') {error "The maskprimers align option is only supported with UMI barcodes in the R2 reads (reads containing V region)."}
+    if (params.maskprimers_align & params.cprimer_position == 'R2') {error "The maskprimers align option is only supported with Cprimers in the R1 reads (reads containing C region)."}
+
+
     // Merge UMI from index file to R1 if provided
     if (params.index_file) {
 
@@ -120,10 +125,10 @@ workflow PRESTO_UMI {
             ch_cprimers.collect(),
             params.primer_maxlen,
             params.primer_r1_maxerror,
-            params.primer_r1_mask_mode
+            params.primer_r1_mask_mode,
+            "R1"
         )
 
-        def r2_suffix = "R2"
         def barcode = true
         PRESTO_MASKPRIMERS_EXTRACT(
             ch_reads_R2,
@@ -131,7 +136,7 @@ workflow PRESTO_UMI {
             params.primer_r2_extract_len,
             params.primer_r2_mask_mode,
             barcode,
-            r2_suffix
+            "R2"
         )
 
         ch_versions = ch_versions.mix(PRESTO_ALIGN_PRIMERS.out.versions)

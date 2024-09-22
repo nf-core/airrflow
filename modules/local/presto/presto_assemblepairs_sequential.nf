@@ -15,7 +15,6 @@ process PRESTO_ASSEMBLEPAIRS_SEQUENTIAL {
     output:
     tuple val(meta), path("*_assemble-pass.fastq"), emit: reads
     path("*_command_log.txt"), emit: logs
-    path("*.log")
     path("*_table.tab")
     path "versions.yml" , emit: versions
 
