@@ -7,6 +7,7 @@
 ## Introduction
 
 The nf-core/airrflow pipeline allows processing BCR and TCR targeted sequencing data from bulk and single-cell sequencing protocols. It performs sequence assembly, V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+Recently, TCR and BCR processing using the [MiXCR](https://mixcr.com/) toolset was introduced.
 
 ![nf-core/airrflow overview](images/airrflow_workflow_overview.png)
 
@@ -437,13 +438,60 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 
 - No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
+
+## Bulk processing using the MiXCR toolset
+
+Processing of TCR and BCR repertoires can be performed using MiXCR. 
+When adding the `--library-generation-method mixcr` flag, preprocessing (QC and sequence assembly) will be performed using MiXCR instead of pRESTO. 
+
+The resulting AIRR files are used as input for airrflow's *V(D)J annotation and filtering step* and the remaining steps of the analysis are carried out by the IMMCANTATION framework. Optionally, the user can decide to perform MiXCR's postprocessing as well by setting the `--mixcr_postanalysis` flag.
+
+Using the `--kit` flag one can choose from a great variety of MiXCRs built-in [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/) containing all required options for many commercially available kits, data types and library preparation protocols.
+
+A typical command when using MiXCR may look as the following. Here,data derived from iRepertoire's human RNA short read kit was analyzed:
+
+```bash
+nextflow run nf-core/airrflow \
+  -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+    --mode fastq \
+    --library_generation_method mixcr \
+    --kit irepertoire-human-rna-xcr-repseq-lr \
+    --input test_samplesheet.tsv \
+    --outdir results \
+    --clonal_threshold 0 \
+    --imgt_mixcr imgt.202312-3.sv8.json.gz \
+    --mixcr_postanalysis \
+    --mixcr_downsampling count-read-auto \
+    --mixcr_weightfunction none \
+    --mixcr_productive_only \
+    --mixcr_drop_outliers \
+    --mixcr_overlap_criteria CDR3|AA|V|J \
+    --mixcr_diversity_plottype boxplot 
+  ```
+
+#### MiXCR IMGT reference
+
+MiXCRs IMGT DB can be downloaded from the [GitHub](https://github.com/repseqio/library-imgt/releases).
+
+
+#### MiXCR Licence
+
+MiXCR is a commercial tool for which a license key is required.
+Academic users can obtain a free license key [here](https://licensing.milaboratories.com/).
+
+Before running the pipeline, you have to store the license as a nextflow secret environmental variable:
+```bash
+nextflow secrets set MIXCR_LICENSE "<YOUR_LICENSE>"
+```
+
 ## Supported single cell library generation methods (protocols)
 
-When processing single cell sequencing data departing from raw `fastq` reads, currently only a `--library_generation_method` to support 10xGenomics data is available.
+To process raw single cell `fastq` reads 10XGenomics data can be analyzed using their framework. Also, MiXCR's single cell presets can be used.
 
 | Library generation methods | Description                                                                                                 | Name in pipeline | Commercial protocols |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------- | -------------------- |
 | RT(RHP)+PCR                | sequencing data produced from Chromium single cell 5'V(D)J libraries containing cellular barcodes and UMIs. | sc_10x_genomics  | 10xGenomics          |
+|  | Different MiXCR single cell [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/#parse-biosciences) | mixcr  |           |
 
 ### 10xGenomics
 
@@ -452,13 +500,13 @@ The `cellranger vdj` automatically uses the Chromium cellular barcodes and UMIs 
 Examples are provided below to run airrflow to process 10xGenomics raw FASTQ data.
 
 ```bash
-nextflow run nf-core/airrflow -r dev \
--profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
---mode fastq \
---input input_samplesheet.tsv \
---library_generation_method sc_10x_genomics \
---reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
---outdir ./results
+nextflow run nf-core/airrflow \
+  -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+  --mode fastq \
+  --input input_samplesheet.tsv \
+  --library_generation_method sc_10x_genomics \
+  --reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
+  --outdir ./results
 ```
 
 #### 10xGenomics reference
@@ -467,6 +515,42 @@ nextflow run nf-core/airrflow -r dev \
 
 - The 10xGenomics reference can be downloaded from the [download page](https://www.10xgenomics.com/support/software/cell-ranger/downloads)
 - To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt).
+
+
+### MiXCR
+
+When using MiXCR to analyze single cell data, refer to MiXCRs [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/#parse-biosciences) to select the right one. The preset can be set in airrflow using the flag `--kit`. Additional flags can be set in a config file selected using `-c`.\
+A typical command could look as followed:
+
+```bash
+nextflow run nf-core/airrflow \
+    -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+    -c 10x_sc.conf \
+    --mode fastq \
+    --library_generation_method  mixcr \
+    --reference_10x vdj_IMGT_human \
+    --kit 10x-sc-xcr-vdj \
+    --input samplesheet_sc.tsv \
+    --outdir test_sc_out \
+    --imgt_mixcr imgt.202312-3.sv8.json.gz \
+    --clonal_threshold 0 \
+    --mixcr_postanalysis \
+    --mixcr_downsampling count-read-auto \
+    --mixcr_weightfunction none \
+    --mixcr_productive_only \
+    --mixcr_drop_outliers \
+    --mixcr_overlap_criteria CDR3|AA|V|J \
+    --mixcr_diversity_plottype boxplot 
+```
+
+An additional config file is required to run the pipeline with this preset:
+```bash
+process {
+    withName: MIXCR_MIXCR {
+        ext.args = "--species hs"
+    }
+}
+```
 
 ## Core Nextflow arguments
 
