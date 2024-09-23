@@ -61,7 +61,14 @@
                     "type": "string",
                     "fa_icon": "fas fa-flask",
                     "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
-                    "enum": ["specific_pcr_umi", "specific_pcr", "dt_5p_race", "dt_5p_race_umi", "sc_10x_genomics", "mixcr"],
+                    "enum": [
+                        "specific_pcr_umi",
+                        "specific_pcr",
+                        "dt_5p_race",
+                        "dt_5p_race_umi",
+                        "sc_10x_genomics",
+                        "trust4",
+                        "mixcr"],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
                 },
                 "race_linker": {
@@ -336,19 +343,22 @@
                 "save_databases": {
                     "type": "boolean",
                     "description": "Save databases so you can use the cache in future runs.",
-                    "fa_icon": "fas fa-file-download"
+                    "fa_icon": "fas fa-file-download",
+                    "default": true
                 },
                 "reference_fasta": {
                     "type": "string",
                     "description": "Path to the germline reference fasta.",
                     "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
-                    "fa_icon": "fas fa-database"
+                    "fa_icon": "fas fa-database",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/imgtdb_base.zip"
                 },
                 "reference_igblast": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
                     "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
-                    "fa_icon": "fas fa-database"
+                    "fa_icon": "fas fa-database",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/igblast_base.zip"
                 },
                 "fetch_imgt": {
                     "type": "boolean",
@@ -478,6 +488,37 @@
             "help_text": "Options for running raw single cell data.",
             "fa_icon": "fab fa-pagelines"
         },
+        "rnaseq_based_analysis_options": {
+            "title": "Unselected RNA-seq based analysis options",
+            "type": "object",
+            "description": "Options specific for raw unselected RNA-seq input.",
+            "default": "",
+            "properties": {
+                "barcode_read": {
+                    "type": "string",
+                    "description": "Specifies which read holds the barcodes",
+                    "enum": ["R1", "R2"],
+                    "fa_icon": "fas fa-terminal",
+                    "help_text": "file containing the barcodes"
+                },
+                "umi_read": {
+                    "type": "string",
+                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
+                    "help_text": "file containing 10x Genomics-like UMIs",
+                    "enum": ["R1", "R2"],
+                    "fa_icon": "fas fa-barcode"
+                },
+                "read_format": {
+                    "type": "string",
+                    "description": "Specifies where in the read the barcodes and UMIs can be found.",
+                    "help_text": "For further information see the TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data).",
+                    "fa_icon": "fas fa-terminal"
+                }
+            },
+            "help_text": "Options for running raw RNA seq data.",
+            "fa_icon": "fab fa-pagelines"
+        },
+        
         "mixcr_options": {
             "title": "MiXCR options",
             "type": "object",
@@ -870,6 +911,9 @@
             "$ref": "#/definitions/single_cell_analysis_options"
         },
         {
+            "$ref": "#/definitions/rnaseq_based_analysis_options"
+        },
+        {
             "$ref": "#/definitions/institutional_config_options"
         },
         {
@@ -878,5 +922,10 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "skip_alignment_filter": {
+            "type": "boolean"
+        }
+    }
 }
