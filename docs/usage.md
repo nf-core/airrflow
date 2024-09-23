@@ -445,13 +445,12 @@ The UMI barcodes are typically read from an index file but sometimes can be prov
 
 - No UMIs in R1 or R2 reads: if no UMIs are present in the samples, specify `--umi_length 0` to use the sans-UMI subworkflow.
 
-
 ## Bulk processing using the MiXCR toolset
 
-Processing of TCR and BCR repertoires can be performed using MiXCR. 
-When adding the `--library-generation-method mixcr` flag, preprocessing (QC and sequence assembly) will be performed using MiXCR instead of pRESTO. 
+Processing of TCR and BCR repertoires can be performed using MiXCR.
+When adding the `--library-generation-method mixcr` flag, preprocessing (QC and sequence assembly) will be performed using MiXCR instead of pRESTO.
 
-The resulting AIRR files are used as input for airrflow's *V(D)J annotation and filtering step* and the remaining steps of the analysis are carried out by the IMMCANTATION framework. Optionally, the user can decide to perform MiXCR's postprocessing as well by setting the `--mixcr_postanalysis` flag.
+The resulting AIRR files are used as input for airrflow's _V(D)J annotation and filtering step_ and the remaining steps of the analysis are carried out by the IMMCANTATION framework. Optionally, the user can decide to perform MiXCR's postprocessing as well by setting the `--mixcr_postanalysis` flag.
 
 Using the `--kit` flag one can choose from the great variety of MiXCRs built-in [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/) containing all required options for many commercially available kits, data types and library preparation protocols.
 
@@ -473,13 +472,12 @@ nextflow run nf-core/airrflow \
     --mixcr_productive_only \
     --mixcr_drop_outliers \
     --mixcr_overlap_criteria CDR3|AA|V|J \
-    --mixcr_diversity_plottype boxplot 
-  ```
+    --mixcr_diversity_plottype boxplot
+```
 
 #### MiXCR IMGT reference
 
 MiXCRs IMGT DB can be downloaded from the [GitHub](https://github.com/repseqio/library-imgt/releases).
-
 
 #### MiXCR Licence
 
@@ -487,6 +485,7 @@ MiXCR is a commercial tool for which a license key is required.
 Academic users can obtain a free license key [here](https://licensing.milaboratories.com/).
 
 Before running the pipeline, you have to store the license as a nextflow secret environmental variable:
+
 ```bash
 nextflow secrets set MIXCR_LICENSE "<YOUR_LICENSE>"
 ```
@@ -495,10 +494,10 @@ nextflow secrets set MIXCR_LICENSE "<YOUR_LICENSE>"
 
 To process raw single cell `fastq` reads 10XGenomics data can be analyzed using their framework. Also, MiXCR's single cell presets can be used.
 
-| Library generation methods | Description                                                                                                 | Name in pipeline | Commercial protocols |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------- | -------------------- |
-| RT(RHP)+PCR                | sequencing data produced from Chromium single cell 5'V(D)J libraries containing cellular barcodes and UMIs. | sc_10x_genomics  | 10xGenomics          |
-|  | Different MiXCR single cell [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/#parse-biosciences) | mixcr  |           |
+| Library generation methods | Description                                                                                                           | Name in pipeline | Commercial protocols |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------- | -------------------- |
+| RT(RHP)+PCR                | sequencing data produced from Chromium single cell 5'V(D)J libraries containing cellular barcodes and UMIs.           | sc_10x_genomics  | 10xGenomics          |
+|                            | Different MiXCR single cell [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/#parse-biosciences) | mixcr            |                      |
 
 ### 10xGenomics
 
@@ -559,7 +558,6 @@ nextflow run nf-core/airrfow \
 - If UMI's are present, the read containing them must be specified using the `--umi_position` parameter.
 - The `--read_format` parameter can be used to specify the Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data))
 
-
 ### MiXCR
 
 When using MiXCR to analyze single cell data, refer to MiXCRs [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/#parse-biosciences) to select the right one. The preset can be set in airrflow using the flag `--kit`. Additional flags can be set in a config file selected using `-c`.\
@@ -583,10 +581,11 @@ nextflow run nf-core/airrflow \
     --mixcr_productive_only \
     --mixcr_drop_outliers \
     --mixcr_overlap_criteria CDR3|AA|V|J \
-    --mixcr_diversity_plottype boxplot 
+    --mixcr_diversity_plottype boxplot
 ```
 
 An additional config file is required to run the pipeline with this preset:
+
 ```bash
 process {
     withName: MIXCR_MIXCR {

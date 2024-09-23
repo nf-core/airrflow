@@ -68,7 +68,8 @@
                         "dt_5p_race_umi",
                         "sc_10x_genomics",
                         "trust4",
-                        "mixcr"],
+                        "mixcr"
+                    ],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
                 },
                 "race_linker": {
@@ -576,7 +577,19 @@
                     "type": "string",
                     "default": "boxplot",
                     "description": "Plot type to plot diversity in.",
-                    "enum": ["boxplot", "boxplot-bindot", "boxplot-jitter", "violin", "violin-bindot", "barplot", "barplot-stacked", "lineplot", "lineplot-jitter", "lineplot-bindot", "scatter"],
+                    "enum": [
+                        "boxplot",
+                        "boxplot-bindot",
+                        "boxplot-jitter",
+                        "violin",
+                        "violin-bindot",
+                        "barplot",
+                        "barplot-stacked",
+                        "lineplot",
+                        "lineplot-jitter",
+                        "lineplot-bindot",
+                        "scatter"
+                    ],
                     "fa_icon": "fas fa-chart-simple"
                 },
                 "mixcr_statistical_method": {
@@ -590,7 +603,15 @@
                     "type": "string",
                     "default": "Holm",
                     "description": "Method to adjust p-values when plotting diversity and cdr3 metrics.",
-                    "enum": ["Holm","BenjaminHochberg", "BenjaminYekutieli", "Bonferroni", "Hochberg", "Hommel", "none"],
+                    "enum": [
+                        "Holm",
+                        "BenjaminHochberg",
+                        "BenjaminYekutieli",
+                        "Bonferroni",
+                        "Hochberg",
+                        "Hommel",
+                        "none"
+                    ],
                     "fa_icon": "fas fa-chart-simple"
                 }
             }
