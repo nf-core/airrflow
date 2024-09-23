@@ -486,72 +486,71 @@
             "properties": {
                 "imgt_mixcr": {
                     "type": "string",
-                    "description": "FILL THIS.",
-                    "help_text": "FILL THIS.",
+                    "description": "MiXCRs IMGT DB can be downloaded from the [GitHub](https://github.com/repseqio/library-imgt/releases).",
                     "fa_icon": "fas fa-database"
                 },
                 "kit": {
                     "type": "string",
-                    "description": "MiXCR preset (FILL FURTHER!)",
-                    "help_text": "FILL THIS.",
-                    "fa_icon": "CHOOSE"
+                    "description": "MiXCR preset",
+                    "help_text": "MiXCRs built-in presets can be found [here](https://mixcr.com/mixcr/reference/overview-built-in-presets/)",
+                    "fa_icon": "fas fa-toolbox"
                 },
                 "mixcr_postanalysis": {
                     "type": "boolean",
                     "description": "Run MiXCR post analysis.",
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-splotch"
                 },
                 "mixcr_downsampling": {
                     "type": "string",
                     "description": "Choose downsampling method.",
                     "help_text": "Default downsampling method to normalize the cloneset. See [MiXCR docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#downsampling) for details.",
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-chart-simple"
                 },
                 "mixcr_weightfunction": {
                     "type": "string",
                     "description": "Choose weight function.",
                     "help_text": "Default clonotype weight function. See [MiXCR docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#weight-functions) for details.",
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-weight-scale"
                 },
                 "mixcr_productive_only": {
                     "type": "string",
                     "default": true,
                     "description": "Filter out non-productive sequencs for individual postprocessing.",
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-check"
                 },
                 "mixcr_drop_outliers": {
                     "type": "string",
                     "default": false,
                     "description": "Drop outliers below downsampling value as defined in `mixcr_downsampling` individual postprocessing.",
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-splotch"
                 },
                 "mixcr_overlap_criteria": {
                     "type": "string",
                     "default": "CDR3|AA|V|J",
                     "description": "Defines the rules to treat clones as equal.",
                     "help_text": "Defines the rules to treat clones as equal. Allows to specify gene feature for overlap (nt or AA) and optionally use V/J hits. Default: Overlap by AA CDR3 and V and J. See [docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#command-line-options_1) for help.",
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-splotch"
                 },
                 "mixcr_diversity_plottype": {
                     "type": "string",
                     "default": "boxplot",
                     "description": "Plot type to plot diversity in.",
                     "enum": ["boxplot", "boxplot-bindot", "boxplot-jitter", "violin", "violin-bindot", "barplot", "barplot-stacked", "lineplot", "lineplot-jitter", "lineplot-bindot", "scatter"],
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-chart-simple"
                 },
                 "mixcr_statistical_method": {
                     "type": "string",
                     "default": "Wilcoxon",
                     "description": "Statistical test method used when plotting diversity and cdr3 metrics.",
                     "enum": ["Wilcoxon", "ANOVA", "TTest", "KruskalWallis", "KolmogorovSmirnov"],
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-chart-simple"
                 },
                 "mixcr_p_adjust_method": {
                     "type": "string",
                     "default": "Holm",
                     "description": "Method to adjust p-values when plotting diversity and cdr3 metrics.",
                     "enum": ["Holm","BenjaminHochberg", "BenjaminYekutieli", "Bonferroni", "Hochberg", "Hommel", "none"],
-                    "fa_icon": "CHOOSE"
+                    "fa_icon": "fas fa-chart-simple"
                 }
             }
         },

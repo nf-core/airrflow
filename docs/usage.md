@@ -446,7 +446,7 @@ When adding the `--library-generation-method mixcr` flag, preprocessing (QC and 
 
 The resulting AIRR files are used as input for airrflow's *V(D)J annotation and filtering step* and the remaining steps of the analysis are carried out by the IMMCANTATION framework. Optionally, the user can decide to perform MiXCR's postprocessing as well by setting the `--mixcr_postanalysis` flag.
 
-Using the `--kit` flag one can choose from a great variety of MiXCRs built-in [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/) containing all required options for many commercially available kits, data types and library preparation protocols.
+Using the `--kit` flag one can choose from the great variety of MiXCRs built-in [presets](https://mixcr.com/mixcr/reference/overview-built-in-presets/) containing all required options for many commercially available kits, data types and library preparation protocols.
 
 A typical command when using MiXCR may look as the following. Here,data derived from iRepertoire's human RNA short read kit was analyzed:
 
