@@ -84,7 +84,7 @@ workflow SC_RAW_INPUT {
         ch_versions = ch_versions.mix(MIXCR_FLOW.out.versions)
     }
 
-    
+
     // convert airr tsv to fasta
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 RENAME_FILE_TSV.out.file

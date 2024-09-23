@@ -39,7 +39,7 @@ process MIXCR_MIXCRQCALIGN {
         echo "Initializing MIXCR_LICENSE env variable"
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
-    
+
     mixcr exportQc align \\
         ${clns} \\
         ${prefix}.align_qc.pdf \\

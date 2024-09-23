@@ -39,7 +39,7 @@ process MIXCR_MIXCRQCCHAINUSAGE {
         echo "Initializing MIXCR_LICENSE env variable"
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
-    
+
     mixcr exportQc chainUsage \\
         ${clns} \\
         ${prefix}.chainusage_qc.pdf \\

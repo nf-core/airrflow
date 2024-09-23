@@ -31,7 +31,7 @@ workflow MIXCR_FLOW {
 
     ch_reads = FASTQ_INPUT_CHECK.out.reads
 
-    MIXCR_MIXCR ( 
+    MIXCR_MIXCR (
         ch_reads,
         file(params.imgt_mixcr),
         params.kit
@@ -41,7 +41,7 @@ workflow MIXCR_FLOW {
     ch_mixcr_out = MIXCR_MIXCR.out.outs
 
 
-    MIXCR_MIXCREXPORTAIRR ( 
+    MIXCR_MIXCREXPORTAIRR (
         MIXCR_MIXCR.out.clns,
         file(params.imgt_mixcr) // it doesnt directly use the imgt db, but it needs it in the right directory anyway
         )
@@ -56,13 +56,13 @@ workflow MIXCR_FLOW {
         )
     ch_versions = ch_versions.mix(MIXCR_MIXCRQCALIGN.out.versions.first())
 
-    MIXCR_MIXCRQCCOVERAGE ( 
+    MIXCR_MIXCRQCCOVERAGE (
         MIXCR_MIXCR.out.vdjca,
         file(params.imgt_mixcr)
         )
     ch_versions = ch_versions.mix(MIXCR_MIXCRQCCOVERAGE.out.versions.first())
 
-    MIXCR_MIXCRQCCHAINUSAGE ( 
+    MIXCR_MIXCRQCCHAINUSAGE (
         MIXCR_MIXCR.out.clns,
         file(params.imgt_mixcr)
         )
@@ -75,7 +75,7 @@ workflow MIXCR_FLOW {
             )
 
     ch_versions = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions
-    
+
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
 
     emit:
@@ -86,7 +86,7 @@ workflow MIXCR_FLOW {
     // mixcr output in clns format
     clns = MIXCR_MIXCR.out.clns
     // mixcr output converted to FASTA format
-    fasta = ch_fasta    
+    fasta = ch_fasta
     samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
 
 }

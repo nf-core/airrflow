@@ -56,12 +56,12 @@ process MIXCR_IND_PLOTS {
     mixcr exportPlots vUsage \\
         ${mixcr_ind_json} \\
         ${prefix}.V_usage_heatmap.pdf
-    
+
     mixcr exportPlots vUsage \\
         --bar-plot \\
         ${mixcr_ind_json} \\
         ${prefix}.V_usage_barplot.pdf
-    
+
     mixcr exportPlots vUsage \\
         --bar-plot-by-sample \\
         ${mixcr_ind_json} \\
@@ -76,7 +76,7 @@ process MIXCR_IND_PLOTS {
         --bar-plot \\
         ${mixcr_ind_json} \\
         ${prefix}.J_usage_barplot.pdf
-    
+
     mixcr exportPlots jUsage \\
         --bar-plot-by-sample \\
         ${mixcr_ind_json} \\
@@ -96,14 +96,14 @@ process MIXCR_IND_PLOTS {
         --bar-plot \\
         ${mixcr_ind_json} \\
         ${prefix}.isotype_usage_barplot.pdf
-    
+
     mixcr exportPlots isotypeUsage \\
         --bar-plot-by-sample \\
         ${mixcr_ind_json} \\
         ${prefix}.isotype_usage_barplot_by_sample.pdf
 
 
-    
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

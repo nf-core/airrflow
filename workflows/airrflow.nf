@@ -142,7 +142,7 @@ workflow AIRRFLOW {
                 if (!params.kit) {
                     error "Kit parameter is required for MiXCR analysis."
                 }
-                
+
                 MIXCR_FLOW(ch_input)
 
                 ch_fasta                    = MIXCR_FLOW.out.fasta
@@ -152,7 +152,7 @@ workflow AIRRFLOW {
                 ch_mixcr_out                = MIXCR_FLOW.out.outs
 
                 ch_validated_samplesheet = MIXCR_FLOW.out.samplesheet.collect()
-                
+
                 ch_presto_filterseq_logs             = Channel.empty()
                 ch_presto_maskprimers_logs           = Channel.empty()
                 ch_presto_pairseq_logs               = Channel.empty()
@@ -165,7 +165,7 @@ workflow AIRRFLOW {
                 ch_fastp_html                        = Channel.empty()
                 ch_fastp_json                        = Channel.empty()
                 ch_fastqc_postassembly_mqc           = Channel.empty()
-            } 
+            }
             else {
             // Perform sequence assembly if input type is fastq from bulk sequencing data
             SEQUENCE_ASSEMBLY(
@@ -313,9 +313,9 @@ workflow AIRRFLOW {
         MIXCR_POSTANALYSIS ( ch_mixcr_clns )
     }
 
-    
+
     // Collate and save software versions
-    
+
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",

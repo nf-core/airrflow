@@ -39,7 +39,7 @@ process MIXCR_MIXCRQCTAGS {
         echo "Initializing MIXCR_LICENSE env variable"
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
-    
+
     mixcr exportQc tags \\
         ${clns} \\
         ${prefix}.tags_qc.tsv \\

@@ -20,7 +20,7 @@ process MIXCR_OVERLAP_POSTANALYSIS {
 
     output:
     tuple val(meta), path('*')      , emit: outs
-    tuple val(meta), path('*.json') , emit: mixcr_overlap_json    
+    tuple val(meta), path('*.json') , emit: mixcr_overlap_json
 
     path "versions.yml"           , emit: versions
 

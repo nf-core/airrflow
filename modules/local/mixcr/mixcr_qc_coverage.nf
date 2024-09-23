@@ -39,7 +39,7 @@ process MIXCR_MIXCRQCCOVERAGE {
         echo "Initializing MIXCR_LICENSE env variable"
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
-    
+
     mixcr exportQc coverage \\
         ${vdjca} \\
         ${prefix}.coverage_qc.pdf \\

@@ -17,7 +17,7 @@ process MIXCR_MIXCREXPORTAIRR {
 
     tuple val(meta), path(clns)
     path(imgt_json) // imgt db
-    
+
     output:
     tuple val(meta), path("*.airr.tsv"), emit: mixcr_airr
     path "versions.yml"           , emit: versions
@@ -39,7 +39,7 @@ process MIXCR_MIXCREXPORTAIRR {
         echo "Initializing MIXCR_LICENSE env variable"
         export MI_LICENSE=\$MIXCR_LICENSE
     fi
-    
+
     mixcr exportAirr \\
         ${clns_file} \\
         ${prefix}.airr.tsv \\
