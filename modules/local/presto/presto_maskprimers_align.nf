@@ -34,7 +34,7 @@ process PRESTO_MASKPRIMERS_ALIGN {
     --mode ${mask_mode} \\
     $args \\
     --outname ${meta.id}_${suffix} \\
-    --log ${meta.id}_R1.log > ${meta.id}_command_log_${suffix}.txt
+    --log ${meta.id}_${suffix}.log > ${meta.id}_command_log_${suffix}.txt
     ParseLog.py -l ${meta.id}_${suffix}.log $args2
 
     cat <<-END_VERSIONS > versions.yml
