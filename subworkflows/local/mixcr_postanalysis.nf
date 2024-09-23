@@ -25,7 +25,7 @@ workflow MIXCR_POSTANALYSIS {
             .map{ get_meta_tabs(it) }
             .set { ch_clns_per_subject }
 
-       
+
 
     MIXCR_IND_POSTANALYSIS (
         ch_clns_per_subject,
