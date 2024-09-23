@@ -518,7 +518,7 @@
             "help_text": "Options for running raw RNA seq data.",
             "fa_icon": "fab fa-pagelines"
         },
-        
+
         "mixcr_options": {
             "title": "MiXCR options",
             "type": "object",
@@ -554,13 +554,13 @@
                     "fa_icon": "fas fa-weight-scale"
                 },
                 "mixcr_productive_only": {
-                    "type": "string",
+                    "type": "boolean",
                     "default": true,
                     "description": "Filter out non-productive sequencs for individual postprocessing.",
                     "fa_icon": "fas fa-check"
                 },
                 "mixcr_drop_outliers": {
-                    "type": "string",
+                    "type": "boolean",
                     "default": false,
                     "description": "Drop outliers below downsampling value as defined in `mixcr_downsampling` individual postprocessing.",
                     "fa_icon": "fas fa-splotch"
@@ -921,6 +921,9 @@
         },
         {
             "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/mixcr_options"
         }
     ],
     "properties": {
