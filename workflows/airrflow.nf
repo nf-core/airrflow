@@ -111,6 +111,10 @@ workflow AIRRFLOW {
 
             } else if (params.library_generation_method == "mixcr") {
 
+                if (!params.kit) {
+                    error "Kit parameter is required for MiXCR analysis."
+                }
+                
                 MIXCR_FLOW(ch_input)
 
                 ch_fasta                    = MIXCR_FLOW.out.fasta
