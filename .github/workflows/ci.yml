@@ -64,7 +64,8 @@ jobs:
             "test_nebnext_umi",
             "test_rnaseq_bulk",
             "test_rnaseq_sc",
-            "test_maskprimers_extract"
+            "test_maskprimers_extract",
+            "test_maskprimers_align",
           ]
       fail-fast: false
     steps:

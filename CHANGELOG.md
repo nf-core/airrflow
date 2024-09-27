@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Simplified pRESTO Maskprimers score and Maskprimers extract processes.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Fix clustersets approach, consider both reads clusters annotation.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Allow for partial alignments in MakeDB for mouse TCR data, to bypass junction check for TRAV germlines with additional positions (e.g. 84A).
+- [#344](https://github.com/nf-core/airrflow/pull/344) Allow for maskprimers align with UMI on both V gene and C gene primers.
 
 ### `Dependencies`
 

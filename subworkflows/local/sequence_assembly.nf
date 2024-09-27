@@ -120,7 +120,7 @@ workflow SEQUENCE_ASSEMBLY {
             error "The oligo-dT 5'-RACE UMI library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-        } else if (params.maskprimers_align) {
+        } else if (params.maskprimers_align_race) {
             ch_vprimers_fasta = Channel.of([])
         } else {
             error "The oligo-dT 5'-RACE UMI library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."
@@ -143,7 +143,7 @@ workflow SEQUENCE_ASSEMBLY {
             error "The oligo-dT 5'-RACE library generation method does not accept V-region primers, please provide a linker with '--race_linker' instead or select another library method option."
         } else if (params.race_linker) {
             ch_vprimers_fasta = Channel.fromPath(params.race_linker, checkIfExists: true)
-        } else if (params.maskprimers_align) {
+        } else if (params.maskprimers_align_race) {
             ch_vprimers_fasta = Channel.of([])
         } else {
             error "The oligo-dT 5'-RACE library generation method requires a linker or Template Switch Oligo sequence, please provide it with the option '--race_linker'."

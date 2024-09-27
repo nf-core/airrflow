@@ -12,8 +12,10 @@ process PRESTO_MASKPRIMERS_ALIGN {
     tuple val(meta), path(R1)
     path(primers)
     val(max_len)
+    val(barcode)
     val(max_error)
     val(mask_mode)
+    val(reverse_primers)
     val(suffix)
 
     output:
@@ -23,6 +25,8 @@ process PRESTO_MASKPRIMERS_ALIGN {
     path "versions.yml" , emit: versions
 
     script:
+    def barcode = barcode ? '--barcode' : ''
+    def revpr = reverse_primers ? '--revpr' : ''
     def args = task.ext.args?: ''
     def args2 = task.ext.args2?: ''
     """
@@ -32,6 +36,7 @@ process PRESTO_MASKPRIMERS_ALIGN {
     --maxlen ${max_len} \\
     --maxerror ${max_error} \\
     --mode ${mask_mode} \\
+    $barcode \\
     $args \\
     --outname ${meta.id}_${suffix} \\
     --log ${meta.id}_${suffix}.log > ${meta.id}_command_log_${suffix}.txt
