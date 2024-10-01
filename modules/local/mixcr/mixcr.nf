@@ -1,6 +1,6 @@
 process MIXCR_MIXCR {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_high'
 
     secret 'MIXCR_LICENSE'
 
