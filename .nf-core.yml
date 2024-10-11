@@ -12,7 +12,7 @@ lint:
         - params.report_logo
         - params.report_logo_img
         - params.config_profile_url
-nf_core_version: 3.0.1
+nf_core_version: 3.0.2
 org_path: null
 repository_type: pipeline
 template:
