@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Allow for partial alignments in MakeDB for mouse TCR data, to bypass junction check for TRAV germlines with additional positions (e.g. 84A).
 - [#344](https://github.com/nf-core/airrflow/pull/344) Fix parse logs merging dataframes using pandas join to produce logs even when there are failing samples.
 
-
 ### `Dependencies`
 
 ### `Deprecated parameters`
