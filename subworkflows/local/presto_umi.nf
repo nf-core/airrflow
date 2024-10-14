@@ -124,7 +124,7 @@ workflow PRESTO_UMI {
     // Mask primers
     if (params.maskprimers_align_race) {
 
-        PRESTO_MASKPRIMERS_ALIGN(
+        PRESTO_ALIGN_PRIMERS(
             ch_reads_R1,
             ch_cprimers.collect(),
             params.primer_maxlen,
