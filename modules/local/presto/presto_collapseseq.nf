@@ -14,7 +14,6 @@ process PRESTO_COLLAPSESEQ {
     output:
     tuple val(meta), path("*_collapse-unique.fastq") , emit: reads
     path("*_command_log.txt") , emit: logs
-    path("*.log")
     path("*_table.tab")
     path("versions.yml"), emit: versions
 

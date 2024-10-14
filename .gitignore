@@ -6,10 +6,4 @@ results/
 testing/
 testing*
 *.pyc
-node_modules/
-package-lock.json
-.idea/
-nf-params.json
-.vscode/
-tests/
-test_flow/
+null/

@@ -74,13 +74,13 @@ tryCatch( {
     write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
 
     plot_table <- tidyr::pivot_longer(tab_seqs,
-                                      cols=Sequences_R1:Igblast,
+                                      cols=Sequences:Igblast,
                                       names_to = "steps",
                                       values_to ="count")
-    plot_table$steps <- factor(plot_table$steps, levels=c("Sequences_R1", "Sequences_R2", "Filtered_quality_R1",
-                                                            "Filtered_quality_R2", "Mask_primers_R1", "Mask_primers_R2",
-                                                            "Paired", "Build_consensus", "Assemble_pairs", "Unique",
-                                                            "Representative_2", "Igblast"))
+    firstcol = which(colnames(tab_seqs) == "Sequences")
+    lastcol = which(colnames(tab_seqs) == "Igblast")
+    plot_table$steps <- factor(plot_table$steps, levels=colnames(tab_seqs)[firstcol:lastcol])
+
     seqs_plot <- ggplot(data=plot_table,
                         aes(x=steps, y=count, group=sample_id)) +
                   geom_line(aes(colour=sample_id)) +

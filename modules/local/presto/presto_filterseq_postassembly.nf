@@ -15,7 +15,6 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     tuple val(meta), path("*quality-pass.fastq") ,  emit: reads
     path "*_command_log.txt" , emit: logs
     path "versions.yml" , emit: versions
-    path "*.log"
     path "*.tab" , emit: log_tab
 
     script:

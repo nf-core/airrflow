@@ -21,10 +21,11 @@ process CHANGEO_MAKEDB {
 
     script:
     def args = task.ext.args ?: ''
+    def partial = meta.species.toLowerCase()=='mouse' && meta.locus.toLowerCase()=='tr'  ? '--partial' : ''
     """
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${reference_fasta}/${meta.species.toLowerCase()}/vdj/ \\
-    $args \\
+    $args $partial \\
     --outname ${meta.id} > ${meta.id}_makedb_command_log.txt
 
     cat <<-END_VERSIONS > versions.yml
