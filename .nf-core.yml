@@ -1,3 +1,4 @@
+bump_version: null
 lint:
   files_exist:
     - conf/igenomes.config
@@ -11,5 +12,17 @@ lint:
         - params.report_logo
         - params.report_logo_img
         - params.config_profile_url
+nf_core_version: 3.0.2
+org_path: null
 repository_type: pipeline
-nf_core_version: "2.14.1"
+template:
+  author: Gisela Gabernet, Susanna Marquez, Alexander Peltzer, Simon Heumos
+  description: B and T cell repertoire analysis pipeline with the Immcantation framework.
+  force: false
+  is_nfcore: true
+  name: airrflow
+  org: nf-core
+  outdir: .
+  skip_features: null
+  version: 4.1.0
+update: null

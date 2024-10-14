@@ -87,9 +87,9 @@ The above pipeline run specified with a params file in yaml format:
 nextflow run nf-core/airrflow -profile docker -params-file params.yaml
 ```
 
-with `params.yaml` containing:
+with:
 
-```yaml
+```yaml title="params.yaml"
 input: './samplesheet.csv'
 outdir: './results/'
 <...>
