@@ -66,7 +66,6 @@ workflow RNASEQ_INPUT {
     ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads.dump(tag: "fastp_filtered")
 
     PREPARE_TRUST4_REFERENCE(
-        ch_reads_fastp_filtered,
         ch_igblast_reference
     )
 
@@ -84,7 +83,7 @@ workflow RNASEQ_INPUT {
 
     TRUST4(
         ch_reads_trust4,
-        PREPARE_TRUST4_REFERENCE.out.trust4_reference,
+        PREPARE_TRUST4_REFERENCE.out.trust4_reference.collect(),
         Channel.of([[], []]).collect(),
         barcode_channel,
         umi_channel
