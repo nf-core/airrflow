@@ -11,7 +11,7 @@ process TRUST4 {
     tuple val(meta), path(bam), path(reads)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(vdj_reference)
-    tuple val(meta4), val(barcode_read)
+    tuple val(meta4), val(cell_barcode_read)
     tuple val(meta5), val(umi_read)
 
     output:
@@ -41,10 +41,10 @@ process TRUST4 {
     // read format is optional
     def readFormat = params.read_format ? "--readFormat ${params.read_format}" : ''
     // add barcode information if present
-    if (barcode_read) {
-        if (barcode_read == "R1") {
+    if (cell_barcode_read) {
+        if (cell_barcode_read == "R1") {
             barcode = "--barcode ${forward[0]}"
-        } else if (barcode_read == "R2") {
+        } else if (cell_barcode_read == "R2") {
             barcode = "--barcode ${reverse[0]}"
         }
     }

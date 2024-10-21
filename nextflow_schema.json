@@ -525,7 +525,7 @@
             "description": "Options specific for raw unselected RNA-seq input.",
             "default": "",
             "properties": {
-                "barcode_read": {
+                "cell_barcode_read": {
                     "type": "string",
                     "description": "Specifies which read holds the barcodes",
                     "enum": ["R1", "R2"],
