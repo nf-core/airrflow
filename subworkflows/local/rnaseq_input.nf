@@ -80,10 +80,11 @@ workflow RNASEQ_INPUT {
     // create barcode and umi channels for nf-core trust4 module
     barcode_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 ->  [meta, params.cell_barcode_read] }
     umi_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, params.umi_read] }
+    ch_reference_trust4 = PREPARE_TRUST4_REFERENCE.out.trust4_reference.map { reference -> [[id: "igblast_reference"], reference] }
 
     TRUST4(
         ch_reads_trust4,
-        PREPARE_TRUST4_REFERENCE.out.trust4_reference.collect(),
+        ch_reference_trust4.collect(),
         Channel.of([[], []]).collect(),
         barcode_channel,
         umi_channel
