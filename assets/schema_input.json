@@ -37,7 +37,7 @@
                 "errorMessage": "Sex must be provided, specify NA if unknown."
             },
             "age": {
-                "type": ["string","integer"],
+                "type": ["string", "integer"],
                 "errorMessage": "Age must be provided, specify NA if unknown."
             },
             "biomaterial_provider": {
