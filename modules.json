@@ -37,7 +37,7 @@
                     },
                     "trust4": {
                         "branch": "master",
-                        "git_sha": "bbb9636dbe460f45fe786d0866f8fd7337e4fc7a",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     }
                 }
