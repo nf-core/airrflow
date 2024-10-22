@@ -8,6 +8,7 @@ process PREPARE_TRUST4_REFERENCE {
         'biocontainers/trust4:1.0.13--h43eeafb_0' }"
 
     input:
+    tuple val(meta), path(R1), path(R2)
     path(reference_igblast)
 
     output:

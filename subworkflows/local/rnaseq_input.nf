@@ -66,6 +66,7 @@ workflow RNASEQ_INPUT {
     ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads.dump(tag: "fastp_filtered")
 
     PREPARE_TRUST4_REFERENCE(
+        ch_reads_fastp_filtered.first(),
         ch_igblast_reference
     )
 
