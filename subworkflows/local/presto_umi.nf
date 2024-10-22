@@ -435,7 +435,7 @@ workflow PRESTO_UMI {
 
     // Build consensus of sequences with same UMI barcode
     if (params.maskprimers_align_race) {
-        // Only consider CREGION primer frequency when building consensus
+        // Only consider CPRIMER frequency when building consensus
         PRESTO_BUILDCONSENSUS_ALIGN_RACE (
             ch_for_buildconsensus
         )
