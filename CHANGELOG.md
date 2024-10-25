@@ -3,7 +3,30 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.1.0] -
+## [4.2.0] - dev
+
+### `Added`
+
+- [#334](https://github.com/nf-core/airrflow/pull/334) Added TRUST4 support.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Added option to remove V and C primer region when sequence is unknown.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Added option to save non-productive sequences
+- [#344](https://github.com/nf-core/airrflow/pull/344) Allow for maskprimers align with UMI on both V gene and C gene primers.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Update pipeline template to nf-core tools v3.0.2.
+
+### `Fixed`
+
+- [#344](https://github.com/nf-core/airrflow/pull/344) Avoid saving pRESTO intermediate fastq files in results directory.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Simplified pRESTO Maskprimers score and Maskprimers extract processes.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Fix clustersets approach, consider both reads clusters annotation.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Allow for partial alignments in MakeDB for mouse TCR data, to bypass junction check for TRAV germlines with additional positions (e.g. 84A).
+- [#344](https://github.com/nf-core/airrflow/pull/344) Fix parse logs merging dataframes using pandas join to produce logs even when there are failing samples.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Use pRESTO Collapseseq with n=0 by default due to runtime issues.
+
+### `Dependencies`
+
+### `Deprecated parameters`
+
+## [4.1.0] - Avenseguim
 
 ### `Added`
 

@@ -15,8 +15,6 @@ process PRESTO_FILTERSEQ {
     tuple val(meta), path("*R1_quality-pass.fastq"), path("*R2_quality-pass.fastq") ,  emit: reads
     path "*_command_log_R?.txt" , emit: logs
     path "versions.yml" , emit: versions
-    path "*_R1.log"
-    path "*_R2.log"
     path "*.tab" , emit: log_tab
 
     script:

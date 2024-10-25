@@ -10,6 +10,7 @@ process PRESTO_PAIRSEQ {
 
     input:
     tuple val(meta), path("${meta.id}_R1.fastq"), path("${meta.id}_R2.fastq")
+    val(barcode_position)
 
     output:
     tuple val(meta), path("*R1_pair-pass.fastq"), path("*R2_pair-pass.fastq") , emit: reads
@@ -17,7 +18,7 @@ process PRESTO_PAIRSEQ {
     path "versions.yml" , emit: versions
 
     script:
-    def copyfield = (params.index_file | params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
+    def copyfield = (barcode_position == 'R1')? '--1f BARCODE' : (barcode_position == 'R2')? '--2f BARCODE' : (barcode_position == 'R1R2')? '--1f BARCODE --2f BARCODE' : (barcode_position == 'clustersets')? '--1f CLUSTER --2f CLUSTER' : ''
     def args = task.ext.args?: ''
     """
     PairSeq.py -1 ${meta.id}_R1.fastq -2 ${meta.id}_R2.fastq $copyfield $args > ${meta.id}_command_log.txt
