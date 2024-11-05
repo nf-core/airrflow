@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+# Author:  Jason Anthony Vander Heiden
+# Date:    2016.11.21
+# Licence: AGPL-3
+"""
+Split AIRR-C germline fasta files into segments for IgBLAST database build
+"""
+import Bio
+from pkg_resources import parse_version
+from sys import argv
+from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
+
+# Get input and output file names
+in_file = argv[1]
+out_file = argv[2]
+locus = argv[3]
+segment = argv[4]
+
+# Load sequences into memory and process them
+seq_list = list()
+for rec in SeqIO.parse(in_file, "fasta"):
+    name = rec.description
+    if name.startswith(locus+segment):
+        seq = SeqRecord(rec.seq.upper(), id=name, name=name, description=name)
+        seq_list.append(seq)
+
+# Overwrite file
+with open(out_file, "w") as out_handle:
+    if parse_version(Bio.__version__) >= parse_version("1.71"):
+        # Biopython >= v1.71
+        SeqIO.write(seq_list, out_handle, format="fasta-2line")
+    else:
+        # Biopython < v1.71
+        writer = SeqIO.FastaIO.FastaWriter(out_handle, wrap=None)
+        writer.write_file(seq_list)

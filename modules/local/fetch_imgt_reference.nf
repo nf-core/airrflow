@@ -1,5 +1,5 @@
-process FETCH_DATABASES {
-    tag "IMGT IGBLAST"
+process FETCH_IMGT_REFERENCE {
+    tag "IMGT reference"
     label 'process_low'
     label 'immcantation'
 
@@ -21,7 +21,7 @@ process FETCH_DATABASES {
 
     script:
     """
-    fetch_databases.sh
+    fetch_imgt_reference.sh
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

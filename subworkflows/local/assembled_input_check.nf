@@ -41,6 +41,7 @@ workflow ASSEMBLED_INPUT_CHECK {
 def get_meta (LinkedHashMap col) {
 
     def meta = [:]
+    def reference = params.fetch_reference ? params.fetch_reference : 'imgt'
 
     meta.id     = col.sample_id
     meta.filename     = col.filename
@@ -54,6 +55,7 @@ def get_meta (LinkedHashMap col) {
     meta.single_cell = col.single_cell
     meta.pcr_target_locus = col.pcr_target_locus
     meta.locus = col.locus
+    meta.reference = "${reference}"
 
     if (!file(col.filename).exists()) {
         error "ERROR: Please check input samplesheet: filename does not exist!\n${col.filename}"

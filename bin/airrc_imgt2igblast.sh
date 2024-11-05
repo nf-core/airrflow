@@ -1,26 +1,30 @@
 #!/usr/bin/env bash
-# Convert IMGT germlines sequences to IgBLAST database
+# set -euo pipefail
+# Convert AIRR-C and IMGT germline sequences to IgBLAST database
 #
-# Author:  Jason Anthony Vander Heiden
-# Date:    2016.11.21
+# Author:  Gisela Gabernet
+# Date:    2024.11.03
 # Licence: AGPL-3
 #
 # Arguments:
-#   -i = Input directory containing germlines in the form <species>/vdj/imgt_<species>_<chain><segment>.fasta
+#   -i = Input directory containing germlines in the form <species>/vdj/imgt_<species>_<LOCUS><segment>.fasta
 #   -o = Output directory for the built database. Defaults to current directory.
 #   -h = Display help.
 
 # Default argument values
+
 OUTDIR="."
 
 # Print usage
 usage () {
     echo -e "Usage: `basename $0` [OPTIONS]"
     echo -e "  -i  Input directory containing germlines in the form:"
-    echo -e "      <species>/vdj/imgt_<species>_<chain><segment>.fasta."
+    echo -e "      <species>/vdj/airrc-imgt_<species>_<chain><segment>.fasta."
     echo -e "  -o  Output directory for the built database."
     echo -e "  -h  This message."
 }
+
+
 
 # Get commandline arguments
 while getopts "i:o:h" OPT; do
@@ -54,39 +58,39 @@ OUTDIR=$(realpath ${OUTDIR})
 mkdir -p ${OUTDIR}/fasta
 TMPDIR=$(mktemp -d)
 
-# Create fasta files of each species, chain and segment combination
-for SPECIES in human mouse
+# Create fasta files of each species, LOCUS and segment combination
+for SPECIES in human #mouse
 do
     for CHAIN in IG TR
     do
-        # VDJ nucleotides
         for SEGMENT in V D J
         do
-            F=$(echo imgt_${SPECIES}_${CHAIN}_${SEGMENT}.fasta | tr '[:upper:]' '[:lower:]')
-            cat ${GERMDIR}/${SPECIES}/vdj/imgt_${SPECIES}_${CHAIN}?${SEGMENT}.fasta > ${TMPDIR}/${F}
+            F=$(echo airrc-imgt_${SPECIES}_${CHAIN}_${SEGMENT}.fasta | tr '[:upper:]' '[:lower:]')
+            cat ${GERMDIR}/${SPECIES}/vdj/airrc-imgt_${SPECIES}_${CHAIN}?${SEGMENT}.fasta > ${TMPDIR}/${F}
         done
 
         # C nucleotides
-        F=$(echo imgt_${SPECIES}_${CHAIN}_c.fasta | tr '[:upper:]' '[:lower:]')
-        cat ${GERMDIR}/${SPECIES}/constant/imgt_${SPECIES}_${CHAIN}?C.fasta > ${TMPDIR}/${F}
-
-
+        F=$(echo airrc-imgt_${SPECIES}_${CHAIN}_c.fasta | tr '[:upper:]' '[:lower:]')
+        cat ${GERMDIR}/${SPECIES}/constant/airrc-imgt_${SPECIES}_${CHAIN}?C.fasta > ${TMPDIR}/${F}
     done
 done
 
 # Parse each created fasta file to create igblast database
 cd ${TMPDIR}
-NT_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse).+\.fasta")
+NT_FILES=$(ls *.fasta | grep -E "airrc-imgt_(human|mouse)_ig_(v|d|j)\.fasta")
+echo ${NT_FILES}
 for F in ${NT_FILES}; do
-    clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
+    cp ${F} ${OUTDIR}/fasta/${F}
     makeblastdb -parse_seqids -dbtype nucl -in ${OUTDIR}/fasta/${F} \
         -out ${OUTDIR}/database/${F%%.*}
 done
 
-AA_FILES=$(ls *.fasta | grep -E "imgt_aa_(human|mouse).+\.fasta")
-for F in ${AA_FILES}; do
+# Reference data from IMGT needs cleaning of the headers
+C_FILES=$(ls *.fasta | grep -E "airrc-imgt_(human|mouse)_(ig|tr)_c\.fasta")
+TR_FILES=$(ls *.fasta | grep -E "airrc-imgt_(human|mouse)_tr_(v|d|j)\.fasta")
+for F in ${IMGT_FILES[@]}; do
     clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
-    makeblastdb -parse_seqids -dbtype prot -in ${OUTDIR}/fasta/${F} \
+    makeblastdb -parse_seqids -dbtype nucl -in ${OUTDIR}/fasta/${F} \
         -out ${OUTDIR}/database/${F%%.*}
 done
 

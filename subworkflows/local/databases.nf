@@ -1,4 +1,5 @@
-include { FETCH_DATABASES } from '../../modules/local/fetch_databases'
+include { FETCH_IMGT_REFERENCE } from '../../modules/local/fetch_imgt_reference'
+include { FETCH_AIRRC_IMGT_REFERENCE } from '../../modules/local/fetch_airrc_imgt_reference'
 include { UNZIP_DB as UNZIP_IGBLAST } from '../../modules/local/unzip_db'
 include { UNZIP_DB as UNZIP_REFERENCE_FASTA } from '../../modules/local/unzip_db'
 
@@ -10,7 +11,7 @@ workflow DATABASES {
     ch_versions = Channel.empty()
 
     // FETCH DATABASES
-    if( !params.fetch_imgt ){
+    if( !params.fetch_reference ){
         if (params.reference_igblast.endsWith(".zip")) {
             Channel.fromPath("${params.reference_igblast}")
                     .ifEmpty{ error "IGBLAST DB not found: ${params.reference_igblast}" }
@@ -25,7 +26,7 @@ workflow DATABASES {
         }
     }
 
-    if( !params.fetch_imgt ){
+    if( !params.fetch_reference ){
         if (params.reference_fasta.endsWith(".zip")) {
             Channel.fromPath("${params.reference_fasta}")
                     .ifEmpty{ error "IMGTDB not found: ${params.reference_fasta}" }
@@ -40,11 +41,16 @@ workflow DATABASES {
         }
     }
 
-    if (params.fetch_imgt) {
-        FETCH_DATABASES()
-        ch_igblast = FETCH_DATABASES.out.igblast
-        ch_reference_fasta = FETCH_DATABASES.out.reference_fasta
-        ch_versions = ch_versions.mix(FETCH_DATABASES.out.versions)
+    if (params.fetch_reference == 'imgt') {
+        FETCH_IMGT_REFERENCE()
+        ch_igblast = FETCH_IMGT_REFERENCE.out.igblast
+        ch_reference_fasta = FETCH_IMGT_REFERENCE.out.reference_fasta
+        ch_versions = ch_versions.mix(FETCH_IMGT_REFERENCE.out.versions)
+    } else if (params.fetch_reference == 'airrc-imgt') {
+        FETCH_AIRRC_IMGT_REFERENCE()
+        ch_igblast = FETCH_AIRRC_IMGT_REFERENCE.out.igblast
+        ch_reference_fasta = FETCH_AIRRC_IMGT_REFERENCE.out.reference_fasta
+        ch_versions = ch_versions.mix(FETCH_AIRRC_IMGT_REFERENCE.out.versions)
     }
 
     emit:

@@ -380,20 +380,30 @@
                 "reference_fasta": {
                     "type": "string",
                     "description": "Path to the germline reference fasta.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of the IMGT or AIRR-C reference, set the `--fetch_reference` parameter instead.",
                     "fa_icon": "fas fa-database",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/imgtdb_base.zip"
                 },
                 "reference_igblast": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT, set the `--fetch_imgt` parameter instead.",
+                    "help_text": "By default, we provide a pre-downloaded version of the IMGT database. It is also possible to provide a custom reference fasta database. To fetch a fresh version of IMGT or AIRR-C reference, set the `--fetch_reference` parameter instead.",
                     "fa_icon": "fas fa-database",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/igblast_base.zip"
                 },
-                "fetch_imgt": {
-                    "type": "boolean",
-                    "description": "Set this flag to fetch the IMGT reference data at runtime.",
+                "fetch_reference": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "enum": ["imgt", "airrc-imgt"]
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ],
+                    "type": ["string", "boolean"],
+                    "default": false,
+                    "description": "Set this parameter to fetch the germline reference data from IMGT (`--fetch_reference imgt`) or the AIRR community (`--fetch_reference airrc`) at runtime.",
                     "fa_icon": "fas fa-cloud-download-alt"
                 },
                 "isotype_column": {

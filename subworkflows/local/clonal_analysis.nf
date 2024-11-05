@@ -68,6 +68,7 @@ workflow CLONAL_ANALYSIS {
                                 it[0].species,
                                 it[0].single_cell,
                                 it[0].locus,
+                                it[0].reference,
                                 it[1] ] }
                 .groupTuple()
                 .map{ get_meta_tabs(it) }
@@ -136,10 +137,11 @@ def get_meta_tabs(arr) {
     meta.species            = arr[3]
     meta.single_cell        = arr[4].unique().join("")
     meta.locus              = arr[5].unique().join("")
+    meta.reference          = arr[6].unique().join("")
 
     def array = []
 
-        array = [ meta, arr[6].flatten() ]
+        array = [ meta, arr[7].flatten() ]
 
     return array
 }

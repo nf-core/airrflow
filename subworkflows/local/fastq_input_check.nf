@@ -58,6 +58,7 @@ workflow FASTQ_INPUT_CHECK {
 def create_fastq_channels(LinkedHashMap col) {
 
     def meta = [:]
+    def reference = params.fetch_reference ? params.fetch_reference : 'imgt'
 
     meta.id                 = col.sample_id
     meta.subject_id         = col.subject_id
@@ -68,6 +69,7 @@ def create_fastq_channels(LinkedHashMap col) {
     meta.single_cell        = col.single_cell.toLowerCase()
     meta.locus              = col.pcr_target_locus
     meta.single_end         = false
+    meta.reference          = "${reference}"
 
     def array = []
     if (!file(col.filename_R1).exists()) {
