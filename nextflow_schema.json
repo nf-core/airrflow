@@ -892,10 +892,7 @@
             "$ref": "#/$defs/single_cell_analysis_options"
         },
         {
-            "$ref": "#/definitions/single_cell_analysis_options"
-        },
-        {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/$defs/reference_genome_options"
         },
         {
             "$ref": "#/$defs/protocol"
@@ -907,10 +904,10 @@
             "$ref": "#/$defs/umi_barcode_handling"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/definitions/mixcr_options"
+            "$ref": "#/$defs/mixcr_options"
         }
     ]
 }
