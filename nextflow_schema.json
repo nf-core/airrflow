@@ -914,6 +914,10 @@
         },
         {
             "$ref": "#/$defs/report_options"
+        },
+        {
+            "$ref": "#/$defs/institutional_config_options"
         }
+
     ]
 }
