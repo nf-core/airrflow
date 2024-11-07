@@ -929,9 +929,6 @@
             "$ref": "#/definitions/reference_genome_options"
         },
         {
-            "$ref": "#/definitions/single_cell_analysis_options"
-        },
-        {
             "$ref": "#/definitions/rnaseq_based_analysis_options"
         },
         {
