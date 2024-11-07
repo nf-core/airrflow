@@ -244,7 +244,7 @@ for process in processes:
             with open(logfile, "r") as f:
                 for line in f:
                     if "PASS>" in line:
-                        s_code.append(logfile.split("/")[1].split("_command_log")[0])
+                        s_code.append(logfile.split("/")[1].split("_makedb_command_log")[0])
                         pass_blast.append(line.strip().removeprefix("PASS> "))
                     elif "FAIL>" in line:
                         fail_blast.append(line.strip().removeprefix("FAIL> "))
@@ -368,9 +368,7 @@ if args.cluster_sets:
 # Getting table colnames
 
 colnames = [
-    "Sample",
-    "Sequences_R1",
-    "Sequences_R2",
+    "Sequences",
     "Filtered_quality_R1",
     "Filtered_quality_R2",
     "Mask_primers_R1",
@@ -386,24 +384,24 @@ colnames = [
 print(df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype"))
 
 values = [
-    df_process_list[2].sort_values(by=["Sample"]).iloc[:, 0].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["start"]["R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["start"]["R2"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R1"].tolist(),
-    df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R2"].tolist(),
-    df_process_list[1].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R1"].tolist(),
-    df_process_list[1].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R2"].tolist(),
-    df_process_list[2].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[5].sort_values(by=["Sample"]).loc[:, "pass_pairs"].tolist(),
-    df_process_list[6].sort_values(by=["Sample"]).loc[:, "unique"].tolist(),
-    df_process_list[7].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[7].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+    df_process_list[0].pivot(index="Sample", columns="readtype")["start"]["R1"],
+    df_process_list[0].pivot(index="Sample", columns="readtype")["pass"]["R1"],
+    df_process_list[0].pivot(index="Sample", columns="readtype")["pass"]["R2"],
+    df_process_list[1].pivot(index="Sample", columns="readtype")["pass"]["R1"],
+    df_process_list[1].pivot(index="Sample", columns="readtype")["pass"]["R2"],
+    df_process_list[2].set_index("Sample").loc[:, "pass_pairs"],
+    df_process_list[4].set_index("Sample").loc[:, "pass_pairs"],
+    df_process_list[5].set_index("Sample").loc[:, "pass_pairs"],
+    df_process_list[6].set_index("Sample").loc[:, "unique"],
+    df_process_list[7].set_index("Sample").loc[:, "repres_2"],
+    df_process_list[7].set_index("Sample").loc[:, "pass_igblast"],
 ]
 
+final_table = pd.concat(values, axis=1, join="outer")
+final_table.columns = colnames
+final_table = final_table.reset_index().rename(columns={"index": "Sample"})
 
-final_table = dict(zip(colnames, values))
-print(final_table)
+
 df_final_table = pd.DataFrame.from_dict(final_table)
 df_final_table = df_final_table.sort_values(["Sample"], ascending=[1])
 
