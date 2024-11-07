@@ -918,6 +918,5 @@
         {
             "$ref": "#/$defs/institutional_config_options"
         }
-
     ]
 }
