@@ -4,7 +4,7 @@ include { RENAME_FILE as RENAME_FILE_TSV                                } from '
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 
-include { MIXCR_FLOW                    } from './mixcr_flow'
+include { MIXCR_FLOW                                                    } from './mixcr_flow'
 
 
 workflow SC_RAW_INPUT {
