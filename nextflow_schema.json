@@ -911,6 +911,9 @@
         },
         {
             "$ref": "#/$defs/rnaseq_based_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/report_options"
         }
     ]
 }
