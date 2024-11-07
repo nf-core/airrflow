@@ -912,10 +912,5 @@
         {
             "$ref": "#/definitions/mixcr_options"
         }
-    ],
-    "properties": {
-        "skip_alignment_filter": {
-            "type": "boolean"
-        }
     ]
 }
