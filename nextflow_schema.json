@@ -908,6 +908,9 @@
         },
         {
             "$ref": "#/$defs/mixcr_options"
+        },
+        {
+            "$ref": "#/$defs/rnaseq_based_analysis_options"
         }
     ]
 }
