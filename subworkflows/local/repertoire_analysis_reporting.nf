@@ -30,7 +30,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     main:
     ch_versions = Channel.empty()
 
-    if (params.mode == "fastq" && params.library_generation_method != "sc_10x_genomics" && params.library_generation_method != "trust4" ) {
+    if (params.mode == "fastq" && params.library_generation_method != "sc_10x_genomics" && params.library_generation_method != "mixcr" && params.library_generation_method != "trust4" ) {
         PARSE_LOGS(
             ch_presto_filterseq_logs,
             ch_presto_maskprimers_logs,

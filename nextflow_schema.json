@@ -67,7 +67,8 @@
                         "dt_5p_race",
                         "dt_5p_race_umi",
                         "sc_10x_genomics",
-                        "trust4"
+                        "trust4",
+                        "mixcr"
                     ],
                     "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
                 },
@@ -549,6 +550,103 @@
             "help_text": "Options for running raw RNA seq data.",
             "fa_icon": "fab fa-pagelines"
         },
+
+        "mixcr_options": {
+            "title": "MiXCR options",
+            "type": "object",
+            "description": "Options for the MiXCR VDJ assignment and postprocessing processes.",
+            "default": "",
+            "properties": {
+                "imgt_mixcr": {
+                    "type": "string",
+                    "description": "MiXCRs IMGT DB can be downloaded from the [GitHub](https://github.com/repseqio/library-imgt/releases).",
+                    "fa_icon": "fas fa-database"
+                },
+                "kit": {
+                    "type": "string",
+                    "description": "MiXCR preset",
+                    "help_text": "MiXCRs built-in presets can be found [here](https://mixcr.com/mixcr/reference/overview-built-in-presets/)",
+                    "fa_icon": "fas fa-toolbox"
+                },
+                "mixcr_postanalysis": {
+                    "type": "boolean",
+                    "description": "Run MiXCR post analysis.",
+                    "fa_icon": "fas fa-splotch"
+                },
+                "mixcr_downsampling": {
+                    "type": "string",
+                    "description": "Choose downsampling method.",
+                    "help_text": "Default downsampling method to normalize the cloneset. See [MiXCR docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#downsampling) for details.",
+                    "fa_icon": "fas fa-chart-simple"
+                },
+                "mixcr_weightfunction": {
+                    "type": "string",
+                    "description": "Choose weight function.",
+                    "help_text": "Default clonotype weight function. See [MiXCR docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#weight-functions) for details.",
+                    "fa_icon": "fas fa-weight-scale"
+                },
+                "mixcr_productive_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Filter out non-productive sequencs for individual postprocessing.",
+                    "fa_icon": "fas fa-check"
+                },
+                "mixcr_drop_outliers": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Drop outliers below downsampling value as defined in `mixcr_downsampling` individual postprocessing.",
+                    "fa_icon": "fas fa-splotch"
+                },
+                "mixcr_overlap_criteria": {
+                    "type": "string",
+                    "default": "CDR3|AA|V|J",
+                    "description": "Defines the rules to treat clones as equal.",
+                    "help_text": "Defines the rules to treat clones as equal. Allows to specify gene feature for overlap (nt or AA) and optionally use V/J hits. Default: Overlap by AA CDR3 and V and J. See [docs](https://mixcr.com/mixcr/reference/mixcr-postanalysis/#command-line-options_1) for help.",
+                    "fa_icon": "fas fa-splotch"
+                },
+                "mixcr_diversity_plottype": {
+                    "type": "string",
+                    "default": "boxplot",
+                    "description": "Plot type to plot diversity in.",
+                    "enum": [
+                        "boxplot",
+                        "boxplot-bindot",
+                        "boxplot-jitter",
+                        "violin",
+                        "violin-bindot",
+                        "barplot",
+                        "barplot-stacked",
+                        "lineplot",
+                        "lineplot-jitter",
+                        "lineplot-bindot",
+                        "scatter"
+                    ],
+                    "fa_icon": "fas fa-chart-simple"
+                },
+                "mixcr_statistical_method": {
+                    "type": "string",
+                    "default": "Wilcoxon",
+                    "description": "Statistical test method used when plotting diversity and cdr3 metrics.",
+                    "enum": ["Wilcoxon", "ANOVA", "TTest", "KruskalWallis", "KolmogorovSmirnov"],
+                    "fa_icon": "fas fa-chart-simple"
+                },
+                "mixcr_p_adjust_method": {
+                    "type": "string",
+                    "default": "Holm",
+                    "description": "Method to adjust p-values when plotting diversity and cdr3 metrics.",
+                    "enum": [
+                        "Holm",
+                        "BenjaminHochberg",
+                        "BenjaminYekutieli",
+                        "Bonferroni",
+                        "Hochberg",
+                        "Hommel",
+                        "none"
+                    ],
+                    "fa_icon": "fas fa-chart-simple"
+                }
+            }
+        },
         "report_options": {
             "title": "Report options",
             "type": "object",
@@ -794,10 +892,7 @@
             "$ref": "#/$defs/single_cell_analysis_options"
         },
         {
-            "$ref": "#/$defs/rnaseq_based_analysis_options"
-        },
-        {
-            "$ref": "#/$defs/report_options"
+            "$ref": "#/$defs/reference_genome_options"
         },
         {
             "$ref": "#/$defs/protocol"
@@ -809,22 +904,10 @@
             "$ref": "#/$defs/umi_barcode_handling"
         },
         {
-            "$ref": "#/$defs/adapter_trimming"
+            "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/$defs/sequence_assembly_options"
-        },
-        {
-            "$ref": "#/$defs/vdj_annotation_options"
-        },
-        {
-            "$ref": "#/$defs/bulk_filtering_options"
-        },
-        {
-            "$ref": "#/$defs/clonal_analysis_options"
-        },
-        {
-            "$ref": "#/$defs/single_cell_analysis_options"
+            "$ref": "#/$defs/mixcr_options"
         },
         {
             "$ref": "#/$defs/rnaseq_based_analysis_options"
@@ -833,13 +916,7 @@
             "$ref": "#/$defs/report_options"
         },
         {
-            "$ref": "#/$defs/reference_genome_options"
-        },
-        {
             "$ref": "#/$defs/institutional_config_options"
-        },
-        {
-            "$ref": "#/$defs/generic_options"
         }
     ]
 }

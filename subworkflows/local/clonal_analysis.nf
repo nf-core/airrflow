@@ -73,6 +73,8 @@ workflow CLONAL_ANALYSIS {
                 .map{ get_meta_tabs(it) }
                 .set{ ch_define_clones }
 
+    // ch_define_clones.view()
+
     DEFINE_CLONES_COMPUTE(
         ch_define_clones,
         clone_threshold.collect(),

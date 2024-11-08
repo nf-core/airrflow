@@ -42,6 +42,8 @@ include { SINGLE_CELL_QC_AND_FILTERING  } from '../subworkflows/local/single_cel
 include { CLONAL_ANALYSIS               } from '../subworkflows/local/clonal_analysis'
 include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire_analysis_reporting'
 include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
+include { MIXCR_FLOW                    } from '../subworkflows/local/mixcr_flow'
+include { MIXCR_POSTANALYSIS            } from '../subworkflows/local/mixcr_postanalysis'
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
 
@@ -81,7 +83,7 @@ workflow AIRRFLOW {
 
         if ( params.mode == "fastq" ) {
 
-            // SC:Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
+            // SC: Perform sequence assembly if input type is fastq from single-cell sequencing data (currently only 10XGenomics)
             if (params.library_generation_method == "sc_10x_genomics") {
 
                 SC_RAW_INPUT(
@@ -107,6 +109,7 @@ workflow AIRRFLOW {
             ch_fastp_html                           = Channel.empty()
             ch_fastp_json                           = Channel.empty()
             ch_fastqc_postassembly_mqc              = Channel.empty()
+
 
         }  else if (params.library_generation_method == "trust4") {
             // Extract VDJ sequences from "general" RNA seq data using TRUST4
@@ -134,7 +137,36 @@ workflow AIRRFLOW {
             ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
             ch_fastqc_postassembly_mqc              = Channel.empty()
         }
-        else {
+        else if (params.library_generation_method == "mixcr") {
+
+                if (!params.kit) {
+                    error "Kit parameter is required for MiXCR analysis."
+                }
+
+                MIXCR_FLOW(ch_input)
+
+                ch_fasta                    = MIXCR_FLOW.out.fasta
+                ch_versions                 = ch_versions.mix(MIXCR_FLOW.out.versions)
+                ch_mixcr_airr               = MIXCR_FLOW.out.airr
+                ch_mixcr_clns               = MIXCR_FLOW.out.clns
+                ch_mixcr_out                = MIXCR_FLOW.out.outs
+
+                ch_validated_samplesheet = MIXCR_FLOW.out.samplesheet.collect()
+
+                ch_presto_filterseq_logs             = Channel.empty()
+                ch_presto_maskprimers_logs           = Channel.empty()
+                ch_presto_pairseq_logs               = Channel.empty()
+                ch_presto_clustersets_logs           = Channel.empty()
+                ch_presto_buildconsensus_logs        = Channel.empty()
+                ch_presto_postconsensus_pairseq_logs = Channel.empty()
+                ch_presto_assemblepairs_logs         = Channel.empty()
+                ch_presto_collapseseq_logs           = Channel.empty()
+                ch_presto_splitseq_logs              = Channel.empty()
+                ch_fastp_html                        = Channel.empty()
+                ch_fastp_json                        = Channel.empty()
+                ch_fastqc_postassembly_mqc           = Channel.empty()
+            }
+            else {
             // Perform sequence assembly if input type is fastq from bulk sequencing data
             SEQUENCE_ASSEMBLY(
                 ch_input,
@@ -275,9 +307,14 @@ workflow AIRRFLOW {
         }
         ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
 
-    //
+    // MiXCR postanalysis
+    if (params.mixcr_postanalysis) {
+        MIXCR_POSTANALYSIS ( ch_mixcr_clns )
+    }
+
+
     // Collate and save software versions
-    //
+
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",

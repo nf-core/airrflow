@@ -4,6 +4,8 @@ include { RENAME_FILE as RENAME_FILE_TSV                                } from '
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 
+include { MIXCR_FLOW                                                    } from './mixcr_flow'
+
 
 workflow SC_RAW_INPUT {
 
@@ -75,7 +77,15 @@ workflow SC_RAW_INPUT {
             )
         .set { ch_renamed_tsv }
 
-    // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
+    if (params.kit) {
+        MIXCR_FLOW(
+            ch_reads_single
+        )
+        ch_versions = ch_versions.mix(MIXCR_FLOW.out.versions)
+    }
+
+
+    // convert airr tsv to fasta
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
                 RENAME_FILE_TSV.out.file
             )
@@ -83,9 +93,6 @@ workflow SC_RAW_INPUT {
     ch_versions = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions
 
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
-
-    // TODO: here you can add support for MiXCR sc protocols.
-
 
     emit:
     versions = ch_versions
