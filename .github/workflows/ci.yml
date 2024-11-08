@@ -149,10 +149,7 @@ jobs:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        profile: [
-          "test_mixcr_bulk",
-          "test_mixcr_sc",
-        ]
+        profile: ["test_mixcr_bulk", "test_mixcr_sc"]
 
     steps:
       - name: Check out pipeline code
