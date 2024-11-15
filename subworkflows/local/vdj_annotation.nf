@@ -53,7 +53,6 @@ workflow VDJ_ANNOTATION {
         ch_for_parsedb_split = ch_assigned_tab
     }
 
-
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT (
             ch_for_parsedb_split

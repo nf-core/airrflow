@@ -10,7 +10,8 @@
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/airrflow/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2642009-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2642009)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
+
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -180,13 +181,14 @@ nf-core/airrflow was originally written by:
 
 - [Gisela Gabernet](https://github.com/ggabernet)
 - [Susanna Marquez](https://github.com/ssnn-airr)
-- [Alexander Peltzer](@apeltzer)
-- [Simon Heumos](@subwaystation)
+- [Alexander Peltzer](https://github.com/apeltzer)
 
 We thank the following people for their extensive assistance in the development of the pipeline:
 
 - [David Ladd](https://github.com/dladd)
-- [Friederike Hanssen](https://github.com/ggabernet/friederikehanssen)
+- [Friederike Hanssen](https://github.com/friederikehanssen)
+- [Simon Heumos](https://github.com/subwaystation)
+- [Mark Polster](https://github.com/mapo9)
 
 ## Contributions and Support
 
@@ -196,13 +198,11 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/airrflow for your analysis, please cite the preprint as follows:
+If you use nf-core/airrflow for your analysis, please cite the article as follows:
 
 > **nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework**
 >
-> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole Jensen, David Ladd, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein.
->
-> BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole G. Jensen, David Ladd, Mark Polster, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. (2024) PLOS Computational Biology, 20(7), e1012265. doi: [https://doi.org/10.1371/journal.pcbi.1012265](https://doi.org/10.1371/journal.pcbi.1012265). Pubmed PMID: 39058741.
 
 The specific pipeline version using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
 

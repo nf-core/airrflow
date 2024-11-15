@@ -55,7 +55,7 @@ include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_inp
 // MODULE: Installed directly from nf-core/modules
 //
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_airrflow_pipeline'
@@ -69,7 +69,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_airr
 workflow AIRRFLOW {
 
     take:
-        ch_input
+        ch_input // channel: samplesheet read in from --input
 
     main:
 
@@ -274,7 +274,6 @@ workflow AIRRFLOW {
             )
         }
         ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
-        ch_versions.dump(tag: "channel_versions")
 
     //
     // Collate and save software versions
@@ -282,7 +281,7 @@ workflow AIRRFLOW {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
@@ -309,7 +308,9 @@ workflow AIRRFLOW {
                 ch_multiqc_files.collect(),
                 ch_multiqc_config.toList(),
                 ch_multiqc_custom_config.toList(),
-                ch_report_logo.toList()
+                ch_report_logo.toList(),
+                [],
+                []
             )
             multiqc_report = MULTIQC.out.report.toList()
         } else {

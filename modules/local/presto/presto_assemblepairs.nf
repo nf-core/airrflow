@@ -15,7 +15,6 @@ process PRESTO_ASSEMBLEPAIRS {
     tuple val(meta), path("*_assemble-pass.fastq"), emit: reads
     tuple val(meta), path("*_assemble-fail.fastq"),emit: reads_fail, optional: true
     path("*_command_log.txt"), emit: logs
-    path("*.log")
     path("*_table.tab")
     path "versions.yml" , emit: versions
 
