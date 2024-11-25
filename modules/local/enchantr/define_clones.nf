@@ -59,7 +59,6 @@ process DEFINE_CLONES {
                                         'threshold'=${thr}, \\
                                         'singlecell'='${params.singlecell}', \\
                                         'outdir'=getwd(), \\
-                                        'isotype_column'='${params.isotype_column}', \\
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
