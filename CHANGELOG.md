@@ -34,8 +34,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `isotype_column`: if `c_call` column value is NA, now `c_region` and `c_primer` column values respectively are annotated into the `c_call` column.
 
-### `Deprecated parameters`
-
 ## [4.1.0] - Avenseguim
 
 ### `Added`
