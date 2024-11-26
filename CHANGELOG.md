@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| enchantr   | 0.1.16      | 0.1.18      |
+| enchantr   | 0.1.16      | 0.1.19      |
 | presto     | 0.7.1       | 0.7.2       |
 
 ### `Deprecated parameters`
