@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.2.0] - dev
+## [4.2.0] - Evanesco
 
 ### `Added`
 
@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Added option to save non-productive sequences
 - [#344](https://github.com/nf-core/airrflow/pull/344) Allow for maskprimers align with UMI on both V gene and C gene primers.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Update pipeline template to nf-core tools v3.0.2.
+- [357](https://github.com/nf-core/airrflow/pull/357) Deprecate isotype_column parameter in favor of annotating C region from internal c_region alignment or c_primer alignment into the c_call column.
 
 ### `Fixed`
 
@@ -24,7 +25,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.16      | 0.1.19      |
+| presto     | 0.7.1       | 0.7.2       |
+
 ### `Deprecated parameters`
+
+- `isotype_column`: if `c_call` column value is NA, now `c_region` and `c_primer` column values respectively are annotated into the `c_call` column.
 
 ## [4.1.0] - Avenseguim
 
