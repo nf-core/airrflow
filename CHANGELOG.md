@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Added option to save non-productive sequences
 - [#344](https://github.com/nf-core/airrflow/pull/344) Allow for maskprimers align with UMI on both V gene and C gene primers.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Update pipeline template to nf-core tools v3.0.2.
-- Deprecate isotype_column parameter in favor of annotating C region from internal c_region alignment or c_primer alignment into the c_call column.
+- [357](https://github.com/nf-core/airrflow/pull/357)  Deprecate isotype_column parameter in favor of annotating C region from internal c_region alignment or c_primer alignment into the c_call column.
 
 ### `Fixed`
 
