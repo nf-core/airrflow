@@ -10,6 +10,7 @@ include { FASTP                                          } from '../../modules/n
 include { PRESTO_FILTERSEQ      as  PRESTO_FILTERSEQ_UMI              }    from '../../modules/local/presto/presto_filterseq'
 include { PRESTO_MASKPRIMERS    as  PRESTO_MASKPRIMERS_UMI            }    from '../../modules/local/presto/presto_maskprimers'
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_PRIMERS            }    from '../../modules/local/presto/presto_maskprimers_align'
+include { PRESTO_MASKPRIMERS_ALIGN_TRIM as PRESTO_ALIGN_TRIM   }    from '../../modules/local/presto/presto_maskprimers_align_trim'
 include { PRESTO_MASKPRIMERS_EXTRACT as PRESTO_MASKPRIMERS_EXTRACT    }    from '../../modules/local/presto/presto_maskprimers_extract'
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_ALIGN_CREGION            }    from '../../modules/local/presto/presto_maskprimers_align'
 include { PRESTO_MASKPRIMERS_ALIGN as PRESTO_MASKPRIMERS_ALIGN_UMI_R1 }    from '../../modules/local/presto/presto_maskprimers_align'
@@ -29,6 +30,7 @@ include { PRESTO_BUILDCONSENSUS as PRESTO_BUILDCONSENSUS_ALIGN_RACE   }    from 
 include { PRESTO_BUILDCONSENSUS as PRESTO_BUILDCONSENSUS_EXTRACT      }    from '../../modules/local/presto/presto_buildconsensus'
 include { PRESTO_POSTCONSENSUS_PAIRSEQ as PRESTO_POSTCONSENSUS_PAIRSEQ_UMI }    from '../../modules/local/presto/presto_postconsensus_pairseq'
 include { PRESTO_ASSEMBLEPAIRS  as  PRESTO_ASSEMBLEPAIRS_UMI          }    from '../../modules/local/presto/presto_assemblepairs'
+include { PRESTO_ASSEMBLEPAIRS_JOIN  as  PRESTO_ASSEMBLEPAIRS_JOIN_UMI }    from '../../modules/local/presto/presto_assemblepairs_join'
 include { PRESTO_ASSEMBLEPAIRS_SEQUENTIAL                             }    from '../../modules/local/presto/presto_assemblepairs_sequential'
 include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_COLLAPSE_UMI  }    from '../../modules/local/presto/presto_parseheaders'
 include { PRESTO_PARSEHEADERS   as  PRESTO_PARSEHEADERS_CREGION       }    from '../../modules/local/presto/presto_parseheaders'
@@ -45,6 +47,7 @@ workflow PRESTO_UMI {
     ch_reads       // channel: [ val(meta), [ reads ] ]
     ch_cprimers    // channel: [ cprimers.fasta ]
     ch_vprimers    // channel: [ vprimers.fasta ]
+    ch_umilinker   // channel: [ umi_linker.fasta ]
     ch_adapter_fasta // channel: [ adapters.fasta ]
     ch_internal_cregion // channel: [ internal_cregions.fasta ]
     ch_igblast
@@ -164,6 +167,40 @@ workflow PRESTO_UMI {
         ch_versions  = ch_versions.mix(PRESTO_PAIRSEQ_ALIGN.out.versions)
         ch_for_clustersets = PRESTO_PAIRSEQ_ALIGN.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_ALIGN.out.logs
+
+    } else if (params.library_generation_method == 'specific_5p_race_umi') {
+
+        ch_reads_R1 = PRESTO_FILTERSEQ_UMI.out.reads
+                                            .map{ reads -> [reads[0], reads[1]] }.dump(tag: 'ch_reads_R1')
+
+        // trim any sequence in R1 that is before UMI pattern-race linker sequence
+        PRESTO_ALIGN_TRIM(
+            ch_reads_R1,
+            ch_umilinker.collect()
+        )
+
+        // Merge again R1 and R2 by sample ID.
+        ch_maskprimers_trim_reads_R1 = PRESTO_ALIGN_TRIM.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_trim_reads_R1')
+        ch_filterseq_umi_reads_R2 = PRESTO_FILTERSEQ_UMI.out.reads.map{ reads -> [reads[0].id, reads[0], reads[2]]}.dump(tag: 'ch_filterseq_umi_reads_R2')
+        ch_reads_for_maskprimers_umi = ch_maskprimers_trim_reads_R1.join(ch_filterseq_umi_reads_R2)
+                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_reads_for_maskprimers_umi')
+
+        PRESTO_MASKPRIMERS_UMI (
+            ch_reads_for_maskprimers_umi,
+            ch_cprimers.collect(),
+            ch_vprimers.collect()
+        )
+        
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_UMI.out.versions)
+        ch_maskprimers_logs = PRESTO_MASKPRIMERS_UMI.out.logs
+
+        // Pre-consensus pair
+        PRESTO_PAIRSEQ_UMI (
+            PRESTO_MASKPRIMERS_UMI.out.reads
+        )
+        ch_versions = ch_versions.mix(PRESTO_PAIRSEQ_UMI.out.versions)
+        ch_for_clustersets = PRESTO_PAIRSEQ_UMI.out.reads
+        ch_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs
 
     } else if (params.maskprimers_align) {
 
@@ -475,6 +512,33 @@ workflow PRESTO_UMI {
         ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_SEQUENTIAL.out.versions)
         ch_assemblepairs_reads = PRESTO_ASSEMBLEPAIRS_SEQUENTIAL.out.reads
         ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_SEQUENTIAL.out.logs
+    } else if (params.assemblepairs_join) {
+        // Assemble read pairs align and get failed reads
+        PRESTO_ASSEMBLEPAIRS_UMI (
+            PRESTO_POSTCONSENSUS_PAIRSEQ_UMI.out.reads
+        )
+        
+
+        // Merge R1 failed, R2 failed and assemblepairs pass reads by sample ID.
+        ch_assemblepairs_fail_reads = PRESTO_ASSEMBLEPAIRS_UMI.out.reads_fail.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_assemblepairs_fail_reads')
+        
+        ch_assemblepairs_pass_reads = PRESTO_ASSEMBLEPAIRS_UMI.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_assemblepairs_pass_reads')
+        
+        ch_reads_for_assemblepairs_join_umi = ch_assemblepairs_fail_reads.join(ch_assemblepairs_pass_reads)
+                                                        .map{ it -> [it[1], it[2][0], it[2][1], it[4]] }.dump(tag: 'ch_reads_for_assemblepairs_join_umi')
+        
+        // rescue no overlapping reads
+        PRESTO_ASSEMBLEPAIRS_JOIN_UMI (
+            ch_reads_for_assemblepairs_join_umi
+        )
+        
+        ch_versions = ch_versions.mix(PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.versions)
+        ch_assemblepairs_reads = PRESTO_ASSEMBLEPAIRS_JOIN_UMI.out.reads
+
+
+        // not include number of rescue reads 
+        ch_assemblepairs_logs = PRESTO_ASSEMBLEPAIRS_UMI.out.logs
+        
     } else {
         // Assemble read pairs align
         PRESTO_ASSEMBLEPAIRS_UMI (
