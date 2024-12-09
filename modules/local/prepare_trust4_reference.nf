@@ -12,7 +12,7 @@ process PREPARE_TRUST4_REFERENCE {
     path(reference_igblast)
 
     output:
-    tuple val(meta), path("trust4_reference.fa") , emit: trust4_reference
+    path("trust4_reference.fa") , emit: trust4_reference
 
     script:
     """

@@ -1,12 +1,12 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/airrflow/master/nextflow_schema.json",
     "title": "nf-core/airrflow pipeline parameters",
     "description": "B and T cell repertoire analysis pipeline with the Immcantation framework.",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "input_output_options": {
-            "title": "Input/output options",
+            "title": "Input output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
@@ -79,8 +79,8 @@
             },
             "fa_icon": "fas fa-flask"
         },
-        "primer_handling": {
-            "title": "Primer handling",
+        "primer_input_and_positions": {
+            "title": "Primer input and positions",
             "type": "object",
             "description": "Define the primer region start and how to deal with the primer alignment.",
             "default": "",
@@ -214,7 +214,7 @@
             }
         },
         "sequence_assembly_options": {
-            "title": "sequence assembly options",
+            "title": "Sequence Assembly options",
             "type": "object",
             "description": "Options for the pRESTO sequence assembly processes",
             "default": "",
@@ -230,14 +230,6 @@
                     "default": 0.6,
                     "description": "Maximum error for building the primer consensus in the pRESTO Buildconsensus step.",
                     "fa_icon": "fas fa-align-left"
-                },
-                "primer_mask_mode": {
-                    "type": "string",
-                    "default": "cut",
-                    "description": "Masking mode for the pRESTO MaskPrimer step. Available: cut, mask, trim, tag.",
-                    "enum": ["cut", "mask", "tag", "trim"],
-                    "help_text": "The primer masking modes will perform the following actions:\n\n* `cut`: remove both the primer region and the preceding sequence.\n* `mask`: replace the primer region with Ns and remove the preceding sequence.\n* `trim`: remove the region preceding the primer, but leave the primer region intact.\n* `tag`: leave the input sequence unmodified.",
-                    "fa_icon": "fas fa-mask"
                 },
                 "buildconsensus_maxerror": {
                     "type": "number",
@@ -274,17 +266,51 @@
                     "fa_icon": "fas fa-align-center",
                     "description": "Align primers instead of scoring them. Used for protocols without primer fixed positions."
                 },
-                "primer_extract_len": {
-                    "type": "integer",
-                    "default": 0,
-                    "fa_icon": "fas fa-align-center",
-                    "description": "Length of the extracted primers with MaskPrimer extract."
-                },
                 "primer_maxlen": {
                     "type": "integer",
                     "default": 50,
                     "fa_icon": "fas fa-align-center",
                     "description": "Maximum allowed primer length when aligning the primers."
+                },
+                "primer_r1_mask_mode": {
+                    "type": "string",
+                    "fa_icon": "fas fa-mask",
+                    "description": "Masking mode for R1 primers.",
+                    "enum": ["cut", "mask", "trim", "tag"],
+                    "default": "cut",
+                    "help_text": "See [pRESTO MaskPrimers](https://presto.readthedocs.io/en/stable/tools/MaskPrimers.html) for more information."
+                },
+                "primer_r2_mask_mode": {
+                    "type": "string",
+                    "default": "cut",
+                    "fa_icon": "fas fa-mask",
+                    "enum": ["cut", "mask", "trim", "tag"],
+                    "description": "Masking mode for R2 primers.",
+                    "help_text": "See [pRESTO MaskPrimers](https://presto.readthedocs.io/en/stable/tools/MaskPrimers.html) for more information."
+                },
+                "maskprimers_align_race": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Use MaskPrimers align for a 5' RACE protocol.",
+                    "help_text": "It will align the C-primers with pRESTO MaskPrimers align, and extract the template-switch Oligo and/or linker with defined length in `--primer_r2_extract_len`."
+                },
+                "maskprimers_extract": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-cut",
+                    "description": "Use when primer sequences are unknown but when their approximate positions are known.",
+                    "help_text": "Use in combination with `--primer_r1_extract_len` and `--primer_r2_extract_len` to define the sequence regions to cut corresponding to the approximate unknown primer sequence length prior to alignment. It is also possible to define a UMI barcode for extraction if it's position is unknown."
+                },
+                "primer_r1_extract_len": {
+                    "type": "integer",
+                    "default": 0,
+                    "fa_icon": "fas fa-cut",
+                    "description": "R1 primer extract length when using `--maskprimers_extract`."
+                },
+                "primer_r2_extract_len": {
+                    "type": "integer",
+                    "default": 0,
+                    "fa_icon": "fas fa-cut",
+                    "description": "R2 primer extract length when using `--maskprimers_extract`."
                 },
                 "assemblepairs_sequential": {
                     "type": "boolean",
@@ -318,6 +344,11 @@
                     "default": "tag",
                     "fa_icon": "fas fa-mask",
                     "description": "Mask mode for C-region alignment."
+                },
+                "skip_alignment_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip filter step after alignment that ensures that locus should match the v_call chain, the sequence alignment should have at least 200 informative positions (excluding N or gaps), and maximum 10% N nucleotides in the alignment."
                 }
             },
             "fa_icon": "fas fa-align-center"
@@ -364,13 +395,6 @@
                     "type": "boolean",
                     "description": "Set this flag to fetch the IMGT reference data at runtime.",
                     "fa_icon": "fas fa-cloud-download-alt"
-                },
-                "isotype_column": {
-                    "type": "string",
-                    "description": "Set the column in the AIRR rearrangement file that isotype information should be gathered from.",
-                    "default": "c_call",
-                    "fa_icon": "fas fa-border-all",
-                    "help_text": "Default is the `c_call` column. For bulk protocols one can use the c_primers or cregion columns (check `align_cregion`). The primer or cregions fasta file header need to contain the strings `IGHA`, `IGHD`, `IGHG`... for the isotypes to be properly parsed. This will be used for plotting mutation frequency by isotype in the clonal analysis report."
                 }
             },
             "fa_icon": "fas fa-edit"
@@ -444,13 +468,13 @@
                     "default": "raxml",
                     "description": "Lineage tree software to use to build trees within Dowser. If you change the default, also set the `lineage_tree_exec` parameter.",
                     "enum": ["raxml", "igphyml"],
-                    "fa_icon": "fas fa-pagelines"
+                    "fa_icon": "fab fa-pagelines"
                 },
                 "lineage_tree_exec": {
                     "type": "string",
                     "default": "/usr/local/bin/raxml-ng",
                     "description": "Path to lineage tree building executable.",
-                    "fa_icon": "fas fa-pagelines"
+                    "fa_icon": "fab fa-pagelines"
                 },
                 "singlecell": {
                     "type": "string",
@@ -494,7 +518,7 @@
             "description": "Options specific for raw unselected RNA-seq input.",
             "default": "",
             "properties": {
-                "barcode_read": {
+                "cell_barcode_read": {
                     "type": "string",
                     "description": "Specifies which read holds the barcodes",
                     "enum": ["R1", "R2"],
@@ -567,14 +591,6 @@
             "fa_icon": "fas fa-dna",
             "description": "Options for the reference genome indices used to align reads.",
             "properties": {
-                "igenomes_base": {
-                    "type": "string",
-                    "format": "directory-path",
-                    "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes",
-                    "fa_icon": "fas fa-cloud-download-alt",
-                    "hidden": true
-                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
@@ -582,6 +598,14 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
                     "default": true
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The base path to the igenomes reference files",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "default": "s3://ngi-igenomes/igenomes/"
                 }
             }
         },
@@ -634,41 +658,6 @@
                 }
             }
         },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fas fa-microchip",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
-                }
-            }
-        },
         "generic_options": {
             "title": "Generic options",
             "type": "object",
@@ -676,12 +665,6 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -762,27 +745,6 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "validationShowHiddenParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "validationFailUnrecognisedParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "hidden": true,
-                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
-                },
-                "validationLenientMode": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters in lenient more.",
-                    "hidden": true,
-                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
-                },
                 "pipelines_testdata_base_path": {
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
@@ -795,57 +757,82 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/protocol"
+            "$ref": "#/$defs/protocol"
         },
         {
-            "$ref": "#/definitions/primer_handling"
+            "$ref": "#/$defs/primer_input_and_positions"
         },
         {
-            "$ref": "#/definitions/umi_barcode_handling"
+            "$ref": "#/$defs/umi_barcode_handling"
         },
         {
-            "$ref": "#/definitions/adapter_trimming"
+            "$ref": "#/$defs/adapter_trimming"
         },
         {
-            "$ref": "#/definitions/sequence_assembly_options"
+            "$ref": "#/$defs/sequence_assembly_options"
         },
         {
-            "$ref": "#/definitions/vdj_annotation_options"
+            "$ref": "#/$defs/vdj_annotation_options"
         },
         {
-            "$ref": "#/definitions/bulk_filtering_options"
+            "$ref": "#/$defs/bulk_filtering_options"
         },
         {
-            "$ref": "#/definitions/clonal_analysis_options"
+            "$ref": "#/$defs/clonal_analysis_options"
         },
         {
-            "$ref": "#/definitions/report_options"
+            "$ref": "#/$defs/single_cell_analysis_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/$defs/rnaseq_based_analysis_options"
         },
         {
-            "$ref": "#/definitions/single_cell_analysis_options"
+            "$ref": "#/$defs/report_options"
         },
         {
-            "$ref": "#/definitions/rnaseq_based_analysis_options"
+            "$ref": "#/$defs/protocol"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/primer_input_and_positions"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/$defs/umi_barcode_handling"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/adapter_trimming"
+        },
+        {
+            "$ref": "#/$defs/sequence_assembly_options"
+        },
+        {
+            "$ref": "#/$defs/vdj_annotation_options"
+        },
+        {
+            "$ref": "#/$defs/bulk_filtering_options"
+        },
+        {
+            "$ref": "#/$defs/clonal_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/single_cell_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/rnaseq_based_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/report_options"
+        },
+        {
+            "$ref": "#/$defs/reference_genome_options"
+        },
+        {
+            "$ref": "#/$defs/institutional_config_options"
+        },
+        {
+            "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "skip_alignment_filter": {
-            "type": "boolean"
-        }
-    }
+    ]
 }

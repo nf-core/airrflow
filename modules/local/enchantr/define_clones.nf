@@ -24,7 +24,7 @@ process DEFINE_CLONES {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "docker.io/immcantation/airrflow:4.1.0"
+    container "docker.io/immcantation/airrflow:4.2.0"
 
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
@@ -59,7 +59,6 @@ process DEFINE_CLONES {
                                         'threshold'=${thr}, \\
                                         'singlecell'='${params.singlecell}', \\
                                         'outdir'=getwd(), \\
-                                        'isotype_column'='${params.isotype_column}', \\
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 

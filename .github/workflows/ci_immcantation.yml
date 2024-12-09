@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "23.04.0"
+          - "24.04.2"
           - "latest-everything"
         profile:
           [
@@ -44,7 +44,7 @@ jobs:
 
       - name: Upload logs on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: logs-${{ matrix.profile }}
           path: |
