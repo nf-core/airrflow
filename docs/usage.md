@@ -250,7 +250,7 @@ And similarly for TCR libraries:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
--profile nebnext_umi_bcr,docker \
+-profile nebnext_umi_tcr,docker \
 --input input_samplesheet.tsv \
 --cprimers https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_R1_Mouse_TR_Primers.fasta \
 --internal_cregion_sequences https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_Mouse_TR_InternalCRegion.fasta \
