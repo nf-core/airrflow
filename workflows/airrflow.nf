@@ -43,6 +43,7 @@ include { CLONAL_ANALYSIS               } from '../subworkflows/local/clonal_ana
 include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire_analysis_reporting'
 include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
+include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -54,7 +55,7 @@ include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_inpu
 // MODULE: Installed directly from nf-core/modules
 //
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_airrflow_pipeline'
@@ -68,7 +69,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_airr
 workflow AIRRFLOW {
 
     take:
-        ch_input
+        ch_input // channel: samplesheet read in from --input
 
     main:
 
@@ -94,24 +95,51 @@ workflow AIRRFLOW {
 
                 ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
 
-                ch_presto_filterseq_logs                = Channel.empty()
-                ch_presto_maskprimers_logs              = Channel.empty()
-                ch_presto_pairseq_logs                  = Channel.empty()
-                ch_presto_clustersets_logs              = Channel.empty()
-                ch_presto_buildconsensus_logs           = Channel.empty()
-                ch_presto_postconsensus_pairseq_logs    = Channel.empty()
-                ch_presto_assemblepairs_logs            = Channel.empty()
-                ch_presto_collapseseq_logs              = Channel.empty()
-                ch_presto_splitseq_logs                 = Channel.empty()
-                ch_fastp_html                           = Channel.empty()
-                ch_fastp_json                           = Channel.empty()
-                ch_fastqc_postassembly_mqc              = Channel.empty()
-            } else {
-                // Perform sequence assembly if input type is fastq from bulk sequencing data
-                SEQUENCE_ASSEMBLY(
-                    ch_input,
-                    DATABASES.out.igblast.collect()
-                )
+            ch_presto_filterseq_logs                = Channel.empty()
+            ch_presto_maskprimers_logs              = Channel.empty()
+            ch_presto_pairseq_logs                  = Channel.empty()
+            ch_presto_clustersets_logs              = Channel.empty()
+            ch_presto_buildconsensus_logs           = Channel.empty()
+            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+            ch_presto_assemblepairs_logs            = Channel.empty()
+            ch_presto_collapseseq_logs              = Channel.empty()
+            ch_presto_splitseq_logs                 = Channel.empty()
+            ch_fastp_html                           = Channel.empty()
+            ch_fastp_json                           = Channel.empty()
+            ch_fastqc_postassembly_mqc              = Channel.empty()
+
+        }  else if (params.library_generation_method == "trust4") {
+            // Extract VDJ sequences from "general" RNA seq data using TRUST4
+
+            RNASEQ_INPUT (
+                ch_input,
+                DATABASES.out.igblast.collect()
+            )
+
+            ch_fasta                                = RNASEQ_INPUT.out.fasta
+            ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
+
+            ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
+
+            ch_presto_filterseq_logs                = Channel.empty()
+            ch_presto_maskprimers_logs              = Channel.empty()
+            ch_presto_pairseq_logs                  = Channel.empty()
+            ch_presto_clustersets_logs              = Channel.empty()
+            ch_presto_buildconsensus_logs           = Channel.empty()
+            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+            ch_presto_assemblepairs_logs            = Channel.empty()
+            ch_presto_collapseseq_logs              = Channel.empty()
+            ch_presto_splitseq_logs                 = Channel.empty()
+            ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
+            ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
+            ch_fastqc_postassembly_mqc              = Channel.empty()
+        }
+        else {
+            // Perform sequence assembly if input type is fastq from bulk sequencing data
+            SEQUENCE_ASSEMBLY(
+                ch_input,
+                DATABASES.out.igblast.collect()
+            )
 
                 ch_fasta                                = SEQUENCE_ASSEMBLY.out.fasta
                 ch_versions                             = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
@@ -246,7 +274,6 @@ workflow AIRRFLOW {
             )
         }
         ch_versions = ch_versions.mix( REPERTOIRE_ANALYSIS_REPORTING.out.versions )
-        ch_versions.dump(tag: "channel_versions")
 
     //
     // Collate and save software versions
@@ -254,7 +281,7 @@ workflow AIRRFLOW {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
@@ -281,7 +308,9 @@ workflow AIRRFLOW {
                 ch_multiqc_files.collect(),
                 ch_multiqc_config.toList(),
                 ch_multiqc_custom_config.toList(),
-                ch_report_logo.toList()
+                ch_report_logo.toList(),
+                [],
+                []
             )
             multiqc_report = MULTIQC.out.report.toList()
         } else {

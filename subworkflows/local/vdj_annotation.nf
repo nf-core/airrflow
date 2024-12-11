@@ -38,19 +38,24 @@ workflow VDJ_ANNOTATION {
     ch_assigned_tab = CHANGEO_MAKEDB.out.tab
     ch_assignment_logs = CHANGEO_MAKEDB.out.logs
 
-    // Apply quality filters:
-    // - locus should match v_call chain
-    // - seq alignment min length informative positions 200
-    // - max 10% N nucleotides
-    FILTER_QUALITY(
-        ch_assigned_tab
-    )
-    ch_logs = ch_logs.mix(FILTER_QUALITY.out.logs)
-    ch_versions = ch_versions.mix(FILTER_QUALITY.out.versions)
+    if (!params.skip_alignment_filter){
+        // Apply quality filters:
+        // - locus should match v_call chain
+        // - seq alignment min length informative positions 200
+        // - max 10% N nucleotides
+        FILTER_QUALITY(
+            ch_assigned_tab
+        )
+        ch_for_parsedb_split = FILTER_QUALITY.out.tab
+        ch_logs = ch_logs.mix(FILTER_QUALITY.out.logs)
+        ch_versions = ch_versions.mix(FILTER_QUALITY.out.versions)
+    } else {
+        ch_for_parsedb_split = ch_assigned_tab
+    }
 
     if (params.productive_only) {
         CHANGEO_PARSEDB_SPLIT (
-            FILTER_QUALITY.out.tab
+            ch_for_parsedb_split
         )
         ch_logs = ch_logs.mix(CHANGEO_PARSEDB_SPLIT.out.logs)
         ch_versions = ch_versions.mix(CHANGEO_PARSEDB_SPLIT.out.versions)
