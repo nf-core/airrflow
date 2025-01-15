@@ -1,0 +1,1 @@
+nextflow run nf-core/airrflow -r 4.1.0 -profile test,docker --outdir test_results
