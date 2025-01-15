@@ -9,7 +9,7 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 For the purpose of running this tutorial on your local machine, we recommend a docker installation.
 
-To install docker, follow the instructions...
+To install docker, follow the instructions [here] (https://docs.docker.com/engine/install/). After installation on linux, don't forget to check the post-installation steps [here] (https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
