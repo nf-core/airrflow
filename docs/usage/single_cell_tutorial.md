@@ -15,9 +15,13 @@ To install docker, follow the instructions...
 
 Command to test the pipeline with built-in tests.
 
+```
+nextflow run nf-core/airrflow -r 4.2.0 -profile test,docker
+```
+
 ## Datasets
 
-For this tutorial we will employ the following datset hosted in Zenodo.
+For this tutorial we will employ the following dataset hosted in Zenodo.
 
 Explain the datasets content.
 
@@ -43,7 +47,7 @@ Explanation of the analysis steps of the pipeline and where to find the results.
 
 ## Including lineage tree computation
 
-Re-run with --lineage_tree parameter using -resume as example.
+Re-run with --lineage_tree parameter using -resume as example. Add
 
 ## Downstream analysis
 
