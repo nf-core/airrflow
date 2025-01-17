@@ -1,4 +1,4 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
 
 nextflow run nf-core/airrflow -r 4.2.0 \
 -profile docker \
