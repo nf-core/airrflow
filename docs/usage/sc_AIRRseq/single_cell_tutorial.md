@@ -58,13 +58,38 @@ bash airrflow_sc_from_assembled.sh
 ```
 
 
-## fastq format
+## Fastq format
 ### Datasets
+For this tutorial we will use subsampled blood single-cell TCR sequencing data of one subject generated with the 10x Genomic platform. The data is provided in the samplesheet. 
 
 ### Preparing samplesheet, gene reference and configuration file
+To run the airrflow pipeline on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, gene reference and configuration file in advance. 
+
+Ready samplesheet for this tutorial is [here](sample_data_code/10x_sc_raw.tsv). Ready configuration file is [here](sample_data_code/resource.config). Download these two files to the directory where you will run the airrflow pipeline.
+
+Gene reference is available at the [10x Genomics website](https://www.10xgenomics.com/support/software/cell-ranger/downloads). Human and mouse V(D)J references are available. Download the one that matches the species of your data. 
 
 ### Running airrflow
+With all the files ready, it's time to run the airrflow pipeline. 
 
+```bash
+nextflow run nf-core/airrflow -r 4.2.0 \
+-profile docker \
+--mode fastq \
+--input 10x_sc_raw.tsv \
+--library_generation_method sc_10x_genomics \
+--reference_10x refdata-cellranger-vdj-GRCh38-alts-ensembl-7.1.0 \
+-c resource.config \
+--clonal_threshold 0 \    # do not set the clonal_threshold parameter if it's BCR data.
+--outdir sc_from_fastq_results
+```
+
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](sample_data_code/airrflow_sc_from_fastq.sh).
+With the bash file, it's easy to run the pipeline with a single-line command. 
+
+```bash
+bash airrflow_sc_from_fastq.sh
+```
 
 ## Understanding the results
 
