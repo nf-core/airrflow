@@ -8,4 +8,5 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 --reference_10x refdata-cellranger-vdj-GRCh38-alts-ensembl-7.1.0 \
 -c resource.config \
 --clonal_threshold 0 \
---outdir sc_from_fastq_results
+--outdir sc_from_fastq_results \
+-resume
