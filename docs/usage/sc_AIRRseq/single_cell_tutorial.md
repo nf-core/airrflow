@@ -32,10 +32,13 @@ For this tutorial we will use subsampled PBMC single-cell BCR sequencing data fr
 
 ### Preparing samplesheet and configuration file
 
-To run the pipeline, a samplesheet and a configuration file must be prepared.  
+To run the pipeline, a tab-seperated samplesheet and a configuration file must be prepared. Details on the requied columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet). 
 
 A prepared samplesheet for this tutorial can be found [here](sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](sample_data_code/resource.config). 
 Download both files to the directory where you intend to run the airrflow pipeline. 
+
+> [Tip] 
+> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in unexpected errors. 
 
 ### Running airrflow 
 
@@ -58,16 +61,26 @@ bash airrflow_sc_from_assembled.sh
 ```
 
 
+> [Tip]
+> When launching a Nextflow pipelien with -resume option, any processes that have already been run with the exact same code, settings and inputs will be skipped. The benefit of using -resume is to avoid duplicating previous work and save time when re-running a pipeline.
+> We include -resume in our Nextflow command  as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.   
+
+
 ## Fastq format
 ### Datasets
 For this tutorial we will use subsampled blood single-cell TCR sequencing data of one subject generated from the 10x Genomic platform. The links to the fastq files are in the samplesheet. 
 
 ### Preparing samplesheet, gene reference and configuration file
-To run the airrflow pipeline on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, gene reference and configuration file in advance. 
+To run the airrflow pipeline on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, gene reference and configuration file in advance. Details on the requied columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet). 
 
 The prepared samplesheet for this tutorial is [here](sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
 
+> [Tip] 
+> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in unexpected errors. 
+
 Gene reference can be accessed at the [10x Genomics website](https://www.10xgenomics.com/support/software/cell-ranger/downloads). Both human and mouse V(D)J references are available. Download the reference that corresponds to the species of your dataset. 
+
+
 
 ### Running airrflow
 With all the files ready, it's time to run the airrflow pipeline. 
@@ -94,8 +107,6 @@ bash airrflow_sc_from_fastq.sh
 
 By default, clonal_threshold is set to be 'auto', allowing the Hamming distance threshold of junction regions to be determined automatically. For BCR data, we recommend using this default setting. After running the pipeline, review the automatically calculated threshold to make sure it is appropriate. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified clonal_threshold. 
 In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical CDR3s. For this reason, we set the clone-threshold parameter to 0. 
-
-
 
 
 ## Understanding the results
