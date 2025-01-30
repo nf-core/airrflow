@@ -1,0 +1,11 @@
+Sample	start_pairs	pass_pairs	fail_pairs	process
+SRR1383468	2977	1763	1214	assemble_pairs
+SRR1383463	92753	92262	491	assemble_pairs
+SRR1383452	23097	21896	1201	assemble_pairs
+SRR1383456	3623	543	3080	assemble_pairs
+SRR1383467	2300	1375	925	assemble_pairs
+SRR1383466	3292	695	2597	assemble_pairs
+SRR1383464	22899	22821	78	assemble_pairs
+SRR1383465	36580	35885	695	assemble_pairs
+SRR1383451	73567	72049	1518	assemble_pairs
+SRR1383453	26468	24933	1535	assemble_pairs

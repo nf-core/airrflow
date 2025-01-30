@@ -1,0 +1,18 @@
+     START> PairSeq
+     FILE1> SRR1383463_R1.fastq
+     FILE2> SRR1383463_R2.fastq
+  FIELDS_1> BARCODE
+  FIELDS_2> None
+COORD_TYPE> illumina
+
+PROGRESS> 15:57:14 |Indexing files           | 0.0 minPROGRESS> 15:57:19 |Done                     | 0.1 min
+
+PROGRESS> 15:57:19 |                    |   0% (      0) 0.0 minPROGRESS> 15:57:19 |#                   |   5% (  6,267) 0.0 minPROGRESS> 15:57:20 |##                  |  10% ( 12,534) 0.0 minPROGRESS> 15:57:20 |###                 |  15% ( 18,801) 0.0 minPROGRESS> 15:57:21 |####                |  20% ( 25,068) 0.0 minPROGRESS> 15:57:21 |#####               |  25% ( 31,335) 0.0 minPROGRESS> 15:57:22 |######              |  30% ( 37,602) 0.1 minPROGRESS> 15:57:23 |#######             |  35% ( 43,869) 0.1 minPROGRESS> 15:57:23 |########            |  40% ( 50,136) 0.1 minPROGRESS> 15:57:24 |#########           |  45% ( 56,403) 0.1 minPROGRESS> 15:57:24 |##########          |  50% ( 62,670) 0.1 minPROGRESS> 15:57:25 |###########         |  55% ( 68,937) 0.1 minPROGRESS> 15:57:26 |############        |  60% ( 75,204) 0.1 minPROGRESS> 15:57:26 |#############       |  65% ( 81,471) 0.1 minPROGRESS> 15:57:27 |##############      |  70% ( 87,738) 0.1 minPROGRESS> 15:57:27 |###############     |  75% ( 94,005) 0.1 minPROGRESS> 15:57:28 |################    |  80% (100,272) 0.2 minPROGRESS> 15:57:28 |#################   |  85% (106,539) 0.2 minPROGRESS> 15:57:29 |##################  |  90% (112,806) 0.2 minPROGRESS> 15:57:30 |################### |  95% (119,073) 0.2 minPROGRESS> 15:57:30 |####################| 100% (125,339) 0.2 min
+
+   OUTPUT1> SRR1383463_R1_pair-pass.fastq
+   OUTPUT2> SRR1383463_R2_pair-pass.fastq
+SEQUENCES1> 800970
+SEQUENCES2> 125339
+      PASS> 96149
+       END> PairSeq
+

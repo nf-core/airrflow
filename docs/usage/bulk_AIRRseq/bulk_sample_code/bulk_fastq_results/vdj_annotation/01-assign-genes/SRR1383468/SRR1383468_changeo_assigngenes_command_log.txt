@@ -1,0 +1,14 @@
+   START> AssignGenes
+ COMMAND> igblast
+ VERSION> 1.22.0
+    FILE> SRR1383468_atleast-2.fasta
+ORGANISM> human
+    LOCI> ig
+   NPROC> 2
+
+PROGRESS> 16:39:47 |Running IgBLAST          | 0.0 minPROGRESS> 16:39:52 |Done                     | 0.1 min
+
+  PASS> 267
+OUTPUT> SRR1383468_igblast.fmt7
+   END> AssignGenes
+

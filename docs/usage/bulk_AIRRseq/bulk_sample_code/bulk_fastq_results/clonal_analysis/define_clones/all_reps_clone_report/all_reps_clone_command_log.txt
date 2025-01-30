@@ -1,0 +1,9 @@
+START> ClonePass
+FILE1> M4__clone-pass.tsv
+OUTPUT1> M4__clone-pass.tsv
+PASS1> 4587
+FAIL1> 0
+FILE2> M5__clone-pass.tsv
+OUTPUT2> M5__clone-pass.tsv
+PASS2> 7710
+FAIL2> 0

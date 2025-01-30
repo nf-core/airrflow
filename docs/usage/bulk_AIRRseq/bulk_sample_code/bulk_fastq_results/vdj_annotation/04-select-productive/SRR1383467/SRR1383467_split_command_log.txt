@@ -1,0 +1,14 @@
+    START> ParseDb
+  COMMAND> split
+     FILE> SRR1383467_quality-pass.tsv
+    FIELD> productive
+NUM_SPLIT> None
+
+PROGRESS> 16:35:32 |                    |   0% (  0) 0.0 minPROGRESS> 16:35:32 |#                   |   5% ( 11) 0.0 minPROGRESS> 16:35:32 |##                  |  11% ( 22) 0.0 minPROGRESS> 16:35:32 |###                 |  16% ( 33) 0.0 minPROGRESS> 16:35:32 |####                |  22% ( 44) 0.0 minPROGRESS> 16:35:32 |#####               |  27% ( 55) 0.0 minPROGRESS> 16:35:32 |######              |  33% ( 66) 0.0 minPROGRESS> 16:35:32 |#######             |  38% ( 77) 0.0 minPROGRESS> 16:35:32 |########            |  43% ( 88) 0.0 minPROGRESS> 16:35:32 |#########           |  49% ( 99) 0.0 minPROGRESS> 16:35:32 |##########          |  54% (110) 0.0 minPROGRESS> 16:35:32 |###########         |  60% (121) 0.0 minPROGRESS> 16:35:32 |#############       |  65% (132) 0.0 minPROGRESS> 16:35:32 |##############      |  70% (143) 0.0 minPROGRESS> 16:35:32 |###############     |  76% (154) 0.0 minPROGRESS> 16:35:32 |################    |  81% (165) 0.0 minPROGRESS> 16:35:32 |#################   |  87% (176) 0.0 minPROGRESS> 16:35:32 |##################  |  92% (187) 0.0 minPROGRESS> 16:35:32 |################### |  98% (198) 0.0 minPROGRESS> 16:35:32 |####################| 100% (203) 0.0 min
+
+OUTPUT1> SRR1383467_productive-T.tsv
+RECORDS> 203
+  PARTS> 1
+  SIZE1> 203
+    END> ParseDb
+

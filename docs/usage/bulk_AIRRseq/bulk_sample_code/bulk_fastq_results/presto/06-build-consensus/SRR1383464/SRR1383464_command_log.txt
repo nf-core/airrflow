@@ -1,0 +1,50 @@
+           START> BuildConsensus
+            FILE> SRR1383464_R1_pair-pass.fastq
+   BARCODE_FIELD> CLUSTER
+       MIN_COUNT> 1
+   MIN_FREQUENCY> 0.6
+     MIN_QUALITY> 0
+         MAX_GAP> 0.5
+    PRIMER_FIELD> PRIMER
+PRIMER_FREQUENCY> 0.6
+       MAX_ERROR> 0.1
+   MAX_DIVERSITY> None
+       DEPENDENT> False
+     COPY_FIELDS> None
+    COPY_ACTIONS> None
+           NPROC> 4
+
+PROGRESS> 16:23:41 |                    |   0% (     0) 0.0 minPROGRESS> 16:23:42 |#                   |   5% ( 1,152) 0.0 minPROGRESS> 16:23:42 |##                  |  10% ( 2,304) 0.0 minPROGRESS> 16:23:42 |###                 |  15% ( 3,456) 0.0 minPROGRESS> 16:23:42 |####                |  20% ( 4,608) 0.0 minPROGRESS> 16:23:43 |#####               |  25% ( 5,760) 0.0 minPROGRESS> 16:23:43 |######              |  30% ( 6,912) 0.0 minPROGRESS> 16:23:43 |#######             |  35% ( 8,064) 0.0 minPROGRESS> 16:23:43 |########            |  40% ( 9,216) 0.0 minPROGRESS> 16:23:43 |#########           |  45% (10,368) 0.0 minPROGRESS> 16:23:44 |##########          |  50% (11,520) 0.0 minPROGRESS> 16:23:44 |###########         |  55% (12,672) 0.1 minPROGRESS> 16:23:44 |############        |  60% (13,824) 0.1 minPROGRESS> 16:23:44 |#############       |  65% (14,976) 0.1 minPROGRESS> 16:23:45 |##############      |  70% (16,128) 0.1 minPROGRESS> 16:23:45 |###############     |  75% (17,280) 0.1 minPROGRESS> 16:23:45 |################    |  80% (18,432) 0.1 minPROGRESS> 16:23:45 |#################   |  85% (19,584) 0.1 minPROGRESS> 16:23:45 |##################  |  90% (20,736) 0.1 minPROGRESS> 16:23:46 |################### |  95% (21,888) 0.1 minPROGRESS> 16:23:46 |####################| 100% (23,038) 0.1 min
+
+   OUTPUT> SRR1383464_R1_consensus-pass.fastq
+SEQUENCES> 23200
+     SETS> 23038
+     PASS> 23038
+     FAIL> 0
+      END> BuildConsensus
+
+           START> BuildConsensus
+            FILE> SRR1383464_R2_pair-pass.fastq
+   BARCODE_FIELD> CLUSTER
+       MIN_COUNT> 1
+   MIN_FREQUENCY> 0.6
+     MIN_QUALITY> 0
+         MAX_GAP> 0.5
+    PRIMER_FIELD> PRIMER
+PRIMER_FREQUENCY> 0.6
+       MAX_ERROR> 0.1
+   MAX_DIVERSITY> None
+       DEPENDENT> False
+     COPY_FIELDS> None
+    COPY_ACTIONS> None
+           NPROC> 4
+
+PROGRESS> 16:23:49 |                    |   0% (     0) 0.0 minPROGRESS> 16:23:49 |#                   |   5% ( 1,152) 0.0 minPROGRESS> 16:23:49 |##                  |  10% ( 2,304) 0.0 minPROGRESS> 16:23:49 |###                 |  15% ( 3,456) 0.0 minPROGRESS> 16:23:50 |####                |  20% ( 4,608) 0.0 minPROGRESS> 16:23:50 |#####               |  25% ( 5,760) 0.0 minPROGRESS> 16:23:50 |######              |  30% ( 6,912) 0.0 minPROGRESS> 16:23:50 |#######             |  35% ( 8,064) 0.0 minPROGRESS> 16:23:50 |########            |  40% ( 9,216) 0.0 minPROGRESS> 16:23:51 |#########           |  45% (10,368) 0.0 minPROGRESS> 16:23:51 |##########          |  50% (11,520) 0.1 minPROGRESS> 16:23:51 |###########         |  55% (12,672) 0.1 minPROGRESS> 16:23:51 |############        |  60% (13,824) 0.1 minPROGRESS> 16:23:52 |#############       |  65% (14,976) 0.1 minPROGRESS> 16:23:52 |##############      |  70% (16,128) 0.1 minPROGRESS> 16:23:52 |###############     |  75% (17,280) 0.1 minPROGRESS> 16:23:52 |################    |  80% (18,432) 0.1 minPROGRESS> 16:23:52 |#################   |  85% (19,584) 0.1 minPROGRESS> 16:23:53 |##################  |  90% (20,736) 0.1 minPROGRESS> 16:23:53 |################### |  95% (21,888) 0.1 minPROGRESS> 16:23:53 |####################| 100% (23,038) 0.1 min
+
+   OUTPUT> SRR1383464_R2_consensus-pass.fastq
+SEQUENCES> 23200
+     SETS> 23038
+     PASS> 22899
+     FAIL> 139
+      END> BuildConsensus
+

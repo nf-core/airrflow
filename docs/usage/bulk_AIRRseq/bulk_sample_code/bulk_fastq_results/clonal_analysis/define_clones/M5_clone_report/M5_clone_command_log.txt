@@ -1,0 +1,5 @@
+START> ClonePass
+FILE1> SRR1383463_meta-pass_SRR1383463_collapse-pass.tsv,SRR1383464_meta-pass_SRR1383464_collapse-pass.tsv,SRR1383465_meta-pass_SRR1383465_collapse-pass.tsv,SRR1383466_meta-pass_SRR1383466_collapse-pass.tsv,SRR1383467_meta-pass_SRR1383467_collapse-pass.tsv,SRR1383468_meta-pass_SRR1383468_collapse-pass.tsv
+OUTPUT1> M5__clone-pass.tsv
+PASS1> 7710
+FAIL1> 5

@@ -1,0 +1,46 @@
+Detecting adapter sequence for read1...
+No adapter detected for read1
+
+Detecting adapter sequence for read2...
+No adapter detected for read2
+
+Read1 before filtering:
+total reads: 1852661
+total bases: 463165250
+Q20 bases: 394141901(85.0975%)
+Q30 bases: 354338580(76.5037%)
+
+Read2 before filtering:
+total reads: 1852661
+total bases: 463165250
+Q20 bases: 325219363(70.2167%)
+Q30 bases: 275188124(59.4147%)
+
+Read1 after filtering:
+total reads: 1852661
+total bases: 463028870
+Q20 bases: 394086989(85.1107%)
+Q30 bases: 354294582(76.5167%)
+
+Read2 after filtering:
+total reads: 1852661
+total bases: 463028870
+Q20 bases: 325185551(70.2301%)
+Q30 bases: 275163147(59.4268%)
+
+Filtering result:
+reads passed filter: 3705322
+reads failed due to low quality: 0
+reads failed due to too many N: 0
+reads with adapter trimmed: 3640
+bases trimmed due to adapters: 272760
+
+Duplication rate: 0.071033%
+
+Insert size peak (evaluated by paired-end reads): 400
+
+JSON report: SRR1383463.fastp.json
+HTML report: SRR1383463.fastp.html
+
+fastp --in1 SRR1383463_1.fastq.gz --in2 SRR1383463_2.fastq.gz --out1 SRR1383463_1.fastp.fastq.gz --out2 SRR1383463_2.fastp.fastq.gz --json SRR1383463.fastp.json --html SRR1383463.fastp.html --thread 4 --detect_adapter_for_pe --disable_quality_filtering --disable_length_filtering true 
+fastp v0.23.4, time used: 52 seconds

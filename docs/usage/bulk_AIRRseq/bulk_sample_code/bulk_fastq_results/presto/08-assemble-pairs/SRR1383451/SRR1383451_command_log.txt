@@ -1,0 +1,20 @@
+       START> AssemblePairs
+     COMMAND> align
+       FILE1> SRR1383451_R1_pair-pass.fastq
+       FILE2> SRR1383451_R2_pair-pass.fastq
+  COORD_TYPE> presto
+       ALPHA> 1e-05
+   MAX_ERROR> 0.3
+     MIN_LEN> 8
+     MAX_LEN> 1000
+SCAN_REVERSE> False
+       NPROC> 4
+
+PROGRESS> 16:16:13 |                    |   0% (     0) 0.0 minPROGRESS> 16:16:22 |#                   |   5% ( 3,679) 0.1 minPROGRESS> 16:16:32 |##                  |  10% ( 7,358) 0.3 minPROGRESS> 16:16:41 |###                 |  15% (11,037) 0.5 minPROGRESS> 16:16:50 |####                |  20% (14,716) 0.6 minPROGRESS> 16:16:59 |#####               |  25% (18,395) 0.8 minPROGRESS> 16:17:08 |######              |  30% (22,074) 0.9 minPROGRESS> 16:17:17 |#######             |  35% (25,753) 1.1 minPROGRESS> 16:17:26 |########            |  40% (29,432) 1.2 minPROGRESS> 16:17:35 |#########           |  45% (33,111) 1.4 minPROGRESS> 16:17:44 |##########          |  50% (36,790) 1.5 minPROGRESS> 16:17:53 |###########         |  55% (40,469) 1.7 minPROGRESS> 16:18:02 |############        |  60% (44,148) 1.8 minPROGRESS> 16:18:12 |#############       |  65% (47,827) 2.0 minPROGRESS> 16:18:21 |##############      |  70% (51,506) 2.1 minPROGRESS> 16:18:30 |###############     |  75% (55,185) 2.3 minPROGRESS> 16:18:39 |################    |  80% (58,864) 2.4 minPROGRESS> 16:18:48 |#################   |  85% (62,543) 2.6 minPROGRESS> 16:18:57 |##################  |  90% (66,222) 2.7 minPROGRESS> 16:19:06 |################### |  95% (69,901) 2.9 minPROGRESS> 16:19:15 |####################| 100% (73,567) 3.0 min
+
+OUTPUT> SRR1383451_assemble-pass.fastq
+ PAIRS> 73567
+  PASS> 72049
+  FAIL> 1518
+   END> AssemblePairs
+

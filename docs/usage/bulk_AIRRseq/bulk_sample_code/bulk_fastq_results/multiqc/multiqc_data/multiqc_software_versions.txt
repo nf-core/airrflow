@@ -1,0 +1,32 @@
+Sample	dplyr	optparse	R	alakazam	shazam	stringr	knitr	igblastn	changeo	enchantr	fastp	fastqc	airr	stringi	DT	gunzip	python	pandas	presto	vsearch	nf-core/airrflow	Nextflow
+ADD_META_TO_TAB	1.1.4	1.7.5	4.4.2																			
+AIRRFLOW_REPORT	1.1.4		4.4.2	1.3.0	1.2.0	1.5.1	1.49															
+CHANGEO_ASSIGNGENES								1.22.0	1.3.0													
+CHANGEO_MAKEDB								1.22.0	1.3.0													
+CHANGEO_PARSEDB_SPLIT									1.3.0													
+COLLAPSE_DUPLICATES										0.1.19												
+DEFINE_CLONES_REPORT										0.1.19												
+FASTQC_POSTASSEMBLY_UMI												0.12.1										
+FILTER_JUNCTION_MOD3		1.7.5	4.4.2	1.3.0									1.5.0									
+FILTER_QUALITY	1.1.4	1.7.5	4.4.2	1.3.0									1.5.0	1.8.4	0.33							
+GUNZIP_UMI																1.1						
+PARSE_LOGS																	3.9.1	1.1.5				
+PRESTO_ASSEMBLEPAIRS_UMI																			0.7.1			
+PRESTO_BUILDCONSENSUS_UMI																			0.7.1			
+PRESTO_CLUSTERSETS_UMI																			0.7.1	v2.21.2		
+PRESTO_COLLAPSESEQ_UMI																			0.7.1			
+PRESTO_FILTERSEQ_UMI																			0.7.1			
+PRESTO_MASKPRIMERS_SCORE_UMI_R1																			0.7.1			
+PRESTO_MASKPRIMERS_SCORE_UMI_R2																			0.7.1			
+PRESTO_PAIRSEQ_CLUSTERSETS																			0.7.1			
+PRESTO_PAIRSEQ_UMI																			0.7.1			
+PRESTO_PARSEHEADERS_COLLAPSE_UMI																			0.7.1			
+PRESTO_PARSEHEADERS_METADATA_UMI																			0.7.1			
+PRESTO_PARSEHEADERS_PRIMERS_UMI																			0.7.1			
+PRESTO_PARSE_CLUSTER_UMI																			0.7.1			
+PRESTO_POSTCONSENSUS_PAIRSEQ_UMI																			0.7.1			
+PRESTO_SPLITSEQ_UMI																			0.7.1			
+REPORT_FILE_SIZE										0.1.19												
+SAMPLESHEET_CHECK																	3.9.1	1.1.5				
+Workflow																					v4.2.0-gd91dd84	24.10.3
+fastp											0.23.4											

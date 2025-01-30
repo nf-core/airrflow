@@ -1,0 +1,21 @@
+Module	Section	Sample Name	Source
+fastp	all_sections	SRR1383464	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/11/SRR1383464.fastp.json
+fastp	all_sections	SRR1383456	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/3/SRR1383456.fastp.json
+fastp	all_sections	SRR1383452	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/4/SRR1383452.fastp.json
+fastp	all_sections	SRR1383467	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/9/SRR1383467.fastp.json
+fastp	all_sections	SRR1383463	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/10/SRR1383463.fastp.json
+fastp	all_sections	SRR1383451	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/6/SRR1383451.fastp.json
+fastp	all_sections	SRR1383466	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/8/SRR1383466.fastp.json
+fastp	all_sections	SRR1383465	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/7/SRR1383465.fastp.json
+fastp	all_sections	SRR1383453	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/5/SRR1383453.fastp.json
+fastp	all_sections	SRR1383468	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/12/SRR1383468.fastp.json
+FastQC (post-assembly)	all_sections	SRR1383466_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/27/SRR1383466_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383465_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/26/SRR1383465_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383464_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/32/SRR1383464_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383451_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/29/SRR1383451_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383463_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/30/SRR1383463_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383468_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/31/SRR1383468_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383452_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/25/SRR1383452_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383456_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/23/SRR1383456_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383453_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/24/SRR1383453_ASSEMBLED_fastqc.zip
+FastQC (post-assembly)	all_sections	SRR1383467_ASSEMBLED	/home/huimin/airrflow/docs/usage/bulk_AIRRseq/bulk_sample_code/work/d4/f4bcac1c7304fb7f2613417ad2ac94/28/SRR1383467_ASSEMBLED_fastqc.zip

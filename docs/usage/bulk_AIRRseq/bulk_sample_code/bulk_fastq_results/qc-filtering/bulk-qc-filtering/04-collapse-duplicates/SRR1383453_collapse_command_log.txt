@@ -1,0 +1,5 @@
+START> CollapseDuplicates
+FILE1> SRR1383453_meta-pass.tsv
+OUTPUT1> SRR1383453_meta-pass_SRR1383453_collapse-pass.tsv
+PASS1> 965
+FAIL1> 1466

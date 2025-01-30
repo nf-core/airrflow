@@ -1,0 +1,5 @@
+START> FilterQuality
+FILE> SRR1383466_db-pass.tsv
+OUTPUT> SRR1383466_quality-pass.tsv
+PASS> 62
+FAIL> 0

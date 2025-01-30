@@ -1,0 +1,14 @@
+    START> SplitSeq
+  COMMAND> group
+     FILE> SRR1383466_collapse-unique_reheader-pass.fastq
+    FIELD> CONSCOUNT
+THRESHOLD> 2.0
+
+PROGRESS> 16:29:13 |                    |   0% (  0) 0.0 minPROGRESS> 16:29:13 |#                   |   5% ( 23) 0.0 minPROGRESS> 16:29:13 |##                  |  10% ( 46) 0.0 minPROGRESS> 16:29:13 |###                 |  16% ( 69) 0.0 minPROGRESS> 16:29:13 |####                |  21% ( 92) 0.0 minPROGRESS> 16:29:13 |#####               |  26% (115) 0.0 minPROGRESS> 16:29:13 |######              |  31% (138) 0.0 minPROGRESS> 16:29:13 |#######             |  36% (161) 0.0 minPROGRESS> 16:29:13 |########            |  42% (184) 0.0 minPROGRESS> 16:29:13 |#########           |  47% (207) 0.0 minPROGRESS> 16:29:13 |##########          |  52% (230) 0.0 minPROGRESS> 16:29:13 |###########         |  57% (253) 0.0 minPROGRESS> 16:29:13 |############        |  62% (276) 0.0 minPROGRESS> 16:29:13 |#############       |  68% (299) 0.0 minPROGRESS> 16:29:13 |##############      |  73% (322) 0.0 minPROGRESS> 16:29:13 |###############     |  78% (345) 0.0 minPROGRESS> 16:29:13 |################    |  83% (368) 0.0 minPROGRESS> 16:29:13 |#################   |  88% (391) 0.0 minPROGRESS> 16:29:13 |##################  |  94% (414) 0.0 minPROGRESS> 16:29:13 |################### |  99% (437) 0.0 minPROGRESS> 16:29:13 |####################| 100% (442) 0.0 min
+
+  OUTPUT1> SRR1383466_under-2.fasta
+  OUTPUT2> SRR1383466_atleast-2.fasta
+SEQUENCES> 442
+    PARTS> 2
+      END> SplitSeq
+

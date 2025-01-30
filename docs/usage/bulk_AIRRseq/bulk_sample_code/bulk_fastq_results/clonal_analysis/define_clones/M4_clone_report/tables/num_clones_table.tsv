@@ -1,0 +1,5 @@
+sample_id	sequences	subject_id	number_of_clones	clone_size_count_min	clone_size_freq_min	clone_size_count_median	clone_size_freq_median	clone_size_count_max	clone_size_freq_max
+SRR1383451	2717	M4	1993	1	0	1	0	56	0.02
+SRR1383452	899	M4	707	1	0	1	0	22	0.02
+SRR1383453	965	M4	718	1	0	1	0	17	0.02
+SRR1383456	6	M4	5	1	0.17	1	0.17	2	0.33

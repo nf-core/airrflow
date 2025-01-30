@@ -1,0 +1,383 @@
+/*
+CSS modified from 
+rstudio4edu: A Handbook for Teaching and Learning with R and RStudio
+https://rstudio4edu.github.io/rstudio4edu-book/ 
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Karla:400,400i,700,700i|Lora:400,400i,700,700i&display=swap');
+
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+
+.page-inner {
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
+  background-color: #3fb5bd;
+}
+
+
+/* ------------Links------------------ */
+
+.book .book-body .page-wrapper .page-inner section.normal a {
+  color: #157f8e;
+}
+
+
+/*------------- Body and header text---------------- */
+
+.book.font-family-1 {
+  font-family: 'Karla', arial, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Lora', arial, sans-serif;
+}
+
+
+.book .book-body .page-wrapper .page-inner section.normal h1, 
+.book .book-body .page-wrapper .page-inner section.normal h2, 
+.book .book-body .page-wrapper .page-inner section.normal h3, 
+.book .book-body .page-wrapper .page-inner section.normal h4, 
+.book .book-body .page-wrapper .page-inner section.normal h5, 
+.book .book-body .page-wrapper .page-inner section.normal h6 {
+    margin-top: 2.275em;
+    margin-bottom: 1em;
+}
+
+.title {
+  font-family: 'Lora';
+  font-size: 3em !important;
+  color: #3fb5bd;
+  margin-top: 0.275em !important;
+  margin-bottom: 0.35em !important;
+}
+
+.subtitle {
+  font-family: 'Lora';
+  margin-top: 1em !important;
+  font-size: 2em !important;
+  color: #0b8d96;
+}
+  
+
+/*------------ TOC --------------*/
+
+.book .book-summary {
+  background: white;
+  border-right: none;
+}
+
+.summary{
+  font-family: 'Karla', sans-serif;
+}
+
+/* all TOC list items, basically */
+.book .book-summary ul.summary li a, 
+.book .book-summary ul.summary li span {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #324748;
+}
+
+.summary a:hover {
+  color: #3ea2aad9 !important;
+} 
+
+.book .book-summary ul.summary li.active>a { /*active TOC links*/
+  color: #379fa7 !important;
+  border-left: solid 4px;
+  border-color: #379fa7;
+  padding-left: 11px !important;
+} 
+
+
+li.appendix span, li.part span { /* for TOC part names */
+  margin-top: 1em;
+  color: #000000;
+  opacity: .9 !important;
+  text-transform: uppercase;
+}
+
+.part + li[data-level=""] { /* grabs first .chapter immediately after .part...but only those ch without numbers */
+ text-transform: uppercase;
+}
+
+
+/* The next two rules make the horizontal line go straight across in top navbar */
+
+.summary > li:first-child {
+	height: 50px;
+	padding-top: 10px;
+	border-bottom: 1px solid rgba(0,0,0,.07);
+}
+
+.book .book-summary ul.summary li.divider {
+	height: 0px;
+	background: #3fb5bd;
+}
+
+
+/*--- LOGO ---*/
+
+.toc-logo {
+  width: 200px !important;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.toc-logo img {
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.summary > li:first-child {
+  height: auto !important; 
+}
+
+/* --------------Two columns--------------- */
+
+.col2 {
+  columns: 2 200px;         /* number of columns and width in pixels*/
+  -webkit-columns: 2 200px; /* chrome, safari */
+  -moz-columns: 2 200px;    /* firefox */
+}
+
+
+.side-by-side {
+  display: flex;
+}
+
+.side1 {
+  width: 40%;
+}
+
+.side2 {
+  width: 58%;
+  margin-left: 1rem;
+}
+
+/* --------------Even split- two columns--------------- */
+
+.split {
+  display: flex;
+}
+
+.split1 {
+  width: 50%;
+  padding-right: 20px;
+}
+
+.split2 {
+  width: 50%;
+}
+
+
+/* Sidebar formating --------------------------------------------*/
+/* from r-pkgs.org*/
+
+div.rstudio-tip, div.tip, div.gotcha, div.design, div.hat{
+  border: 4px #aed6d963;
+  border-style: dashed solid;
+  padding: 1em;
+  margin: 1em 0;
+  padding-left: 100px;
+  background-size: 70px;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  min-height: 120px;
+  color: #2ea8b3;
+  background-color: #fcfcfc;
+}
+
+/*
+div.rstudio-tip {
+  background-image: url("../images/divs/rstudio.png");
+}
+
+div.tip {
+  background-image: url("../images/divs/lightbulb.png");
+}
+
+div.gotcha {
+  background-image: url("../images/divs/gotcha_2.png");
+}
+
+div.design {
+  background-image: url("../images/divs/design.png");
+}
+
+div.hat {
+  background-image: url("../images/divs/hat.png");
+}
+*/
+
+/* for fancy bookdown cookbook */
+
+div.puzzle, div.fyi, div.demo, div.note {
+  padding: 1em;
+  margin: 1em 0;
+  padding-left: 100px;
+  background-size: 70px;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  min-height: 120px;
+  color: #1f5386;
+  background-color: #bed3ec;
+  border: solid 5px #dfedff;
+}
+
+/*
+div.puzzle {
+  background-image: url("../images/illos/Your-turn.png");
+}
+
+div.fyi {
+  background-image: url("../images/illos/fyi.png");
+}
+
+div.demo {
+  background-image: url("../images/illos/Live-code.png");
+}
+
+div.note {
+  background-image: url("../images/illos/lightbulb2.png");
+}
+*/
+
+/* .book .book-body .page-wrapper .page-inner section.normal is needed
+   to override the styles produced by gitbook, which are ridiculously
+   overspecified. Goal of the selectors is to ensure internal "margins"
+   controlled only by padding of container */
+
+.book .book-body .page-wrapper .page-inner section.normal div.rstudio-tip > :first-child,
+.book .book-body .page-wrapper .page-inner section.normal div.tip > :first-child {
+  margin-top: 0;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal div.rstudio-tip > :last-child,
+.book .book-body .page-wrapper .page-inner section.normal div.tip > :last-child {
+  margin-bottom: 0;
+}
+
+iframe { 
+   -moz-transform-origin: top left; 
+   -webkit-transform-origin: top left; 
+   -o-transform-origin: top left; 
+   -ms-transform-origin: top left; 
+   transform-origin: top left; 
+}
+
+.iframe-container {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border: #ddd 2px solid;
+  box-shadow: #888 0px 5px 8px;
+  margin-bottom: 1em;
+}
+
+.iframe-container > iframe {
+  border: none;
+}
+
+
+/* -------Clipboard copy button --------- */
+.copy {
+  width: inherit;
+  background-color: #e2e2e2 ;
+  border: none;
+  border-radius: 2px;
+  float: right;
+  font-size: 60%;
+  padding: 4px 4px 4px 4px;
+}
+
+/* for new copy button */
+
+.hasCopyButton {
+  position: relative;
+}
+
+.btn-copy-ex {
+  position: absolute;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+}
+
+.hasCopyButton:hover button.btn-copy-ex {
+  visibility: visible;
+}
+
+
+
+/* -----------Section anchors -------------*/
+
+.book .book-body .page-wrapper .page-inner section.normal {
+  overflow: visible !important; /*so anchor link doesn't get cut off */
+}
+
+a.anchor {
+  margin-left: -30px;
+  padding-right: 3px;
+  display:inline-block;
+  width: 30px;
+  height: 30px;
+  /*visibility: hidden;*/
+  /* background-image: url(https://image.flaticon.com/icons/svg/34/34735.svg) !important; */
+  background-repeat: no-repeat !important;
+  background-size: 20px 20px !important;
+  background-position: center bottom !important;
+  opacity: 0;
+}
+
+
+.hasAnchor:hover a.anchor, 
+a.anchor:hover {
+  /*visibility: visible;*/
+  opacity: 0.6;
+}
+
+/* disable anchors for headers with "no-anchor" class */
+.no-anchor .hasAnchor:hover a.anchor, 
+.no-anchor a.anchor:hover {
+  opacity: 0 !important;
+}
+
+@media (max-width: 1144px) { /* don't show anchor link on small screens */
+  .hasAnchor:hover a.anchor {
+    visibility: hidden;
+  }
+}
+
+
+/*____Code Chunks____*/
+
+.sourceCode {
+  margin-bottom: 0.85em; /* adds same amount of margin as a <p> would */
+}
+
+.sourceCode pre {
+  margin: 0 !important; /* makes space above and below symmetrical*/
+}
+
+/* Footer */
+
+.footer {
+  font-family: "Lora", serif;
+  font-size: .85em;
+  color: #2ea8b3;
+}
