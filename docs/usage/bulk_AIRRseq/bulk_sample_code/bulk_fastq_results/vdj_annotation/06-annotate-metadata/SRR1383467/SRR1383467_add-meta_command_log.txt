@@ -1,5 +1,0 @@
-START> AddMetadata
-FILE> SRR1383467_junction-pass.tsv
-OUTPUT> SRR1383467_meta-pass.tsv
-PASS> 203
-FAIL> 0

@@ -1,18 +1,0 @@
-     START> PairSeq
-     FILE1> SRR1383452_R1.fastq
-     FILE2> SRR1383452_R2.fastq
-  FIELDS_1> CLUSTER
-  FIELDS_2> CLUSTER
-COORD_TYPE> illumina
-
-PROGRESS> 16:05:55 |Indexing files           | 0.0 minPROGRESS> 16:05:55 |Done                     | 0.0 min
-
-PROGRESS> 16:05:55 |                    |   0% (     0) 0.0 minPROGRESS> 16:05:55 |#                   |   5% ( 1,207) 0.0 minPROGRESS> 16:05:55 |##                  |  10% ( 2,414) 0.0 minPROGRESS> 16:05:56 |###                 |  15% ( 3,621) 0.0 minPROGRESS> 16:05:56 |####                |  20% ( 4,828) 0.0 minPROGRESS> 16:05:56 |#####               |  25% ( 6,035) 0.0 minPROGRESS> 16:05:56 |######              |  30% ( 7,242) 0.0 minPROGRESS> 16:05:56 |#######             |  35% ( 8,449) 0.0 minPROGRESS> 16:05:56 |########            |  40% ( 9,656) 0.0 minPROGRESS> 16:05:56 |#########           |  45% (10,863) 0.0 minPROGRESS> 16:05:57 |##########          |  50% (12,070) 0.0 minPROGRESS> 16:05:57 |###########         |  55% (13,277) 0.0 minPROGRESS> 16:05:57 |############        |  60% (14,484) 0.0 minPROGRESS> 16:05:57 |#############       |  65% (15,691) 0.0 minPROGRESS> 16:05:57 |##############      |  70% (16,898) 0.0 minPROGRESS> 16:05:57 |###############     |  75% (18,105) 0.0 minPROGRESS> 16:05:57 |################    |  80% (19,312) 0.0 minPROGRESS> 16:05:58 |#################   |  85% (20,519) 0.0 minPROGRESS> 16:05:58 |##################  |  90% (21,726) 0.0 minPROGRESS> 16:05:58 |################### |  95% (22,933) 0.0 minPROGRESS> 16:05:58 |####################| 100% (24,140) 0.0 min
-
-   OUTPUT1> SRR1383452_R1_pair-pass.fastq
-   OUTPUT2> SRR1383452_R2_pair-pass.fastq
-SEQUENCES1> 24140
-SEQUENCES2> 24140
-      PASS> 24140
-       END> PairSeq
-

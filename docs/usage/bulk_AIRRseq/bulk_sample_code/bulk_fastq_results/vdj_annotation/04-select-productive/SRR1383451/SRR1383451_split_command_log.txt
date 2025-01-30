@@ -1,16 +1,0 @@
-    START> ParseDb
-  COMMAND> split
-     FILE> SRR1383451_quality-pass.tsv
-    FIELD> productive
-NUM_SPLIT> None
-
-PROGRESS> 16:36:00 |                    |   0% (    0) 0.0 minPROGRESS> 16:36:00 |#                   |   5% (  444) 0.0 minPROGRESS> 16:36:00 |##                  |  10% (  888) 0.0 minPROGRESS> 16:36:00 |###                 |  15% (1,332) 0.0 minPROGRESS> 16:36:00 |####                |  20% (1,776) 0.0 minPROGRESS> 16:36:00 |#####               |  25% (2,220) 0.0 minPROGRESS> 16:36:00 |######              |  30% (2,664) 0.0 minPROGRESS> 16:36:00 |#######             |  35% (3,108) 0.0 minPROGRESS> 16:36:00 |########            |  40% (3,552) 0.0 minPROGRESS> 16:36:00 |#########           |  45% (3,996) 0.0 minPROGRESS> 16:36:00 |##########          |  50% (4,440) 0.0 minPROGRESS> 16:36:00 |###########         |  55% (4,884) 0.0 minPROGRESS> 16:36:00 |############        |  60% (5,328) 0.0 minPROGRESS> 16:36:00 |#############       |  65% (5,772) 0.0 minPROGRESS> 16:36:00 |##############      |  70% (6,216) 0.0 minPROGRESS> 16:36:00 |###############     |  75% (6,660) 0.0 minPROGRESS> 16:36:00 |################    |  80% (7,104) 0.0 minPROGRESS> 16:36:00 |#################   |  85% (7,548) 0.0 minPROGRESS> 16:36:00 |##################  |  90% (7,992) 0.0 minPROGRESS> 16:36:00 |################### |  95% (8,436) 0.0 minPROGRESS> 16:36:00 |####################| 100% (8,872) 0.0 min
-
-OUTPUT1> SRR1383451_productive-F.tsv
-OUTPUT2> SRR1383451_productive-T.tsv
-RECORDS> 8872
-  PARTS> 2
-  SIZE1> 13
-  SIZE2> 8859
-    END> ParseDb
-

@@ -1,20 +1,0 @@
-       START> MaskPrimers
-     COMMAND> score
-    SEQ_FILE> SRR1383451_R2_quality-pass.fastq
- PRIMER_FILE> vprimers.fasta
-        MODE> cut
-   MAX_ERROR> 0.2
-   START_POS> 0
-  REV_PRIMER> False
-     BARCODE> False
-PRIMER_FIELD> PRIMER
-       NPROC> 4
-
-PROGRESS> 15:45:04 |                    |   0% (      0) 0.0 minPROGRESS> 15:45:06 |#                   |   5% (  5,171) 0.0 minPROGRESS> 15:45:07 |##                  |  10% ( 10,342) 0.1 minPROGRESS> 15:45:09 |###                 |  15% ( 15,513) 0.1 minPROGRESS> 15:45:10 |####                |  20% ( 20,684) 0.1 minPROGRESS> 15:45:12 |#####               |  25% ( 25,855) 0.1 minPROGRESS> 15:45:13 |######              |  30% ( 31,026) 0.2 minPROGRESS> 15:45:15 |#######             |  35% ( 36,197) 0.2 minPROGRESS> 15:45:16 |########            |  40% ( 41,368) 0.2 minPROGRESS> 15:45:18 |#########           |  45% ( 46,539) 0.2 minPROGRESS> 15:45:19 |##########          |  50% ( 51,710) 0.3 minPROGRESS> 15:45:21 |###########         |  55% ( 56,881) 0.3 minPROGRESS> 15:45:22 |############        |  60% ( 62,052) 0.3 minPROGRESS> 15:45:24 |#############       |  65% ( 67,223) 0.3 minPROGRESS> 15:45:25 |##############      |  70% ( 72,394) 0.4 minPROGRESS> 15:45:27 |###############     |  75% ( 77,565) 0.4 minPROGRESS> 15:45:28 |################    |  80% ( 82,736) 0.4 minPROGRESS> 15:45:30 |#################   |  85% ( 87,907) 0.4 minPROGRESS> 15:45:31 |##################  |  90% ( 93,078) 0.4 minPROGRESS> 15:45:33 |################### |  95% ( 98,249) 0.5 minPROGRESS> 15:45:34 |####################| 100% (103,411) 0.5 min
-
-   OUTPUT> SRR1383451_R2_primers-pass.fastq
-SEQUENCES> 103411
-     PASS> 97654
-     FAIL> 5757
-      END> MaskPrimers
-

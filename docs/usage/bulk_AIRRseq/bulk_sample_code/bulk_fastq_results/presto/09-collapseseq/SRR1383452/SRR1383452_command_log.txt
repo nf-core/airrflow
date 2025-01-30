@@ -1,20 +1,0 @@
-       START> CollapseSeq
-        FILE> SRR1383452_assemble-pass_reheader-pass_reheader-pass.fastq
- MAX_MISSING> 0
- UNIQ_FIELDS> PRCONS
- COPY_FIELDS> CONSCOUNT
-COPY_ACTIONS> sum
-   MAX_FIELD> None
-   MIN_FIELD> None
-       INNER> True
-KEEP_MISSING> True
-
-PROGRESS> [0 missing] 16:27:26 |                    |   0% (     0) 0.0 minPROGRESS> [0 missing] 16:27:26 |#                   |   5% ( 1,095) 0.0 minPROGRESS> [0 missing] 16:27:26 |##                  |  10% ( 2,190) 0.0 minPROGRESS> [0 missing] 16:27:26 |###                 |  15% ( 3,285) 0.0 minPROGRESS> [0 missing] 16:27:26 |####                |  20% ( 4,380) 0.0 minPROGRESS> [0 missing] 16:27:26 |#####               |  25% ( 5,475) 0.0 minPROGRESS> [0 missing] 16:27:26 |######              |  30% ( 6,570) 0.0 minPROGRESS> [0 missing] 16:27:26 |#######             |  35% ( 7,665) 0.0 minPROGRESS> [0 missing] 16:27:26 |########            |  40% ( 8,760) 0.0 minPROGRESS> [0 missing] 16:27:26 |#########           |  45% ( 9,855) 0.0 minPROGRESS> [0 missing] 16:27:26 |##########          |  50% (10,950) 0.0 minPROGRESS> [0 missing] 16:27:26 |###########         |  55% (12,045) 0.0 minPROGRESS> [0 missing] 16:27:26 |############        |  60% (13,140) 0.0 minPROGRESS> [0 missing] 16:27:26 |#############       |  65% (14,235) 0.0 minPROGRESS> [0 missing] 16:27:26 |##############      |  70% (15,330) 0.0 minPROGRESS> [0 missing] 16:27:26 |###############     |  75% (16,425) 0.0 minPROGRESS> [0 missing] 16:27:26 |################    |  80% (17,520) 0.0 minPROGRESS> [0 missing] 16:27:26 |#################   |  85% (18,615) 0.0 minPROGRESS> [0 missing] 16:27:26 |##################  |  90% (19,710) 0.0 minPROGRESS> [0 missing] 16:27:26 |################### |  95% (20,805) 0.0 minPROGRESS> [0 missing] 16:27:26 |####################| 100% (21,896) 0.0 min
-
-      OUTPUT> SRR1383452_collapse-unique.fastq
-   SEQUENCES> 21896
-      UNIQUE> 16370
-   DUPLICATE> 5509
-UNDETERMINED> 17
-         END> CollapseSeq
-

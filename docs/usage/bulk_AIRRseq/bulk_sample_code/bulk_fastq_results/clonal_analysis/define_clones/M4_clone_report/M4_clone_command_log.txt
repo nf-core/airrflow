@@ -1,5 +1,0 @@
-START> ClonePass
-FILE1> SRR1383451_meta-pass_SRR1383451_collapse-pass.tsv,SRR1383452_meta-pass_SRR1383452_collapse-pass.tsv,SRR1383453_meta-pass_SRR1383453_collapse-pass.tsv,SRR1383456_meta-pass_SRR1383456_collapse-pass.tsv
-OUTPUT1> M4__clone-pass.tsv
-PASS1> 4587
-FAIL1> 5

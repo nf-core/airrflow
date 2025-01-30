@@ -1,19 +1,0 @@
-         START> MakeDB
-       COMMAND> igblast
-  ALIGNER_FILE> SRR1383453_igblast.fmt7
-      SEQ_FILE> SRR1383453_atleast-2.fasta
-       ASIS_ID> False
-    ASIS_CALLS> False
-      VALIDATE> strict
-      EXTENDED> True
-INFER_JUNCTION> False
-
-PROGRESS> 16:34:13 |Loading files       | 0.0 minPROGRESS> 16:34:13 |Done                | 0.0 min
-
-PROGRESS> 16:34:13 |                    |   0% (    0) 0.0 minPROGRESS> 16:34:15 |#                   |   5% (  126) 0.0 minPROGRESS> 16:34:16 |##                  |  10% (  252) 0.0 minPROGRESS> 16:34:16 |###                 |  15% (  378) 0.0 minPROGRESS> 16:34:16 |####                |  20% (  504) 0.0 minPROGRESS> 16:34:16 |#####               |  25% (  630) 0.1 minPROGRESS> 16:34:16 |######              |  30% (  756) 0.1 minPROGRESS> 16:34:16 |#######             |  35% (  882) 0.1 minPROGRESS> 16:34:16 |########            |  40% (1,008) 0.1 minPROGRESS> 16:34:16 |#########           |  45% (1,134) 0.1 minPROGRESS> 16:34:16 |##########          |  50% (1,260) 0.1 minPROGRESS> 16:34:16 |###########         |  55% (1,386) 0.1 minPROGRESS> 16:34:17 |############        |  60% (1,512) 0.1 minPROGRESS> 16:34:17 |#############       |  65% (1,638) 0.1 minPROGRESS> 16:34:17 |##############      |  70% (1,764) 0.1 minPROGRESS> 16:34:17 |###############     |  75% (1,890) 0.1 minPROGRESS> 16:34:17 |################    |  80% (2,016) 0.1 minPROGRESS> 16:34:17 |#################   |  85% (2,142) 0.1 minPROGRESS> 16:34:17 |##################  |  90% (2,268) 0.1 minPROGRESS> 16:34:17 |################### |  95% (2,394) 0.1 minPROGRESS> 16:34:17 |####################| 100% (2,513) 0.1 min
-
-OUTPUT> SRR1383453_db-pass.tsv
-  PASS> 2438
-  FAIL> 75
-   END> MakeDb
-

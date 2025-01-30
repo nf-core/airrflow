@@ -1,5 +1,0 @@
-START> FilterQuality
-FILE> SRR1383453_db-pass.tsv
-OUTPUT> SRR1383453_quality-pass.tsv
-PASS> 2434
-FAIL> 4

@@ -1,5 +1,0 @@
-START> FindThreshold
-FILE> find_threshold_samplesheet.txt
-OUTPUT> all_reps_threshold-pass.tsv
-PASS> 12307
-FAIL> 0

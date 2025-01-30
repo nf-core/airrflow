@@ -1,42 +1,0 @@
-         START> ClusterSets
-       COMMAND> set
-          FILE> SRR1383463_R1_pair-pass.fastq
-      IDENTITY> 0.9
-SEQUENCE_START> 0
-  SEQUENCE_END> None
-     SET_FIELD> BARCODE
- CLUSTER_FIELD> CLUSTER
-CLUSTER_PREFIX> 
-  CLUSTER_TOOL> usearch
-         NPROC> 4
-
-PROGRESS> 16:04:11 |                    |   0% (     0) 0.1 minPROGRESS> 16:04:12 |#                   |   5% ( 4,712) 0.1 minPROGRESS> 16:04:13 |##                  |  10% ( 9,424) 0.1 minPROGRESS> 16:04:14 |###                 |  15% (14,136) 0.1 minPROGRESS> 16:04:15 |####                |  20% (18,848) 0.1 minPROGRESS> 16:04:16 |#####               |  25% (23,560) 0.2 minPROGRESS> 16:04:17 |######              |  30% (28,272) 0.2 minPROGRESS> 16:04:18 |#######             |  35% (32,984) 0.2 minPROGRESS> 16:04:19 |########            |  40% (37,696) 0.2 minPROGRESS> 16:04:19 |#########           |  45% (42,408) 0.2 minPROGRESS> 16:04:20 |##########          |  50% (47,120) 0.2 minPROGRESS> 16:04:21 |###########         |  55% (51,832) 0.2 minPROGRESS> 16:04:22 |############        |  60% (56,544) 0.2 minPROGRESS> 16:04:22 |#############       |  65% (61,256) 0.3 minPROGRESS> 16:04:23 |##############      |  70% (65,968) 0.3 minPROGRESS> 16:04:24 |###############     |  75% (70,680) 0.3 minPROGRESS> 16:04:24 |################    |  80% (75,392) 0.3 minPROGRESS> 16:04:25 |#################   |  85% (80,104) 0.3 minPROGRESS> 16:04:26 |##################  |  90% (84,816) 0.3 minPROGRESS> 16:04:26 |################### |  95% (89,528) 0.3 minPROGRESS> 16:04:27 |####################| 100% (94,233) 0.3 min
-
-   OUTPUT> SRR1383463_R1_cluster-pass.fastq
-SEQUENCES> 96149
-     SETS> 94233
-     PASS> 94233
-     FAIL> 0
-      END> ClusterSets
-
-         START> ClusterSets
-       COMMAND> set
-          FILE> SRR1383463_R2_pair-pass.fastq
-      IDENTITY> 0.9
-SEQUENCE_START> 0
-  SEQUENCE_END> None
-     SET_FIELD> BARCODE
- CLUSTER_FIELD> CLUSTER
-CLUSTER_PREFIX> 
-  CLUSTER_TOOL> usearch
-         NPROC> 4
-
-PROGRESS> 16:04:35 |                    |   0% (     0) 0.1 minPROGRESS> 16:04:36 |#                   |   5% ( 4,712) 0.1 minPROGRESS> 16:04:37 |##                  |  10% ( 9,424) 0.1 minPROGRESS> 16:04:38 |###                 |  15% (14,136) 0.1 minPROGRESS> 16:04:39 |####                |  20% (18,848) 0.1 minPROGRESS> 16:04:40 |#####               |  25% (23,560) 0.2 minPROGRESS> 16:04:41 |######              |  30% (28,272) 0.2 minPROGRESS> 16:04:42 |#######             |  35% (32,984) 0.2 minPROGRESS> 16:04:43 |########            |  40% (37,696) 0.2 minPROGRESS> 16:04:44 |#########           |  45% (42,408) 0.2 minPROGRESS> 16:04:44 |##########          |  50% (47,120) 0.2 minPROGRESS> 16:04:45 |###########         |  55% (51,832) 0.2 minPROGRESS> 16:04:46 |############        |  60% (56,544) 0.3 minPROGRESS> 16:04:47 |#############       |  65% (61,256) 0.3 minPROGRESS> 16:04:47 |##############      |  70% (65,968) 0.3 minPROGRESS> 16:04:48 |###############     |  75% (70,680) 0.3 minPROGRESS> 16:04:49 |################    |  80% (75,392) 0.3 minPROGRESS> 16:04:49 |#################   |  85% (80,104) 0.3 minPROGRESS> 16:04:50 |##################  |  90% (84,816) 0.3 minPROGRESS> 16:04:51 |################### |  95% (89,528) 0.3 minPROGRESS> 16:04:51 |####################| 100% (94,233) 0.3 min
-
-   OUTPUT> SRR1383463_R2_cluster-pass.fastq
-SEQUENCES> 96149
-     SETS> 94233
-     PASS> 94233
-     FAIL> 0
-      END> ClusterSets
-

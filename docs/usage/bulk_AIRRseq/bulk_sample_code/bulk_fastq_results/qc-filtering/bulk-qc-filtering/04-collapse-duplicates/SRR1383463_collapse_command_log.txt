@@ -1,5 +1,0 @@
-START> CollapseDuplicates
-FILE1> SRR1383463_meta-pass.tsv
-OUTPUT1> SRR1383463_meta-pass_SRR1383463_collapse-pass.tsv
-PASS1> 4764
-FAIL1> 5090

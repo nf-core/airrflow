@@ -1,5 +1,0 @@
-START> FilterJunctionMod3
-FILE> SRR1383453_productive-T.tsv
-OUTPUT> SRR1383453_junction-pass.tsv
-PASS> 2431
-FAIL> 1

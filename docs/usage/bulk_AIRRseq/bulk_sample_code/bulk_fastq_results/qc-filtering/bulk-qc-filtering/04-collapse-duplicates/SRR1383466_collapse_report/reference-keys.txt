@@ -1,7 +1,0 @@
-tab:input
-input-parameters
-read-repertoires
-homogenize-c_call-c_primer-and-c_region-fields-containing-isotype-information
-collapse-duplicates
-remove-duplicate-sequences
-software-versions
