@@ -28,7 +28,7 @@ For this tutorial we will practice on both of the input formats.
 ## AIRR rearrangement format
 ### Datasets
 
-For this tutorial we will use subsampled PBMC single-cell BCR sequencing data from two subjects, before (d0) and after flu vaccination (d12). The dataset is available on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.11373740). You don't need to downlaod the samples bacause the links to the samples are already in the samplesheet. 
+For this tutorial we will use subsampled PBMC single-cell BCR sequencing data from two subjects, before (d0) and after flu vaccination (d12). The dataset is available on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.11373740). You don't need to download the samples bacause the links to the samples are already in the samplesheet we provide. 
 
 ### Preparing samplesheet and configuration file
 
