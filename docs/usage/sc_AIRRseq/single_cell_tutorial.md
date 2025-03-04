@@ -5,11 +5,11 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 ## Pre-requisites
 
 > [!INSTALLATION]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
 
 For the purpose of running this tutorial on your local machine, we recommend a docker installation.
 
-To install docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation on linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
+To install docker, follow the instructions [here](https://docs.docker.com/engine/install/). After docker installation on linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
@@ -93,7 +93,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 --library_generation_method sc_10x_genomics \
 --reference_10x refdata-cellranger-vdj-GRCh38-alts-ensembl-7.1.0 \
 -c resource.config \
---clonal_threshold 0 \    # do not set the clonal_threshold parameter if it's BCR data.
+--clonal_threshold 0 \    
 --outdir sc_from_fastq_results \
 -resume
 ```
@@ -130,12 +130,17 @@ The analysis steps and their corresponding folders, where the results are stored
    - In this step, cells without heavy chains or with multiple heavy chains are removed. Sequences in different samples that share the same cell_id and necleotide sequence are filtered out. The result are stored in the 'qc-filtering' folder. 
 
 4. Clonal analysis. 
-   - In this step, the Hamming distance threshold of the junction regions is determined when clonal_threshold is set to 'auto' (by default). Once the threshold is established, clones are assigned to the sequences. The result is under the folder named 'clonal_analysis'. 
-   - By default, the clonal_threshold is set to be 'auto', it should be reviewed for accuracy once the result is out. If the automatic threshold is unsatisfactory, you can set the threshold manually and rerun the pipeline. (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work). 
+   - In this step, the Hamming distance threshold of the junction regions is determined when clonal_threshold is set to 'auto' (by default).it should be reviewed for accuracy once the result is out. The threshold result can be found under the folder clonal_analysis/find_threshold. 
+   - If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline. 
+   (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work). 
    - For TCR data, where somatic hypermutation does not occur, set the clonal_threshold to 0 when running the Airrflow pipeline.  
+   - Once the threshold is established, clones are assigned to the sequences. A variety of tables and plots associated with clonal analysis were added to the folder 'clonal_analysis/define_clones', such as  sequences_per_locus_table, sequences_per_c_call_table, sequences_per_constant_region_table,num_clones_table, clone_sizes_table,clone size distribution plot, clonal abundance plot, diversity plot and etc. 
 
-5. Repertoire analysis and reporting. 
-   - The output folders are 'repertoire_comparison' and 'multiqc'. 
+5. Repertoire analysis. 
+   - The output folder is'repertoire_comparison'. V gene distribution tables and plots are included in this folder.
+
+6. Other reporting.
+   - Additional reports are also generated, including: a multiqc report which summarizes QC metrics across all samples, pipeline_info reports and report_file_size reports.
 
 
 
@@ -146,4 +151,6 @@ Lineage tree computation is skipped by default because it's time-consuming. To e
 
 ## Downstream analysis
 
-Downstream analysis can be performed from the AIRR repertoires. Provide one example and links to the Immcantation single-cell tutorial.
+Airrflow is a standardized pipeline that is not highly flexible for customized downstream analysis. For such cases, you can use the Airrflow results as input for customized analyses using the Immcantation packages with appropriate parameters. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html). 
+
+
