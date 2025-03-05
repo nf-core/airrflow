@@ -5,11 +5,11 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 ## Pre-requisites
 
 > [!INSTALLATION]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
 
 For the purpose of running this tutorial on your local machine, we recommend a docker installation.
 
-To install docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation on linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
+To install docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation docker on linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
@@ -31,7 +31,11 @@ To run the Airrflow pipeline on bulk BCR/TCR sequencing data, several files must
 
 - A configuration file requiring memory, cpu and time. Before setting the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in unexpected errors. 
 
-- The sequences for the V-region primers as well as the C-region primers used in the specific PCR amplification. 
+- Information on bulk library generation method(protocol). 
+  - We provide two predefined profiles for analyzing bulk FASTQ sequencing data, each corresponding to a specific library preparation method:
+    - NEB Immune Profiling Kit: Use the profiles nebnext_umi_bcr or nebnext_umi_tcr for BCR and TCR libraries, respectively.
+    - Takara SMARTer Human Profiling Kit: Use the profiles clontech_umi_bcr or clontech_umi_tcr for BCR and TCR libraries, respectively.
+  - If your data was generated using a different library preparation method, you can manually set the relevant Airrflow parameters according to the design of your protocol — similar to the approach we used for the samples in this tutorial.
 
 A prepared samplesheet for this tutorial can be found [here](bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](bulk_sample_code/resource.config). 
 Download both files to the directory where you intend to run the airrflow pipeline. 
@@ -66,7 +70,9 @@ bash airrflow_bulk_b_fastq.sh
 ```
 
 If no UMI barcodes were used, set the --library_generation_method to specific_pcr, and the UMI length will be set automatically to 0. 
-Don't forget to modify the parameters (eg. --library_generation_method, --cprimer_position, --umi_length, --umi_start, --umi_position, etc.) if you run the pipeline on your own data. 
+>[Warning!] 
+>Please ensure you modify the parameters when running the pipeline on your own data to match the specific details of your library preparation protocol.
+
 
 > [Tip]
 > When launching a Nextflow pipelien with -resume option, any processes that have already been run with the exact same code, settings and inputs will be skipped. The benefit of using -resume is to avoid duplicating previous work and save time when re-running a pipeline.
@@ -81,25 +87,38 @@ After running the pipeline, several reports are generated under the result folde
 The analysis steps and their corresponding folders, where the results are stored, are listed below. 
 
 
-1. QC and sequence assembly 
-   - PRESTO
+1. QC 
+   - fastp was used to perform quality control, adapter trimming, quality filtering, per-read quality pruning of the FASTQ data. The results are stored under the folder 'fastp'. 
+   - FastQC was applied to do some quality control checks on raw sequence data. The fastqc report for each fastq file is under the folder named 'fastqc'.  
 
-2. V(D)J annotation and filtering. 
+2. Sequence assembly
+   - pRESTO is a toolkit for processing raw reads from high-throughput sequencing of B cell and T cell repertoires. It includes features for quality control, primer masking, annotation of reads with sequence embedded barcodes, generation of unique molecular identifier (UMI) consensus sequences, assembly of paired-end reads and identification of duplicate sequences. 
+
+3. V(D)J annotation and filtering. 
    - In this step, gene segments are assigned using a germline reference. Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are removed. Metadata is added. The results are under the folder named 'vdj_annotation'. 
 
-3. QC filtering. 
-   
+4. QC filtering. 
+   Duplicates are collapsed in this step and the results are available under folder 'qc-filtering'. 
 
-4. Clonal analysis. 
-   - In this step, the Hamming distance threshold of the junction regions is determined when clonal_threshold is set to 'auto' (by default). Once the threshold is established, clones are assigned to the sequences. The result is under the folder named 'clonal_analysis'. 
-   - By default, the clonal_threshold is set to be 'auto', it should be reviewed for accuracy once the result is out. If the automatic threshold is unsatisfactory, you can set the threshold manually and rerun the pipeline. (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work). 
+5. Clonal analysis. 
+   - In this step, the Hamming distance threshold of the junction regions is determined when clonal_threshold is set to 'auto' (by default).it should be reviewed for accuracy once the result is out. The threshold result can be found under the folder clonal_analysis/find_threshold. 
+   - If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline. 
+   (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work). 
    - For TCR data, where somatic hypermutation does not occur, set the clonal_threshold to 0 when running the Airrflow pipeline.  
+   - Once the threshold is established, clones are assigned to the sequences. A variety of tables and plots associated with clonal analysis were added to the folder 'clonal_analysis/define_clones', such as  sequences_per_locus_table, sequences_per_c_call_table, sequences_per_constant_region_table,num_clones_table, clone_sizes_table,clone size distribution plot, clonal abundance plot, diversity plot and etc. 
 
-5. Repertoire analysis and reporting. 
-   - The output folders are 'repertoire_comparison', 'parsed_logs', 'report_file_size' and 'multiqc'. 
+6. Repertoire analysis. 
+   - The output folder is'repertoire_comparison'. V gene distribution tables and plots are included in this folder.
+
+7. Other reporting.
+   - Additional reports are also generated, including: a multiqc report which summarizes QC metrics across all samples, pipeline_info reports and report_file_size reports.
 
 
 
 ## Including lineage tree computation
 
 Lineage tree computation is skipped by default because it's time-consuming. To enable lineage tree computation, re-run the pipeline with the --lineage_trees parameter set to true. Remember to include the -resume parameter to avoid duplicating previous work.
+
+## Downstream analysis
+
+Airrflow is a standardized pipeline that is not highly flexible for customized downstream analysis. For such cases, you can use the Airrflow results as input for customized analyses using the Immcantation packages with appropriate parameters. You can find introduction to Bulk B cell repertoire analysis using the Immcantation framework [here](https://immcantation.readthedocs.io/en/stable/getting_started/intro-lab.html). 
