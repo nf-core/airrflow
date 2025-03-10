@@ -33,7 +33,7 @@ The [AIRR rearrangement format](https://docs.airr-community.org/en/latest/datare
 
 The AIRR rearrangement format is also the default one when analyzing publicly available data from specialized AIRRseq databases such as the AIRR Data Commons through the [iReceptor gateway](https://gateway.ireceptor.org/login).
 
-In this tutorial we will showcase how to run nf-core/airrflow both of the input formats.
+In this tutorial we will showcase how to run nf-core/airrflow with both of the input formats.
 
 ![nf-core/airrflow overview](../images/metro-map-airrflow.png)
 
