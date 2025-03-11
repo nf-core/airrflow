@@ -19,10 +19,16 @@ Once you have set up your Nextflow and container (docker or singularity), test t
 nextflow run nf-core/airrflow -r 4.2.0 -profile test,docker --outdir test_results
 ```
 
-If the tests run through correctly, you should see this output in your command line:
+If the tests run through correctly, you should see the execution of airrflow processes. Finally, the following output will appear in your command line:
 
 ```bash
 output:
+
+-[nf-core/airrflow] Pipeline completed successfully-
+Completed at: 11-Mar-2025 11:30:35
+Duration    : 5m 50s
+CPU hours   : 0.6
+Succeeded   : 221
 ```
 
 ## Supported input formats
@@ -87,14 +93,35 @@ bash airrflow_sc_from_assembled.sh
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
-After launching the pipeline the following will be printed to the console output:
+After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
 
 ```bash
+ N E X T F L O W   ~  version 24.10.5
+
+WARN: It appears you have never run this project before -- Option `-resume` is ignored
+Launching `https://github.com/nf-core/airrflow` [boring_heyrovsky] DSL2 - revision: d91dd840f4 [4.2.0]
+
+
+------------------------------------------------------
+                                        ,--./,-.
+        ___     __   __   __   ___     /,-._.--~'
+  |\ | |__  __ /  ` /  \ |__) |__         }  {
+  | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                        `._,._,'
+  nf-core/airrflow 4.2.0
+------------------------------------------------------
+
 ```
 
 Once the pipeline has finished successfully, the following message will appear:
 
 ```bash
+output:
+-[nf-core/airrflow] Pipeline completed successfully-
+Completed at: 11-Mar-2025 13:06:05
+Duration    : 2m 47s
+CPU hours   : 0.4
+Succeeded   : 44
 ```
 
 ## Starting from raw reads in fastq format
@@ -138,7 +165,35 @@ With the bash file, it's easy to run the pipeline with a single-line command.
 ```bash
 bash airrflow_sc_from_fastq.sh
 ```
+After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
 
+```bash
+ N E X T F L O W   ~  version 24.10.5
+
+Launching `https://github.com/nf-core/airrflow` [gloomy_monod] DSL2 - revision: d91dd840f4 [4.2.0]
+
+
+------------------------------------------------------
+                                        ,--./,-.
+        ___     __   __   __   ___     /,-._.--~'
+  |\ | |__  __ /  ` /  \ |__) |__         }  {
+  | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                        `._,._,'
+  nf-core/airrflow 4.2.0
+------------------------------------------------------
+```
+
+Once the pipeline has finished successfully, the following message will appear:
+
+```bash
+output:
+-[nf-core/airrflow] Pipeline completed successfully-
+Completed at: 11-Mar-2025 13:18:13
+Duration    : 2m 46s
+CPU hours   : 0.3 (0.1% cached)
+Succeeded   : 17
+Cached      : 2
+```
 ## Important considerations for clonal analysis
 
 An important step in the analysis of AIRR sequencing data is inferring B cell and T cell clones, or clonal groups, sometimes also called clonotypes. These are cells that are derived from the same progenitor cell through clonal expansion. For T cells, this definition is more strict as T cells do not undergo somatic hypermutation, so the TCRs from T cells in the same clone should be identical. For B cells, on the other hand, the BCRs from cells in the same clone can differ due to somatic hypermutation. They also can have a variety of isotypes.
