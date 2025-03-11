@@ -35,7 +35,7 @@ The AIRR rearrangement format is also the default one when analyzing publicly av
 
 In this tutorial we will showcase how to run nf-core/airrflow with both of the input formats.
 
-![nf-core/airrflow overview](../../images/metro-map-airrflow.png)
+![nf-core/airrflow overview](../../images/airrflow_workflow_overview.png)
 
 ## Starting from AIRR rearrangement format
 
@@ -82,8 +82,18 @@ bash airrflow_sc_from_assembled.sh
 ```
 
 > [Tip]
-> When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using `-resume` is to avoid duplicating previous work and save time when re-running a pipeline.
-> We include `-resume` in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
+> When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
+> We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
+
+After launching the pipeline the following will be printed to the console output:
+
+```bash
+```
+
+Once the pipeline has finished successfully, the following message will appear:
+
+```bash
+```
 
 ## Starting from raw reads in fastq format
 
@@ -141,7 +151,7 @@ The sample grouping can also be controlled with the [`--cloneby`](https://nf-co.
 
 ### Clonal inference method
 
-nf-core/airrflow utilizes the `Hierarchical clustering` method in the [SCOPer](https://scoper.readthedocs.io/) Immcantation tool to infer clonal groups, which initially partitions the BCR / TCR sequences according to V gene, J gene and junction length. Then, it defines clonal groups within each partition by performing hierarchical clustering of the sequences within a partition and cutting the clusters according to an automatically detected or user-defined threshold. More details about this method can be found on the respective SCOPer [vignette](https://scoper.readthedocs.io/en/stable/vignettes/Scoper-Vignette/#). Details on how to determine the clonal threshold can be found in the next section.
+nf-core/airrflow utilizes the Hierarchical clustering method in the [SCOPer](https://scoper.readthedocs.io/) Immcantation tool to infer clonal groups, which initially partitions the BCR / TCR sequences according to V gene, J gene and junction length. Then, it defines clonal groups within each partition by performing hierarchical clustering of the sequences within a partition and cutting the clusters according to an automatically detected or user-defined threshold. More details about this method can be found on the respective SCOPer [vignette](https://scoper.readthedocs.io/en/stable/vignettes/Scoper-Vignette/#). Details on how to determine the clonal threshold can be found in the next section.
 
 ### Setting a clonal threshold
 
@@ -185,13 +195,16 @@ The analysis steps and their corresponding folders, where the results are stored
    - Once the threshold is established, clones are assigned to the sequences. A variety of tables and plots associated with clonal analysis were added to the folder `clonal_analysis/define_clones`, such as  sequences_per_locus_table, sequences_per_c_call_table, sequences_per_constant_region_table, num_clones_table, clone_sizes_table,clone size distribution plot, clonal abundance plot, diversity plot and etc.
 
 5. Repertoire analysis.
-   - Calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations. The output folder is `repertoire_comparison`. 
+   - Calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations. The output folder is `repertoire_comparison`.
 
 6. Other reporting.
    Additional reports are also generated, including:
    - MultiQC report: summarizes QC metrics across all samples.
-   - Pipeline_info report: various reports relevant to the running and execution of the pipeline. 
+   - Pipeline_info report: various reports relevant to the running and execution of the pipeline.
    - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
+
+## Understanding error messages
+
 
 
 ## Costumizing your analysis and generating your own figures
