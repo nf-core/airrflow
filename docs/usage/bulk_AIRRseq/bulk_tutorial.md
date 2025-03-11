@@ -23,6 +23,12 @@ If the tests run through correctly, you should see this output in your command l
 
 ```bash
 output:
+
+-[nf-core/airrflow] Pipeline completed successfully-
+Completed at: 11-Mar-2025 11:30:35
+Duration    : 5m 50s
+CPU hours   : 0.6
+Succeeded   : 221
 ```
 
 ## Datasets
@@ -47,7 +53,7 @@ Download both files to the directory where you intend to run the airrflow pipeli
 
 ## Choosing the right protocol profile
 
-Bulk BCR and TCR targeted sequencing can be performed with a wide variety of protocols, using different library preparation methods. Different protocols usually use different amplification primers, UMI barcode lengths and position and will require setting different parameters. To ease running the pipeline on commonly used commercially available kits, we provide parameter presets as profiles. A full [list of protocol profiles](https://nf-co.re/airrflow/docs/usage/#supported-protocol-profiles) is available on the usage documentation page.
+Bulk BCR and TCR targeted sequencing can be performed with a wide variety of protocols, using different library preparation methods. Different protocols usually use different amplification primers, UMI barcode lengths and position, which require different parameter setting to run Airrflow pipeline. To make it easier to run the pipeline on commonly used commercially available kits, we provide parameter presets as profiles. A full [list of protocol profiles](https://nf-co.re/airrflow/docs/usage/#supported-protocol-profiles) is available on the usage documentation page.
 
 You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide as additional parameters the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as any parameters in the launch command will override the parameters in the profile.
 
@@ -104,14 +110,33 @@ If no UMI barcodes were used, set the --library_generation_method to specific_pc
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
-After launching the pipeline the following will be printed to the console output:
+After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
 
 ```bash
+ N E X T F L O W   ~  version 24.10.5
+
+WARN: It appears you have never run this project before -- Option `-resume` is ignored
+Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.2.0]
+
+
+------------------------------------------------------
+                                        ,--./,-.
+        ___     __   __   __   ___     /,-._.--~'
+  |\ | |__  __ /  ` /  \ |__) |__         }  {
+  | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                        `._,._,'
+  nf-core/airrflow 4.2.0
+------------------------------------------------------
 ```
 
 Once the pipeline has finished successfully, the following message will appear:
 
 ```bash
+-[nf-core/airrflow] Pipeline completed successfully-
+Completed at: 11-Mar-2025 15:01:11
+Duration    : 23m 46s
+CPU hours   : 5.9
+Succeeded   : 271
 ```
 
 ## Important considerations for clonal analysis
@@ -151,6 +176,10 @@ After running the pipeline, several reports are generated under the result folde
 
 ![example of result folder](bulk_tutorial_images/AIRRFLOW_BULK_RESULT.png)
 
+The summary report, named `Airrflow_report.html`, provides an overview of the analysis results, such as an overview of the number of sequences per sample in each of the pipeline steps, the V(D)J gene assignment and QC, and V gene family usage. Additionally, it contains links to detailed reports for other specific analysis steps.
+
+The analysis steps and their corresponding folders, where the results are stored, are briefly listed below. Detailed documentation on the pipeline output can be found on the [Output documentation page](https://nf-co.re/airrflow/docs/output/).
+
 The analysis steps and their corresponding folders, where the results are stored, are listed below.
 
 
@@ -175,10 +204,14 @@ The analysis steps and their corresponding folders, where the results are stored
    - Once the threshold is established, clones are assigned to the sequences. A variety of tables and plots associated with clonal analysis were added to the folder 'clonal_analysis/define_clones', such as  sequences_per_locus_table, sequences_per_c_call_table, sequences_per_constant_region_table,num_clones_table, clone_sizes_table,clone size distribution plot, clonal abundance plot, diversity plot and etc.
 
 6. Repertoire analysis.
-   - The output folder is 'repertoire_comparison'. V gene distribution tables and plots are included in this folder.
+   - Calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations. The output folder is `repertoire_comparison`.
 
 7. Other reporting.
-   - Additional reports are also generated, including: a multiqc report which summarizes QC metrics across all samples, pipeline_info reports and report_file_size reports.
+   Additional reports are also generated, including:
+   - MultiQC report: summarizes QC metrics across all samples.
+   - Pipeline_info report: various reports relevant to the running and execution of the pipeline.
+   - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
+   - parsed_logs report: Summary of the number of sequences left after each of the most important pipeline steps.
 
 
 
