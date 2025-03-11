@@ -45,14 +45,16 @@ For this tutorial we will use subsampled PBMC single-cell BCR sequencing data fr
 The dataset is publicly available on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.11373740).
 You don't need to download the dataset bacause the links to the samples are already provided in the samplesheet and Nextflow will get the data from the links automatically when running the pipeline.
 
-### Preparing samplesheet and configuration file
+### Preparing the samplesheet and configuration file
 
-To run the pipeline, a tab-seperated samplesheet that provides the path to the AIRR rearrangement files and a configuration file must be prepared.
+To run the pipeline, a tab-separated samplesheet that provides the path to the AIRR rearrangement files must be prepared.
 The samplesheet collects experimental details that are important for the data analysis.
 Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
 A prepared samplesheet for this tutorial can be found [here](sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](sample_data_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
+
+The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option.
 
 > [Tip]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.

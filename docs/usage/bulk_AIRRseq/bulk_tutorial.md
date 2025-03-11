@@ -25,37 +25,57 @@ If the tests run through correctly, you should see this output in your command l
 output:
 ```
 
-## Running airrflow pipeline
+## Datasets
 
-### Datasets
-In this tutorial, we will use bulk BCR sequencing data from two subjects in fastq format. The first subject has 3 samples from lymph node and 1 sample from brain lesion while the second subject has 3 samples from lymph node and 3 samples from brain lesion. You don't need to download the samples bacause the links to the samples are already provided in the samplesheet.
+In this tutorial, we will use nf-core/airrflow to analyze bulk BCR sequencing data from two subjects with multiple sclerosis publicly available on Sequence Read Archive (PRJNA248475) from [Stern et al](https://pubmed.ncbi.nlm.nih.gov/25100741/). The first subject has 3 samples available from a cervical lymph node and 1 sample from a brain lesion while the second subject has 3 samples from the lymph node and 3 samples from a brain lesion. You don't need to download the samples bacause the links to the samples are already provided in the samplesheet.
 
-### Preparing files needed
-To run the Airrflow pipeline on bulk BCR/TCR sequencing data, several files must be prepared in advance.
+## Preparing the samplesheet and configuration file
 
-- A tab-seperated samplesheet containing the information of each sample. Details on the requied columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet).
+To run the pipeline on bulk BCR/TCR sequencing data, several files must be prepared in advance:
 
-- A configuration file requiring memory, cpu and time. Before setting the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in unexpected errors.
+- A tab-separated samplesheet containing the information of each sample. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet).
+- A configuration file specifying the system's maximum available RAM memory, CPUs and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource configuration file is provided with the `-c` option.
 
-- Information on bulk library generation method(protocol).
-  - We provide two predefined profiles for analyzing bulk FASTQ sequencing data, each corresponding to a specific library preparation method:
-    - NEB Immune Profiling Kit: Use the profiles nebnext_umi_bcr or nebnext_umi_tcr for BCR and TCR libraries, respectively.
-    - Takara SMARTer Human Profiling Kit: Use the profiles clontech_umi_bcr or clontech_umi_tcr for BCR and TCR libraries, respectively.
-  - If your data was generated using a different library preparation method, you can manually set the relevant Airrflow parameters according to the design of your protocol — similar to the approach we used for the samples in this tutorial.
+> [Tip]
+> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
+
+> [Tip]
+> When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
 A prepared samplesheet for this tutorial can be found [here](bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](bulk_sample_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
-The sequences for the V-region primers as well as the C-region primers are stored in AWS S3, and the links are provided in the Nextflow command which will be fetched by nextflow automatically when executing the command.
+## Choosing the right protocol profile
 
-### Running airrflow
-With all the files ready, you can proceed to run the airrflow pipeline.
+Bulk BCR and TCR targeted sequencing can be performed with a wide variety of protocols, using different library preparation methods. Different protocols usually use different amplification primers, UMI barcode lengths and position and will require setting different parameters. To ease running the pipeline on commonly used commercially available kits, we provide parameter presets as profiles. A full [list of protocol profiles](https://nf-co.re/airrflow/docs/usage/#supported-protocol-profiles) is available on the usage documentation page.
+
+You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide as additional parameters the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as any parameters in the launch command will override the parameters in the profile.
+
+```bash
+nextflow run nf-core/airrflow -r 4.2.0 \
+-profile <protocol-profile-name>,docker \
+--input samplesheet.tsv \
+-c resource.config \
+--outdir bulk_fastq_results \
+-resume
+```
+
+> [Tip]
+> We're always looking forward to expanding the set of protocol profiles readily available for other users. Feel free to open an issue and create a pull request to add a new profile that you want to share with other users or ask in the nf-core `#airrflow` [slack channel](https://nf-co.re/join) if you have any questions in doing so.
+
+## Analyzing a dataset with a custom library preparation method
+
+If your dataset was generated using a custom library preparation method, you can manually set the relevant parameters according to your protocol design, similar to the approach we used for the samples in this tutorial. For more examples on how to set the parameters for custom protocols check the [usage documentation](https://nf-co.re/airrflow/docs/usage/#supported-bulk-library-generation-methods-protocols) page.
+
+The BCRseq dataset used in this tutorial was obtained with a multiplexed PCR protocol using custom C-region and V-region primers. We stored the sequences for the V-region primers as well as the C-region primers in AWS S3, and the links are provided in the Nextflow command which will be fetched by nextflow automatically when executing the command. You can also provide the full path to the custom primers fasta files.
+
+The command to launch nf-core/airrflow for the dataset in this tutorial is the following:
 
 ```bash
 nextflow run nf-core/airrflow -r 4.2.0 \
 -profile docker \
 --mode fastq \
---input metadata_pcr_umi_airr_300.tsv \
+--input samplesheet.tsv \
 --cprimers 's3://ngi-igenomes/test-data/airrflow/pcr_umi/cprimers.fasta' \
 --vprimers 's3://ngi-igenomes/test-data/airrflow/pcr_umi/vprimers.fasta' \
 --library_generation_method specific_pcr_umi \
@@ -76,13 +96,23 @@ bash airrflow_bulk_b_fastq.sh
 ```
 
 If no UMI barcodes were used, set the --library_generation_method to specific_pcr, and the UMI length will be set automatically to 0.
+
 >[Warning!]
 >Please ensure you modify the parameters when running the pipeline on your own data to match the specific details of your library preparation protocol.
 
-
 > [Tip]
-> When launching a Nextflow pipelien with -resume option, any processes that have already been run with the exact same code, settings and inputs will be skipped. The benefit of using -resume is to avoid duplicating previous work and save time when re-running a pipeline.
-> We include -resume in our Nextflow command  as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
+> When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
+> We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
+
+After launching the pipeline the following will be printed to the console output:
+
+```bash
+```
+
+Once the pipeline has finished successfully, the following message will appear:
+
+```bash
+```
 
 ## Important considerations for clonal analysis
 
