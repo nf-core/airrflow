@@ -189,8 +189,6 @@ The summary report, named `Airrflow_report.html`, provides an overview of the an
 
 The analysis steps and their corresponding folders, where the results are stored, are briefly listed below. Detailed documentation on the pipeline output can be found on the [Output documentation page](https://nf-co.re/airrflow/docs/output/).
 
-The analysis steps and their corresponding folders, where the results are stored, are listed below.
-
 1. Quality control
    - `fastp` is used to perform quality control, adapter trimming, quality filtering, per-read quality pruning of the FASTQ data. The results are stored under the folder 'fastp'.
    - `FastQC` is applied to do some quality control checks on raw sequence data. The fastqc report for each fastq file is under the folder named 'fastqc'. The aggregated QC reports for all samples can also be checked in the MultiQC report.
@@ -206,6 +204,7 @@ The analysis steps and their corresponding folders, where the results are stored
 
 5. Clonal analysis
    - Results of the clonal threshold determination using `SHazaM` should be inspected in the html report under the  'clonal_analysis/find_threshold' folder. If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
+      (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
    - Clonal inference is performed with `SCOPer`. Clonal inference results as well as clonal abundance and diversity plots can be inspected in the html report in the folder 'clonal_analysis/define_clones'. For BCR sequencing data, mutation frequency is also computed using `SHazaM` at this step and plotted in the report. The `repertoires` subfolder contains the AIRR formatted files with the clonal assignments in a new column `clone_id` and mutation frequency in the column `mu_freq`. The `tables` subfolder contains the tabulated abundance and diversity computation as well as a table with the number of clones and their size. The `ggplots` subfolder contains the abundance and diversity plots as an `RData` object for loading and customization in R.
    - If lineage trees were computed using `Dowser`, a folder under 'clonal_analysis/dowser_lineages' will be present. The trees can be inspected in the html report and saved as PDF. Additionally, an `RDS` object with the formatted trees can also be loaded in R for customizing the lineage tree plots with Dowser.
 

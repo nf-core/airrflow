@@ -225,10 +225,19 @@ Dowser supports different methods for the lineage tree computation, `raxml` is t
 
 ## Understanding the results
 
-After running the pipeline, several reports are generated under the result folder.
+After running the pipeline, several subfolders are available under the results folder.
 
-![example of result folder](tutorial_images/airrflow_result_folder_example.png)
-
+```bash
+Airrflow_report.html
+- cellranger
+- vdj_annotation
+- qc_filtering
+- clonal_analysis
+- repertoire_comparison
+- multiqc
+- report_file_size
+- pipeline_info
+```
 
 The summary report, named `Airrflow_report.html`, provides an overview of the analysis results, such as an overview of the number of sequences per sample in each of the pipeline steps, the V(D)J gene assignment and QC, and V gene family usage. Additionally, it contains links to detailed reports for other specific analysis steps.
 
@@ -238,20 +247,19 @@ The analysis steps and their corresponding folders, where the results are stored
    - In this first step, Cell Ranger's VDJ algorithm is employed to assemble contigs, annotate contigs, call cells and generate clonoytpes. The results are stored in the 'cellranger' folder.
 
 2. V(D)J annotation and filtering.
-   - In this step, gene segments are assigned using a germline reference. Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are removed. Metadata is added. The results are under the folder named 'vdj_annotation'.
+   - In this step, V(D)J gene segments are inferred using the provided germline reference and [`IgBLAST`](https://www.ncbi.nlm.nih.gov/igblast/). Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are filtered out unless otherwise specified. The intermediate results are stored under the folder named 'vdj_annotation'.
 
 3. QC filtering.
    - In this step, cells without heavy chains or with multiple heavy chains are removed. Sequences in different samples that share the same cell_id and necleotide sequence are filtered out. The result are stored in the 'qc-filtering' folder.
 
 4. Clonal analysis.
-   - In this step, the Hamming distance threshold of the junction regions is determined when clonal_threshold is set to 'auto' (by default). It should be reviewed for accuracy once the result is out. The threshold result can be found under the folder clonal_analysis/find_threshold.
-   - If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
-   (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
-   - For TCR data, where somatic hypermutation does not occur, set the clonal_threshold to 0 when running the Airrflow pipeline.
-   - Once the threshold is established, clones are assigned to the sequences. A variety of tables and plots associated with clonal analysis were added to the folder `clonal_analysis/define_clones`, such as  sequences_per_locus_table, sequences_per_c_call_table, sequences_per_constant_region_table, num_clones_table, clone_sizes_table,clone size distribution plot, clonal abundance plot, diversity plot and etc.
+   - Results of the clonal threshold determination using `SHazaM` should be inspected in the html report under the  'clonal_analysis/find_threshold' folder. If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
+      (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
+   - Clonal inference is performed with `SCOPer`. Clonal inference results as well as clonal abundance and diversity plots can be inspected in the html report in the folder 'clonal_analysis/define_clones'. For BCR sequencing data, mutation frequency is also computed using `SHazaM` at this step and plotted in the report. The `repertoires` subfolder contains the AIRR formatted files with the clonal assignments in a new column `clone_id` and mutation frequency in the column `mu_freq`. The `tables` subfolder contains the tabulated abundance and diversity computation as well as a table with the number of clones and their size. The `ggplots` subfolder contains the abundance and diversity plots as an `RData` object for loading and customization in R.
+   - If lineage trees were computed using `Dowser`, a folder under 'clonal_analysis/dowser_lineages' will be present. The trees can be inspected in the html report and saved as PDF. Additionally, an `RDS` object with the formatted trees can also be loaded in R for customizing the lineage tree plots with Dowser.
 
 5. Repertoire analysis.
-   - Calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations. The output folder is `repertoire_comparison`.
+   - Example calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations is shown in the html report under `repertoire_comparison`. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to fit the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check also the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
 
 6. Other reporting.
    Additional reports are also generated, including:
