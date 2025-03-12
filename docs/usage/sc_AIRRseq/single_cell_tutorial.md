@@ -116,7 +116,6 @@ Launching `https://github.com/nf-core/airrflow` [boring_heyrovsky] DSL2 - revisi
 Once the pipeline has finished successfully, the following message will appear:
 
 ```bash
-output:
 -[nf-core/airrflow] Pipeline completed successfully-
 Completed at: 11-Mar-2025 13:06:05
 Duration    : 2m 47s
@@ -186,7 +185,6 @@ Launching `https://github.com/nf-core/airrflow` [gloomy_monod] DSL2 - revision: 
 Once the pipeline has finished successfully, the following message will appear:
 
 ```bash
-output:
 -[nf-core/airrflow] Pipeline completed successfully-
 Completed at: 11-Mar-2025 13:18:13
 Duration    : 2m 46s
@@ -194,6 +192,7 @@ CPU hours   : 0.3 (0.1% cached)
 Succeeded   : 17
 Cached      : 2
 ```
+
 ## Important considerations for clonal analysis
 
 An important step in the analysis of AIRR sequencing data is inferring B cell and T cell clones, or clonal groups, sometimes also called clonotypes. These are cells that are derived from the same progenitor cell through clonal expansion. For T cells, this definition is more strict as T cells do not undergo somatic hypermutation, so the TCRs from T cells in the same clone should be identical. For B cells, on the other hand, the BCRs from cells in the same clone can differ due to somatic hypermutation. They also can have a variety of isotypes.

@@ -22,7 +22,7 @@ nextflow run nf-core/airrflow -r 4.2.0 -profile test,docker --outdir test_result
 If the tests run through correctly, you should see this output in your command line:
 
 ```bash
-[nf-core/airrflow] Pipeline completed successfully-
+-[nf-core/airrflow] Pipeline completed successfully-
 Completed at: 11-Mar-2025 11:30:35
 Duration    : 5m 50s
 CPU hours   : 0.6
