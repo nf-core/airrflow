@@ -1,6 +1,6 @@
-# nf-core/airrflow: Bulk Airr-seq tutorial
+# nf-core/airrflow: Bulk AIRRseq tutorial
 
-This tutorial provides step by step introductions on how to run nf-core/airrflow on bulk AIRR-seq data.
+This tutorial provides a step by step introduction on how to run nf-core/airrflow on bulk AIRR-seq data.
 
 ## Pre-requisites
 
@@ -22,9 +22,7 @@ nextflow run nf-core/airrflow -r 4.2.0 -profile test,docker --outdir test_result
 If the tests run through correctly, you should see this output in your command line:
 
 ```bash
-output:
-
--[nf-core/airrflow] Pipeline completed successfully-
+[nf-core/airrflow] Pipeline completed successfully-
 Completed at: 11-Mar-2025 11:30:35
 Duration    : 5m 50s
 CPU hours   : 0.6
@@ -101,7 +99,7 @@ With the bash file, it's easy to run the pipeline with a single-line command.
 bash airrflow_bulk_b_fastq.sh
 ```
 
-If no UMI barcodes were used, set the --library_generation_method to specific_pcr, and the UMI length will be set automatically to 0.
+If no UMI barcodes were used, set the `--library_generation_method specific_pcr`, and the UMI length will be set automatically to 0.
 
 >[Warning!]
 >Please ensure you modify the parameters when running the pipeline on your own data to match the specific details of your library preparation protocol.
@@ -169,12 +167,23 @@ BCR lineage tree computation is performed using the [Dowser](https://dowser.read
 
 Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
 
-
 ## Understanding the results
 
-After running the pipeline, several reports are generated under the result folder.
+After running the pipeline, several subfolders are available under the results folder.
 
-![example of result folder](bulk_tutorial_images/AIRRFLOW_BULK_RESULT.png)
+```bash
+Airrflow_report.html
+- fastp
+- fastqc
+- vdj_annotation
+- qc_filtering
+- clonal_analysis
+- repertoire_comparison
+- multiqc
+- parsed_logs
+- report_file_size
+- pipeline_info
+```
 
 The summary report, named `Airrflow_report.html`, provides an overview of the analysis results, such as an overview of the number of sequences per sample in each of the pipeline steps, the V(D)J gene assignment and QC, and V gene family usage. Additionally, it contains links to detailed reports for other specific analysis steps.
 
@@ -182,38 +191,33 @@ The analysis steps and their corresponding folders, where the results are stored
 
 The analysis steps and their corresponding folders, where the results are stored, are listed below.
 
-
-1. QC
-   - fastp was used to perform quality control, adapter trimming, quality filtering, per-read quality pruning of the FASTQ data. The results are stored under the folder 'fastp'.
-   - FastQC was applied to do some quality control checks on raw sequence data. The fastqc report for each fastq file is under the folder named 'fastqc'.
+1. Quality control
+   - `fastp` is used to perform quality control, adapter trimming, quality filtering, per-read quality pruning of the FASTQ data. The results are stored under the folder 'fastp'.
+   - `FastQC` is applied to do some quality control checks on raw sequence data. The fastqc report for each fastq file is under the folder named 'fastqc'. The aggregated QC reports for all samples can also be checked in the MultiQC report.
 
 2. Sequence assembly
-   - pRESTO is a toolkit for processing raw reads from high-throughput sequencing of B cell and T cell repertoires. It includes features for quality control, primer masking, annotation of reads with sequence embedded barcodes, generation of unique molecular identifier (UMI) consensus sequences, assembly of paired-end reads and identification of duplicate sequences.
+   - [`pRESTO`](https://presto.readthedocs.io/en/stable/) is a tool part of Immcantation for processing raw reads from high-throughput sequencing of B cell and T cell repertoires. It includes features for quality control, primer masking, annotation of reads with sequence embedded barcodes, generation of unique molecular identifier (UMI) consensus sequences, assembly of paired-end reads and identification of duplicate sequences. The 'presto' folder contains the intermediate pRESTO steps logs.
 
-3. V(D)J annotation and filtering.
-   - In this step, gene segments are assigned using a germline reference. Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are removed. Metadata is added. The results are under the folder named 'vdj_annotation'.
+3. V(D)J annotation and filtering
+   - In this step, V(D)J gene segments are inferred using the provided germline reference and [`IgBLAST`](https://www.ncbi.nlm.nih.gov/igblast/). Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are filtered out unless otherwise specified. The intermediate results are stored under the folder named 'vdj_annotation'.
 
-4. QC filtering.
-   Duplicates are collapsed in this step and the results are available under folder 'qc-filtering'.
+4. Post alignment QC and filtering
+   - Duplicates detected after alignment are collapsed in this step and the results are available under folder 'qc-filtering'.
 
-5. Clonal analysis.
-   - In this step, the Hamming distance threshold of the junction regions is determined when clonal_threshold is set to 'auto' (by default).it should be reviewed for accuracy once the result is out. The threshold result can be found under the folder clonal_analysis/find_threshold.
-   - If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
-   (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
-   - For TCR data, where somatic hypermutation does not occur, set the clonal_threshold to 0 when running the Airrflow pipeline.
-   - Once the threshold is established, clones are assigned to the sequences. A variety of tables and plots associated with clonal analysis were added to the folder 'clonal_analysis/define_clones', such as  sequences_per_locus_table, sequences_per_c_call_table, sequences_per_constant_region_table,num_clones_table, clone_sizes_table,clone size distribution plot, clonal abundance plot, diversity plot and etc.
+5. Clonal analysis
+   - Results of the clonal threshold determination using `SHazaM` should be inspected in the html report under the  'clonal_analysis/find_threshold' folder. If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
+   - Clonal inference is performed with `SCOPer`. Clonal inference results as well as clonal abundance and diversity plots can be inspected in the html report in the folder 'clonal_analysis/define_clones'. For BCR sequencing data, mutation frequency is also computed using `SHazaM` at this step and plotted in the report. The `repertoires` subfolder contains the AIRR formatted files with the clonal assignments in a new column `clone_id` and mutation frequency in the column `mu_freq`. The `tables` subfolder contains the tabulated abundance and diversity computation as well as a table with the number of clones and their size. The `ggplots` subfolder contains the abundance and diversity plots as an `RData` object for loading and customization in R.
+   - If lineage trees were computed using `Dowser`, a folder under 'clonal_analysis/dowser_lineages' will be present. The trees can be inspected in the html report and saved as PDF. Additionally, an `RDS` object with the formatted trees can also be loaded in R for customizing the lineage tree plots with Dowser.
 
-6. Repertoire analysis.
-   - Calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations. The output folder is `repertoire_comparison`.
+6. Repertoire analysis
+   - Example calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations is shown in the html report under `repertoire_comparison`. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to fit the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check also the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
 
-7. Other reporting.
+7. Other reporting
    Additional reports are also generated, including:
-   - MultiQC report: summarizes QC metrics across all samples.
-   - Pipeline_info report: various reports relevant to the running and execution of the pipeline.
-   - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
-   - parsed_logs report: Summary of the number of sequences left after each of the most important pipeline steps.
-
-
+   - `MultiQC` report: summarizes QC metrics across all samples.
+   - `Pipeline_info` report: various reports relevant to the running and execution of the pipeline.
+   - `Report_file_size` report: Summary of the number of sequences left after each of the most important pipeline steps.
+   - `parsed_logs` report: Summary of the number of sequences left after each of the most important pipeline steps.
 
 ## Costumizing your analysis and generating your own figures
 
