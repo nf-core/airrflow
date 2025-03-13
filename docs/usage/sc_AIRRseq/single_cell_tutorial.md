@@ -268,8 +268,36 @@ The analysis steps and their corresponding folders, where the results are stored
    - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
 
 ## Understanding error messages
+Here, we list some common errors you may encounter while running the Airrflow pipeline. 
 
+1. Missing required column(s) in samplesheet. 
+    - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
+    - An example error message is shown below if the required column 'sex' is missing from the samplesheet. 
+
+```bash
+ERROR ~ Validation of pipeline parameters failed!
+
+ -- Check '.nextflow.log' file for details
+The following invalid input values have been detected:
+
+* --input (assembled_samplesheet_missing_sex.tsv): Validation of file failed:
+        -> Entry 1: Missing required field(s): sex
+        -> Entry 2: Missing required field(s): sex
+        -> Entry 3: Missing required field(s): sex
+        -> Entry 4: Missing required field(s): sex
+```
+
+2. Request more CPUs or memory than the system's capacity. 
+    - Example error messages are shown below if you request more CPUs or memory than the system's capacity. 
+
+```bash
+
+```
+
+```bash
+
+```
 
 ## Costumizing your analysis and generating your own figures
 
