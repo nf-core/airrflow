@@ -286,18 +286,12 @@ The following invalid input values have been detected:
         -> Entry 2: Missing required field(s): sex
         -> Entry 3: Missing required field(s): sex
         -> Entry 4: Missing required field(s): sex
+
+ -- Check script '/home/hl2244/.nextflow/assets/nf-core/airrflow/./workflows/../subworkflows/local/utils_nfcore_airrflow_pipeline/../../nf-core/utils_nfschema_plugin/main.nf' at line: 39 or see '.nextflow.log' file for more details
 ```
 
 2. Request more CPUs or memory than the system's capacity. 
-    - Example error messages are shown below if you request more CPUs or memory than the system's capacity. 
 
-```bash
-
-```
-
-```bash
-
-```
 
 ## Costumizing your analysis and generating your own figures
 
