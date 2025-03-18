@@ -57,13 +57,19 @@ To run the pipeline, a tab-separated samplesheet that provides the path to the A
 The samplesheet collects experimental details that are important for the data analysis.
 Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
+The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option. In this example we set the maximum RAM memory to 16GB, we restrict the pipeline to use 8 CPUs and to run for a maximum of 24 hours.
+
+```bash
+process {
+    resourceLimits = [ memory: 16.GB, time: 24.h, cpus: 8 ]
+}
+```
+
 A prepared samplesheet for this tutorial can be found [here](sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](sample_data_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
-The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option.
-
 > [Tip]
-> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
+> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory. Depending on the size of your dataset, it might be required to extend the running time. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
 
 > [Tip]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
@@ -268,12 +274,12 @@ The analysis steps and their corresponding folders, where the results are stored
    - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
 
 ## Understanding error messages
-Here, we list some common errors you may encounter while running the Airrflow pipeline. 
+Here, we list some common errors you may encounter while running the nf-core/airrflow pipeline and how to solve them.
 
-1. Missing required column(s) in samplesheet. 
+1. Missing required column(s) in samplesheet.
     - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
-    - An example error message is shown below if the required column 'sex' is missing from the samplesheet. 
+    - An example error message is shown below if the required column 'sex' is missing from the samplesheet.
 
 ```bash
 ERROR ~ Validation of pipeline parameters failed!
@@ -290,8 +296,7 @@ The following invalid input values have been detected:
  -- Check script '/home/hl2244/.nextflow/assets/nf-core/airrflow/./workflows/../subworkflows/local/utils_nfcore_airrflow_pipeline/../../nf-core/utils_nfschema_plugin/main.nf' at line: 39 or see '.nextflow.log' file for more details
 ```
 
-2. Request more CPUs or memory than the system's capacity. 
-
+For more information on Nextflow errors and how to debug them you can check this [Nextflow troubleshooting tutorial](https://training.nextflow.io/2.1.1/basic_training/debugging/).
 
 ## Costumizing your analysis and generating your own figures
 

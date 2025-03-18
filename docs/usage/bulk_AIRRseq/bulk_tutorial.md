@@ -38,7 +38,13 @@ In this tutorial, we will use nf-core/airrflow to analyze bulk BCR sequencing da
 To run the pipeline on bulk BCR/TCR sequencing data, several files must be prepared in advance:
 
 - A tab-separated samplesheet containing the information of each sample. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet).
-- A configuration file specifying the system's maximum available RAM memory, CPUs and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource configuration file is provided with the `-c` option.
+- A configuration file specifying the system's maximum available RAM memory, CPUs and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource configuration file is provided with the `-c` option. In this example we set the maximum RAM memory to 20GB, we restrict the pipeline to use 8 CPUs and to run for a maximum of 24 hours. Depending on the size of your dataset, it might be required to extend the running time. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
+
+```bash
+process {
+   resourceLimits = [cpus: 8, memory: 20.GB, time: 24.h]
+}
+```
 
 > [Tip]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
