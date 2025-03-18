@@ -273,7 +273,19 @@ Here, we list some common errors you may encounter while running the Airrflow pi
 1. Missing required column(s) in samplesheet. 
     - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
-    - An example error message is shown below if the required column 'sex' is missing from the samplesheet. 
+    - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](sample_data_code/assembled_samplesheet_missing_sex.tsv)) and the pipeline is run with this samplesheet. 
+
+```bash
+#! /usr/bin/bash
+
+nextflow run nf-core/airrflow -r 4.2.0 \
+-profile docker \
+--mode assembled \
+--input assembled_samplesheet_missing_sex.tsv \
+--outdir sc_from_assembled_results_error_test  \
+-c resource.config \
+-resume
+```
 
 ```bash
 ERROR ~ Validation of pipeline parameters failed!
