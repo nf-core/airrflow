@@ -52,7 +52,7 @@ process {
 > [Tip]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
-A prepared samplesheet for this tutorial can be found [here](bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](bulk_sample_code/resource.config).
+A prepared samplesheet for this tutorial can be found [here](bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](bulk_tutorial/bulk_sample_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
 ## Choosing the right protocol profile
@@ -98,7 +98,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 -resume
 ```
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](bulk_sample_code/airrflow_bulk_b_fastq.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](bulk_tutorial/bulk_sample_code/airrflow_bulk_b_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash

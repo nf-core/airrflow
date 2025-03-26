@@ -65,7 +65,7 @@ process {
 }
 ```
 
-A prepared samplesheet for this tutorial can be found [here](sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](sample_data_code/resource.config).
+A prepared samplesheet for this tutorial can be found [here](single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](single_cell_tutorial/sample_data_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
 > [Tip]
@@ -88,7 +88,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 -resume
 ```
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](sample_data_code/airrflow_sc_from_assembled.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
@@ -139,7 +139,7 @@ For this tutorial we will use subsampled blood single-cell TCR sequencing data o
 
 To run the airrflow pipeline on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, pre-built 10x genomics V(D)J references and configuration file in advance. Details on the required columns for this samplesheet are available [here](https://nf-co.re/airrflow/usage#fastq-input-samplesheet-single-cell-sequencing).
 
-The prepared samplesheet for this tutorial is [here](sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
+The prepared samplesheet for this tutorial is [here](single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](single_cell_tutorial/sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
 
 > [Tip]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
@@ -165,7 +165,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 
 In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical junction regions. For this reason, we set the `--clonal_threshold` parameter to 0. For more details on important considerations when performing clonal analysis check the section below.
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](sample_data_code/airrflow_sc_from_fastq.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
@@ -288,7 +288,7 @@ Here, we list some common errors you may encounter while running the nf-core/air
 
    - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
-   - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](sample_data_code/assembled_samplesheet_missing_sex.tsv)) and the pipeline is run with this samplesheet.
+   - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](single_cell_tutorial/sample_data_code/assembled_samplesheet_missing_sex.tsv)) and the pipeline is run with this samplesheet.
 
 ```bash
 #! /usr/bin/bash
