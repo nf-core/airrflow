@@ -3,7 +3,7 @@ name: nf-core CI
 on:
   push:
     branches:
-      - dev
+    - dev
   pull_request:
   release:
     types: [published]
@@ -29,63 +29,64 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "24.04.2"
-          - "latest-everything"
+        - 24.10.5
+        - latest-everything
         profile:
-          - "docker"
-          - "singularity"
+        - "docker"
+        - "singularity"
         test_name:
-          - "test"
+        - "test"
         isMaster:
-          - ${{ github.base_ref == 'master' }}
+        - ${{ github.base_ref == 'master' }}
         # Exclude conda and singularity on dev
         exclude:
-          - isMaster: false
-            profile: "conda"
-          - isMaster: false
-            profile: "singularity"
+        - isMaster: false
+          profile: "conda"
+        - isMaster: false
+          profile: "singularity"
     steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
+    - name: Check out pipeline code
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4
+      with:
+        fetch-depth: 0
 
-      - name: Set up Nextflow
-        uses: nf-core/setup-nextflow@v2
-        with:
-          version: "${{ matrix.NXF_VER }}"
+    - name: Set up Nextflow
+      uses: nf-core/setup-nextflow@v2
+      with:
+        version: "${{ matrix.NXF_VER }}"
 
-      - name: Set up Apptainer
-        if: matrix.profile == 'singularity'
-        uses: eWaterCycle/setup-apptainer@main
+    - name: Set up Apptainer
+      if: matrix.profile == 'singularity'
+      uses: eWaterCycle/setup-apptainer@main
 
-      - name: Set up Singularity
-        if: matrix.profile == 'singularity'
-        run: |
-          mkdir -p $NXF_SINGULARITY_CACHEDIR
-          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+    - name: Set up Singularity
+      if: matrix.profile == 'singularity'
+      run: |
+        mkdir -p $NXF_SINGULARITY_CACHEDIR
+        mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
-      - name: Set up Miniconda
-        if: matrix.profile == 'conda'
-        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          conda-solver: libmamba
-          channels: conda-forge,bioconda
+    - name: Set up Miniconda
+      if: matrix.profile == 'conda'
+      uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca   # v3
+      with:
+        miniconda-version: "latest"
+        auto-update-conda: true
+        conda-solver: libmamba
+        channels: conda-forge,bioconda
 
-      - name: Set up Conda
-        if: matrix.profile == 'conda'
-        run: |
-          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
-          echo $(realpath python) >> $GITHUB_PATH
+    - name: Set up Conda
+      if: matrix.profile == 'conda'
+      run: |
+        echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+        echo $(realpath python) >> $GITHUB_PATH
 
-      - name: Clean up Disk space
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+    - name: Clean up Disk space
+      uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be   # v1.3.1
 
-      - name: "Run pipeline with test data ${{ matrix.NXF_VER }} | ${{ matrix.test_name }} | ${{ matrix.profile }}"
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},${{ matrix.profile }} --outdir ./results
+    - name: "Run pipeline with test data ${{ matrix.NXF_VER }} | ${{ matrix.test_name
+        }} | ${{ matrix.profile }}"
+      run: |
+        nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},${{ matrix.profile }} --outdir ./results
 
   test_profile:
     name: Run workflow test with different profiles
@@ -94,45 +95,32 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "24.04.2"
-          - "latest-everything"
-        profile:
-          [
-            "test_tcr",
-            "test_no_umi",
-            "test_nocluster",
-            "test_fetchimgt",
-            "test_assembled_hs",
-            "test_assembled_mm",
-            "test_10x_sc",
-            "test_clontech_umi",
-            "test_nebnext_umi",
-            "test_rnaseq_bulk",
-            "test_rnaseq_sc",
-            "test_maskprimers_extract",
-            "test_maskprimers_align",
-          ]
+        - "24.04.2"
+        - "latest-everything"
+        profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled_hs",
+          "test_assembled_mm", "test_10x_sc", "test_clontech_umi", "test_nebnext_umi",
+          "test_rnaseq_bulk", "test_rnaseq_sc", "test_maskprimers_extract", "test_maskprimers_align"]
       fail-fast: false
     steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+    - name: Check out pipeline code
+      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b   # v4
 
-      - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v2
-        with:
-          version: "${{ matrix.NXF_VER }}"
+    - name: Install Nextflow
+      uses: nf-core/setup-nextflow@v2
+      with:
+        version: "${{ matrix.NXF_VER }}"
 
-      - name: Run pipeline with test data
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+    - name: Run pipeline with test data
+      run: |
+        nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
 
-      - name: Upload logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs-${{ matrix.profile }}
-          path: |
-            /home/runner/.nextflow.log
-            /home/runner/work
-            !/home/runner/work/conda
-            !/home/runner/work/singularity
+    - name: Upload logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs-${{ matrix.profile }}
+        path: |
+          /home/runner/.nextflow.log
+          /home/runner/work
+          !/home/runner/work/conda
+          !/home/runner/work/singularity
