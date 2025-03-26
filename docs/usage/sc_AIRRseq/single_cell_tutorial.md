@@ -147,6 +147,7 @@ The prepared samplesheet for this tutorial is [here](sample_data_code/10x_sc_raw
 Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics website](https://www.10xgenomics.com/support/software/cell-ranger/downloads). Both human and mouse V(D)J references are available. Download the reference that corresponds to the species of your dataset.
 
 ### Running airrflow
+
 With all the files ready, it's time to run the airrflow pipeline.
 
 ```bash
@@ -170,6 +171,7 @@ With the bash file, it's easy to run the pipeline with a single-line command.
 ```bash
 bash airrflow_sc_from_fastq.sh
 ```
+
 After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
 
 ```bash
@@ -250,21 +252,26 @@ The summary report, named `Airrflow_report.html`, provides an overview of the an
 The analysis steps and their corresponding folders, where the results are stored, are briefly listed below. Detailed documentation on the pipeline output can be found on the [Output documentation page](https://nf-co.re/airrflow/docs/output/).
 
 1. QC and sequence assembly (if starting from fastq files).
+
    - In this first step, Cell Ranger's VDJ algorithm is employed to assemble contigs, annotate contigs, call cells and generate clonoytpes. The results are stored in the 'cellranger' folder.
 
 2. V(D)J annotation and filtering.
+
    - In this step, V(D)J gene segments are inferred using the provided germline reference and [`IgBLAST`](https://www.ncbi.nlm.nih.gov/igblast/). Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are filtered out unless otherwise specified. The intermediate results are stored under the folder named 'vdj_annotation'.
 
 3. QC filtering.
+
    - In this step, cells without heavy chains or with multiple heavy chains are removed. Sequences in different samples that share the same cell_id and necleotide sequence are filtered out. The result are stored in the 'qc-filtering' folder.
 
 4. Clonal analysis.
-   - Results of the clonal threshold determination using `SHazaM` should be inspected in the html report under the  'clonal_analysis/find_threshold' folder. If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
-      (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
+
+   - Results of the clonal threshold determination using `SHazaM` should be inspected in the html report under the 'clonal_analysis/find_threshold' folder. If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
+     (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
    - Clonal inference is performed with `SCOPer`. Clonal inference results as well as clonal abundance and diversity plots can be inspected in the html report in the folder 'clonal_analysis/define_clones'. For BCR sequencing data, mutation frequency is also computed using `SHazaM` at this step and plotted in the report. The `repertoires` subfolder contains the AIRR formatted files with the clonal assignments in a new column `clone_id` and mutation frequency in the column `mu_freq`. The `tables` subfolder contains the tabulated abundance and diversity computation as well as a table with the number of clones and their size. The `ggplots` subfolder contains the abundance and diversity plots as an `RData` object for loading and customization in R.
    - If lineage trees were computed using `Dowser`, a folder under 'clonal_analysis/dowser_lineages' will be present. The trees can be inspected in the html report and saved as PDF. Additionally, an `RDS` object with the formatted trees can also be loaded in R for customizing the lineage tree plots with Dowser.
 
 5. Repertoire analysis.
+
    - Example calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations is shown in the html report under `repertoire_comparison`. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to fit the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check also the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
 
 6. Other reporting.
@@ -274,12 +281,14 @@ The analysis steps and their corresponding folders, where the results are stored
    - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
 
 ## Understanding error messages
+
 Here, we list some common errors you may encounter while running the nf-core/airrflow pipeline and how to solve them.
 
 1. Missing required column(s) in samplesheet.
-    - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
-    - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](sample_data_code/assembled_samplesheet_missing_sex.tsv)) and the pipeline is run with this samplesheet. 
+   - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
+
+   - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](sample_data_code/assembled_samplesheet_missing_sex.tsv)) and the pipeline is run with this samplesheet.
 
 ```bash
 #! /usr/bin/bash
@@ -314,4 +323,38 @@ For more information on Nextflow errors and how to debug them you can check this
 
 nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. The computations results (e.g. clonal inference, mutation frequency analysis) are stored in the output AIRR rearrangement repertoire files in newly generated columns under `clonal_analysis/define_clones/all_repertoires`. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
 
+## Updating process resource requests
 
+By default the pipeline has set reasonable process resource requests (number of CPUs, RAM memory, time limits) to the compute system. Depending on the size of your datasets or your running infrastructure you can customize these requests to meet your needs.
+
+To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
+
+````bash
+process {
+   resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
+
+   withName:CHANGEO_ASSIGNGENES {
+        cpus   = 2
+        memory = 10.GB
+        time   = 5h
+   }
+}
+
+In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](../../../conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
+
+```bash
+process {
+   resourceLimits = [cpus: 24, memory: 100.GB, time: 24.h]
+
+   withLabel:process_high {
+        cpus   = 24
+        memory = 100.GB
+        time   = 10h
+   }
+}
+````
+
+Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this exmaple we also have updated the `resourceLimits` to reflect that.
+
+> [Tip]
+> For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).
