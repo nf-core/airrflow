@@ -95,8 +95,8 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-        - "24.04.2"
-        - "latest-everything"
+        - 24.10.5
+        - latest-everything
         profile: ["test_tcr", "test_no_umi", "test_nocluster", "test_fetchimgt", "test_assembled_hs",
           "test_assembled_mm", "test_10x_sc", "test_clontech_umi", "test_nebnext_umi",
           "test_rnaseq_bulk", "test_rnaseq_sc", "test_maskprimers_extract", "test_maskprimers_align"]
