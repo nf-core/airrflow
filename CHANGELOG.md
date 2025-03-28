@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.3.0dev]
+
+- [#360](https://github.com/nf-core/airrflow/pull/360) Update pipeline diagrams.
+- [#374](https://github.com/nf-core/airrflow/pull/374) Template update to nf-core v3.2.0.
+- [#373](https://github.com/nf-core/airrflow/pull/373) Added bulk and single-cell tutorials.
+
 ## [4.2.0] - Evanesco
 
 ### `Added`
