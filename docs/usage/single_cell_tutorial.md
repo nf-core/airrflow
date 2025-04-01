@@ -41,7 +41,7 @@ The AIRR rearrangement format is also the default one when analyzing publicly av
 
 In this tutorial we will showcase how to run nf-core/airrflow with both of the input formats.
 
-![nf-core/airrflow overview](../../images/airrflow_workflow_overview.png)
+![nf-core/airrflow overview](https://github.com/nf-core/airrflow/blob/master/docs/images/airrflow_workflow_overview.png)
 
 ## Starting from AIRR rearrangement format
 
@@ -59,19 +59,19 @@ Details on the required columns of a samplesheet are available [here](https://nf
 
 The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option. In this example we set the maximum RAM memory to 16GB, we restrict the pipeline to use 8 CPUs and to run for a maximum of 24 hours.
 
-```bash
+```json title="resource.config"
 process {
     resourceLimits = [ memory: 16.GB, time: 24.h, cpus: 8 ]
 }
 ```
 
-A prepared samplesheet for this tutorial can be found [here](single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](single_cell_tutorial/sample_data_code/resource.config).
+A prepared samplesheet for this tutorial can be found [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
-> [Tip]
+> [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory. Depending on the size of your dataset, it might be required to extend the running time. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
 
-> [Tip]
+> [!NOTE]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
 ### Running airrflow
@@ -88,14 +88,14 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 -resume
 ```
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
 bash airrflow_sc_from_assembled.sh
 ```
 
-> [Tip]
+> [!TIP]
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
@@ -139,9 +139,9 @@ For this tutorial we will use subsampled blood single-cell TCR sequencing data o
 
 To run the airrflow pipeline on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, pre-built 10x genomics V(D)J references and configuration file in advance. Details on the required columns for this samplesheet are available [here](https://nf-co.re/airrflow/usage#fastq-input-samplesheet-single-cell-sequencing).
 
-The prepared samplesheet for this tutorial is [here](single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](single_cell_tutorial/sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
+The prepared samplesheet for this tutorial is [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
 
-> [Tip]
+> [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
 
 Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics website](https://www.10xgenomics.com/support/software/cell-ranger/downloads). Both human and mouse V(D)J references are available. Download the reference that corresponds to the species of your dataset.
@@ -165,7 +165,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 
 In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical junction regions. For this reason, we set the `--clonal_threshold` parameter to 0. For more details on important considerations when performing clonal analysis check the section below.
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
@@ -219,7 +219,7 @@ nf-core/airrflow utilizes the Hierarchical clustering method in the [SCOPer](htt
 
 ### Setting a clonal threshold
 
-The clonal threshold can also be customized through the `--clonal_threshold` parameter. By default, `--clonal_threshold` is set to be 'auto', allowing the threshold of how different two BCRs - or specifically their junction regions - can be to be assigned to the same clonal to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
+The clonal threshold can also be customized through the `--clonal_threshold` parameter. The clonal threshold specifies how different two BCRs can be so that are assigned to the same clonal group. The value is specified in length-normalized hamming distance across the BCR junction regions. By default, `--clonal_threshold` is set to be 'auto', allowing the clonal threshold to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
 
 For BCR data, we recommend using this default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it is fitting the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 (length-normalized Hamming distance of nearest neighbors) for human BCR data.
 
@@ -288,7 +288,7 @@ Here, we list some common errors you may encounter while running the nf-core/air
 
    - The samplesheet collects experimental details that are important for the data analysis. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
-   - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](single_cell_tutorial/sample_data_code/assembled_samplesheet_missing_sex.tsv)) and the pipeline is run with this samplesheet.
+   - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet_missing_sex.tsv) and the pipeline is run with this samplesheet.
 
 ```bash
 #! /usr/bin/bash
@@ -329,7 +329,7 @@ By default the pipeline has set reasonable process resource requests (number of 
 
 To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
 
-````bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
 
@@ -339,10 +339,11 @@ process {
         time   = 5h
    }
 }
+```
 
-In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](../../../conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
+In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](https://github.com/nf-core/airrflow/blob/master/conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
 
-```bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 24, memory: 100.GB, time: 24.h]
 
@@ -352,9 +353,9 @@ process {
         time   = 10h
    }
 }
-````
+```
 
 Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this exmaple we also have updated the `resourceLimits` to reflect that.
 
-> [Tip]
+> [!TIP]
 > For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).

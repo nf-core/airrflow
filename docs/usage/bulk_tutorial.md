@@ -40,19 +40,19 @@ To run the pipeline on bulk BCR/TCR sequencing data, several files must be prepa
 - A tab-separated samplesheet containing the information of each sample. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet).
 - A configuration file specifying the system's maximum available RAM memory, CPUs and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource configuration file is provided with the `-c` option. In this example we set the maximum RAM memory to 20GB, we restrict the pipeline to use 8 CPUs and to run for a maximum of 24 hours. Depending on the size of your dataset, it might be required to extend the running time. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
 
-```bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 8, memory: 20.GB, time: 24.h]
 }
 ```
 
-> [Tip]
+> [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
 
-> [Tip]
+> [!NOTE]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
-A prepared samplesheet for this tutorial can be found [here](bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](bulk_tutorial/bulk_sample_code/resource.config).
+A prepared samplesheet for this tutorial can be found [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
 ## Choosing the right protocol profile
@@ -70,7 +70,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 -resume
 ```
 
-> [Tip]
+> [!TIP]
 > We're always looking forward to expanding the set of protocol profiles readily available for other users. Feel free to open an issue and create a pull request to add a new profile that you want to share with other users or ask in the nf-core `#airrflow` [slack channel](https://nf-co.re/join) if you have any questions in doing so.
 
 ## Analyzing a dataset with a custom library preparation method
@@ -98,7 +98,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 -resume
 ```
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](bulk_tutorial/bulk_sample_code/airrflow_bulk_b_fastq.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/airrflow_bulk_b_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
@@ -107,10 +107,10 @@ bash airrflow_bulk_b_fastq.sh
 
 If no UMI barcodes were used, set the `--library_generation_method specific_pcr`, and the UMI length will be set automatically to 0.
 
-> [Warning!]
+> [!TIP]
 > Please ensure you modify the parameters when running the pipeline on your own data to match the specific details of your library preparation protocol.
 
-> [Tip]
+> [!WARNING]
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
@@ -161,7 +161,7 @@ nf-core/airrflow utilizes the Hierarchical clustering method in the [SCOPer](htt
 
 ### Setting a clonal threshold
 
-The clonal threshold can also be customized through the `--clonal_threshold` parameter. By default, `--clonal_threshold` is set to be 'auto', allowing the threshold of how different two BCRs - or specifically their junction regions - can be to be assigned to the same clonal to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
+The clonal threshold can also be customized through the `--clonal_threshold` parameter. The clonal threshold specifies how different two BCRs can be so that are assigned to the same clonal group. The value is specified in length-normalized hamming distance across the BCR junction regions. By default, `--clonal_threshold` is set to be 'auto', allowing the clonal threshold to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
 
 For BCR data, we recommend using this default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it is fitting the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 (length-normalized Hamming distance of nearest neighbors) for human BCR data.
 
@@ -240,7 +240,7 @@ By default the pipeline has set reasonable process resource requests (number of 
 
 To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
 
-````bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
 
@@ -250,10 +250,11 @@ process {
         time   = 5h
    }
 }
+```
 
 In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](../../../conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
 
-```bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 24, memory: 100.GB, time: 24.h]
 
@@ -263,9 +264,9 @@ process {
         time   = 10h
    }
 }
-````
+```
 
 Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this exmaple we also have updated the `resourceLimits` to reflect that.
 
-> [Tip]
+> [!TIP]
 > For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).
