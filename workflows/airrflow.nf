@@ -248,6 +248,15 @@ workflow AIRRFLOW {
         )
         ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
 
+        // Translation and embedding
+        if (params.translate | params.embeddings) {
+            TRANSLATE_EMBED(
+                CLONAL_ANALYSIS.out.repertoire,
+                DATABASES.out.igblast.collect(),
+                DATABASES.out.reference_fasta.collect()
+            )
+        }
+
         if (!params.skip_report){
             REPERTOIRE_ANALYSIS_REPORTING(
                 ch_presto_filterseq_logs.collect().ifEmpty([]),

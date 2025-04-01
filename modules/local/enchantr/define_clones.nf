@@ -33,7 +33,7 @@ process DEFINE_CLONES {
     path repertoires_samplesheet
 
     output:
-    path("*/*/*clone-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*/*/*clone-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions

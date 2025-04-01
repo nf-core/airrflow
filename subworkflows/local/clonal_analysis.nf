@@ -86,6 +86,7 @@ workflow CLONAL_ANALYSIS {
 
     // prepare ch for define clones all samples report
     DEFINE_CLONES_COMPUTE.out.tab
+            .map { it -> it[1]}
             .collect()
             .map { it -> [ [id:'all_reps'], it ] }
             .set{ch_all_repertoires_cloned}
@@ -122,7 +123,7 @@ workflow CLONAL_ANALYSIS {
     }
 
     emit:
-    repertoire = ch_all_repertoires_cloned
+    repertoire = DEFINE_CLONES_COMPUTE.out.tab
     versions = ch_versions
     logs = ch_logs
 }
