@@ -5,9 +5,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [4.3.0dev]
 
+### `Added`
+
 - [#360](https://github.com/nf-core/airrflow/pull/360) Update pipeline diagrams.
 - [#374](https://github.com/nf-core/airrflow/pull/374) Template update to nf-core v3.2.0.
 - [#373](https://github.com/nf-core/airrflow/pull/373) Added bulk and single-cell tutorials.
+
+### `Fixed`
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.16      | 0.1.20      |
+| presto     | 0.7.1       | 0.7.4       |
+| dowser     | 2.1         | 2.3         |
+| alakazam   | 1.3.0       | 1.3.1       |
+
 
 ## [4.2.0] - Evanesco
 
