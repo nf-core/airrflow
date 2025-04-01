@@ -68,10 +68,10 @@ process {
 A prepared samplesheet for this tutorial can be found [here](single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](single_cell_tutorial/sample_data_code/resource.config).
 Download both files to the directory where you intend to run the airrflow pipeline.
 
-> [Tip]
+> [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory. Depending on the size of your dataset, it might be required to extend the running time. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
 
-> [Tip]
+> [!NOTE]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
 ### Running airrflow
@@ -95,7 +95,7 @@ With the bash file, it's easy to run the pipeline with a single-line command.
 bash airrflow_sc_from_assembled.sh
 ```
 
-> [Tip]
+> [!TIP]
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
@@ -141,7 +141,7 @@ To run the airrflow pipeline on single cell TCR or BCR sequencing data from fast
 
 The prepared samplesheet for this tutorial is [here](single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](single_cell_tutorial/sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
 
-> [Tip]
+> [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
 
 Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics website](https://www.10xgenomics.com/support/software/cell-ranger/downloads). Both human and mouse V(D)J references are available. Download the reference that corresponds to the species of your dataset.
@@ -329,7 +329,7 @@ By default the pipeline has set reasonable process resource requests (number of 
 
 To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
 
-````bash
+```bash
 process {
    resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
 
@@ -339,6 +339,7 @@ process {
         time   = 5h
    }
 }
+```
 
 In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](../../../conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
 
@@ -352,9 +353,9 @@ process {
         time   = 10h
    }
 }
-````
+```
 
 Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this exmaple we also have updated the `resourceLimits` to reflect that.
 
-> [Tip]
+> [!TIP]
 > For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).
