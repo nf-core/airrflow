@@ -134,10 +134,7 @@
             ],
             "creator": [
                 {
-                    "@id": "https://orcid.org/0000-0002-8824-1946"
-                },
-                {
-                    "@id": "#gisela.gabernet@gmail.com"
+                    "@id": "https://orcid.org/0000-0001-7049-9474"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-6503-2180"
@@ -160,10 +157,13 @@
             ],
             "maintainer": [
                 {
-                    "@id": "#gisela.gabernet@gmail.com"
+                    "@id": "https://orcid.org/0000-0001-7049-9474"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-6503-2180"
+                },
+                {
+                    "@id": "#susanna.marquez@yale.edu"
                 }
             ],
             "name": [
@@ -348,21 +348,21 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "https://orcid.org/0000-0002-8824-1946",
-            "@type": "Person",
-            "email": "gisela.gabernet@gmail.com",
-            "name": "Gisela Gabernet Garriga"
-        },
-        {
-            "@id": "#gisela.gabernet@gmail.com",
+            "@id": "https://orcid.org/0000-0001-7049-9474",
             "@type": "Person",
             "email": "gisela.gabernet@gmail.com",
             "name": "Gisela Gabernet"
         },
         {
+            "@id": "#susanna.marquez@yale.edu",
+            "@type": "Person",
+            "email": "susanna.marquez@yale.edu",
+            "name": "Susanna Marquez"
+        },
+        {
             "@id": "https://orcid.org/0000-0002-6503-2180",
             "@type": "Person",
-            "email": "apeltzer@users.noreply.github.com",
+            "email": "alex.peltzer@gmail.com",
             "name": "Alexander Peltzer"
         }
     ]
