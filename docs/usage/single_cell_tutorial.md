@@ -41,7 +41,7 @@ The AIRR rearrangement format is also the default one when analyzing publicly av
 
 In this tutorial we will showcase how to run nf-core/airrflow with both of the input formats.
 
-![nf-core/airrflow overview](../../images/airrflow_workflow_overview.png)
+![nf-core/airrflow overview](https://github.com/nf-core/airrflow/blob/master/docs/images/airrflow_workflow_overview.png)
 
 ## Starting from AIRR rearrangement format
 
@@ -341,7 +341,7 @@ process {
 }
 ```
 
-In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](../../../conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
+In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](https://github.com/nf-core/airrflow/blob/master/conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
 
 ```json title="resource.config"
 process {
