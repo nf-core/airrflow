@@ -59,7 +59,7 @@ Details on the required columns of a samplesheet are available [here](https://nf
 
 The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option. In this example we set the maximum RAM memory to 16GB, we restrict the pipeline to use 8 CPUs and to run for a maximum of 24 hours.
 
-```bash
+```json title="resource.config"
 process {
     resourceLimits = [ memory: 16.GB, time: 24.h, cpus: 8 ]
 }
@@ -329,7 +329,7 @@ By default the pipeline has set reasonable process resource requests (number of 
 
 To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
 
-```bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
 
@@ -343,7 +343,7 @@ process {
 
 In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](../../../conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
 
-```bash
+```json title="resource.config"
 process {
    resourceLimits = [cpus: 24, memory: 100.GB, time: 24.h]
 
