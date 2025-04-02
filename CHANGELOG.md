@@ -22,7 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | dowser     | 2.1         | 2.3         |
 | alakazam   | 1.3.0       | 1.3.1       |
 
-
 ## [4.2.0] - Evanesco
 
 ### `Added`
