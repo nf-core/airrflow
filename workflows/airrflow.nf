@@ -44,6 +44,7 @@ include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire
 include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
+include { TRANSLATE_EMBED              } from '../subworkflows/local/translate_embed'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -249,12 +250,10 @@ workflow AIRRFLOW {
         ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
 
         // Translation and embedding
-        if (params.translate | params.embeddings) {
+        if (params.translate || params.embeddings) {
             TRANSLATE_EMBED(
                 CLONAL_ANALYSIS.out.repertoire,
-                DATABASES.out.igblast.collect(),
-                DATABASES.out.reference_fasta.collect()
-            )
+                DATABASES.out.igblast.collect()            )
         }
 
         if (!params.skip_report){

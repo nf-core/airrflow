@@ -109,15 +109,9 @@ workflow CLONAL_ANALYSIS {
         ch_versions = DEFINE_CLONES_REPORT.out.versions
     }
 
-    // prepare ch for dowser lineages
-    DEFINE_CLONES_COMPUTE.out.tab
-        .flatten()
-        .map { it -> [ [id: "${it.baseName}".replaceFirst("__clone-pass", "")], it ] }
-        .set{ch_repertoires_cloned}
-
     if (params.lineage_trees){
         DOWSER_LINEAGES(
-            ch_repertoires_cloned
+            DEFINE_CLONES_COMPUTE.out.tab
         )
         ch_versions = ch_versions.mix(DOWSER_LINEAGES.out.versions)
     }

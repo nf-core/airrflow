@@ -8,13 +8,21 @@ process AMULETY_TRANSLATE {
 
     input:
     tuple val(meta), path(tsv) // meta, sequence tsv in AIRR format
-    path(igblast) // igblast references
+    path(reference_igblast) // igblast references
 
     output:
-    path "*_translated.tsv" , emit: translated
+    tuple val(meta), path("*_translated.tsv") , emit: repertoire_translated
+    path "versions.yml" , emit: versions
 
     script:
     """
-    amulety translate-igblast $tsv . igblast
+    export IGDATA=${reference_igblast}
+    amulety translate-igblast $tsv . $reference_igblast
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
+        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
+    END_VERSIONS
     """
 }
