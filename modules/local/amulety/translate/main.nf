@@ -3,7 +3,7 @@ process AMULETY_TRANSLATE {
     label "process_medium"
     label 'immcantation'
 
-    container "docker.io/immcantation/airrflow:4.3.0"
+    container "biocontainers/mulled-v2-92ebbfc09fc136b8e201cb187cd9567ba335d439:459e6ebe51fb2818cb6de807f2c5fa99599b1214-0"
     publishDir "${params.outdir}/translations/", mode: "copy"
 
     input:
