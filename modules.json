@@ -5,6 +5,16 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "amulety/antiberty": {
+                        "branch": "master",
+                        "git_sha": "c350d97a09c15a98ed2cd7dfa6058d93c05969db",
+                        "installed_by": ["modules"]
+                    },
+                    "amulety/translate": {
+                        "branch": "master",
+                        "git_sha": "ddf8244c4d46f9369f99b88c88eccc1b41295aa0",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "02fd5bd7275abad27aad32d5c852e0a9b1b98882",

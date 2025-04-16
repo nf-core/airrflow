@@ -1,5 +1,5 @@
-include { AMULETY_TRANSLATE } from '../../modules/local/amulety/translate/main.nf'
-include { AMULETY_ANTIBERTY } from '../../modules/local/amulety/antiberty/main.nf'
+include { AMULETY_TRANSLATE } from '../../modules/nf-core/amulety/translate/main'
+include { AMULETY_ANTIBERTY } from '../../modules/nf-core/amulety/antiberty/main'
 
 workflow TRANSLATE_EMBED {
     take:
@@ -16,7 +16,8 @@ workflow TRANSLATE_EMBED {
 
     if (params.embeddings && params.embeddings.split(',').contains('antiberty') ){
         AMULETY_ANTIBERTY(
-            AMULETY_TRANSLATE.out.repertoire_translated
+            AMULETY_TRANSLATE.out.repertoire_translated,
+            params.embedding_chain
         )
     }
 
