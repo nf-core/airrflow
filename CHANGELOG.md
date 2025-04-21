@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
-- Updated primer links to Immcantation GitHub.
+- [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
 
 ## [4.2.0] - Evanesco
 
