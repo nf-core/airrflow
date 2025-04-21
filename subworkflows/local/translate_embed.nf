@@ -21,6 +21,28 @@ workflow TRANSLATE_EMBED {
         )
     }
 
+    if (params.embeddings && params.embeddings.split(',').contains('antiberta2') ){
+        AMULETY_ANTIBERTA2(
+            AMULETY_TRANSLATE.out.repertoire_translated,
+            params.embedding_chain
+        )
+    }
+
+    if (params.embeddings && params.embeddings.split(',').contains('antiberta2') ){
+        AMULETY_ESM2(
+            AMULETY_TRANSLATE.out.repertoire_translated,
+            params.embedding_chain
+        )
+    }
+
+    if (params.embeddings && params.embeddings.split(',').contains('antiberta2') ){
+        AMULETY_BALM_PAIRED(
+            AMULETY_TRANSLATE.out.repertoire_translated,
+            params.embedding_chain
+        )
+    }
+
+
     emit:
     versions = ch_versions
 }
