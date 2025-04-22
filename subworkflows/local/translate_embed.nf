@@ -1,5 +1,7 @@
-include { AMULETY_TRANSLATE } from '../../modules/nf-core/amulety/translate/main'
-include { AMULETY_ANTIBERTY } from '../../modules/nf-core/amulety/antiberty/main'
+include { AMULETY_TRANSLATE  } from '../../modules/nf-core/amulety/translate/main'
+include { AMULETY_ANTIBERTY  } from '../../modules/nf-core/amulety/antiberty/main'
+include { AMULETY_ANTIBERTA2 } from '../../modules/nf-core/amulety/antiberta2/main'
+include { AMULETY_ESM2       } from '../../modules/nf-core/amulety/esm2/main'
 
 workflow TRANSLATE_EMBED {
     take:
@@ -28,15 +30,15 @@ workflow TRANSLATE_EMBED {
         )
     }
 
-    if (params.embeddings && params.embeddings.split(',').contains('antiberta2') ){
+    if (params.embeddings && params.embeddings.split(',').contains('esm2') ){
         AMULETY_ESM2(
             AMULETY_TRANSLATE.out.repertoire_translated,
             params.embedding_chain
         )
     }
 
-    if (params.embeddings && params.embeddings.split(',').contains('antiberta2') ){
-        AMULETY_BALM_PAIRED(
+    if (params.embeddings && params.embeddings.split(',').contains('balmpaired') ){
+        AMULETY_BALMPAIRED(
             AMULETY_TRANSLATE.out.repertoire_translated,
             params.embedding_chain
         )
