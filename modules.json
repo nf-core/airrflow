@@ -5,9 +5,19 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "amulety/antiberta2": {
+                        "branch": "master",
+                        "git_sha": "52948eb3c1f839d2434161fa41582faa108698ad",
+                        "installed_by": ["modules"]
+                    },
                     "amulety/antiberty": {
                         "branch": "master",
                         "git_sha": "ab63efb49c518eedee5df056bdc54fd51a515600",
+                        "installed_by": ["modules"]
+                    },
+                    "amulety/esm2": {
+                        "branch": "master",
+                        "git_sha": "4b78419111c3618f76d714f1542c6eb672431ad6",
                         "installed_by": ["modules"]
                     },
                     "amulety/translate": {
