@@ -651,10 +651,9 @@
                 },
                 "config_profile_url": {
                     "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
                 }
             }
         },
@@ -840,5 +839,20 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "translate": {
+            "type": "boolean"
+        },
+        "embeddings": {
+            "type": "string"
+        },
+        "embedding_chain": {
+            "type": "string",
+            "default": "H"
+        },
+        "use_gpu": {
+            "type": "boolean"
+        }
+    }
 }
