@@ -7,7 +7,7 @@
                 "nf-core": {
                     "amulety/antiberty": {
                         "branch": "master",
-                        "git_sha": "c350d97a09c15a98ed2cd7dfa6058d93c05969db",
+                        "git_sha": "ab63efb49c518eedee5df056bdc54fd51a515600",
                         "installed_by": ["modules"]
                     },
                     "amulety/translate": {
