@@ -1,6 +1,7 @@
 include { AMULETY_TRANSLATE  } from '../../modules/nf-core/amulety/translate/main'
 include { AMULETY_ANTIBERTY  } from '../../modules/nf-core/amulety/antiberty/main'
 include { AMULETY_ANTIBERTA2 } from '../../modules/nf-core/amulety/antiberta2/main'
+include { AMULETY_BALMPAIRED } from '../../modules/nf-core/amulety/balmpaired/main'
 include { AMULETY_ESM2       } from '../../modules/nf-core/amulety/esm2/main'
 
 workflow TRANSLATE_EMBED {
