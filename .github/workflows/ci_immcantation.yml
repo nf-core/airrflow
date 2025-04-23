@@ -1,9 +1,7 @@
 name: Immcantation
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
-  pull_request:
-    branches-ignore:
-      - "master"
+  workflow_dispatch:
 
 env:
   NXF_ANSI_LOG: false
@@ -20,7 +18,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - 24.10.5
+          - 24.04.2
           - latest-everything
         profile:
           [

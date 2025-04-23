@@ -5,9 +5,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [4.3.0dev]
 
+### `Added`
+
 - [#360](https://github.com/nf-core/airrflow/pull/360) Update pipeline diagrams.
 - [#374](https://github.com/nf-core/airrflow/pull/374) Template update to nf-core v3.2.0.
 - [#373](https://github.com/nf-core/airrflow/pull/373) Added bulk and single-cell tutorials.
+
+### `Fixed`
+
+- [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
 
 ## [4.2.0] - Evanesco
 
