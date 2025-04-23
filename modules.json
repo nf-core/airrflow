@@ -15,6 +15,11 @@
                         "git_sha": "ab63efb49c518eedee5df056bdc54fd51a515600",
                         "installed_by": ["modules"]
                     },
+                    "amulety/balmpaired": {
+                        "branch": "master",
+                        "git_sha": "8d237889d110c792fa1fd4c656ca9698cde0aa56",
+                        "installed_by": ["modules"]
+                    },
                     "amulety/esm2": {
                         "branch": "master",
                         "git_sha": "4b78419111c3618f76d714f1542c6eb672431ad6",
