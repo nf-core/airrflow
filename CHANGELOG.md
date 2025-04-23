@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
+- [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
+
 ### `Dependencies`
 
 | Dependency | Old version | New version |
@@ -21,7 +23,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | presto     | 0.7.1       | 0.7.4       |
 | dowser     | 2.1         | 2.3         |
 | alakazam   | 1.3.0       | 1.3.1       |
-
 
 ## [4.2.0] - Evanesco
 
