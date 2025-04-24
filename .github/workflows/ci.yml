@@ -116,6 +116,8 @@ jobs:
             "test_rnaseq_sc",
             "test_maskprimers_extract",
             "test_maskprimers_align",
+            "test_embeddings_H",
+            "test_embeddings_HL",
           ]
       fail-fast: false
     steps:

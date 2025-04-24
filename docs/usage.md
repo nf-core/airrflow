@@ -305,7 +305,7 @@ nextflow run nf-core/airrflow -r <release> \
 
 ## Supported bulk library generation methods (protocols)
 
-When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
+For common sequencing protocols such as commercial kits please check the section above if your kit has a preset profile first, as this will greatly simplify running the pipeline. When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
 The following table matches the library generation methods as described in the [AIRR metadata annotation guidelines](https://docs.airr-community.org/en/stable/miairr/metadata_guidelines.html#library-generation-method) to the value that can be provided to the `--library_generation_method` parameter.
 
 | Library generation methods (AIRR) | Description                                                                                | Name in pipeline |
@@ -512,6 +512,36 @@ nextflow run nf-core/airrfow \
 
 - If UMI's are present, the read containing them must be specified using the `--umi_read` parameter.
 - The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNAseq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
+
+## Important considerations for clonal analysis
+
+An important step in the analysis of AIRR sequencing data is inferring B cell and T cell clones, or clonal groups, sometimes also called clonotypes. These are cells that are derived from the same progenitor cell through clonal expansion. For T cells, this definition is more strict as T cells do not undergo somatic hypermutation, so the TCRs from T cells in the same clone should be identical. For B cells, on the other hand, the BCRs from cells in the same clone can differ due to somatic hypermutation. They also can have a variety of isotypes.
+
+There are two crucial considerations when defining clonal groups with nf-core/airrflow: across which samples should clonal groups be defined, and what should be the clonal threshold, i.e. how different can these receptors be, so that these are assigned to the same clonal group. These are discussed in detail in the following sections.
+
+### Defining clonal groups across samples
+
+Often times we want to analyze clonal groups from the same individual or animal model across time, different conditions or across samples extracted from different tissues. To ensure that the same clone ID (field `clone_id` in the output AIRR rearrangement file) is assigned to the same BCR / TCR clone across these conditions to be able to track the clones, the clonal inference step should be done pulling the sequences from these samples together. This is why, by default, nf-core/airrflow uses the `subject_id` column to group samples prior to defining clonal groups, so it is important to set the exact same subject ID to samples from the same individual across different conditions.
+
+The sample grouping can also be controlled with the [`--cloneby`](https://nf-co.re/airrflow/4.2.0/parameters/#cloneby) parameter, by providing the name of the column containing the group information that should be used to pull the samples together before defining clonal groups (samples or rows with the same string in this column will be grouped together). You can create a new column if you wish for this purpose.
+
+### Clonal inference method
+
+nf-core/airrflow utilizes the Hierarchical clustering method in the [SCOPer](https://scoper.readthedocs.io/) Immcantation tool to infer clonal groups by default, which initially partitions the BCR / TCR sequences according to V gene, J gene and junction length. Then, it defines clonal groups within each partition by performing hierarchical clustering of the sequences within a partition and cutting the clusters according to an automatically detected or user-defined threshold. More details about this method can be found on the respective SCOPer [vignette](https://scoper.readthedocs.io/en/stable/vignettes/Scoper-Vignette/#). Details on how to determine the clonal threshold can be found in the next section.
+
+### Setting a clonal threshold
+
+The clonal threshold can also be customized through the `--clonal_threshold` parameter. The clonal threshold specifies how different two BCRs can be so that are assigned to the same clonal group. The value is specified in length-normalized hamming distance across the BCR junction regions. By default, `--clonal_threshold` is set to be 'auto', allowing the clonal threshold to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
+
+For BCR data, we recommend using this default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it is fitting the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 (length-normalized Hamming distance of nearest neighbors) for human BCR data.
+
+Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, the `--clonal_threshold` parameter should be set to 0 for TCR data.
+
+### Including BCR lineage tree computation
+
+BCR lineage tree computation is performed using the [Dowser](https://dowser.readthedocs.io/) Immcantation package. This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter set to true. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` so all the previous analysis steps are cached and not recomputed.
+
+Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
 
 ## Core Nextflow arguments
 

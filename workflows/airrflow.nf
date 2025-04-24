@@ -44,6 +44,7 @@ include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire
 include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
+include { TRANSLATE_EMBED              } from '../subworkflows/local/translate_embed'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,6 +248,13 @@ workflow AIRRFLOW {
             ch_report_logo_img.collect().ifEmpty([])
         )
         ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
+
+        // Translation and embedding
+        if (params.translate || params.embeddings) {
+            TRANSLATE_EMBED(
+                CLONAL_ANALYSIS.out.repertoire,
+                DATABASES.out.igblast.collect()            )
+        }
 
         if (!params.skip_report){
             REPERTOIRE_ANALYSIS_REPORTING(
