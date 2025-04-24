@@ -24,9 +24,6 @@ process AIRRFLOW_REPORT {
     """
     execute_report.R --report_file ${repertoire_report}
 
-    mkdir repertoire_comparison/repertoires
-    cp *clone-pass.tsv repertoire_comparison/repertoires/
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         alakazam: \$(Rscript -e "library(alakazam); cat(paste(packageVersion('alakazam'), collapse='.'))")

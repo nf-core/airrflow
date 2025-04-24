@@ -153,14 +153,14 @@ ggplotly(seqs_plot_assembled)
 ```{r read_data, include=FALSE}
 # paths to the files are found in the first column of all_repertoires_report_tabs.txt,
 # in the current folder
-all_files <- system(paste0("find '", datadir, "' -name '*clone-pass.tsv'"), intern=T)
+all_files <- system(paste0("find '", datadir, "' -name '*-pass.tsv'"), intern=T)
 
 vfamily_dir <- paste(outdir, "V_family", sep="/")
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
 col_select <- c(
-  "sample_id", "subject_id", "sequence_id", "clone_id",
+  "sample_id", "subject_id", "sequence_id",
   "v_call", "d_call", "j_call",
   "locus",
   "junction",
@@ -176,136 +176,7 @@ df_all$sample_id <- stringr::str_replace_all(df_all$sample_id , "_", "")
 # Annotate sample and samplepop (sample + population) by add ing all the conditions
 df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
 
-# Uncomment to save a table with all the sequencess across samples together
-# write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
-
-# Set number of bootrstraps
-nboot <- 200
 ```
-
-
-<!-- Uncomment to include Clonal abundance and clonal diversity in the repertoire comparison report
-
-# Clonal abundance
-
-For plotting the clonal abundance, the clones were ordered by size from bigger clones to smaller clones (x-axis, Rank).
-The Abundance of each clone was represented as the percentage of unique sequences in the clone, with respect to the total
-number of unique sequences in that subject (By Patient) or in the B-cell or T-cell sample (By Cell Population).
-
-To correct for the different number of sequences in each of the samples, the Bootstrapping technique was employed,
-in which `r nboot` random bootstrap samples were taken, with size the number of sequences in the sample with less sequences (N).
-The solid line shows the mean Abundance of the bootstrap samples, whereas the transparent area shows the full Abundance
-range of the bootstrap samples.
-
-All clonal abundance plots and tables with abundance values can be found under `repertoire_analysis/Abundance`.
-
--->
-
-```{r clonal_abundance, echo=FALSE, eval=FALSE}
-# Set line above to eval=TRUE to include clonal abundance
-diversity_dir <- paste(outdir, "Diversity", sep="/")
-abundance_dir <- paste(outdir, "Abundance", sep="/")
-dir.create(diversity_dir)
-dir.create(abundance_dir)
-
-abund <- estimateAbundance(df_all, group = "subj_locus", ci=0.95, nboot=nboot)
-abund@abundance$sample_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-abund@abundance$subject_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-abund@abundance$locus <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-
-abund_main <- paste0("Clonal abundance (N=", abund@n[1], ")")
-
-p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
-    geom_ribbon(aes(ymin = lower,
-                    ymax = upper, fill = sample_id), alpha = 0.4) +
-    geom_line(aes(color = sample_id)) +
-    ggtitle(abund_main) +
-    xlab('log(Rank)') + ylab('Abundance') +
-    scale_x_log10(limits = NULL,
-                breaks = scales::trans_breaks("log10", function(x) 10^x),
-                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-    scale_y_continuous(labels = scales::percent)
-
-p_ca
-
-```
-
-```{r plot_abundance, include = FALSE, eval=FALSE}
-# Set to eval=TRUE to include clonal abundance
-ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf"), device="pdf", width = 25, height = 10, units="cm")
-ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
-write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
-```
-
-<!-- Uncomment to include Clonal diversity and clonal diversity in the repertoire comparison report
-
-# Clonal diversity
-
-The clonal diversity $D$ of the repertoire was calculated according to the general formula of Hill Diversity
-numbers:
-
-$$
-\begin{aligned}
-    ^{q}D = \left( \sum_{i=1}^Rp_i^q \right)^{1/(1-q)}
-\end{aligned}
-$$
-
-where:
-
-* $p_i$ is the proportion of unique sequences belonging to clone $i$.
-* $q$ are the values of the different diversity numbers.
-* $R$ is the Richness, the number of different clones in the sample.
-
-At $q=1$ the function is undefined and the limit to zero equals the exponential of the Shannon Entropy:
-
-$$
-\begin{aligned}
-    ^{1}D = exp \left(  \sum_{i=1}^Rp_i ln(p_i)  \right)
-\end{aligned}
-$$
-
-The intuition about the different Hill Diversity values is the following:
-
-* At $q=0$ the diversity index equals the number of clones in the sample.
-* At $q=1$ the diversity index is the geometric mean of the clones in the sample,
-weighted by their proportion in the sample.
-* At $q>1$ more weight is given to the clones with higher proportions in the sample.
-
-All clonal diversity plots and tables with diversity values can be found under `repertoire_analysis/Diversity`.
-To correct for the different number of sequences in each of the samples, the Bootstrapping technique was employed,
-in which `r nboot` random bootstrap samples were taken, with size the number of sequences in the sample with less sequences (N).
-The solid line shows the mean Diversity of the bootstrap samples, whereas the transparent area shows the full Diversity
-range of the bootstrap samples.
--->
-
-```{r clonal_diversity, echo = FALSE, eval=FALSE}
-# Set line above to eval=TRUE to include clonal diversity
-sample_div <- alphaDiversity(abund, group="subj_locus", min_q=0, max_q=4, step_q=0.05,
-                            ci=0.95, nboot=nboot)
-sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
-
-sample_div@diversity$sample_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-sample_div@diversity$subject_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-sample_div@diversity$locus <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
-    geom_ribbon(aes(ymin = d_lower,
-                    ymax = d_upper,
-                    fill = sample_id), alpha = 0.4) +
-    geom_line(aes(color = sample_id)) +
-    xlab("q") + ylab("Diversity(q)") +
-    ggtitle(sample_main)
-
-div_p
-```
-```{r plot_diversity, include = FALSE, eval=FALSE}
-# Set to eval=TRUE to include clonal diversity
-ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
-ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
-write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversity_data_subject.tsv"), sep="\t", quote = F, row.names = F)
-```
-
 
 # V gene usage
 
@@ -313,15 +184,13 @@ write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversit
 
 The V gene usage (in percentage) in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
-Gene family usage is normalized by the number of clones.
-
 ```{r gene_family, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family", clone="clone_id")
+family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family")
 family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
 family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
 family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
 
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id)) +
+g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
@@ -341,30 +210,6 @@ write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"
 
 The V gene usage (in percentage) in each of the samples is represented below.
 All plots and tables can be found [here](./repertoire_comparison/V_family/).
-
-### By clones {-}
-
-```{r gene_clonal, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene", clone = "clone_id")
-family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id)) +
-    scale_color_brewer(palette="Set1") +
-    geom_bar(position = "dodge", stat="identity") +
-    ggtitle("V Gene Family Usage") +
-    theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
-    ylab("Frequency") +
-    xlab("")
-ggplotly(g2)
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
-
-write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_data.tsv"), sep = "\t", quote = F, row.names = F)
-```
-
-### By sequences {-}
 
 ```{r gene_seq, echo=F}
 family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
