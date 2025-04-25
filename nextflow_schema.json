@@ -562,7 +562,7 @@
                     "description": "MiXCRs IMGT DB can be downloaded from the [GitHub](https://github.com/repseqio/library-imgt/releases).",
                     "fa_icon": "fas fa-database"
                 },
-                "kit": {
+                "mixcr_preset": {
                     "type": "string",
                     "description": "MiXCR preset",
                     "help_text": "MiXCRs built-in presets can be found [here](https://mixcr.com/mixcr/reference/overview-built-in-presets/)",
