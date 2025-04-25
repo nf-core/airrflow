@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#373](https://github.com/nf-core/airrflow/pull/373) Added bulk and single-cell tutorials.
 - [#377](https://github.com/nf-core/airrflow/pull/377) Added Amulety translation and embeddings.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
+- [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
 
 ### `Fixed`
 
