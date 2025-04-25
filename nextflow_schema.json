@@ -537,6 +537,11 @@
                     "type": "boolean",
                     "description": "Skip report of EnchantR FindThreshold for all samples together.",
                     "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_clonal_analysis": {
+                    "type": "boolean",
+                    "description": "Skip all clonal anlaysis processes",
+                    "fa_icon": "fas fa-angle-double-right"
                 }
             },
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
