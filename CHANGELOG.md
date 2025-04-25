@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.3.0dev]
+## [4.3.0] - Revelio
 
 ### `Added`
 
@@ -13,10 +13,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#377](https://github.com/nf-core/airrflow/pull/377) Added Amulety translation and embeddings.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
+- [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
 
 ### `Fixed`
 
 - [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
+- [#384](https://github.com/nf-core/airrflow/pull/384) Temporarily downgrade nf-schema to fix compatibility with NXF > 25.03.1-edge
 
 
 ### `Dependencies`
