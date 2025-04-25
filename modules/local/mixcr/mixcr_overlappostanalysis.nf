@@ -36,7 +36,7 @@ process MIXCR_OVERLAP_POSTANALYSIS {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def productive_only = productive ? '--only-productive' : ''
-    def drop_outliers = drop_outliers ? '--drop-outliers' : ''
+    def drop = drop_outliers ? '--drop-outliers' : ''
     def criteria_pick = criteria ? "--criteria '${criteria}'" : ''
     """
     # activate license
@@ -49,7 +49,7 @@ process MIXCR_OVERLAP_POSTANALYSIS {
         --default-downsampling ${downsampling} \\
         --default-weight-function ${weight_function} \\
         ${productive_only} \\
-        ${drop_outliers} \\
+        ${drop} \\
         ${criteria_pick} \\
         ${clns} \\
         ${prefix}.overlap_postanalysis.json \\

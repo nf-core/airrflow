@@ -35,7 +35,7 @@ process MIXCR_IND_POSTANALYSIS {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def productive_only = productive ? '--only-productive' : ''
-    def drop_outliers = drop_outliers ? '--drop-outliers' : ''
+    def drop = drop_outliers ? '--drop-outliers' : ''
     """
     # activate license
     if [ \${MIXCR_LICENSE:-"unset"} != "unset" ]; then
@@ -47,7 +47,7 @@ process MIXCR_IND_POSTANALYSIS {
         --default-downsampling ${downsampling} \\
         --default-weight-function ${weight_function} \\
         ${productive_only} \\
-        ${drop_outliers} \\
+        ${drop} \\
         ${clns} \\
         ${prefix}.individual_postanalysis.json \\
         $args \\

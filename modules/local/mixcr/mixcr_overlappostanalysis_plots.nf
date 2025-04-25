@@ -36,7 +36,8 @@ process MIXCR_OVERLAP_PLOTS {
 
     mixcr exportPlots overlap \\
         ${mixcr_overlap_json} \\
-        ${prefix}.overlap.pdf
+        ${prefix}.overlap.pdf \\
+        $args
 
 
 
