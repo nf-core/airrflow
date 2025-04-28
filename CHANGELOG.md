@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
 - [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
+- [#385](https://github.com/nf-core/airrflow/pull/385) Added trust4 barcodewhitelist parameter
 
 ### `Fixed`
 
