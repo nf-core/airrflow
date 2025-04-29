@@ -73,7 +73,11 @@ workflow SC_RAW_INPUT {
         ch_rename_original
     )
 
-    ch_reads_fastp = RENAME_FASTQ_CELLRANGER.out.reads.map{ meta, read1, read2 -> [meta, [read1, read2]] }
+    RENAME_FASTQ_CELLRANGER.out.reads.dump(tag:"fastq_renamed")
+
+    ch_reads_fastp = RENAME_FASTQ_CELLRANGER.out.reads
+
+    ch_reads_fastp.dump(tag: "mapped_reads")
 
     // run cellranger vdj
     CELLRANGER_VDJ (

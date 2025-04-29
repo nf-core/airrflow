@@ -13,7 +13,7 @@ process RENAME_FASTQ_CELLRANGER {
     tuple val(meta_2), path(orig_r1), path(orig_r2)
 
     output:
-    tuple val(meta), path('*R1_001.fastq.gz'), path('*R2_001.fastq.gz') , emit: reads
+    tuple val(meta), path('*.fastq.gz') , emit: reads
 
     script:
     """
