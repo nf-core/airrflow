@@ -82,8 +82,7 @@ workflow RNASEQ_INPUT {
     ch_reference_trust4 = PREPARE_TRUST4_REFERENCE.out.trust4_reference.map { reference -> [[id: "igblast_reference"], reference] }
     barcode_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 ->  [meta, params.trust4_cell_barcode_read] }
     umi_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, params.trust4_umi_read] }
-    barcodewhitelist_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> 
-                                            [meta, params.trust4_barcode_whitelist ? file(params.trust4_barcode_whitelist) : []] }   
+    barcodewhitelist_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, params.trust4_barcode_whitelist ? file(params.trust4_barcode_whitelist) : []] }
 
     TRUST4(
         ch_reads_trust4,
