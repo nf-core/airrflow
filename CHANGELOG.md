@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
-- [#384](https://github.com/nf-core/airrflow/pull/384) Temporarily downgrade nf-schema to fix compatibility with NXF > 25.03.1-edge
+- [#384](https://github.com/nf-core/airrflow/pull/384) Temporarily downgrade nf-schema to fix compatibility with NXF > 25.03.1-edge.
+- [#388](https://github.com/nf-core/airrflow/pull/388) Fixed some tutorials links and added info.
 
 ### `Dependencies`
 
