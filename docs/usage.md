@@ -6,7 +6,7 @@
 
 ## Introduction
 
-The nf-core/airrflow pipeline allows processing B-cell receptor (BCR) and and T-cell receptor (TCR) sequencing data from bulk and single-cell sequencing protocols. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNAseq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
+The nf-core/airrflow pipeline allows processing B-cell receptor (BCR) and and T-cell receptor (TCR) sequencing data from bulk and single-cell sequencing protocols. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNA-seq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
 
 In addition to this page, you can find additional information on how to use the pipeline on the following pages:
 
