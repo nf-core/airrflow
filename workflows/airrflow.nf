@@ -276,6 +276,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs.collect().ifEmpty([]),
                 ch_presto_collapseseq_logs.collect().ifEmpty([]),
                 ch_presto_splitseq_logs.collect().ifEmpty([]),
+                ASSEMBLED_INPUT_CHECK.out.logs.collect().ifEmpty([]),
                 ch_reassign_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
