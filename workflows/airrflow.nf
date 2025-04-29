@@ -44,6 +44,7 @@ include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire
 include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
+include { TRANSLATE_EMBED              } from '../subworkflows/local/translate_embed'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -235,20 +236,36 @@ workflow AIRRFLOW {
         )
         ch_versions = ch_versions.mix( SINGLE_CELL_QC_AND_FILTERING.out.versions )
 
-        // Mixing bulk and single cell channels for clonal analysis
-        ch_repertoires_for_clones = ch_bulk_filtered
+        // Mixing bulk and single cell channels after filtering
+        ch_repertoires_after_qc = ch_bulk_filtered
                                         .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
                                         .dump(tag: 'sc bulk mix')
 
         // Clonal analysis
-        CLONAL_ANALYSIS(
-            ch_repertoires_for_clones,
-            VDJ_ANNOTATION.out.reference_fasta.collect(),
-            ch_report_logo_img.collect().ifEmpty([])
-        )
-        ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
+        if (!params.skip_clonal_analysis) {
+            CLONAL_ANALYSIS(
+                ch_repertoires_after_qc,
+                VDJ_ANNOTATION.out.reference_fasta.collect(),
+                ch_report_logo_img.collect().ifEmpty([])
+            )
+            ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
+        }
+
+        // Translation and embedding
+        if (params.translate || params.embeddings) {
+            TRANSLATE_EMBED(
+                ch_repertoires_after_qc,
+                DATABASES.out.igblast.collect()
+            )
+            ch_versions = ch_versions.mix( TRANSLATE_EMBED.out.versions )
+        }
 
         if (!params.skip_report){
+            ch_all_repertoires_after_qc = ch_repertoires_after_qc
+                .map { it -> it[1] }
+                .collect()
+                .map { it -> [ [id:'all_reps'], it ] }
+
             REPERTOIRE_ANALYSIS_REPORTING(
                 ch_presto_filterseq_logs.collect().ifEmpty([]),
                 ch_presto_maskprimers_logs.collect().ifEmpty([]),
@@ -264,8 +281,7 @@ workflow AIRRFLOW {
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
                 BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
                 SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
-                CLONAL_ANALYSIS.out.logs.collect().ifEmpty([]),
-                CLONAL_ANALYSIS.out.repertoire,
+                ch_all_repertoires_after_qc,
                 ch_input.collect(),
                 ch_report_rmd.collect(),
                 ch_report_css.collect(),
@@ -281,7 +297,7 @@ workflow AIRRFLOW {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
+            name: 'nf_core_'  +  'airrflow_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }

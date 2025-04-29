@@ -19,7 +19,6 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_vdj_annotation_logs
     ch_bulk_qc_and_filter_logs
     ch_sc_qc_and_filter_logs
-    ch_clonal_analysis_logs
     ch_repertoires // Repertoire tsv files from clonal analysis process
     ch_input // Input samplesheet
     ch_report_rmd // Report Rmarkdown file
@@ -53,8 +52,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
 
     ch_logs = ch_vdj_annotation_logs.mix(ch_bulk_qc_and_filter_logs,
                                         ch_reassign_logs,
-                                        ch_sc_qc_and_filter_logs,
-                                        ch_clonal_analysis_logs)
+                                        ch_sc_qc_and_filter_logs)
     ch_logs_tabs =  ch_logs.collect()
                         .flatten()
                         .map{ it -> it.getName().toString() }
