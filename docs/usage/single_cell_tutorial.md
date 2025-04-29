@@ -4,12 +4,12 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 ## Pre-requisites
 
-> [!INSTALLATION]
+> [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
 
-For the purpose of running this tutorial on your local machine, we recommend a docker installation.
+For the purpose of running this tutorial on your local machine, we recommend a docker installation. To install docker, follow the instructions [here](https://docs.docker.com/engine/install/). After docker installation on linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
-To install docker, follow the instructions [here](https://docs.docker.com/engine/install/). After docker installation on linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
+Alternatively, you can run this tutorial using the Gitpod platform which comes with Nextflow, nf-core and docker pre-installed. Please follow [these instructions](https://nf-co.re/docs/tutorials/gitpod/overview) on how to set it up.
 
 ## Testing the pipeline with built-in tests
 
@@ -41,7 +41,7 @@ The AIRR rearrangement format is also the default one when analyzing publicly av
 
 In this tutorial we will showcase how to run nf-core/airrflow with both of the input formats.
 
-![nf-core/airrflow overview](https://github.com/nf-core/airrflow/blob/master/docs/images/airrflow_workflow_overview.png)
+![nf-core/airrflow overview](https://raw.githubusercontent.com/nf-core/airrflow/master/docs/images/airrflow_workflow_overview.png)
 
 ## Starting from AIRR rearrangement format
 
