@@ -13,9 +13,17 @@ process RENAME_FILE {
 
     output:
     tuple val(meta), path("${meta.id}.${file.extension}")  , emit: file
+    path("*_command_log.txt"), emit: logs
 
     script:
     """
     mv ${file} ${meta.id}.${file.extension}
+    echo "START> RenameFile" > ${meta.id}_command_log.txt
+    echo "FILE> ${file}" >> ${meta.id}_command_log.txt
+    echo "OUTPUT> ${meta.id}.${file.extension}" >> ${meta.id}_command_log.txt
+    if [[ "${file.extension}" == "fasta" ]]; then
+        seq_count=\$(grep -c "^>" ${meta.id}.${file.extension})
+        echo "PASS> \${seq_count}" >> ${meta.id}_command_log.txt
+    fi
     """
 }
