@@ -6,13 +6,25 @@
 
 ## Introduction
 
-The nf-core/airrflow pipeline allows processing BCR and TCR targeted sequencing data from bulk and single-cell sequencing protocols. It performs sequence assembly, V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+The nf-core/airrflow pipeline allows processing B-cell receptor (BCR) and and T-cell receptor (TCR) sequencing data from bulk and single-cell sequencing protocols. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNA-seq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
 
-![nf-core/airrflow overview](images/airrflow_workflow_overview.png)
+In addition to this page, you can find additional information on how to use the pipeline on the following pages:
+
+- [bulk_tutorial](usage/bulk_tutorial.md): a step by step tutorial on how to run nf-core/airrflow for bulk data.
+- [single_cell_tutorial](usage/single_cell_tutorial.md): a step by step tutorial on how to run nf-core/airrflow for single-cell data.
 
 ## Running the pipeline
 
 ### Quickstart
+
+> [!INSTALLATION]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+
+First, ensure that the pipeline tests run on your infrastructure:
+
+```bash
+nextflow run nf-core/airrflow -profile test,<docker/singularity/apptainer/podman/shifter/charliecloud/conda/institute> --outdir <OUTDIR>
+```
 
 A typical command for running the pipeline for **bulk raw fastq files** using available pre-set protocol profiles is shown below. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles).
 
@@ -60,8 +72,22 @@ nextflow run nf-core/airrflow \
 --outdir results
 ```
 
-Check the section [Input samplesheet](#input-samplesheet) below for instructions on how to create the samplesheet, and the [Supported library generation protocols](#supported-bulk-library-generation-methods-protocols) section below for examples on how to run the pipeline for different bulk and the 10xGenomics single cell sequencing protocol.
-For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
+It is also possible to reconstruct BCR and TCR sequences from untargeted bulk and single-cell sequencing data. A typical command to run the pipeline from **single-cell RNA-seq fastq files** is shown below. For more information, check the section on [supported untargeted RNA-seq based methods](#supported-untargeted-rna-seq-based-methods) below.
+
+```bash
+nextflow run nf-core/airrfow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method trust4 \
+--umi_read R1 \
+--cell_barcode_read R1 \
+--read_format bc:0:15,um:16:27 \
+--outdir results
+```
+
+Check the section [Input samplesheet](#input-samplesheet) below for instructions on how to create the samplesheet, and the [Supported library generation protocols](#supported-bulk-library-generation-methods-protocols) section below for examples on how to run the pipeline for the different bulk and single-cell sequencing protocols.
+For more detailed information about all the available parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
 The command above will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -77,9 +103,8 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-:::warning
-Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-:::
+> [!WARNING]
+> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 
 The above pipeline run specified with a params file in yaml format:
 
@@ -107,17 +132,16 @@ nextflow pull nf-core/airrflow
 
 ## Reproducibility
 
-It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
+It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
 First, go to the [nf-core/airrflow releases page](https://github.com/nf-core/airrflow/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
-To further assist in reproducibility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and reuse [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
-:::tip
-If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
-:::
+> [!TIP]
+> If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 ## Input samplesheet
 
@@ -153,7 +177,7 @@ Other optional columns can be added. These columns will be available as metadata
 
 It is possible to provide several fastq files per sample (e.g. sequenced over different chips or lanes). In this case the different fastq files per sample will be merged together prior to processing. Provide one fastq pair R1/R2 per row, and the same `sample_id` field for these rows.
 
-### Fastq input samplesheet (single cell sequencing)
+### Fastq input samplesheet (single-cell AIRR sequencing)
 
 The required input file for processing raw BCR or TCR single cell targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. Any other columns you add will be available in the final repertoire file as extra metadata fields. You can refer to the bulk fastq input section for documentation on the individual columns.
 An example samplesheet is:
@@ -174,7 +198,7 @@ An example samplesheet is:
 
 It is possible to provide several fastq files per sample (e.g. sequenced over different chips or lanes). In this case the different fastq files per sample will be provided to the same cellranger process. These rows should then have an identical `sample_id` field.
 
-### Fastq input samplesheet (untargeted bulk or sc RNA sequencing)
+### Fastq input samplesheet (untargeted bulk or single-cell RNAseq)
 
 When running the untargeted protocol, BCR or TCR sequences will be extracted from the untargeted bulk or single-cell RNA sequencing with tools such as [TRUST4](https://github.com/liulab-dfci/TRUST4).
 The required input file is the same as for the [Fastq bulk AIRR samplesheet](#fastq-input-samplesheet-bulk-airr-sequencing) or [Fastq single-cell AIRR samplesheet](#fastq-input-samplesheet-single-cell-sequencing) depending on the input data type (bulk RNAseq or single-cell RNAseq).
@@ -302,9 +326,9 @@ nextflow run nf-core/airrflow -r <release> \
 --outdir results
 ```
 
-## Supported bulk library generation methods (protocols)
+## Supported custom bulk library generation methods (protocols)
 
-When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
+For common sequencing protocols such as commercial kits please check the section above if your kit has a preset profile first, as this will greatly simplify running the pipeline. When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
 The following table matches the library generation methods as described in the [AIRR metadata annotation guidelines](https://docs.airr-community.org/en/stable/miairr/metadata_guidelines.html#library-generation-method) to the value that can be provided to the `--library_generation_method` parameter.
 
 | Library generation methods (AIRR) | Description                                                                                | Name in pipeline |
@@ -455,7 +479,8 @@ When processing single cell sequencing data departing from raw `fastq` reads, cu
 ### 10xGenomics
 
 This sequencing type requires setting `--library_generation_method sc_10x_genomics`.
-The `cellranger vdj` automatically uses the Chromium cellular barcodes and UMIs to perform sequence assembly, paired clonotype calling and to assemble V(D)J transcripts per cell.
+The `cellranger vdj` tool automatically uses the Chromium cell barcodes and UMIs to perform sequence assembly, paired clonotype calling and to assemble V(D)J transcripts per cell. The pipeline will then perform gene reassignment and clonotyping with the Immcantation framework unless otherwise specified.
+
 Examples are provided below to run airrflow to process 10xGenomics raw FASTQ data.
 
 ```bash
@@ -475,10 +500,10 @@ nextflow run nf-core/airrflow -r dev \
 - The 10xGenomics reference can be downloaded from the [download page](https://www.10xgenomics.com/support/software/cell-ranger/downloads)
 - To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt).
 
-## Supported unselected RNA-seq based methods
+## Supported untargeted RNA-seq based methods
 
-nf-core/airrflow supports unselected bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow. <br>
-To use unselected RNA-seq based input, specify `--library_generation_method trust4`.
+nf-core/airrflow supports untargeted bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow. <br>
+To use untargeted RNA-seq based input, specify `--library_generation_method trust4`.
 
 ### Bulk RNA-seq
 
@@ -512,11 +537,40 @@ nextflow run nf-core/airrfow \
 - If UMI's are present, the read containing them must be specified using the `--umi_read` parameter.
 - The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNAseq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
 
+## Important considerations for clonal analysis
+
+An important step in the analysis of AIRR sequencing data is inferring B cell and T cell clones, or clonal groups, sometimes also called clonotypes. These are cells that are derived from the same progenitor cell through clonal expansion. For T cells, this definition is more strict as T cells do not undergo somatic hypermutation, so the TCRs from T cells in the same clone should be identical. For B cells, on the other hand, the BCRs from cells in the same clone can differ due to somatic hypermutation. They also can have a variety of isotypes.
+
+There are two crucial considerations when defining clonal groups with nf-core/airrflow: across which samples should clonal groups be defined, and what should be the clonal threshold, i.e. how different can these receptors be, so that these are assigned to the same clonal group. These are discussed in detail in the following sections.
+
+### Defining clonal groups across samples
+
+Often times we want to analyze clonal groups from the same individual or animal model across time, different conditions or across samples extracted from different tissues. To ensure that the same clone ID (field `clone_id` in the output AIRR rearrangement file) is assigned to the same BCR / TCR clone across these conditions to be able to track the clones, the clonal inference step should be done pulling the sequences from these samples together. This is why, by default, nf-core/airrflow uses the `subject_id` column to group samples prior to defining clonal groups, so it is important to set the exact same subject ID to samples from the same individual across different conditions.
+
+The sample grouping can also be controlled with the [`--cloneby`](https://nf-co.re/airrflow/4.2.0/parameters/#cloneby) parameter, by providing the name of the column containing the group information that should be used to pull the samples together before defining clonal groups (samples or rows with the same string in this column will be grouped together). You can create a new column if you wish for this purpose.
+
+### Clonal inference method
+
+nf-core/airrflow utilizes the Hierarchical clustering method in the [SCOPer](https://scoper.readthedocs.io/) Immcantation tool to infer clonal groups by default, which initially partitions the BCR / TCR sequences according to V gene, J gene and junction length. Then, it defines clonal groups within each partition by performing hierarchical clustering of the sequences within a partition and cutting the clusters according to an automatically detected or user-defined threshold. More details about this method can be found on the respective SCOPer [vignette](https://scoper.readthedocs.io/en/stable/vignettes/Scoper-Vignette/#). Details on how to determine the clonal threshold can be found in the next section.
+
+### Setting a clonal threshold
+
+The clonal threshold can also be customized through the `--clonal_threshold` parameter. The clonal threshold specifies how different two BCRs can be so that are assigned to the same clonal group. The value is specified in length-normalized hamming distance across the BCR junction regions. By default, `--clonal_threshold` is set to be 'auto', allowing the clonal threshold to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
+
+For BCR data, we recommend using this default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it is fitting the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 (length-normalized Hamming distance of nearest neighbors) for human BCR data.
+
+Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, the `--clonal_threshold` parameter should be set to 0 for TCR data.
+
+### Including BCR lineage tree computation
+
+BCR lineage tree computation is performed using the [Dowser](https://dowser.readthedocs.io/) Immcantation package. This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter set to true. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` so all the previous analysis steps are cached and not recomputed.
+
+Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
+
 ## Core Nextflow arguments
 
-:::note
-These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
-:::
+> [!NOTE]
+> These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen)
 
 ### `-profile`
 
@@ -524,16 +578,15 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
-:::info
-We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
-:::
+> [!IMPORTANT]
+> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility. Conda is not supported for this pipeline.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to check if your system is supported, please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
-If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer enviroment.
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer environment.
 
 - `test`
   - A profile with a complete configuration for automated testing
@@ -569,13 +622,13 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
 ### Custom Containers
 
-In some cases you may wish to change which container or conda environment a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version may be out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
