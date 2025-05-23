@@ -9,7 +9,7 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/Linux-postinstall/).
 
-Alternatively, you can run this tutorial using the Gitpod platform which comes with Nextflow, nf-core and Docker pre-installed. Please follow [these instructions](https://nf-co.re/docs/tutorials/gitpod/overview) on how to set it up.
+Alternatively, you can run this tutorial using the Gitpod platform which contains pre-installed Nextflow, nf-core and Docker. There are three ways to open Gitpod platform. Please watch this [video](https://www.youtube.com/watch?v=ij1msCffQZA&list=PL3TSF5whlprXVp-7Br2oKwQgU4bji1S7H&index=2) to set it up. If you want to know more about Gitpod, check [the Gitpod overview](https://nf-co.re/docs/tutorials/gitpod/overview).
 
 ## Testing the pipeline with built-in tests
 
