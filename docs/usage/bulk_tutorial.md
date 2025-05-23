@@ -206,8 +206,8 @@ The analysis steps and their corresponding folders, where the results are stored
 ## Find out more
 To continue learning about how to use nf-core/airrflow please check out the following documentation:
 
-   - [Airrflow usage documentation](https://nf-co.re/airrflow/4.2.0/docs/usage)
-   - [Airrflow parameters documentation](https://nf-co.re/airrflow/4.2.0/parameters)
+   - [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
+   - [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
    - [FAQ page](./FAQ.md)
 
 The nf-core troubleshooting documentation will also help you troubleshoot your Nextflow errors.

@@ -33,8 +33,6 @@ BCR lineage tree computation is performed using the Immcantation package [Dowser
 
 Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
 
-
-
 ## How to costumize the analysis and figures?
 
 nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. The computations results (e.g. clonal inference, mutation frequency analysis) are stored in the output AIRR rearrangement repertoire files in newly generated columns under `clonal_analysis/define_clones/all_repertoires`. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
@@ -42,9 +40,14 @@ nf-core/airrflow is a standardized pipeline that performs the different computat
 
 ## How to update process resource requests?
 
-By default the pipeline has set reasonable process resource requests (number of CPUs, RAM memory, time limits) to the compute system. Depending on the size of your datasets or your running infrastructure you can customize these requests to meet your needs.
+By default the pipeline has set reasonable process resource requests (number of CPUs, RAM memory, time limits) to the compute system. Depending on the size of your datasets or your running infrastructure you can customize these requests. The `resourceLimits` option applies upper resource request limits to all the processes in the pipeline. Make sure to set resource limits that are not surpassing the available resources in your compute infrastructure. You can do so in the `resource.config` file provided with the `-c` parameter.
 
-To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
+```json title="resource.config"
+process {
+   resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
+ }
+
+To update the resource requests for a specific pipeline process, you can also provide specific process requests in this config file. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
 
 ```json title="resource.config"
 process {
@@ -58,7 +61,7 @@ process {
 }
 ```
 
-In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](https://github.com/nf-core/airrflow/blob/master/conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
+In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](https://github.com/nf-core/airrflow/blob/master/conf/base.config) file. You can update the resource requests for all processes with a specific label by providing the updated configuration. For example here we update the process requests of processes with the `process_high` label:
 
 ```json title="resource.config"
 process {
