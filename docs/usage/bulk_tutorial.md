@@ -85,7 +85,7 @@ The command to launch nf-core/airrflow for the dataset in this tutorial is the f
 nextflow run nf-core/airrflow -r 4.2.0 \
 -profile docker \
 --mode fastq \
---input samplesheet.tsv \
+--input metadata_pcr_umi_airr_300.tsv \
 --cprimers 's3://ngi-igenomes/test-data/airrflow/pcr_umi/cprimers.fasta' \
 --vprimers 's3://ngi-igenomes/test-data/airrflow/pcr_umi/vprimers.fasta' \
 --library_generation_method specific_pcr_umi \
