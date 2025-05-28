@@ -193,7 +193,7 @@ The analysis steps and their corresponding folders, where the results are stored
 
 6. Repertoire analysis
 
-   - Example calculation of several repertoire characteristics, e.g. V gene usage, for comparison between subjects, time points or cell populations is shown in the html report under `repertoire_comparison`. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to fit the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check also the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
+   - Comparison of several repertoire characteristics, such as V gene usage, across subjects, time points or cell populations. All associated plots and tables are available under the folder `repertoire_comparison`. The plots are also included in the `Airrflow_report.html` file. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to meet the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
 
 7. Other reporting
    Additional reports are also generated, including:
