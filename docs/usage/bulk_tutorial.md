@@ -16,7 +16,7 @@ Alternatively, you can run this tutorial using the Gitpod platform which contain
 Once you have set up your Nextflow and container (Docker or Singularity), test the airrflow pipeline with built-in test.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.2.0 -profile test,docker --outdir test_results
+nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_results
 ```
 
 If the tests run through correctly, you should see this output in your command line:
@@ -62,7 +62,7 @@ Bulk BCR and TCR targeted sequencing can be performed with a wide variety of pro
 You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as any parameters in the launch command will override the parameters in the profile.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.2.0 \
+nextflow run nf-core/airrflow -r 4.3.0 \
 -profile <protocol-profile-name>,docker \
 --input samplesheet.tsv \
 -c resource.config \
@@ -82,7 +82,7 @@ The BCRseq dataset used in this tutorial was obtained with a multiplexed PCR pro
 The command to launch nf-core/airrflow for the dataset in this tutorial is the following:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.2.0 \
+nextflow run nf-core/airrflow -r 4.3.0 \
 -profile docker \
 --mode fastq \
 --input metadata_pcr_umi_airr_300.tsv \
@@ -120,7 +120,7 @@ After launching the pipeline the following will be printed to the console output
  N E X T F L O W   ~  version 24.10.5
 
 WARN: It appears you have never run this project before -- Option `-resume` is ignored
-Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.2.0]
+Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.3.0]
 
 
 ------------------------------------------------------
@@ -129,7 +129,7 @@ Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revisio
   |\ | |__  __ /  ` /  \ |__) |__         }  {
   | \| |       \__, \__/ |  \ |___     \`-._,-`-,
                                         `._,._,'
-  nf-core/airrflow 4.2.0
+  nf-core/airrflow 4.3.0
 ------------------------------------------------------
 ```
 
@@ -143,11 +143,9 @@ CPU hours   : 5.9
 Succeeded   : 271
 ```
 
-
-
 ## Understanding the results
 
-After running the pipeline, several subfolders are available under the results folder.
+After running the pipeline, several sub-folders are available under the results folder.
 
 ```bash
 Airrflow_report.html
@@ -193,7 +191,7 @@ The analysis steps and their corresponding folders, where the results are stored
 
 6. Repertoire analysis
 
-   - Comparison of several repertoire characteristics, such as V gene usage, across subjects, time points or cell populations. All associated plots and tables are available under the folder `repertoire_comparison`. The plots are also included in the `Airrflow_report.html` file. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to meet the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
+   - Comparison of several repertoire characteristics, such as V gene usage, across subjects, time points or cell populations. All associated plots and tables are available under the folder `repertoire_comparison`. The plots are also included in the `Airrflow_report.html` file. This report is generated from an R markdown `Rmd` file. It is possible to customize this to meet the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
 
 7. Other reporting
    Additional reports are also generated, including:
@@ -202,14 +200,14 @@ The analysis steps and their corresponding folders, where the results are stored
    - `Report_file_size` report: Summary of the number of sequences left after each of the most important pipeline steps.
    - `parsed_logs` report: Summary of the number of sequences left after each of the most important pipeline steps.
 
-
 ## Find out more
+
 To continue learning about how to use nf-core/airrflow please check out the following documentation:
 
-   - [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
-   - [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
-   - [FAQ page](./FAQ.md)
+- [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
+- [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
+- [FAQ page](./FAQ.md)
 
 The nf-core troubleshooting documentation will also help you troubleshoot your Nextflow errors.
 
-   - [nf-core troubleshooting](https://nf-co.re/docs/usage/troubleshooting/overview)
+- [nf-core troubleshooting](https://nf-co.re/docs/usage/troubleshooting/overview)

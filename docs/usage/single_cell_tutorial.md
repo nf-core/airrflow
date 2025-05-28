@@ -16,7 +16,7 @@ Alternatively, you can run this tutorial using the Gitpod platform which contain
 Once you have set up your Nextflow and container (Docker or Singularity), test the airrflow pipeline with built-in test.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.2.0 -profile test,docker --outdir test_results
+nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_results
 ```
 
 If the tests run through correctly, you should see the execution of airrflow processes. Finally, the following output will appear in your command line:
@@ -47,9 +47,9 @@ In this tutorial we will showcase how to run nf-core/airrflow with both of the i
 
 ### Datasets
 
-For this tutorial we will use subsampled PBMC single-cell BCR sequencing data from two subjects, before (d0) and after flu vaccination (d12).
+For this tutorial we will use sub-sampled PBMC single-cell BCR sequencing data from two subjects, before (d0) and after flu vaccination (d12).
 The dataset is publicly available on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.11373740).
-You don't need to download the dataset bacause the links to the samples are already provided in the samplesheet and Nextflow will get the data from the links automatically when running the pipeline.
+You don't need to download the dataset because the links to the samples are already provided in the samplesheet and Nextflow will get the data from the links automatically when running the pipeline.
 
 ### Preparing the samplesheet and configuration file
 
@@ -80,7 +80,7 @@ Download both files to the directory where you intend to run the airrflow pipeli
 With all the files ready, you can proceed to start the pipeline run:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.2.0 \
+nextflow run nf-core/airrflow -r 4.3.0 \
 -profile docker \
 --mode assembled \
 --input assembled_samplesheet.tsv \
@@ -106,7 +106,7 @@ After launching the pipeline the following will be printed to the console output
  N E X T F L O W   ~  version 24.10.5
 
 WARN: It appears you have never run this project before -- Option `-resume` is ignored
-Launching `https://github.com/nf-core/airrflow` [boring_heyrovsky] DSL2 - revision: d91dd840f4 [4.2.0]
+Launching `https://github.com/nf-core/airrflow` [boring_heyrovsky] DSL2 - revision: d91dd840f4 [4.3.0]
 
 
 ------------------------------------------------------
@@ -115,7 +115,7 @@ Launching `https://github.com/nf-core/airrflow` [boring_heyrovsky] DSL2 - revisi
   |\ | |__  __ /  ` /  \ |__) |__         }  {
   | \| |       \__, \__/ |  \ |___     \`-._,-`-,
                                         `._,._,'
-  nf-core/airrflow 4.2.0
+  nf-core/airrflow 4.3.0
 ------------------------------------------------------
 
 ```
@@ -155,7 +155,7 @@ Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics web
 With all the files ready, it's time to run the airrflow pipeline.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.2.0 \
+nextflow run nf-core/airrflow -r 4.3.0 \
 -profile docker \
 --mode fastq \
 --input 10x_sc_raw.tsv \
@@ -167,7 +167,7 @@ nextflow run nf-core/airrflow -r 4.2.0 \
 -resume
 ```
 
-In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical junction regions. For this reason, we set the `--clonal_threshold` parameter to 0. For more details on important considerations when performing clonal analysis check [FAQ](./FAQ.md). 
+In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical junction regions. For this reason, we set the `--clonal_threshold` parameter to 0. For more details on important considerations when performing clonal analysis check [FAQ](./FAQ.md).
 
 Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
@@ -181,7 +181,7 @@ After launching the pipeline the following will be printed to the console output
 ```bash
  N E X T F L O W   ~  version 24.10.5
 
-Launching `https://github.com/nf-core/airrflow` [gloomy_monod] DSL2 - revision: d91dd840f4 [4.2.0]
+Launching `https://github.com/nf-core/airrflow` [gloomy_monod] DSL2 - revision: d91dd840f4 [4.3.0]
 
 
 ------------------------------------------------------
@@ -190,7 +190,7 @@ Launching `https://github.com/nf-core/airrflow` [gloomy_monod] DSL2 - revision: 
   |\ | |__  __ /  ` /  \ |__) |__         }  {
   | \| |       \__, \__/ |  \ |___     \`-._,-`-,
                                         `._,._,'
-  nf-core/airrflow 4.2.0
+  nf-core/airrflow 4.3.0
 ------------------------------------------------------
 ```
 
@@ -207,7 +207,7 @@ Cached      : 2
 
 ## Understanding the results
 
-After running the pipeline, several subfolders are available under the results folder.
+After running the pipeline, several sub-folders are available under the results folder.
 
 ```bash
 Airrflow_report.html
@@ -235,7 +235,7 @@ The analysis steps and their corresponding folders, where the results are stored
 
 3. QC filtering.
 
-   - In this step, cells without heavy chains or with multiple heavy chains are removed. Sequences in different samples that share the same cell_id and necleotide sequence are filtered out. The result are stored in the 'qc-filtering' folder.
+   - In this step, cells without heavy chains or with multiple heavy chains are removed. Sequences in different samples that share the same cell_id and nucleotide sequence are filtered out. The result are stored in the 'qc-filtering' folder.
 
 4. Clonal analysis.
 
@@ -246,7 +246,7 @@ The analysis steps and their corresponding folders, where the results are stored
 
 5. Repertoire analysis
 
-   - Comparison of several repertoire characteristics, such as V gene usage, across subjects, time points or cell populations. All associated plots and tables are available under the folder `repertoire_comparison`. The plots are also included in the `Airrflow_report.html` file. This report is generated from an Rmarkdown `Rmd` file. It is possible to customize this to meet the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
+   - Comparison of several repertoire characteristics, such as V gene usage, across subjects, time points or cell populations. All associated plots and tables are available under the folder `repertoire_comparison`. The plots are also included in the `Airrflow_report.html` file. This report is generated from an R markdown `Rmd` file. It is possible to customize this to meet the user's needs by editing the report and then providing the edited Rmd file with the `--report_rmd` parameter. Check the remaining [Report parameters](https://nf-co.re/airrflow/parameters/#report-options) for further customizing the report.
 
 6. Other reporting.
    Additional reports are also generated, including:
@@ -254,14 +254,14 @@ The analysis steps and their corresponding folders, where the results are stored
    - Pipeline_info report: various reports relevant to the running and execution of the pipeline.
    - Report_file_size report: Summary of the number of sequences left after each of the most important pipeline steps.
 
-
 ## Find out more
+
 To continue learning about how to use nf-core/airrflow please check out the following documentation:
 
-   - [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
-   - [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
-   - [FAQ page](./FAQ.md)
+- [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
+- [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
+- [FAQ page](./FAQ.md)
 
 The nf-core troubleshooting documentation will also help you troubleshoot your Nextflow errors
 
-   - [nf-core troubleshooting](https://nf-co.re/docs/usage/troubleshooting/overview)
+- [nf-core troubleshooting](https://nf-co.re/docs/usage/troubleshooting/overview)

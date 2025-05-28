@@ -1,13 +1,14 @@
 # nf-core/airrflow: Frequently Asked Questions
 
-## How to update process resource requests?
+## How to update process resource requests and resource limits?
 
-By default the pipeline has set reasonable process resource requests (number of CPUs, RAM memory, time limits) to the compute system. Depending on the size of your datasets or your running infrastructure you can customize these requests. The `resourceLimits` option applies upper resource request limits to all the processes in the pipeline. Make sure to set resource limits that are not surpassing the available resources in your compute infrastructure. You can do so in the `resource.config` file provided with the `-c` parameter.
+By default, the pipeline defines reasonable resource requests for each process (number of CPUs, RAM memory, time limits) based on typical compute environments. However, you can adjust these settings to better match the size of your datasets or the capabilities of your compute infrastructure. You can customize the limits and requests in `resource.config` file and provide it to the pipeline using the -c parameter during execution. The `resourceLimits` option applies upper resource request limits to all the processes in the pipeline. Ensure that these limits do not exceed the available resources on your compute system.
 
 ```json title="resource.config"
 process {
    resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
  }
+```
 
 To update the resource requests for a specific pipeline process, you can also provide specific process requests in this config file. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
 
@@ -37,11 +38,10 @@ process {
 }
 ```
 
-Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this exmaple we also have updated the `resourceLimits` to reflect that.
+Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this example we also have updated the `resourceLimits` to reflect that.
 
 > [!TIP]
 > For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).
-
 
 ## What to consider for clonal analysis?
 
@@ -65,16 +65,12 @@ For BCR data, we recommend using the default setting initially. After running th
 
 Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, the `--clonal_threshold` parameter should be set to 0 for TCR data.
 
-
 ## How to include BCR lineage tree computation?
 
 BCR lineage tree computation is performed using the Immcantation package [Dowser](https://dowser.readthedocs.io/). This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter and set it to be `true`. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` so all the previous analysis steps are cached and not recomputed.
 
 Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
 
+## How to customize the analysis and figures?
 
-## How to costumize the analysis and figures?
-
-nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. The computations results (e.g. clonal inference, mutation frequency analysis) are stored in the output AIRR rearrangement repertoire files in newly generated columns under `clonal_analysis/define_clones/all_repertoires`. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
-
-
+nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
