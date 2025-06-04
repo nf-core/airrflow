@@ -43,34 +43,6 @@ Note that the resource requests will never exceed what is specified in the `reso
 > [!TIP]
 > For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).
 
-## What to consider for clonal analysis?
-
-There are two crucial considerations for clonal analysis with nf-core/airrflow: : (1) the scope of sample grouping — that is, what samples should be grouped together before clonal inference; and (2) the clonal threshold, that is he maximum allowable distance between receptor sequences to be considered within the same clonal group. These considerations are explored in detail in the sections below.
-
-### Sample grouping before defining clonal groups
-
-We often want to analyze clonal groups from samples belonging to the same individual or animal model and being extracted across time, different conditions or from different tissues. To ensure that the same clone ID (field `clone_id` in the output AIRR rearrangement file) is assigned to the same BCR / TCR clone across these conditions, the clonal inference step should be done pulling the sequences from these samples together. This is why, by default, nf-core/airrflow uses the `subject_id` column to group samples prior to defining clonal groups, so it is important to set the exact same subject ID to samples from the same individual across different conditions.
-
-The sample grouping can also be controlled with the [`--cloneby`](https://nf-co.re/airrflow/4.3.0/parameters/#cloneby) parameter, by providing the name of the column containing the group information that should be used to pull the samples together before defining clonal groups (samples or rows with the same string in this column will be grouped together). You can create a new column if you wish for this purpose.
-
-### Setting a clonal threshold
-
-nf-core/airrflow utilizes the Hierarchical clustering method in the Immcantation tool [SCOPer](https://scoper.readthedocs.io/) to infer clonal groups, which initially partitions the BCR / TCR sequences according to V gene, J gene and junction length. Then, it defines clonal groups within each partition by performing hierarchical clustering of the sequences within a partition and cutting the clusters according to an automatically detected or user-defined threshold. More details about this method can be found on the respective [SCOPer vignette](https://scoper.readthedocs.io/en/stable/vignettes/Scoper-Vignette/#).
-
-By default, `--clonal_threshold` is set to be 'auto', allowing the clonal threshold to be determined automatically using a method included in the Immcantation tool [SHazaM](https://shazam.readthedocs.io/). You can read more details about the method in the [SHazaM vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
-
-The clonal threshold can also be customized through the `--clonal_threshold` parameter. It defines the maximum allowable distance between receptor sequences to be considered within the same clonal group. Specifically, this distance is measured as the length-normalized Hamming distance across the BCR junction regions.
-
-For BCR data, we recommend using the default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it fits the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 for human BCR data.
-
-Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, the `--clonal_threshold` parameter should be set to 0 for TCR data.
-
-## How to include BCR lineage tree computation?
-
-BCR lineage tree computation is performed using the Immcantation package [Dowser](https://dowser.readthedocs.io/). This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter and set it to be `true`. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` so all the previous analysis steps are cached and not recomputed.
-
-Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
-
 ## How to customize the analysis and figures?
 
 nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
