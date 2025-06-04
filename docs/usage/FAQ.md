@@ -7,7 +7,7 @@ By default, the pipeline defines reasonable resource requests for each process (
 ```json title="resource.config"
 process {
    resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
- }
+}
 ```
 
 To update the resource requests for a specific pipeline process, you can also provide specific process requests in this config file. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
