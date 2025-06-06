@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- [#399](https://github.com/nf-core/airrflow/pull/399) Bump versions.
 
 ### `Fixed`
 
