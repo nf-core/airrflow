@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [4.3.1] - Revelio hotfix
 
+### `Added`
+
+- [#399](https://github.com/nf-core/airrflow/pull/399) Bump versions.
+
 ### `Fixed`
 
 - [#392](https://github.com/nf-core/airrflow/pull/392) Updated tutorials.
