@@ -13,7 +13,7 @@ Alternatively, you can run this tutorial using the Gitpod platform which contain
 
 ## Testing the pipeline with built-in tests
 
-Once you have set up your Nextflow and container (Docker or Singularity), test the airrflow pipeline with built-in test.
+Once you have set up your Nextflow and container (Docker or Singularity), test nf-core/airrflow with the built-in test data.
 
 ```bash
 nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_results
@@ -33,11 +33,11 @@ Succeeded   : 221
 
 ## Supported input formats
 
-There are two supported input formats for nf-core/airrflow single-cell AIRRseq pipeline: assembled sequences in AIRR rearrangement format or raw reads in fastq format sequenced in the 10x Genomics platform.
+There are two supported input formats for nf-core/airrflow single-cell AIRR-seq pipeline: assembled sequences in AIRR rearrangement format or raw reads in fastq format sequenced in the 10x Genomics platform.
 
-The [AIRR rearrangement format](https://docs.airr-community.org/en/latest/datarep/rearrangements.html) is a standard format to store BCR and TCR sequence data with relevant metadata fields. This format is supported as input and output by multiple tools specific for analyzing AIRR sequencing data. For example, when analyzing single-cell AIRR sequencing data with CellRanger versions >= 4.0 an AIRR rearrangement file will be provided as output, and this is the recommended input for running nf-core/airrflow. Note that it is also possible to start running the pipeline directly from raw sequencing reads, and in this case CellRanger will be run when launching nf-core/airrflow.
+The [AIRR rearrangement format](https://docs.airr-community.org/en/latest/datarep/rearrangements.html) is a standard format to store BCR and TCR sequence data with relevant metadata fields. This format is supported as input and output by multiple tools specific for analyzing AIRR-seq data. For example, when analyzing single-cell AIRR sequencing data with CellRanger versions >= 4.0 an AIRR rearrangement file will be provided as output, and this is the recommended input for running nf-core/airrflow. Note that it is also possible to start running the pipeline directly from raw sequencing reads, and in this case CellRanger will be run when launching nf-core/airrflow.
 
-The AIRR rearrangement format is also the default one when analyzing publicly available data from specialized AIRRseq databases such as the AIRR Data Commons through the [iReceptor gateway](https://gateway.ireceptor.org/login).
+The AIRR rearrangement format is also the default one when analyzing publicly available data from specialized AIRR-seq databases such as the AIRR Data Commons through the [iReceptor gateway](https://gateway.ireceptor.org/login).
 
 In this tutorial we will showcase how to run nf-core/airrflow with both of the input formats.
 
@@ -67,7 +67,7 @@ process {
 ```
 
 A prepared samplesheet for this tutorial can be found [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv), and the configuration file is available [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config).
-Download both files to the directory where you intend to run the airrflow pipeline.
+Download both files to the directory where you intend to run nf-core/airrflow.
 
 > [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime for large-size dataset.
@@ -100,7 +100,7 @@ bash airrflow_sc_from_assembled.sh
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
-After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
+After launching the pipeline the following will be printed to the console output, followed by some the default parameters used by the pipeline and execution log of airrflow processes:
 
 ```bash
  N E X T F L O W   ~  version 24.10.5
@@ -138,12 +138,12 @@ For this tutorial we will use subsampled blood single-cell TCR sequencing data o
 
 ### Preparing samplesheet, gene reference and configuration file
 
-To run the airrflow pipeline on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, pre-built 10x genomics V(D)J references and configuration file in advance. Details on the required columns for this samplesheet are available [here](https://nf-co.re/airrflow/usage#fastq-input-samplesheet-single-cell-sequencing).
+To run nf-core/airrflow on single cell TCR or BCR sequencing data from fastq files, we need to prepare samplesheet, pre-built 10x genomics V(D)J references and configuration file in advance. Details on the required columns for this samplesheet are available [here](https://nf-co.re/airrflow/usage#fastq-input-samplesheet-single-cell-sequencing).
 
 > [!WARNING]
 > The fastq file names must follow the 10X Genomics file naming convention or the cellranger process will fail.
 
-The prepared samplesheet for this tutorial is [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config). Download these two files to the directory where you intend to run the airrflow pipeline.
+The prepared samplesheet for this tutorial is [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and a prepared configuration file is [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config). Download these two files to the directory where you intend to run nf-core/airrflow.
 
 > [!TIP]
 > Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
@@ -152,7 +152,7 @@ Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics web
 
 ### Running airrflow
 
-With all the files ready, it's time to run the airrflow pipeline.
+With all the files ready, it's time to run nf-core/airrflow.
 
 ```bash
 nextflow run nf-core/airrflow -r 4.3.0 \
@@ -176,7 +176,7 @@ With the bash file, it's easy to run the pipeline with a single-line command.
 bash airrflow_sc_from_fastq.sh
 ```
 
-After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
+After launching the pipeline the following will be printed to the console output, followed by some the default parameters used by the pipeline and execution log of airrflow processes:
 
 ```bash
  N E X T F L O W   ~  version 24.10.5
@@ -258,8 +258,8 @@ The analysis steps and their corresponding folders, where the results are stored
 
 To continue learning about how to use nf-core/airrflow please check out the following documentation:
 
-- [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
-- [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
+- [nf-core/airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
+- [nf-core/airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
 - [FAQ page](./FAQ.md)
 
 The nf-core troubleshooting documentation will also help you troubleshoot your Nextflow errors

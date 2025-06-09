@@ -1,4 +1,4 @@
-# nf-core/airrflow: Bulk AIRRseq tutorial
+# nf-core/airrflow: Bulk AIRR-seq tutorial
 
 This tutorial provides a step by step introduction on how to run nf-core/airrflow on bulk AIRR-seq data.
 
@@ -13,7 +13,7 @@ Alternatively, you can run this tutorial using the Gitpod platform which has Nex
 
 ## Testing the pipeline with built-in tests
 
-Once you have set up your Nextflow and container (Docker or Singularity), test the airrflow pipeline with built-in test.
+Once you have set up your Nextflow and container (Docker or Singularity), test nf-core/airrflow with the built-in test data.
 
 ```bash
 nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_results
@@ -53,11 +53,11 @@ process {
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
 A prepared samplesheet for this tutorial can be found [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/resource.config).
-Download both files to the directory where you intend to run the airrflow pipeline.
+Download both files to the directory where you intend to run nf-core/airrflow.
 
 ## Choosing the right protocol profile
 
-Bulk BCR and TCR targeted sequencing can be performed with a wide variety of protocols, using different library preparation methods. Different protocols usually use different amplification primers, UMI barcode lengths and position, which require different parameter setting to run Airrflow pipeline. To make it easier to run the pipeline on commonly used commercially available kits, we provide parameter presets as profiles. A full [list of protocol profiles](https://nf-co.re/airrflow/docs/usage/#supported-protocol-profiles) is available on the usage documentation page.
+Bulk BCR and TCR targeted sequencing can be performed with a wide variety of protocols, using different library preparation methods. Different protocols usually use different amplification primers, UMI barcode lengths and position, which require different parameter settings to run nf-core/airrflow. To make it easier to run the pipeline on commonly used commercially available kits, we provide parameter presets as profiles. A full [list of protocol profiles](https://nf-co.re/airrflow/docs/usage/#supported-protocol-profiles) is available on the usage documentation page.
 
 You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as any parameters in the launch command will override the parameters in the profile.
 
@@ -114,7 +114,7 @@ If no UMI barcodes were used, set the `--library_generation_method specific_pcr`
 > When launching a Nextflow pipeline with the `-resume` option, any processes that have already been run with the exact same code, settings and inputs will be cached and the pipeline will resume from the last step that changed or failed with an error. The benefit of using "resume" is to avoid duplicating previous work and save time when re-running a pipeline.
 > We include "resume" in our Nextflow command as a precaution in case anything goes wrong during execution. After fixing the issue, you can relaunch the pipeline with the same command, it will resume running from the point of failure, significantly reducing runtime and resource usage.
 
-After launching the pipeline the following will be printed to the console output, followed by some Nextflow parameters and executions of Airrflow processes:
+After launching the pipeline the following will be printed to the console output, followed by some the default parameters used by the pipeline and execution log of airrflow processes:
 
 ```bash
  N E X T F L O W   ~  version 24.10.5
@@ -204,8 +204,8 @@ The analysis steps and their corresponding folders, where the results are stored
 
 To continue learning about how to use nf-core/airrflow please check out the following documentation:
 
-- [Airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
-- [Airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
+- [nf-core/airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
+- [nf-core/airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
 - [FAQ page](./FAQ.md)
 
 The nf-core troubleshooting documentation will also help you troubleshoot your Nextflow errors.
