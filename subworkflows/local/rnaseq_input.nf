@@ -83,9 +83,9 @@ workflow RNASEQ_INPUT {
         PREPARE_TRUST4_REFERENCE.out.trust4_reference.collect(),
         [],
         params.trust4_barcode_whitelist ? params.trust4_barcode_whitelist : [],
-        params.trust4_cell_barcode_read,
-        params.trust4_umi_read,
-        params.trust4_read_format
+        params.trust4_cell_barcode_read ? params.trust4_cell_barcode_read : [],
+        params.trust4_umi_read ? params.trust4_umi_read : [],
+        params.trust4_read_format ? params.trust4_read_format : [],
     )
 
     ch_trust4_out = TRUST4.out.outs
