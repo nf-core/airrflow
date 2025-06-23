@@ -77,7 +77,7 @@ workflow RNASEQ_INPUT {
     PREPARE_TRUST4_REFERENCE.out.trust4_reference.dump(tag: "trust4_reference")
 
     ch_reads_trust4.dump(tag: "trust4_input")
-    
+
     TRUST4(
         ch_reads_trust4,
         PREPARE_TRUST4_REFERENCE.out.trust4_reference.collect(),
