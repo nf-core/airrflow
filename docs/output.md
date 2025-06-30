@@ -38,7 +38,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Single cell QC](#single-cell-qc)
 - [Clonal analysis](#clonal-analysis)
   - [Find clonal threshold](#find-clonal-threshold)
-  - [SCOPer define clones](#scoper-define-clones) - Defining clonal B-cell or T-cell groups
+  - [SCOPer clonal assignment](#scoper-clonal-assignment) - Defining clonal B-cell or T-cell groups
   - [Dowser lineage reconstruction](#dowser-lineage-reconstruction) - Clonal lineage reconstruction.
 - [Repertoire analysis](#repertoire-analysis) - Repertoire analysis and comparison.
 - [Report file size](#report-file-size) - Log parsing.
@@ -399,12 +399,12 @@ This folder is genereated when `detect_contamination` is set to `true`.
 
 Determining the hamming distance threshold of the junction regions for clonal determination using [Shazam](https://shazam.readthedocs.io) when `clonal_threshold` is set to `auto`.
 
-### SCOPer define clones
+### SCOPer clonal assignment
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `clonal_analysis/define_clones/<subjectID>`
+- `clonal_analysis/clonal_assignment/<subjectID>`
   - `*log`: Log of the process that will be parsed to generate a report.
   - `repertoires/<sampleID>_clone-pass.tsv`: Rearrangement tables in AIRR-C format with sequences that
     passed the clonal assignment step. The field `clone_id` contains the clonal clusters identifiers.
@@ -417,7 +417,7 @@ Determining the hamming distance threshold of the junction regions for clonal de
   - `ggplots/`: Diversity and abundance plots as `ggplot` objects.
   - `figures/`: Clone size, diversity and abundance `png` plots.
 
-A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is generated for all data, with additional
+A similar output folder `clonal_analysis/clonal_assignment/all_reps_clone_report` is generated for all data, with additional
 `ggplot` objects and `png` figures showing the convergence between samples.
 
 </details>

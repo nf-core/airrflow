@@ -225,7 +225,7 @@ for process in processes:
 
         df_process_list.append(df_process)
 
-    elif process in ["define_clones"]:
+    elif process in ["clonal_assignment"]:
         s_code = []
         seqs = []
         clones = []

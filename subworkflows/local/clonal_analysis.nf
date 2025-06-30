@@ -1,7 +1,7 @@
 include { FIND_THRESHOLD as FIND_CLONAL_THRESHOLD } from '../../modules/local/enchantr/find_threshold'
 include { FIND_THRESHOLD as REPORT_THRESHOLD } from '../../modules/local/enchantr/find_threshold'
-include { DEFINE_CLONES as DEFINE_CLONES_COMPUTE  } from '../../modules/local/enchantr/define_clones'
-include { DEFINE_CLONES as DEFINE_CLONES_REPORT } from '../../modules/local/enchantr/define_clones'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_COMPUTE  } from '../../modules/local/enchantr/clonal_assignment'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_REPORT } from '../../modules/local/enchantr/clonal_assignment'
 include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
 
 workflow CLONAL_ANALYSIS {
@@ -61,7 +61,7 @@ workflow CLONAL_ANALYSIS {
         }
     }
 
-    // prepare ch for define clones
+    // prepare ch for clonal assignment
     ch_repertoire.map{ it -> [ it[0]."${params.cloneby}",
                                 it[0].id,
                                 it[0].subject_id,
@@ -71,19 +71,19 @@ workflow CLONAL_ANALYSIS {
                                 it[1] ] }
                 .groupTuple()
                 .map{ get_meta_tabs(it) }
-                .set{ ch_define_clones }
+                .set{ ch_clonal_assignment }
 
-    DEFINE_CLONES_COMPUTE(
-        ch_define_clones,
+    CLONAL_ASSIGNMENT_COMPUTE(
+        ch_clonal_assignment,
         clone_threshold.collect(),
         ch_reference_fasta.collect(),
         []
     )
 
-    ch_versions = ch_versions.mix(DEFINE_CLONES_COMPUTE.out.versions)
+    ch_versions = ch_versions.mix(CLONAL_ASSIGNMENT_COMPUTE.out.versions)
 
-    // prepare ch for define clones all samples report
-    DEFINE_CLONES_COMPUTE.out.tab
+    // prepare ch for clonal assignment all samples report
+    CLONAL_ASSIGNMENT_COMPUTE.out.tab
             .map { it -> it[1]}
             .collect()
             .map { it -> [ [id:'all_reps'], it ] }
@@ -98,24 +98,24 @@ workflow CLONAL_ANALYSIS {
                                         .dump(tag: 'ch_all_repertoires_cloned_samplesheet')
                                         .collectFile(name: 'all_repertoires_cloned_samplesheet.txt', newLine: true)
 
-        DEFINE_CLONES_REPORT(
+        CLONAL_ASSIGNMENT_REPORT(
             ch_all_repertoires_cloned,
             clone_threshold.collect(),
             ch_reference_fasta.collect(),
             ch_all_repertoires_cloned_samplesheet
         )
-        ch_versions = DEFINE_CLONES_REPORT.out.versions
+        ch_versions = CLONAL_ASSIGNMENT_REPORT.out.versions
     }
 
     if (params.lineage_trees){
         DOWSER_LINEAGES(
-            DEFINE_CLONES_COMPUTE.out.tab
+            CLONAL_ASSIGNMENT_COMPUTE.out.tab
         )
         ch_versions = ch_versions.mix(DOWSER_LINEAGES.out.versions)
     }
 
     emit:
-    repertoire = DEFINE_CLONES_COMPUTE.out.tab
+    repertoire = CLONAL_ASSIGNMENT_COMPUTE.out.tab
     versions = ch_versions
     logs = ch_logs
 }
