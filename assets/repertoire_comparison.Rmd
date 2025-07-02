@@ -192,6 +192,7 @@ family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.charact
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
+    guides(color = "none") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
@@ -219,6 +220,7 @@ family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.charact
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
+    guides(color = "none") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
