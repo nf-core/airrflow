@@ -457,6 +457,11 @@
                     "fa_icon": "fas fa-compress-alt",
                     "default": "sample_id"
                 },
+                "cross_sample_collapse":{
+                    "type": "boolean",
+                    "fa_icon": "fas fa-search",
+                    "description": "Whether to collapse duplicates cross samples."
+                },
                 "detect_contamination": {
                     "type": "boolean",
                     "fa_icon": "fas fa-search",

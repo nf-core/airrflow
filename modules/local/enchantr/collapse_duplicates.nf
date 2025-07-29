@@ -1,3 +1,21 @@
+def asString (args) {
+    def s = ""
+    def value = ""
+    if (args.size()>0) {
+        if (args[0] != 'none') {
+            for (param in args.keySet().sort()){
+                value = args[param].toString()
+                if (!value.isNumber()) {
+                    value = "'"+value+"'"
+                }
+                s = s + ",'"+param+"'="+value
+            }
+        }
+    }
+    return s
+}
+
+
 process COLLAPSE_DUPLICATES {
     tag "$meta.id"
 
@@ -19,15 +37,14 @@ process COLLAPSE_DUPLICATES {
     path "versions.yml" , emit: versions
 
     script:
+    def args = task.ext.args ? asString(task.ext.args) : ''
     """
     echo "${tabs.join('\n')}" > tabs.txt
     Rscript -e "enchantr::enchantr_report('collapse_duplicates', \\
         report_params=list('input'='tabs.txt',\\
-        'collapseby'='${params.collapseby}',\\
         'outdir'=getwd(),\\
         'nproc'=${task.cpus},\\
-        'outname'='${meta.id}',\\
-        'log'='${meta.id}_collapse_command_log'))"
+        'log'='${meta.id}_collapse_command_log' ${args}))"
 
     cp -r enchantr ${meta.id}_collapse_report && rm -r enchantr
 
