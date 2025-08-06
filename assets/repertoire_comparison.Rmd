@@ -51,12 +51,12 @@ datadir <- "."
 # AIRR repertoire results
 
 The repertoires per subject after clonal analysis can be found in the
-subdirectory [clonal_analysis/define_clones/all_reps_clone_report/repertoires](clonal_analysis/define_clones/all_reps_clone_report/repertoires).
+subdirectory [clonal_analysis/clonal_assignment/all_reps_clone_report/repertoires](clonal_analysis/clonal_assignment/all_reps_clone_report/repertoires).
 
 Additionally, html reports summarizing the results are provided:
 
 - Report summarizing the clonal threshold found per each specified cloning group [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
-- Report summarizing the repertoire properties for all the samples [clonal_analysis/define_clones/all_reps_clone_report/index.html](clonal_analysis/define_clones/all_reps_clone_report/index.html).
+- Report summarizing the repertoire properties for all the samples [clonal_analysis/clonal_assignment/all_reps_clone_report/index.html](clonal_analysis/clonal_assignment/all_reps_clone_report/index.html).
 - Report summarizing the lineage trees for each specified cloning group [clonal_analysis/dowser_lineages/](clonal_analysis/dowser_lineages/).
 
 A full description of the pipeline results can be found on the Output section of the [nf-core/airrflow website](https://nf-co.re/airrflow).

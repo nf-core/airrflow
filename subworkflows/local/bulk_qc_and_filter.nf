@@ -59,36 +59,48 @@ workflow BULK_QC_AND_FILTER {
         ch_bulk_chimeric_pass
     )
 
-    ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.versions)
-    ch_logs = ch_logs.mix(COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.logs)
-
-    COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.tab.dump(tag:"output collapse withinsample")
-
     if (params.cross_sample_collapse == true){
+            COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.tab
+            .map{ it -> [   it[0].id,
+                            it[0] ] }
+            .set{ch_onlymeta}
+
         COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.tab
-            .map { it -> it[1]}
+            .map { it -> it[1] }
             .collect()
             .map { it -> [ [id:'all_reps'], it ] }
             .set{ch_all_repertoires_within_sample}
-        ch_all_repertoires_within_sample.dump(tag:"ch_all_repertoires_within_sample")
 
         COLLAPSE_DUPLICATES_CROSS_SAMPLES(
-            ch_all_repertoires_within_sample 
+            ch_all_repertoires_within_sample
         )
-        COLLAPSE_DUPLICATES_CROSS_SAMPLES.out.tab.dump(tag:"output collapse crossample")
-        ch_all_repertoires_collapsed = COLLAPSE_DUPLICATES_CROSS_SAMPLES.out.tab
 
+        COLLAPSE_DUPLICATES_CROSS_SAMPLES.out.tab
+            .map { it -> it[1] }
+            .flatten()
+            .map { path ->
+                def sample_id = path.baseName.replaceFirst("__collapse-pass", "")
+                [ sample_id, path]
+                }
+            .set{ch_repertoire_after_2nd_collpasing_with_sampleid}
+
+        ch_repertoire_after_2nd_collpasing_with_meta = ch_onlymeta.join(ch_repertoire_after_2nd_collpasing_with_sampleid)
+                                                    .map{ it -> [ it[1], it[2] ]}
+
+        ch_collapsed = ch_repertoire_after_2nd_collpasing_with_meta
 
         ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES_CROSS_SAMPLES.out.versions)
         ch_logs = ch_logs.mix(COLLAPSE_DUPLICATES_CROSS_SAMPLES.out.logs)
     } else {
-        ch_all_repertoires_collapsed = COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.tab
+        ch_versions = ch_versions.mix(COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.versions)
+        ch_logs = ch_logs.mix(COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.logs)
+        ch_collapsed = COLLAPSE_DUPLICATES_WITHIN_SAMPLE.out.tab
     }
-   
+
 
     emit:
     versions = ch_versions
-    repertoires = ch_all_repertoires_collapsed
+    repertoires = ch_collapsed
     logs = ch_logs
-    
+
 }
