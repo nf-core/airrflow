@@ -10,6 +10,7 @@
 #   -i = Input directory containing germlines in the form <species>/vdj/imgt_<species>_<LOCUS><segment>.fasta
 #   -o = Output directory for the built database. Defaults to current directory.
 #   -h = Display help.
+# TODO allow other reference names other than <imgt> (e.g. airrc)
 
 # Default argument values
 
@@ -19,7 +20,7 @@ OUTDIR="."
 usage () {
     echo -e "Usage: `basename $0` [OPTIONS]"
     echo -e "  -i  Input directory containing germlines in the form:"
-    echo -e "      <species>/vdj/airrc-imgt_<species>_<chain><segment>.fasta."
+    echo -e "      <species>/vdj/imgt_<species>_<chain><segment>.fasta."
     echo -e "  -o  Output directory for the built database."
     echo -e "  -h  This message."
 }
@@ -65,19 +66,19 @@ do
     do
         for SEGMENT in V D J
         do
-            F=$(echo airrc-imgt_${SPECIES}_${CHAIN}_${SEGMENT}.fasta | tr '[:upper:]' '[:lower:]')
-            cat ${GERMDIR}/${SPECIES}/vdj/airrc-imgt_${SPECIES}_${CHAIN}?${SEGMENT}.fasta > ${TMPDIR}/${F}
+            F=$(echo imgt_${SPECIES}_${CHAIN}_${SEGMENT}.fasta | tr '[:upper:]' '[:lower:]')
+            cat ${GERMDIR}/${SPECIES}/vdj/imgt_${SPECIES}_${CHAIN}?${SEGMENT}.fasta > ${TMPDIR}/${F}
         done
 
         # C nucleotides
-        F=$(echo airrc-imgt_${SPECIES}_${CHAIN}_c.fasta | tr '[:upper:]' '[:lower:]')
-        cat ${GERMDIR}/${SPECIES}/constant/airrc-imgt_${SPECIES}_${CHAIN}?C.fasta > ${TMPDIR}/${F}
+        F=$(echo imgt_${SPECIES}_${CHAIN}_c.fasta | tr '[:upper:]' '[:lower:]')
+        cat ${GERMDIR}/${SPECIES}/constant/imgt_${SPECIES}_${CHAIN}?C.fasta > ${TMPDIR}/${F}
     done
 done
 
 # Parse each created fasta file to create igblast database
 cd ${TMPDIR}
-NT_FILES=$(ls *.fasta | grep -E "airrc-imgt_(human|mouse)_ig_(v|d|j)\.fasta")
+NT_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse)_ig_(v|d|j)\.fasta")
 echo ${NT_FILES}
 for F in ${NT_FILES}; do
     cp ${F} ${OUTDIR}/fasta/${F}
@@ -86,8 +87,8 @@ for F in ${NT_FILES}; do
 done
 
 # Reference data from IMGT needs cleaning of the headers
-C_FILES=$(ls *.fasta | grep -E "airrc-imgt_(human|mouse)_(ig|tr)_c\.fasta")
-TR_FILES=$(ls *.fasta | grep -E "airrc-imgt_(human|mouse)_tr_(v|d|j)\.fasta")
+C_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse)_(ig|tr)_c\.fasta")
+TR_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse)_tr_(v|d|j)\.fasta")
 for F in ${IMGT_FILES[@]}; do
     clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
     makeblastdb -parse_seqids -dbtype nucl -in ${OUTDIR}/fasta/${F} \

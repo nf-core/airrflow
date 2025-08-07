@@ -41,7 +41,7 @@ while getopts "o:h" OPT; do
 done
 
 # Info
-REPERTOIRE="airrc-imgt"
+REPERTOIRE="imgt"
 DATE=$(date +"%Y.%m.%d")
 TMPDIR=$(mktemp -d)
 
