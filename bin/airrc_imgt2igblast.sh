@@ -89,6 +89,8 @@ done
 # Reference data from IMGT needs cleaning of the headers
 C_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse)_(ig|tr)_c\.fasta")
 TR_FILES=$(ls *.fasta | grep -E "imgt_(human|mouse)_tr_(v|d|j)\.fasta")
+# join the two arrays
+IMGT_FILES=("${C_FILES[@]}" "${TR_FILES[@]}")
 for F in ${IMGT_FILES[@]}; do
     clean_imgtdb.py ${F} ${OUTDIR}/fasta/${F}
     makeblastdb -parse_seqids -dbtype nucl -in ${OUTDIR}/fasta/${F} \

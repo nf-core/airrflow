@@ -105,6 +105,7 @@ do
                     FILE_NAME="${TMPDIR}/${REPERTOIRE}_${KEY}_${LOCUS}.fasta"
                     wget $URL -O $FILE_NAME -q
                 elif [ "$LOCUS" == "IGK" ] || [ "$LOCUS" == "IGL" ]; then
+                    FILE_NAME="${TMPDIR}/${REPERTOIRE}_${KEY}_${LOCUS}.fasta"
                     # C57BL-6J is the strain used in AIRR-C for IGK and IGL
                     # C57BL-6 is not available in AIRR-C for IGK and IGL
                     if [ "$STRAIN_KEY" == "C57BL-6" ]; then
@@ -114,7 +115,7 @@ do
                     # Get V gene data and check it downloaded well
                     URLV="https://ogrdb.airr-community.org/download_germline_set/${VALUE}/${STRAIN_VALUE}/${STRAIN_VALUE}%20${LOCUS}V/published/gapped"
                     echo $URLV
-                    FILENAME_V="${FILE_PATH}/${REPERTOIRE}_${KEY}_${LOCUS}V.fasta"
+                    FILENAME_V="${TMPDIR}/${REPERTOIRE}_${KEY}_${LOCUS}V.fasta"
                     wget $URLV -O $FILENAME_V -q
                     if [ -s "$FILENAME_V" ]
                     then
@@ -132,7 +133,7 @@ do
                     # Get J gene data and check it downloaded well
                     URLJ="https://ogrdb.airr-community.org/download_germline_set/${VALUE}/${LOCUS}J%20(all%20strains)/published/gapped"
                     echo $URLJ
-                    FILENAME_J="${FILE_PATH}/${REPERTOIRE}_${KEY}_${LOCUS}J.fasta"
+                    FILENAME_J="${TMPDIR}/${REPERTOIRE}_${KEY}_${LOCUS}J.fasta"
                     wget $URLJ -O $FILENAME_J -q
                     if [ -s "$FILENAME_J" ]
                     then
@@ -146,6 +147,10 @@ do
                         echo "AIRR-C Fasta file does not exist, or is empty. Is the OGRDB server online?"
                         exit 1
                     fi
+
+                    # Concatenate V and J gene files into one
+                    cat $FILENAME_V $FILENAME_J > ${FILE_NAME}
+                    rm $FILENAME_V $FILENAME_J
 
                 else
                     STRAIN_VALUE=${STRAIN#*:}
@@ -162,13 +167,13 @@ do
 
         for SEGMENT in ${SEGMENTS[@]}
         do
-            if [ "$KEY" == "mouse" ] && ([ "$LOCUS" == "IGK" ] || [ "$LOCUS" == "IGL" ]); then
-                continue
-            fi
+            #if [ "$KEY" == "mouse" ] && ([ "$LOCUS" == "IGK" ] || [ "$LOCUS" == "IGL" ]); then
+            #    continue
+            #fi
             # Split the file into segments
             F="${REPERTOIRE}_${KEY}_${LOCUS}${SEGMENT}.fasta"
             FILE_NAME="${FILE_PATH}/${F}"
-            ./split_airrcdb.py ${TMPDIR}/${REPERTOIRE}_${KEY}_${LOCUS}.fasta ${FILE_NAME} ${LOCUS} ${SEGMENT}
+            split_airrcdb.py ${TMPDIR}/${REPERTOIRE}_${KEY}_${LOCUS}.fasta ${FILE_NAME} ${LOCUS} ${SEGMENT}
 
             # Checking once that file exists and is not empty (checks IMGT server is online)
             if [ -s "$FILE_NAME" ]
