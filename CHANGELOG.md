@@ -3,7 +3,44 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.2.0] - dev
+## [4.3.1] - Revelio hotfix
+
+### `Added`
+
+- [#399](https://github.com/nf-core/airrflow/pull/399) Bump versions.
+
+### `Fixed`
+
+- [#392](https://github.com/nf-core/airrflow/pull/392) Updated tutorials.
+
+## [4.3.0] - Revelio
+
+### `Added`
+
+- [#360](https://github.com/nf-core/airrflow/pull/360) Update pipeline diagrams.
+- [#374](https://github.com/nf-core/airrflow/pull/374) Template update to nf-core v3.2.0.
+- [#373](https://github.com/nf-core/airrflow/pull/373) Added bulk and single-cell tutorials.
+- [#377](https://github.com/nf-core/airrflow/pull/377) Added Amulety translation and embeddings.
+- [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
+- [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
+- [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
+
+### `Fixed`
+
+- [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
+- [#384](https://github.com/nf-core/airrflow/pull/384) Temporarily downgrade nf-schema to fix compatibility with NXF > 25.03.1-edge.
+- [#388](https://github.com/nf-core/airrflow/pull/388) Fixed some tutorials links and added info.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.16      | 0.1.20      |
+| presto     | 0.7.1       | 0.7.4       |
+| dowser     | 2.1         | 2.3         |
+| alakazam   | 1.3.0       | 1.3.1       |
+
+## [4.2.0] - Evanesco
 
 ### `Added`
 
@@ -12,7 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Added option to save non-productive sequences
 - [#344](https://github.com/nf-core/airrflow/pull/344) Allow for maskprimers align with UMI on both V gene and C gene primers.
 - [#344](https://github.com/nf-core/airrflow/pull/344) Update pipeline template to nf-core tools v3.0.2.
-- Added support for AIRR community germline reference data.
+- [357](https://github.com/nf-core/airrflow/pull/357) Deprecate isotype_column parameter in favor of annotating C region from internal c_region alignment or c_primer alignment into the c_call column.
 
 ### `Fixed`
 
@@ -25,10 +62,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Dependencies`
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.16      | 0.1.19      |
+| presto     | 0.7.1       | 0.7.2       |
+
 ### `Deprecated parameters`
 
-- `--fetch_imgt` is now deprecated in favor of `--fetch_reference`. This new parameter is false by default, using the cached `imgt` reference data. When set to `imgt` or `airrc` it will download the latest version of the [IMGT](https://www.imgt.org/) or [AIRR community](https://ogrdb.airr-community.org/).
-
+- `isotype_column`: if `c_call` column value is NA, now `c_region` and `c_primer` column values respectively are annotated into the `c_call` column.
 
 ## [4.1.0] - Avenseguim
 

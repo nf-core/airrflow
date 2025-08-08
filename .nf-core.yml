@@ -1,7 +1,7 @@
-bump_version: null
 lint:
   files_exist:
     - conf/igenomes.config
+  included_configs: false
   multiqc_config:
     - report_comment
   nextflow_config:
@@ -12,8 +12,7 @@ lint:
         - params.report_logo
         - params.report_logo_img
         - params.config_profile_url
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.2.0
 repository_type: pipeline
 template:
   author: Gisela Gabernet, Susanna Marquez, Alexander Peltzer, Simon Heumos
@@ -23,6 +22,4 @@ template:
   name: airrflow
   org: nf-core
   outdir: .
-  skip_features: null
   version: 4.1.0
-update: null

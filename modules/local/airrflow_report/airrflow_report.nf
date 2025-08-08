@@ -5,7 +5,7 @@ process AIRRFLOW_REPORT {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "docker.io/immcantation/airrflow:4.2.0"
+    container "docker.io/immcantation/airrflow:4.3.0"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
@@ -23,9 +23,6 @@ process AIRRFLOW_REPORT {
     script:
     """
     execute_report.R --report_file ${repertoire_report}
-
-    mkdir repertoire_comparison/repertoires
-    cp *clone-pass.tsv repertoire_comparison/repertoires/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
