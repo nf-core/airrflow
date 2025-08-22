@@ -86,6 +86,7 @@ workflow BULK_QC_AND_FILTER {
 
         ch_repertoire_after_2nd_collpasing_with_meta = ch_onlymeta.join(ch_repertoire_after_2nd_collpasing_with_sampleid)
                                                     .map{ it -> [ it[1], it[2] ]}
+                                                    .view()
 
         ch_collapsed = ch_repertoire_after_2nd_collpasing_with_meta
 
