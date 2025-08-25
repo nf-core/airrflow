@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-- Bump versions to dev.
-- Updated nf-core template to v3.3.2
+- [#413](https://github.com/nf-core/airrflow/pull/413) Bump versions to dev.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
 
 ### `Fixed`
 
-- Add amulety versions in multiQC report.
-- Fixed bug in sans-umi worklfow `revpr` parameter.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
 
 ## [4.3.1] - Revelio hotfix
 
