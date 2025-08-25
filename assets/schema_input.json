@@ -70,10 +70,20 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+$",
+                "errorMessage": "Filename cannot contain spaces."
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": [
+            "sample_id",
+            "subject_id",
+            "species",
+            "pcr_target_locus",
+            "tissue",
+            "sex",
+            "age",
+            "biomaterial_provider",
+            "single_cell"
+        ]
     }
 }
