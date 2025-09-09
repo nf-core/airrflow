@@ -16,6 +16,7 @@ workflow TRANSLATE_EMBED {
         ch_repertoire,
         ch_reference_igblast
     )
+    ch_versions = ch_versions.mix(AMULETY_TRANSLATE.out.versions)
 
     if (params.embeddings && params.embeddings.split(',').contains('antiberty') ){
         AMULETY_ANTIBERTY(

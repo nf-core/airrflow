@@ -43,6 +43,7 @@ workflow SC_RAW_INPUT {
             UNZIP_CELLRANGERDB(
                 params.reference_10x
             )
+            ch_versions = ch_versions.mix(UNZIP_CELLRANGERDB.out.versions)
             UNZIP_CELLRANGERDB.out.unzipped.set { ch_sc_reference }
         } else {
             ch_sc_reference = Channel.fromPath(params.reference_10x, checkIfExists: true)
@@ -74,6 +75,7 @@ workflow SC_RAW_INPUT {
                 ch_cellranger_airr
             )
         .set { ch_renamed_tsv }
+    ch_versions = ch_versions.mix(RENAME_FILE_TSV.out.versions)
 
     // convert airr tsv to fasta (cellranger does not create any fasta with clonotype information)
     CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
