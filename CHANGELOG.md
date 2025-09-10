@@ -15,6 +15,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
 
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.20      |     |
+| presto     | 0.7.4       | 0.7.6       |
+| dowser     | 2.3         |          |
+| alakazam   | 1.3.1       |        |
+
+
 ## [4.3.1] - Revelio hotfix
 
 ### `Added`
