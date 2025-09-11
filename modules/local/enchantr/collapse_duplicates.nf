@@ -3,6 +3,7 @@ process COLLAPSE_DUPLICATES {
 
     label 'process_long_parallelized'
     label 'immcantation'
+    label 'immcantation_container'
 
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."

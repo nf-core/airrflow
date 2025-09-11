@@ -2,6 +2,7 @@ process ADD_META_TO_TAB {
     tag "$meta.id"
     label 'immcantation'
     label 'process_single'
+    label 'immcantation_container'
 
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
