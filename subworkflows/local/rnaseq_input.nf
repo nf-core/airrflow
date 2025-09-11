@@ -70,13 +70,9 @@ workflow RNASEQ_INPUT {
         ch_igblast_reference
     )
 
-
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
 
-    PREPARE_TRUST4_REFERENCE.out.trust4_reference.dump(tag: "trust4_reference")
-
-    ch_reads_trust4.dump(tag: "trust4_input")
 
     TRUST4(
         ch_reads_trust4,
@@ -87,6 +83,7 @@ workflow RNASEQ_INPUT {
         params.trust4_umi_read ? params.trust4_umi_read : [],
         params.trust4_read_format ? params.trust4_read_format : [],
     )
+    ch_versions = ch_versions.mix(TRUST4.out.versions)
 
     ch_trust4_out = TRUST4.out.outs
 

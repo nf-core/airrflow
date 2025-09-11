@@ -51,21 +51,25 @@
             },
             "filename_R1": {
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Filename for R1 cannot contain spaces."
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "Filename for R1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "filename_R2": {
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Filename for R2 cannot contain spaces."
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "Filename for R2 must not contain spaces and must have extension '.fq.gz' or '.fastq.gz'."
             },
             "filename_I1": {
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Filename for I1 cannot contain spaces."
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "Filename for indices must not contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "filename": {
                 "type": "string",
+                "format": "file-path",
+                "exists": true,
                 "pattern": "^\\S+$",
                 "errorMessage": "Filename cannot contain spaces."
             }
