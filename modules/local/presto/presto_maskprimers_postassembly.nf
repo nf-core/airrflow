@@ -5,7 +5,7 @@ process PRESTO_MASKPRIMERS_POSTASSEMBLY {
 
     conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'biocontainers/presto:0.7.6--pyhdfd78af_0' :
+        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
         'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:
