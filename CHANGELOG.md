@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#413](https://github.com/nf-core/airrflow/pull/413) Bump versions to dev.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
 
 ### `Fixed`
 
