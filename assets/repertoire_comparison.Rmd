@@ -114,7 +114,7 @@ if (any(is.na(tab_seqs_assembled$sample_id))) {
 dat <- tab_seqs_assembled %>%
         tidyr::pivot_wider(id_cols=sample_id,
                             names_from=task,
-                            values_from=to_num_seqs)
+                            values_from=output_size)
 dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
@@ -127,8 +127,8 @@ write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t"
 ```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
 
 tab_seqs_assembled <- tab_seqs_assembled %>%
-        filter( !grepl("-fail.tsv", to_name) ) %>%
-        filter( !grepl("productive-F.tsv", to_name) ) %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
         dplyr::filter( task %in% c("sample_id","AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))
@@ -139,7 +139,7 @@ tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes
                                                         "ClonePass"))
 
 seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
-                    aes(x=task, y=to_num_seqs, group=sample_id)) +
+                    aes(x=task, y=output_size, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
               scale_y_log10() +
@@ -192,6 +192,7 @@ family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.charact
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
+    guides(color = "none") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
@@ -219,6 +220,7 @@ family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.charact
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
+    guides(color = "none") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Usage") +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
