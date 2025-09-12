@@ -70,26 +70,20 @@ workflow RNASEQ_INPUT {
         ch_igblast_reference
     )
 
-
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
 
-    PREPARE_TRUST4_REFERENCE.out.trust4_reference.dump(tag: "trust4_reference")
-
-    ch_reads_trust4.dump(tag: "trust4_input")
-
-    // create barcode and umi channels for nf-core trust4 module
-    barcode_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 ->  [meta, params.cell_barcode_read] }
-    umi_channel = ch_reads_fastp_filtered.map { meta, read_1, read_2 -> [meta, params.umi_read] }
-    ch_reference_trust4 = PREPARE_TRUST4_REFERENCE.out.trust4_reference.map { reference -> [[id: "igblast_reference"], reference] }
 
     TRUST4(
         ch_reads_trust4,
-        ch_reference_trust4.collect(),
-        Channel.of([[], []]).collect(),
-        barcode_channel,
-        umi_channel
+        PREPARE_TRUST4_REFERENCE.out.trust4_reference.collect(),
+        [],
+        params.trust4_barcode_whitelist ? params.trust4_barcode_whitelist : [],
+        params.trust4_cell_barcode_read ? params.trust4_cell_barcode_read : [],
+        params.trust4_umi_read ? params.trust4_umi_read : [],
+        params.trust4_read_format ? params.trust4_read_format : [],
     )
+    ch_versions = ch_versions.mix(TRUST4.out.versions)
 
     ch_trust4_out = TRUST4.out.outs
 

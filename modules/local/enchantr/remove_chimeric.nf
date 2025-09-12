@@ -3,6 +3,7 @@ process REMOVE_CHIMERIC {
 
     label 'process_long_parallelized'
     label 'immcantation'
+    label 'immcantation_container'
 
 
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {

@@ -3,10 +3,10 @@ process PRESTO_PAIRSEQ {
     label "process_low"
     label 'immcantation'
 
-    conda "bioconda::presto=0.7.4"
+    conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.4--pyhdfd78af_0' :
-        'biocontainers/presto:0.7.4--pyhdfd78af_0' }"
+        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
+        'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path("${meta.id}_R1.fastq"), path("${meta.id}_R2.fastq")
