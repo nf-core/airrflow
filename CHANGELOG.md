@@ -3,6 +3,38 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.4dev]
+
+### `Added`
+
+- [#413](https://github.com/nf-core/airrflow/pull/413) Bump versions to dev.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
+
+### `Fixed`
+
+- [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.20      |             |
+| presto     | 0.7.4       | 0.7.6       |
+| dowser     | 2.3         |             |
+| alakazam   | 1.3.1       |             |
+
+## [4.3.1] - Revelio hotfix
+
+### `Added`
+
+- [#399](https://github.com/nf-core/airrflow/pull/399) Bump versions.
+
+### `Fixed`
+
+- [#392](https://github.com/nf-core/airrflow/pull/392) Updated tutorials.
+
 ## [4.3.0] - Revelio
 
 ### `Added`
@@ -14,6 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
 - [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
+- [#385](https://github.com/nf-core/airrflow/pull/385) Added trust4 barcodewhitelist parameter
 
 ### `Fixed`
 

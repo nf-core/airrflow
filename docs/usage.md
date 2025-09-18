@@ -6,7 +6,7 @@
 
 ## Introduction
 
-The nf-core/airrflow pipeline allows processing B-cell receptor (BCR) and and T-cell receptor (TCR) sequencing data from bulk and single-cell sequencing protocols. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNA-seq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
+nf-core/airrflow allows processing B-cell receptor (BCR) and and T-cell receptor (TCR) sequencing data from bulk and single-cell sequencing protocols. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNA-seq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
 
 In addition to this page, you can find additional information on how to use the pipeline on the following pages:
 
@@ -198,10 +198,10 @@ An example samplesheet is:
 
 It is possible to provide several fastq files per sample (e.g. sequenced over different chips or lanes). In this case the different fastq files per sample will be provided to the same cellranger process. These rows should then have an identical `sample_id` field.
 
-### Fastq input samplesheet (untargeted bulk or single-cell RNAseq)
+### Fastq input samplesheet (untargeted bulk or single-cell RNA-seq)
 
 When running the untargeted protocol, BCR or TCR sequences will be extracted from the untargeted bulk or single-cell RNA sequencing with tools such as [TRUST4](https://github.com/liulab-dfci/TRUST4).
-The required input file is the same as for the [Fastq bulk AIRR samplesheet](#fastq-input-samplesheet-bulk-airr-sequencing) or [Fastq single-cell AIRR samplesheet](#fastq-input-samplesheet-single-cell-sequencing) depending on the input data type (bulk RNAseq or single-cell RNAseq).
+The required input file is the same as for the [Fastq bulk AIRR samplesheet](#fastq-input-samplesheet-bulk-airr-sequencing) or [Fastq single-cell AIRR samplesheet](#fastq-input-samplesheet-single-cell-sequencing) depending on the input data type (bulk RNA-seq or single-cell RNA-seq).
 
 ### Assembled input samplesheet (bulk or single-cell sequencing)
 
@@ -535,7 +535,7 @@ nextflow run nf-core/airrfow \
 ```
 
 - If UMI's are present, the read containing them must be specified using the `--umi_read` parameter.
-- The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNAseq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
+- The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNA-seq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
 
 ## Important considerations for clonal analysis
 
@@ -622,7 +622,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/airrflow/blob/132ab3d129c0df3f2de0ede7a7afaf549277c512/conf/base.config#L17) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
