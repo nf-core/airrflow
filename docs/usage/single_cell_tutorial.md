@@ -7,7 +7,7 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
 
-For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After Docker installation on Linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/Linux-postinstall/).
+For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After Docker installation on Linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 Alternatively, you can run this tutorial using the Gitpod platform which contains pre-installed Nextflow, nf-core and Docker. There are three ways to open Gitpod platform. Please watch this [video](https://www.youtube.com/watch?v=ij1msCffQZA&list=PL3TSF5whlprXVp-7Br2oKwQgU4bji1S7H&index=2) to set it up. If you want to know more about Gitpod, check [the Gitpod overview](https://nf-co.re/docs/tutorials/gitpod/overview).
 
@@ -259,78 +259,4 @@ To continue learning about how to use nf-core/airrflow please check out the foll
 
 The nf-core troubleshooting documentation will also help you troubleshoot your Nextflow errors
 
-<<<<<<< HEAD
-   - An example error message is shown below if the required column 'sex' is missing from the samplesheet( [assembled_samplesheet_missing_sex.tsv](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet_missing_sex.tsv) and the pipeline is run with this samplesheet.
-
-```bash
-#! /usr/bin/bash
-
-nextflow run nf-core/airrflow -r 4.2.0 \
--profile docker \
---mode assembled \
---input assembled_samplesheet_missing_sex.tsv \
---outdir sc_from_assembled_results_error_test  \
--c resource.config \
--resume
-```
-
-```bash
-ERROR ~ Validation of pipeline parameters failed!
-
- -- Check '.nextflow.log' file for details
-The following invalid input values have been detected:
-
-* --input (assembled_samplesheet_missing_sex.tsv): Validation of file failed:
-        -> Entry 1: Missing required field(s): sex
-        -> Entry 2: Missing required field(s): sex
-        -> Entry 3: Missing required field(s): sex
-        -> Entry 4: Missing required field(s): sex
-
- -- Check script '/home/hl2244/.nextflow/assets/nf-core/airrflow/./workflows/../subworkflows/local/utils_nfcore_airrflow_pipeline/../../nf-core/utils_nfschema_plugin/main.nf' at line: 39 or see '.nextflow.log' file for more details
-```
-
-For more information on Nextflow errors and how to debug them you can check this [Nextflow troubleshooting tutorial](https://training.nextflow.io/2.1.1/basic_training/debugging/).
-
-## Costumizing your analysis and generating your own figures
-
-nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. The computations results (e.g. clonal inference, mutation frequency analysis) are stored in the output AIRR rearrangement repertoire files in newly generated columns under `clonal_analysis/clonal_assignment/all_repertoires`. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
-
-## Updating process resource requests
-
-By default the pipeline has set reasonable process resource requests (number of CPUs, RAM memory, time limits) to the compute system. Depending on the size of your datasets or your running infrastructure you can customize these requests to meet your needs.
-
-To update the resource requests for a specific pipeline process, you can do so in the `resource.config` file provided with the `-c` parameter. For example, to update the resource requests for the `CHANGEO_ASSIGNGENES` process:
-
-```json title="resource.config"
-process {
-   resourceLimits = [cpus: 8, memory: 72.GB, time: 24.h]
-
-   withName:CHANGEO_ASSIGNGENES {
-        cpus   = 2
-        memory = 10.GB
-        time   = 5h
-   }
-}
-```
-
-In nf-core pipelines, each process has a label indicating the resources that are being requested (`process_low`, `process_medium`, `process_high`, ...). The CPUs, RAM and time set up for each of these labels can be found in the [base.config](https://github.com/nf-core/airrflow/blob/master/conf/base.config) file. You can update the resource requests for all processes with a specific label by adding a new setting in your `resource.config` file provided with the `-c` parameter. For example here we update the process requests of processes with the `process_high` label:
-
-```json title="resource.config"
-process {
-   resourceLimits = [cpus: 24, memory: 100.GB, time: 24.h]
-
-   withLabel:process_high {
-        cpus   = 24
-        memory = 100.GB
-        time   = 10h
-   }
-}
-```
-
-Note that the resource requests will never exceed what is specified in the `resourceLimits` line, so if you do want to increase the resource requests for specific processes, you should also increase the `resourceLimits` requests and run the pipeline in a compute infrastructure with sufficient resources. In this exmaple we also have updated the `resourceLimits` to reflect that.
-
-> [!TIP]
-> For more information about nf-core pipeline resource configurations, check out the [nf-core pipeline configuration docs](https://nf-co.re/docs/usage/getting_started/configuration).
-=======
 - [nf-core troubleshooting](https://nf-co.re/docs/usage/troubleshooting/overview)
->>>>>>> 1daa0857bddc3046009a1002828b323edd565155

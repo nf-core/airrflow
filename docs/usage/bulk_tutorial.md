@@ -7,7 +7,7 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
 
-For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/Linux-postinstall/).
+For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 Alternatively, you can run this tutorial using the Gitpod platform which has Nextflow, nf-core and Docker pre-installed. There are three ways to open the Gitpod platform. Please watch this [video](https://www.youtube.com/watch?v=ij1msCffQZA&list=PL3TSF5whlprXVp-7Br2oKwQgU4bji1S7H&index=2) to set it up. If you want to know more about Gitpod, check [the Gitpod overview](https://nf-co.re/docs/tutorials/gitpod/overview).
 
@@ -196,11 +196,7 @@ The analysis steps and their corresponding folders, where the results are stored
 
 ## Find out more
 
-<<<<<<< HEAD
-nf-core/airrflow is a standardized pipeline that performs the different computational analysis steps and provides standard figures for a first data exploration. The computations results (e.g. clonal inference, mutation frequency analysis) are stored in the output AIRR rearrangement repertoire files in newly generated columns under `clonal_analysis/clonal_assignment/all_repertoires`. You can use these Airrflow results as input for customized analyses using R and the Immcantation tools. You can find the tutorial for Immcantation's single-cell V(D)J analysis [here](https://immcantation.readthedocs.io/en/stable/getting_started/10x_tutorial.html).
-=======
 To continue learning about how to use nf-core/airrflow please check out the following documentation:
->>>>>>> 1daa0857bddc3046009a1002828b323edd565155
 
 - [nf-core/airrflow usage documentation](https://nf-co.re/airrflow/docs/usage)
 - [nf-core/airrflow parameters documentation](https://nf-co.re/airrflow/parameters)
