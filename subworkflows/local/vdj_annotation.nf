@@ -11,6 +11,7 @@ workflow VDJ_ANNOTATION {
 
     take:
     ch_fasta // [meta, fasta]
+    ch_tsv // [meta, tsv]
     ch_validated_samplesheet
     ch_igblast
     ch_reference_fasta
@@ -35,7 +36,8 @@ workflow VDJ_ANNOTATION {
     ch_logs = ch_logs.mix(CHANGEO_MAKEDB.out.logs)
     ch_versions = ch_versions.mix(CHANGEO_MAKEDB.out.versions)
 
-    ch_assigned_tab = CHANGEO_MAKEDB.out.tab
+    ch_assigned_tab = ch_tsv.mix(CHANGEO_MAKEDB.out.tab)
+
     ch_assignment_logs = CHANGEO_MAKEDB.out.logs
 
     if (!params.skip_alignment_filter){

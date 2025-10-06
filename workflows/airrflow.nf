@@ -176,8 +176,10 @@ workflow AIRRFLOW {
                 ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
                 ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions)
                 ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+                ch_tsv_files = Channel.empty()
             } else {
                 ch_fasta_from_tsv = Channel.empty()
+                ch_tsv_files = ASSEMBLED_INPUT_CHECK.out.ch_tsv
             }
 
             ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
@@ -199,9 +201,11 @@ workflow AIRRFLOW {
         } else {
             error "Mode parameter value not valid."
         }
+
         // Perform V(D)J annotation and filtering
         VDJ_ANNOTATION(
             ch_fasta,
+            ch_tsv_files,
             ch_validated_samplesheet.collect(),
             DATABASES.out.igblast.collect(),
             DATABASES.out.reference_fasta.collect()
