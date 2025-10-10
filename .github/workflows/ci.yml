@@ -110,7 +110,7 @@ jobs:
             "test_assembled_hs",
             "test_assembled_mm",
             "test_10x_sc",
-            "test_takara_umi",
+            "test_clontech_umi",
             "test_nebnext_umi",
             "test_reassign_false",
             "test_rnaseq_bulk",
