@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
+- Fixed reassign false option and added tests.
 
 ### `Dependencies`
 
