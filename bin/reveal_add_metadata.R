@@ -69,7 +69,10 @@ metadata <- metadata %>%
     dplyr::distinct()
 
 if (nrow(metadata) != 1) {
-    stop("Expecting nrow(metadata) == 1; nrow(metadata) == ", nrow(metadata), " found")
+    message("Concatenating metadata fields for this sample ID:", opt$INPUTID)
+    metadata <- metadata %>%
+        dplyr::group_by(sample_id) %>%
+        dplyr::summarise(across(everything(), ~ paste(unique(.), collapse = ",")))
 }
 
 internal_fields <-
