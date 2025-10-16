@@ -10,16 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Bump versions to dev.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
-- Update Takara protocol names and docs. Add Takara SMART-seq protocol.
-- Add nf-test tests.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Update Takara protocol names and docs. Add Takara SMART-seq protocol.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Add nf-test tests.
 
 
 ### `Fixed`
 
 - [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
-- Subsample reads for report_threshold process.
-- Removed a variable that was defined twice.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Subsample reads for report_threshold process.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Removed a variable that was defined twice.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Renamed define_clones to clonal_assignment.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in number of sequences report.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in report file size.
 
 ### `Dependencies`
 
