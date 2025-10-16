@@ -404,7 +404,7 @@ Determining the hamming distance threshold of the junction regions for clonal de
 <details markdown="1">
 <summary>Output files</summary>
 
-- `clonal_analysis/define_clones/<subjectID>`
+- `clonal_analysis/clonal_assignment/<subjectID>`
   - `*log`: Log of the process that will be parsed to generate a report.
   - `repertoires/<sampleID>_clone-pass.tsv`: Rearrangement tables in AIRR-C format with sequences that
     passed the clonal assignment step. The field `clone_id` contains the clonal clusters identifiers.
@@ -417,7 +417,7 @@ Determining the hamming distance threshold of the junction regions for clonal de
   - `ggplots/`: Diversity and abundance plots as `ggplot` objects.
   - `figures/`: Clone size, diversity and abundance `png` plots.
 
-A similar output folder `clonal_analysis/define_clones/all_reps_clone_report` is generated for all data, with additional
+A similar output folder `clonal_analysis/clonal_assignment/all_reps_clone_report` is generated for all data, with additional
 `ggplot` objects and `png` figures showing the convergence between samples.
 
 </details>

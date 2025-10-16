@@ -76,6 +76,7 @@ workflow AIRRFLOW {
 
         ch_versions = Channel.empty()
         ch_reassign_logs = Channel.empty()
+        ch_input_check_logs = Channel.empty()
 
         // Download or fetch databases
         DATABASES()
@@ -168,6 +169,7 @@ workflow AIRRFLOW {
                 params.cloneby
             )
             ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions )
+            ch_input_check_logs = ASSEMBLED_INPUT_CHECK.out.logs
 
             if (params.reassign) {
                 CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
@@ -276,6 +278,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs.collect().ifEmpty([]),
                 ch_presto_collapseseq_logs.collect().ifEmpty([]),
                 ch_presto_splitseq_logs.collect().ifEmpty([]),
+                ch_input_check_logs.collect().ifEmpty([]),
                 ch_reassign_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),

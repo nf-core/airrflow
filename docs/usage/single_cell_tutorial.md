@@ -7,7 +7,7 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
 
-For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After Docker installation on Linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/Linux-postinstall/).
+For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After Docker installation on Linux system, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 Alternatively, you can run this tutorial using the Gitpod platform which contains pre-installed Nextflow, nf-core and Docker. There are three ways to open Gitpod platform. Please watch this [video](https://www.youtube.com/watch?v=ij1msCffQZA&list=PL3TSF5whlprXVp-7Br2oKwQgU4bji1S7H&index=2) to set it up. If you want to know more about Gitpod, check [the Gitpod overview](https://nf-co.re/docs/tutorials/gitpod/overview).
 
@@ -18,6 +18,10 @@ Once you have set up your Nextflow and container (Docker or Singularity), test n
 ```bash
 nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_results
 ```
+
+> [!NOTE]
+> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release. 
+
 
 If the tests run through correctly, you should see the execution of airrflow processes. Finally, the following output will appear in your command line:
 
@@ -237,7 +241,7 @@ The analysis steps and their corresponding folders, where the results are stored
 4. Clonal analysis.
    - Results of the clonal threshold determination using `SHazaM` should be inspected in the html report under the 'clonal_analysis/find_threshold' folder. If the automatic threshold is unsatisfactory, you can set the threshold manually and re-run the pipeline.
      (Tip: use -resume whenever running the Nextflow pipeline to avoid duplicating previous work).
-   - Clonal inference is performed with `SCOPer`. Clonal inference results as well as clonal abundance and diversity plots can be inspected in the html report in the folder 'clonal_analysis/define_clones'. For BCR sequencing data, mutation frequency is also computed using `SHazaM` at this step and plotted in the report. The `repertoires` subfolder contains the AIRR formatted files with the clonal assignments in a new column `clone_id` and mutation frequency in the column `mu_freq`. The `tables` subfolder contains the tabulated abundance and diversity computation as well as a table with the number of clones and their size. The `ggplots` subfolder contains the abundance and diversity plots as an `RData` object for loading and customization in R.
+   - Clonal inference is performed with `SCOPer`. Clonal inference results as well as clonal abundance and diversity plots can be inspected in the html report in the folder 'clonal_analysis/clonal_assignment'. For BCR sequencing data, mutation frequency is also computed using `SHazaM` at this step and plotted in the report. The `repertoires` subfolder contains the AIRR formatted files with the clonal assignments in a new column `clone_id` and mutation frequency in the column `mu_freq`. The `tables` subfolder contains the tabulated abundance and diversity computation as well as a table with the number of clones and their size. The `ggplots` subfolder contains the abundance and diversity plots as an `RData` object for loading and customization in R.
    - If lineage trees were computed using `Dowser`, a folder under 'clonal_analysis/dowser_lineages' will be present. The trees can be inspected in the html report and saved as PDF. Additionally, an `RDS` object with the formatted trees can also be loaded in R for customizing the lineage tree plots with Dowser.
 
 5. Repertoire analysis

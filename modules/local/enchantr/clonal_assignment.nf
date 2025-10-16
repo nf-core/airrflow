@@ -15,7 +15,7 @@ def asString (args) {
     return s
 }
 
-process DEFINE_CLONES {
+process CLONAL_ASSIGNMENT {
     tag "${meta.id}"
 
     label 'process_long_parallelized'
@@ -50,7 +50,7 @@ process DEFINE_CLONES {
         input = tabs.join(',')
     }
     """
-    Rscript -e "enchantr::enchantr_report('define_clones', \\
+    Rscript -e "enchantr::enchantr_report('clonal_assignment', \\
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
