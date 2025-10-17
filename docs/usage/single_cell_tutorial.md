@@ -20,8 +20,7 @@ nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_result
 ```
 
 > [!NOTE]
-> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release. 
-
+> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release.
 
 If the tests run through correctly, you should see the execution of airrflow processes. Finally, the following output will appear in your command line:
 

@@ -177,7 +177,7 @@ for process in processes:
                         s_code.append(logfile.split("/")[1].split("_command_log")[0])
                         process_name.append(process)
                     elif "KEEP_MISSING>" in line:
-                        keep_missing=line.strip().removeprefix("KEEP_MISSING> ")    
+                        keep_missing=line.strip().removeprefix("KEEP_MISSING> ")
                     elif "SEQUENCES>" in line:
                         seqs.append(line.strip().removeprefix("SEQUENCES> "))
                     elif "UNIQUE>" in line:
@@ -190,7 +190,7 @@ for process in processes:
         # Keep is the number of sequences kept after this step.
         if keep_missing.lower()=='true':
             keep = [int(x) + int(y) for x, y in zip(unique, undetermined)]
-        else: 
+        else:
             keep = unique
 
         df_process = pd.DataFrame.from_dict(

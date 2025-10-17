@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Update Takara protocol names and docs. Add Takara SMART-seq protocol.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Add nf-test tests.
 
-
 ### `Fixed`
 
 - [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.

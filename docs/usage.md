@@ -355,8 +355,8 @@ This profile executes the sequence assembly commands based on the pRESTO pre-set
 
 After the sequence assembly steps, the remaining steps are common for all protocols.
 
->[!NOTE]
->Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
+> [!NOTE]
+> Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
