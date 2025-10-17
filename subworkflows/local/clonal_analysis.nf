@@ -104,7 +104,7 @@ workflow CLONAL_ANALYSIS {
             ch_reference_fasta.collect(),
             ch_all_repertoires_cloned_samplesheet
         )
-        ch_versions = CLONAL_ASSIGNMENT_REPORT.out.versions
+        ch_versions = ch_versions.mix(CLONAL_ASSIGNMENT_REPORT.out.versions)
     }
 
     if (params.lineage_trees){
