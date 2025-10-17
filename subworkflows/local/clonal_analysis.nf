@@ -30,15 +30,36 @@ workflow CLONAL_ANALYSIS {
             ch_logo,
             ch_find_threshold_samplesheet
         )
-        ch_threshold = FIND_CLONAL_THRESHOLD.out.mean_threshold
+        def ch_threshold_channel = FIND_CLONAL_THRESHOLD.out.mean_threshold
         ch_versions = ch_versions.mix(FIND_CLONAL_THRESHOLD.out.versions)
 
-        clone_threshold = ch_threshold
+        // Collect raw threshold values into a single list so we can distinguish
+        // between (A) no values at all (likely upstream failure), and
+        // (B) values present but all invalid thresholds ('' / 'NA' / 'NaN').
+        def raw_list = ch_threshold_channel
             .splitText( limit:1 ) { it.trim().toString() }
-            .dump(tag: 'clone_threshold')
-            .filter { it != 'NA'}
-            .filter { it != 'NaN' }
-            .ifEmpty { error "Automatic clone_threshold is 'NA'. Consider setting --clonal_threshold manually."}
+            .map { it -> it.trim() }
+            .dump(tag: 'clone_threshold_raw')
+            .collect()
+
+        // Process the collected list to identify when no valid thresholds were found
+        clone_threshold = raw_list
+            .map { list ->
+                if (!list || list.size() == 0) {
+                    // upstream produced nothing — do not print a message here
+                    return []
+                }
+
+                def valid = list.findAll { it != '' && it != 'NA' && it != 'NaN' }
+                if (valid.size() == 0) {
+                    // The automatic threshold finder returned values but all were
+                    // NA, NaN or empty strings - ask the user to set a manual value.
+                    error "Automatic clone_threshold detection failed. Consider setting --clonal_threshold manually."
+                }
+
+                return valid
+            }
+            .flatten()
 
     } else {
         clone_threshold = params.clonal_threshold
