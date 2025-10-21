@@ -286,7 +286,6 @@
                 "fastqc/postassembly/Sample8_ASSEMBLED_fastqc.zip",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/fastp-insert-size-plot.txt",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_Before_filtering.txt",
@@ -312,7 +311,9 @@
                 "multiqc/multiqc_data/fastqc-1_sequence_duplication_levels_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_top_overrepresented_sequences_table.txt",
                 "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastp.txt",
@@ -870,7 +871,7 @@
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,f08f62309e204a8eedf4371e4ac7b500",
                 "multiqc_fastqc_fastqc-1.txt:md5,f6b8822f161130fda71c58ed55136f2d",
-                "multiqc_general_stats.txt:md5,d0dad5d1e0b01d49436cf5f07dee0e4d",
+                "multiqc_general_stats.txt:md5,dfcf7745fc773fe631d3e4a35726765b",
                 "Sample2_collapse_command_log.txt:md5,c5ba8730adf7ae2c3fe0e669a1f4d774",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample3_collapse_command_log.txt:md5,83ebaac5c24188d75d3fb4c27721c7c2",
@@ -906,8 +907,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-17T14:11:29.384081266"
+        "timestamp": "2025-10-21T10:38:57.492281136"
     }
 }
