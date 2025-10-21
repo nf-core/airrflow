@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-nextflow run nf-core/airrflow -r 4.2.0 \
+nextflow run nf-core/airrflow -r 4.3.0 \
 -profile docker \
 --mode assembled \
 --input assembled_samplesheet.tsv \

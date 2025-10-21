@@ -47,7 +47,7 @@ workflow FASTQ_INPUT_CHECK {
     }
 
     // final versions channel: base merged with CAT_FASTQ versions only when CAT_FASTQ was used
-    def ch_versions = (params.library_generation_method == 'sc_10x_genomics' || params.library_generation_method == 'trust4') ? 
+    def ch_versions = (params.library_generation_method == 'sc_10x_genomics' || params.library_generation_method == 'trust4') ?
         ch_versions_base : ch_versions_base.mix( CAT_FASTQ.out.versions )
 
     emit:

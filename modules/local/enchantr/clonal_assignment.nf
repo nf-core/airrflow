@@ -15,7 +15,7 @@ def asString (args) {
     return s
 }
 
-process DEFINE_CLONES {
+process CLONAL_ASSIGNMENT {
     tag "${meta.id}"
 
     label 'process_long_parallelized'
@@ -25,7 +25,7 @@ process DEFINE_CLONES {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "docker.io/immcantation/airrflow:4.3.0"
+    container "docker.io/immcantation/airrflow:4.4.0"
 
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
@@ -50,7 +50,7 @@ process DEFINE_CLONES {
         input = tabs.join(',')
     }
     """
-    Rscript -e "enchantr::enchantr_report('define_clones', \\
+    Rscript -e "enchantr::enchantr_report('clonal_assignment', \\
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
