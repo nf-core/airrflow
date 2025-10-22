@@ -31,8 +31,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | ---------- | ----------- | ----------- |
 | enchantr   | 0.1.20      | 0.1.23      |
 | presto     | 0.7.4       | 0.7.6       |
-| dowser     | 2.3         |             |
-| alakazam   | 1.3.1       |             |
+| dowser     | 2.3         | 2.4.0       |
+| alakazam   | 1.3.1       | 1.4.1       |
 
 ## [4.3.1] - Revelio hotfix
 
