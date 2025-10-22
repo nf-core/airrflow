@@ -30,13 +30,13 @@ workflow CLONAL_ANALYSIS {
             ch_logo,
             ch_find_threshold_samplesheet
         )
-        def ch_threshold_channel = FIND_CLONAL_THRESHOLD.out.mean_threshold
+        def ch_threshold = FIND_CLONAL_THRESHOLD.out.mean_threshold
         ch_versions = ch_versions.mix(FIND_CLONAL_THRESHOLD.out.versions)
 
         // Collect raw threshold values into a single list so we can distinguish
         // between (A) no values at all (likely upstream failure), and
         // (B) values present but all invalid thresholds ('' / 'NA' / 'NaN').
-        def raw_list = ch_threshold_channel
+        def raw_list = ch_threshold
             .splitText( limit:1 ) { it.trim().toString() }
             .map { it -> it.trim() }
             .dump(tag: 'clone_threshold_raw')
