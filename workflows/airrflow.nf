@@ -158,7 +158,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs            = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs.ifEmpty([])
                 ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.ifEmpty([])
                 ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.ifEmpty([])
-            }
+                ch_tsv_files                            = Channel.empty()
 
         } else if ( params.mode == "assembled" ) {
 
