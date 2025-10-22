@@ -97,51 +97,52 @@ workflow AIRRFLOW {
 
                 ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
 
-            ch_presto_filterseq_logs                = Channel.empty()
-            ch_presto_maskprimers_logs              = Channel.empty()
-            ch_presto_pairseq_logs                  = Channel.empty()
-            ch_presto_clustersets_logs              = Channel.empty()
-            ch_presto_buildconsensus_logs           = Channel.empty()
-            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
-            ch_presto_assemblepairs_logs            = Channel.empty()
-            ch_presto_collapseseq_logs              = Channel.empty()
-            ch_presto_splitseq_logs                 = Channel.empty()
-            ch_fastp_html                           = Channel.empty()
-            ch_fastp_json                           = Channel.empty()
-            ch_fastqc_postassembly_mqc              = Channel.empty()
+                ch_presto_filterseq_logs                = Channel.empty()
+                ch_presto_maskprimers_logs              = Channel.empty()
+                ch_presto_pairseq_logs                  = Channel.empty()
+                ch_presto_clustersets_logs              = Channel.empty()
+                ch_presto_buildconsensus_logs           = Channel.empty()
+                ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+                ch_presto_assemblepairs_logs            = Channel.empty()
+                ch_presto_collapseseq_logs              = Channel.empty()
+                ch_presto_splitseq_logs                 = Channel.empty()
+                ch_fastp_html                           = Channel.empty()
+                ch_fastp_json                           = Channel.empty()
+                ch_fastqc_postassembly_mqc              = Channel.empty()
+                ch_tsv_files                            = Channel.empty()
 
-        }  else if (params.library_generation_method == "trust4") {
-            // Extract VDJ sequences from "general" RNA seq data using TRUST4
+            }  else if (params.library_generation_method == "trust4") {
+                // Extract VDJ sequences from "general" RNA seq data using TRUST4
 
-            RNASEQ_INPUT (
-                ch_input,
-                DATABASES.out.igblast.collect()
-            )
+                RNASEQ_INPUT (
+                    ch_input,
+                    DATABASES.out.igblast.collect()
+                )
 
-            ch_fasta                                = RNASEQ_INPUT.out.fasta
-            ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
+                ch_fasta                                = RNASEQ_INPUT.out.fasta
+                ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
 
-            ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
+                ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
 
-            ch_presto_filterseq_logs                = Channel.empty()
-            ch_presto_maskprimers_logs              = Channel.empty()
-            ch_presto_pairseq_logs                  = Channel.empty()
-            ch_presto_clustersets_logs              = Channel.empty()
-            ch_presto_buildconsensus_logs           = Channel.empty()
-            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
-            ch_presto_assemblepairs_logs            = Channel.empty()
-            ch_presto_collapseseq_logs              = Channel.empty()
-            ch_presto_splitseq_logs                 = Channel.empty()
-            ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
-            ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
-            ch_fastqc_postassembly_mqc              = Channel.empty()
-        }
-        else {
-            // Perform sequence assembly if input type is fastq from bulk sequencing data
-            SEQUENCE_ASSEMBLY(
-                ch_input,
-                DATABASES.out.igblast.collect()
-            )
+                ch_presto_filterseq_logs                = Channel.empty()
+                ch_presto_maskprimers_logs              = Channel.empty()
+                ch_presto_pairseq_logs                  = Channel.empty()
+                ch_presto_clustersets_logs              = Channel.empty()
+                ch_presto_buildconsensus_logs           = Channel.empty()
+                ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+                ch_presto_assemblepairs_logs            = Channel.empty()
+                ch_presto_collapseseq_logs              = Channel.empty()
+                ch_presto_splitseq_logs                 = Channel.empty()
+                ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
+                ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
+                ch_fastqc_postassembly_mqc              = Channel.empty()
+                ch_tsv_files                            = Channel.empty()
+            } else {
+                // Perform sequence assembly if input type is fastq from bulk sequencing data
+                SEQUENCE_ASSEMBLY(
+                    ch_input,
+                    DATABASES.out.igblast.collect()
+                )
 
                 ch_fasta                                = SEQUENCE_ASSEMBLY.out.fasta
                 ch_versions                             = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
@@ -159,6 +160,7 @@ workflow AIRRFLOW {
                 ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.ifEmpty([])
                 ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.ifEmpty([])
                 ch_tsv_files                            = Channel.empty()
+            }
 
         } else if ( params.mode == "assembled" ) {
 
