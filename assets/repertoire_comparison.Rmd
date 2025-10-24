@@ -130,6 +130,8 @@ if (is.null(tab_seqs_assembled$sample_id)) {
 }
 
 dat <- tab_seqs_assembled %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
         tidyr::pivot_wider(id_cols=sample_id,
                             names_from=task,
                             values_from=output_size)
@@ -207,7 +209,7 @@ df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_
 The V gene usage in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ```{r gene_family, echo=F}
-family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="family")
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id"), mode="family")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
@@ -237,7 +239,7 @@ The V gene usage in each of the samples is represented below.
 All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ```{r gene_seq, echo=F, fig.width=10, fig.height=5}
-family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="gene")
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id"), mode="gene")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
