@@ -28,7 +28,8 @@ presto/**/*
 vdj_annotation/01-assign-genes/**/*
 vdj_annotation/02-make-db/**/*
 vdj_annotation/04-select-productive/**/*
-results/vdj_annotation/convert-db/**/*
+vdj_annotation/convert-db/**/*
+qc-filtering/bulk-qc-filtering/01-create-germlines/**/*
 vdj_annotation/select-locus/**/*
-results/databases/**/*
+databases/**/*
 **/reference-keys.txt
