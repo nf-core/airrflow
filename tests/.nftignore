@@ -24,6 +24,9 @@ pipeline_info/*.{html,json,txt,yml}
 **/*.fmt7
 **/*.RDS
 **/*.fastp.log
+**/*.bam
+**/*.bam.bai
+**/*.vloupe
 presto/**/*
 vdj_annotation/01-assign-genes/**/*
 vdj_annotation/02-make-db/**/*
