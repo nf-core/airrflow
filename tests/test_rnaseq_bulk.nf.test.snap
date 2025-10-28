@@ -313,8 +313,7 @@
                 "Sample01_toassemble_2.fq:md5,3db3768e3d8c7c486717fc8bd5715ba7",
                 "Sample01_fq_command_log.txt:md5,ffbebb972c298e7a6f59d02fa7c0ad00",
                 "Sample01_jmod3_command_log.txt:md5,107af13dffdb34d8753a77a40d60e90f",
-                "Sample01_add-meta_command_log.txt:md5,7a2773fc319047679e67592e4e8bcfac",
-                "Sample01_convertdb_command_log.txt:md5,7ba3752358fc2d1979415dcf0ad1dd49"
+                "Sample01_add-meta_command_log.txt:md5,7a2773fc319047679e67592e4e8bcfac"
             ],
             "Table_sequences_assembled.tsv:md5,ed13c90a4a6508a01e46de1592b5be6a"
         ],
@@ -322,6 +321,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-24T18:26:38.041129764"
+        "timestamp": "2025-10-28T14:45:41.033229117"
     }
 }

@@ -349,7 +349,6 @@
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,0ab419629a18657594c2330f4539a05c",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "PGP1_create-germlines_command_log.txt:md5,deb3104e4325e5ac0437639156e9e680",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_chimeric_command_log.txt:md5,709f2a7a656506d226337fb1b8e2ca41",
                 "PGP1_collapse_command_log.txt:md5,9ef86b07c0292ee3b446d99228e7dee2",
@@ -362,8 +361,7 @@
                 "PGP1_jmod3_command_log.txt:md5,813795c3d2537b1804963709c81696b0",
                 "sc5p_v2_hs_PBMC_1k_5fb_jmod3_command_log.txt:md5,3e8671ce536a5ad0c66ade5cde940054",
                 "PGP1_add-meta_command_log.txt:md5,1b89785869ec1755fc89f459a1d2f2a2",
-                "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,675e83b0cdcfa384e317fe8197109afb",
-                "sc5p_v2_hs_PBMC_1k_5fb_convertdb_command_log.txt:md5,6ffc589a532042fcd2e8e371dc5fe465"
+                "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,675e83b0cdcfa384e317fe8197109afb"
             ],
             "Table_sequences_assembled.tsv:md5,f7a5bbe842d269dfe8f8feb2c8ba939f"
         ],
@@ -371,6 +369,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-24T17:46:58.238463899"
+        "timestamp": "2025-10-28T13:17:24.889844471"
     }
 }

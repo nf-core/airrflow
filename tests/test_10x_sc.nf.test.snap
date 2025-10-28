@@ -245,18 +245,12 @@
                 "vdj_annotation/convert-db/Sample1/Sample1_sequences.fasta"
             ],
             [
-                "all_contig.bam:md5,62a7989e83d92752d07d266cbff09bc7",
-                "all_contig.bam.bai:md5,05dee545f9b672af2b2eb62ea03f1176",
                 "all_contig.fasta.fai:md5,fff064ab164e7bb722b7bfbbeeb13677",
                 "all_contig.fastq:md5,8116e4d7e82a3df8711ff0db11eeda4c",
                 "all_contig_annotations.bed:md5,49028a9d0b98cdf25b221456ca86e49a",
                 "all_contig_annotations.csv:md5,5b61c706acf1e0648f7aaca1d8043a4d",
                 "clonotypes.csv:md5,bbab287f9e5e68d7fb4f7541e2497faf",
-                "concat_ref.bam:md5,a88ffa62a85b544623bbc3352a656073",
-                "concat_ref.bam.bai:md5,157eed5d52460811ad6fc5f6f6d987c9",
                 "concat_ref.fasta.fai:md5,4a9f476df52e6ebe9368e1dd737be639",
-                "consensus.bam:md5,b37512513dcfc59be688214b41a285cb",
-                "consensus.bam.bai:md5,161337ed89fd9b5d93980d40eea47033",
                 "consensus.fasta.fai:md5,697560da1871da151866b1e013b95699",
                 "consensus_annotations.csv:md5,6259b8b8d2014ab1af348bda5df7ab48",
                 "donor_regions.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -265,7 +259,6 @@
                 "metrics_summary.csv:md5,d621de844b1512bcc4e83b1787d6eaab",
                 "vdj_contig_info.pb:md5,478dab842be5b6865a088e04b69bbaaa",
                 "regions.fa:md5,1953406d913fb0fd753c6b56e847da83",
-                "vloupe.vloupe:md5,10b59697f2f3cd55d811bcd2f8764eb5",
                 "Patient1_clone_command_log.txt:md5,c845c438c035a70e5b01d7100dc07a9c",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_clone_command_log.txt:md5,a2196dc568533023a52852f10efb8ce3",
@@ -280,8 +273,7 @@
                 "supp_regions.fa:md5,70bd8e62f963ee1d1d0733794e2f523e",
                 "Sample1_fq_command_log.txt:md5,681ae237c9b28a23695ee57745d3f0fc",
                 "Sample1_jmod3_command_log.txt:md5,a5367f27524a90c89df50d2a4c5009c3",
-                "Sample1_add-meta_command_log.txt:md5,408220585e5a54ca839471794f5e9ae5",
-                "Sample1_convertdb_command_log.txt:md5,c3656c0da3af318891a958f34df0887e"
+                "Sample1_add-meta_command_log.txt:md5,408220585e5a54ca839471794f5e9ae5"
             ],
             "Table_sequences_assembled.tsv:md5,3a75dcfb427de7a4f15617aed91bb5ad"
         ],
@@ -289,6 +281,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-24T17:43:14.58534123"
+        "timestamp": "2025-10-28T13:13:38.160351246"
     }
 }
