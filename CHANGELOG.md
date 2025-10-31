@@ -11,8 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Update Takara protocol names and docs. Add Takara SMART-seq protocol.
-- [#416](https://github.com/nf-core/airrflow/pull/416) Add nf-test tests.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Add first nf-test.
 - [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
+- [#425](https://github.com/nf-core/airrflow/pull/416) Add all nf-tests.
 
 ### `Fixed`
 
@@ -29,10 +30,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| enchantr   | 0.1.20      | 0.1.23      |
+| enchantr   | 0.1.20      | 0.1.24      |
 | presto     | 0.7.4       | 0.7.6       |
 | dowser     | 2.3         | 2.4.0       |
-| alakazam   | 1.3.1       | 1.4.1       |
 
 ## [4.3.1] - Revelio hotfix
 

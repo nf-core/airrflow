@@ -93,13 +93,7 @@ tryCatch( {
                   ggtitle("Number of sequences after each of the sequence assembly steps") +
                   theme(axis.text.x= element_text(angle = 45))
 
-    p <- ggplotly(seqs_plot) %>%
-      layout(shapes = list(list(type = "rect",
-              xref = "paper", yref = "paper",
-              x0 = -0.02, x1 = 1.02, y0 = -0.02, y1 = 1.02,
-              line = list(color = "black", width = 1.5),
-              fillcolor = 'rgba(0,0,0,0)',
-              layer = 'above')))
+    p <- ggplotly(seqs_plot)
   p
 
 
@@ -173,11 +167,7 @@ seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
               theme(axis.text.x = element_text(angle = 45)
               )
 
-p <- ggplotly(seqs_plot_assembled) |>
-  layout(
-    xaxis = list(showline = TRUE, linecolor = "black", linewidth = 0.66, mirror = TRUE),
-    yaxis = list(showline = TRUE, linecolor = "black", linewidth = 0.66, mirror = TRUE)
-  )
+p <- ggplotly(seqs_plot_assembled)
 p
 ```
 
@@ -209,7 +199,7 @@ df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_
 The V gene usage in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ```{r gene_family, echo=F}
-family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id"), mode="family")
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="family")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
@@ -220,11 +210,7 @@ g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     ylab("Frequency") +
     xlab("") +
     theme(legend.position = "right")
-p <- ggplotly(g2) |>
-  layout(
-    xaxis = list(showline = TRUE, linecolor = "black", linewidth = 0.66, mirror = TRUE),
-    yaxis = list(showline = TRUE, linecolor = "black", linewidth = 0.66, mirror = TRUE)
-  )
+p <- ggplotly(g2)
 p
 
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 18, height = 15, units = "cm")
@@ -239,7 +225,7 @@ The V gene usage in each of the samples is represented below.
 All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ```{r gene_seq, echo=F, fig.width=10, fig.height=5}
-family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id"), mode="gene")
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="gene")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
@@ -249,11 +235,7 @@ g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("")
-p <- ggplotly(g2) |>
-  layout(
-    xaxis = list(showline = TRUE, linecolor = "black", linewidth = 0.66, mirror = TRUE),
-    yaxis = list(showline = TRUE, linecolor = "black", linewidth = 0.66, mirror = TRUE)
-  )
+p <- ggplotly(g2)
 p
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
