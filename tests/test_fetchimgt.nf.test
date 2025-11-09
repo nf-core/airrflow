@@ -3,9 +3,9 @@ nextflow_pipeline {
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
-    profile "test"
+    profile "test_fetchimgt"
 
-    test("-profile test") {
+    test("-profile test_fetchimgt") {
 
         when {
             params {
@@ -30,8 +30,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // Additional files that are excluded in .nftignore but need to be checked
-                    "$outputDir/repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv",
-                    "$outputDir/repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv"
+                    "$outputDir/repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv"
                 ).match() }
             )
         }

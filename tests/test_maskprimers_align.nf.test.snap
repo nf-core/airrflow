@@ -1,7 +1,7 @@
 {
-    "-profile test": {
+    "-profile test_maskprimers_align": {
         "content": [
-            169,
+            167,
             {
                 "ADD_META_TO_TAB": {
                     "dplyr": "1.1.4",
@@ -34,9 +34,6 @@
                     "enchantr": "0.1.24"
                 },
                 "COLLAPSE_DUPLICATES": {
-                    "enchantr": "0.1.24"
-                },
-                "DOWSER_LINEAGES": {
                     "enchantr": "0.1.24"
                 },
                 "FASTP": {
@@ -90,10 +87,10 @@
                 "PRESTO_FILTERSEQ_UMI": {
                     "presto": "0.7.6"
                 },
-                "PRESTO_MASKPRIMERS_SCORE_UMI_R1": {
+                "PRESTO_MASKPRIMERS_ALIGN_UMI_R1": {
                     "presto": "0.7.6"
                 },
-                "PRESTO_MASKPRIMERS_SCORE_UMI_R2": {
+                "PRESTO_MASKPRIMERS_ALIGN_UMI_R2": {
                     "presto": "0.7.6"
                 },
                 "PRESTO_PAIRSEQ_CLUSTERSETS": {
@@ -205,29 +202,6 @@
                 "clonal_analysis/clonal_assignment/all_reps_clone_report/tables/clonal_diversity.tsv",
                 "clonal_analysis/clonal_assignment/all_reps_clone_report/tables/clone_sizes_table.tsv",
                 "clonal_analysis/clonal_assignment/all_reps_clone_report/tables/num_clones_table.tsv",
-                "clonal_analysis/dowser_lineages",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_command_log.txt",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/assets",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/assets/logo.png",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/assets/style.css",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/formatted_clones.RDS",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/index.html",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/params.RData",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/reference-keys.txt",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/search_index.json",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_command_log.txt",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/all_trees.pdf",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/assets",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/assets/logo.png",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/assets/style.css",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/formatted_clones.RDS",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/index.html",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/params.RData",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/reference-keys.txt",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/search_index.json",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/trees_object.RDS",
                 "clonal_analysis/find_threshold",
                 "clonal_analysis/find_threshold/all_reps_dist_report",
                 "clonal_analysis/find_threshold/all_reps_dist_report/assets",
@@ -862,10 +836,6 @@
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_clone_command_log.txt:md5,8330aad6ad2fc8ff9eb8b27ce4b96cca",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient1_dowser_command_log.txt:md5,c57e1e23a1b48d636b3d499998aa8527",
-                "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient2_dowser_command_log.txt:md5,ef468c73cfcb68d55eafdba9f8edf04c",
-                "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,9d11dfc74e37fc71180e648dbbc186bb",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
@@ -905,12 +875,12 @@
                 "Sample8_add-meta_command_log.txt:md5,eaaaa70f2f95d61750d77605798a75b9"
             ],
             "Table_sequences_assembled.tsv:md5,7330606135fab6f1bc7c33de4e455512",
-            "Table_sequences_assembly.tsv:md5,d6f5ac80a7781b76ec008c2ee4487cd6"
+            "Table_sequences_assembly.tsv:md5,89784ae0ca1831afe69cc3f3e5fac3f9"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-04T13:26:21.925049633"
+        "timestamp": "2025-11-04T14:11:21.94447946"
     }
 }
