@@ -4,24 +4,20 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 ## Pre-requisites
 
-You can run this tutorial using the Github Codespaces platform. Integrated into GitHub, Codespaces can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
-
-![Codespaces button](../images/codespaces-button.png)
+You can run this tutorial using the Github Codespaces platform. Codespaces already has Nextflow and Singularity pre-installed, and it can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
 
 In the dropdown menu, go to the `Codespaces` tab. You can create a basic "2-core" Codespace by clicking the `+` icon. However, as more CPUs and memories are needed for nf-core/airrflow task, you need to press the `...` sign and choose `+ New with options...`. 
 
 ![Create Codespaces with options](../images/Create_codespaces.png)
 
-Afterwards, you will be directed to another page to choose the setting of your platform. Select "4-core" for "machine type", which will give you 4 CPUs, 16GB RAM and 32GB space. 
+Afterwards, you will be directed to another page to choose the setting of your platform. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
 
 ![Chose 4-core](../images/Codespaces_4core.png)
 
-If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces).
+If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces part in [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
 
 > [!NOTE]
-> If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using Conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
-
-To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
+> If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data. To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
