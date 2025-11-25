@@ -821,7 +821,6 @@
             "$ref": "#/$defs/protocol"
         },
         {
-            "$ref": "#/$defs/primer_handling"
             "$ref": "#/$defs/primer_input_and_positions"
         },
         {
@@ -834,11 +833,9 @@
             "$ref": "#/$defs/sequence_assembly_options"
         },
         {
-            "$ref": "#/$defs/vdj_annotation_options"
             "$ref": "#/$defs/single_cell_analysis_options"
         },
         {
-            "$ref": "#/$defs/bulk_filtering_options"
             "$ref": "#/$defs/rnaseq_based_analysis_options"
         },
         {
