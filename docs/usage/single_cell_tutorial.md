@@ -6,30 +6,38 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 You can run this tutorial using the Github Codespaces platform. Codespaces already has Nextflow and Singularity pre-installed, and it can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
 
-In the dropdown menu, go to the `Codespaces` tab. You can create a basic "2-core" Codespace by clicking the `+` icon. However, as more CPUs and memories are needed for nf-core/airrflow task, you need to press the `...` sign and choose `+ New with options...`. 
+In the dropdown menu, go to the `Codespaces` tab. After clicking on the `...` sign, and the `+ New with options...` button.
 
 ![Create Codespaces with options](../images/Create_codespaces.png)
 
-Afterwards, you will be directed to another page to choose the setting of your platform. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
+Choose the setting of your platform. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
 
 ![Chose 4-core](../images/Codespaces_4core.png)
 
-If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces part in [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
+If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview) nf-core documentation. 
+
+The Codespaces environment already comes with Singularity and Nextflow pre-installed. When running this tutorial on your local machine, you'll first have to set up Nextflow and a container engine (Docker or Singularity).
 
 > [!NOTE]
-> If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data. To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
+> If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
 Once you have set up Nextflow and container (Docker or Singularity) for your local machine or Codespace environment, test nf-core/airrflow with the built-in test data.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 -profile test,docker --outdir test_results
+nextflow run nf-core/airrflow -r 4.3.1 -profile test_assembled_hs,docker --outdir test_results
 ```
-Change the `docker` profile to `singularity` if you use Codespace since The docker profile currently does not work in Codespaces. 
+Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces.
+
+We can first set up a Singularity cache directory. This will allow us to reuse the containers across all runs:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_results
+mkdir singularity_cache
+export NXF_SINGULARITY_CACHEDIR="/workspaces/airrflow/singularity_cache"
+
+```bash
+nextflow run nf-core/airrflow -r 4.3.1 -profile test_assembled_hs,singularity --outdir test_results
 ```
 
 > [!NOTE]
@@ -39,10 +47,10 @@ If the tests run through correctly, you should see this output in your command l
 
 ```bash
 -[nf-core/airrflow] Pipeline completed successfully-
-Completed at: 17-Nov-2025 19:53:55
-Duration    : 19m 48s
-CPU hours   : 1.0
-Succeeded   : 221
+Completed at: 25-Nov-2025 16:23:32
+Duration    : 11m 43s
+CPU hours   : 0.4
+Succeeded   : 32
 ```
 
 ## Supported input formats
@@ -77,6 +85,9 @@ The resource configuration file sets the compute infrastructure maximum availabl
 ```json title="resource.config"
 process {
     resourceLimits = [ memory: 16.GB, time: 24.h, cpus: 4 ]
+}
+apptainer{
+  cacheDir = "/workspaces/airrflow/singularity_cache"
 }
 ```
 
@@ -250,7 +261,7 @@ The summary report, named `Airrflow_report.html`, provides an overview of the an
 The analysis steps and their corresponding folders, where the results are stored, are briefly listed below. Detailed documentation on the pipeline output can be found on the [Output documentation page](https://nf-co.re/airrflow/docs/output/).
 
 1. QC and sequence assembly (if starting from fastq files).
-   - In this first step, Cell Ranger's VDJ algorithm is employed to assemble contigs, annotate contigs, call cells and generate clonotypes. The results are stored in the 'cellranger' folder.
+   - In this first step, Cell Ranger's VDJ algorithm is employed to assemble contigs, annotate contigs, and call cells. The results are stored in the 'cellranger' folder.
 
 2. V(D)J annotation and filtering.
    - In this step, V(D)J gene segments are inferred using the provided germline reference and [`IgBLAST`](https://www.ncbi.nlm.nih.gov/igblast/). Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are filtered out unless otherwise specified. The intermediate results are stored under the folder named 'vdj_annotation'.
