@@ -3,6 +3,8 @@ lint:
     - conf/igenomes.config
   multiqc_config:
     - report_comment
+  files_unchanged:
+    - .gitignore
   nextflow_config:
     - config_defaults:
         - params.miairr
