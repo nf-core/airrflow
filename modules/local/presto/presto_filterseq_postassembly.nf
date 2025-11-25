@@ -3,10 +3,10 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     label "process_medium"
     label 'immcantation'
 
-    conda "bioconda::presto=0.7.1"
+    conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
+        'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -15,7 +15,6 @@ process PRESTO_FILTERSEQ_POSTASSEMBLY {
     tuple val(meta), path("*quality-pass.fastq") ,  emit: reads
     path "*_command_log.txt" , emit: logs
     path "versions.yml" , emit: versions
-    path "*.log"
     path "*.tab" , emit: log_tab
 
     script:

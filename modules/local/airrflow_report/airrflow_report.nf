@@ -1,13 +1,12 @@
 process AIRRFLOW_REPORT {
     tag "${meta.id}"
     label 'process_high'
+    label 'immcantation_container'
 
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:4.0.0':
-        'docker.io/immcantation/airrflow:4.0.0' }"
+    container "docker.io/immcantation/airrflow:4.4.0"
 
     input:
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
@@ -25,9 +24,6 @@ process AIRRFLOW_REPORT {
     script:
     """
     execute_report.R --report_file ${repertoire_report}
-
-    mkdir repertoire_comparison/repertoires
-    cp *clone-pass.tsv repertoire_comparison/repertoires/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

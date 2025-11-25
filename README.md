@@ -23,7 +23,7 @@
 
 ## Introduction
 
-**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell or T-cell repertoire sequencing data. It makes use of the [Immcantation](https://immcantation.readthedocs.io) toolset. The input data can be targeted amplicon bulk sequencing data of the V, D, J and C regions of the B/T-cell receptor with multiplex PCR or 5' RACE protocol, single-cell VDJ sequencing using the 10xGenomics libraries, or assembled reads (bulk or single-cell).
+**nf-core/airrflow** is a bioinformatics best-practice pipeline to analyze B-cell receptor (BCR) or T-cell receptor (TCR) repertoire sequencing data. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNA-seq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
 
 ![nf-core/airrflow overview](docs/images/airrflow_workflow_overview.png)
 
@@ -33,7 +33,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data. Several protocols are supported, please see the [usage documentation](https://nf-co.re/airrflow/usage) for more details on the supported protocols. The pipeline has been certified as [AIRR compliant](https://docs.airr-community.org/en/stable/swtools/airr_swtools_compliant.html) by the AIRR community, which means that it is compatible with downstream analysis tools also supporting this format.
+nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single cell targeted sequencing data, as well as extracting BCR and TCR sequences from bulk and single-cell RNA-seq datasets. Several protocols are supported, please see the [usage documentation](https://nf-co.re/airrflow/usage) for more details on the supported protocols. The pipeline has been certified as [AIRR compliant](https://docs.airr-community.org/en/stable/swtools/airr_swtools_compliant.html) by the AIRR community, which means that it is compatible with downstream analysis tools also supporting this format.
 
 ![nf-core/airrflow overview](docs/images/metro-map-airrflow.png)
 
@@ -50,7 +50,7 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
   - Assemble R1 and R2 read mates (`pRESTO AssemblePairs`).
   - Remove and annotate read duplicates (`pRESTO CollapseSeq`).
   - Filter out sequences that do not have at least 2 duplicates (`pRESTO SplitSeq`).
-- single cell
+- Single cell
   - cellranger vdj
     - Assemble contigs
     - Annotate contigs
@@ -75,8 +75,8 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 - Single-cell QC filtering (`EnchantR`)
   - Remove cells without heavy chains.
   - Remove cells with multiple heavy chains.
-  - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence.
-  - Modify `cell_id`s to ensure they are unique in the project.
+  - Remove sequences in different samples that share the same `cell_id` and nucleotide sequence, and thus are very likely contaminants.
+  - Modify `cell_id`s to ensure they are unique in each run.
 
 4. Clonal analysis (bulk and single-cell)
 
@@ -92,20 +92,20 @@ nf-core/airrflow allows the end-to-end processing of BCR and TCR bulk and single
 ## Usage
 
 > [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. You will also need to install a container engine such as [Docker](https://docs.docker.com/engine/install/) or [Apptainer - formerly singularity -](https://apptainer.org/docs/admin/main/installation.html) prior to running the pipeline. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, ensure that the pipeline tests run on your infrastructure:
 
 ```bash
-nextflow run nf-core/airrflow -profile test,<docker/singularity/podman/shifter/charliecloud/conda/institute> --outdir <OUTDIR>
+nextflow run nf-core/airrflow -profile test,<docker/singularity/apptainer/podman/shifter/charliecloud/conda/institute> --outdir <OUTDIR>
 ```
 
-To run nf-core/airrflow with your data, prepare a tab-separated samplesheet with your input data. Depending on the input data type (bulk or single-cell, raw reads or assembled reads) the input samplesheet will vary. Please follow the [documentation on samplesheets](https://nf-co.re/airrflow/usage#input-samplesheet) for more details. An example samplesheet for running the pipeline on bulk BCR / TCR sequencing data in fastq format looks as follows:
+To run nf-core/airrflow with your data, you will need to first prepare a tab-separated samplesheet with the paths to your input data and necessary metadata to run the analysis. Depending on the input data type (bulk or single-cell, raw reads or assembled reads) the input samplesheet will vary. Please follow the [documentation on samplesheets](https://nf-co.re/airrflow/usage#input-samplesheet) for more details. An example samplesheet for running the pipeline on bulk BCR / TCR sequencing data departing from raw reads looks as follows:
 
 | sample_id | filename_R1                     | filename_R2                     | filename_I1                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell | intervention   | collection_time_point_relative | cell_subset  |
 | --------- | ------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- | -------------- | ------------------------------ | ------------ |
 | sample01  | sample1_S8_L001_R1_001.fastq.gz | sample1_S8_L001_R2_001.fastq.gz | sample1_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
-| sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
+| sample02  | sample2_S8_L001_R1_001.fastq.gz | sample2_S8_L001_R2_001.fastq.gz | sample2_S8_L001_I1_001.fastq.gz | Subject02  | human   | IG               | blood  | female | 78  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
 
 Each row represents a sample with fastq files (paired-end).
 
@@ -180,13 +180,14 @@ nf-core/airrflow was originally written by:
 
 - [Gisela Gabernet](https://github.com/ggabernet)
 - [Susanna Marquez](https://github.com/ssnn-airr)
-- [Alexander Peltzer](@apeltzer)
-- [Simon Heumos](@subwaystation)
+- [Alexander Peltzer](https://github.com/apeltzer)
 
 We thank the following people for their extensive assistance in the development of the pipeline:
 
 - [David Ladd](https://github.com/dladd)
-- [Friederike Hanssen](https://github.com/ggabernet/friederikehanssen)
+- [Friederike Hanssen](https://github.com/friederikehanssen)
+- [Simon Heumos](https://github.com/subwaystation)
+- [Mark Polster](https://github.com/mapo9)
 
 ## Contributions and Support
 
@@ -196,13 +197,11 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/airrflow for your analysis, please cite the preprint as follows:
+If you use nf-core/airrflow for your analysis, please cite the article as follows:
 
 > **nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework**
 >
-> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole Jensen, David Ladd, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein.
->
-> BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole G. Jensen, David Ladd, Mark Polster, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. (2024) PLOS Computational Biology, 20(7), e1012265. doi: [https://doi.org/10.1371/journal.pcbi.1012265](https://doi.org/10.1371/journal.pcbi.1012265). Pubmed PMID: 39058741.
 
 The specific pipeline version using the following DOI: [10.5281/zenodo.2642009](https://doi.org/10.5281/zenodo.2642009)
 

@@ -3,7 +3,107 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.1.0] -
+## [4.4dev]
+
+### `Added`
+
+- [#413](https://github.com/nf-core/airrflow/pull/413) Bump versions to dev.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Update Takara protocol names and docs. Add Takara SMART-seq protocol.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Add first nf-test.
+- [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
+- [#425](https://github.com/nf-core/airrflow/pull/416) Add all nf-tests.
+
+### `Fixed`
+
+- [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Subsample reads for report_threshold process.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Removed a variable that was defined twice.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Renamed define_clones to clonal_assignment.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in number of sequences report.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in report file size.
+- [#422](https://github.com/nf-core/airrflow/pull/422) Fixed annoying automatic clonal threshold message on any failure.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.20      | 0.1.24      |
+| presto     | 0.7.4       | 0.7.6       |
+| dowser     | 2.3         | 2.4.0       |
+
+## [4.3.1] - Revelio hotfix
+
+### `Added`
+
+- [#399](https://github.com/nf-core/airrflow/pull/399) Bump versions.
+
+### `Fixed`
+
+- [#392](https://github.com/nf-core/airrflow/pull/392) Updated tutorials.
+
+## [4.3.0] - Revelio
+
+### `Added`
+
+- [#360](https://github.com/nf-core/airrflow/pull/360) Update pipeline diagrams.
+- [#374](https://github.com/nf-core/airrflow/pull/374) Template update to nf-core v3.2.0.
+- [#373](https://github.com/nf-core/airrflow/pull/373) Added bulk and single-cell tutorials.
+- [#377](https://github.com/nf-core/airrflow/pull/377) Added Amulety translation and embeddings.
+- [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
+- [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
+- [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
+- [#385](https://github.com/nf-core/airrflow/pull/385) Added trust4 barcodewhitelist parameter
+
+### `Fixed`
+
+- [#378](https://github.com/nf-core/airrflow/pull/378) Updated primer links to Immcantation GitHub.
+- [#384](https://github.com/nf-core/airrflow/pull/384) Temporarily downgrade nf-schema to fix compatibility with NXF > 25.03.1-edge.
+- [#388](https://github.com/nf-core/airrflow/pull/388) Fixed some tutorials links and added info.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.16      | 0.1.20      |
+| presto     | 0.7.1       | 0.7.4       |
+| dowser     | 2.1         | 2.3         |
+| alakazam   | 1.3.0       | 1.3.1       |
+
+## [4.2.0] - Evanesco
+
+### `Added`
+
+- [#334](https://github.com/nf-core/airrflow/pull/334) Added TRUST4 support.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Added option to remove V and C primer region when sequence is unknown.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Added option to save non-productive sequences
+- [#344](https://github.com/nf-core/airrflow/pull/344) Allow for maskprimers align with UMI on both V gene and C gene primers.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Update pipeline template to nf-core tools v3.0.2.
+- [357](https://github.com/nf-core/airrflow/pull/357) Deprecate isotype_column parameter in favor of annotating C region from internal c_region alignment or c_primer alignment into the c_call column.
+
+### `Fixed`
+
+- [#344](https://github.com/nf-core/airrflow/pull/344) Avoid saving pRESTO intermediate fastq files in results directory.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Simplified pRESTO Maskprimers score and Maskprimers extract processes.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Fix clustersets approach, consider both reads clusters annotation.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Allow for partial alignments in MakeDB for mouse TCR data, to bypass junction check for TRAV germlines with additional positions (e.g. 84A).
+- [#344](https://github.com/nf-core/airrflow/pull/344) Fix parse logs merging dataframes using pandas join to produce logs even when there are failing samples.
+- [#344](https://github.com/nf-core/airrflow/pull/344) Use pRESTO Collapseseq with n=0 by default due to runtime issues.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.16      | 0.1.19      |
+| presto     | 0.7.1       | 0.7.2       |
+
+### `Deprecated parameters`
+
+- `isotype_column`: if `c_call` column value is NA, now `c_region` and `c_primer` column values respectively are annotated into the `c_call` column.
+
+## [4.1.0] - Avenseguim
 
 ### `Added`
 
@@ -14,6 +114,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#335](https://github.com/nf-core/airrflow/pull/335) Fix report number of sequences per sample plots.
 
 ### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| biopython  | 1.71        | 1.81        |
+| enchantr   | 0.1.15      | 0.1.16      |
+| scoper     | 1.2.1       | 1.3.0       |
+| dowser     | 1.2.0       | 2.1.0       |
+| igphyml    | 1.1.5       | 2.0.0       |
 
 ## [4.0] - 2024-04-22 Ascendio
 

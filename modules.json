@@ -5,6 +5,31 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "amulety/antiberta2": {
+                        "branch": "master",
+                        "git_sha": "52948eb3c1f839d2434161fa41582faa108698ad",
+                        "installed_by": ["modules"]
+                    },
+                    "amulety/antiberty": {
+                        "branch": "master",
+                        "git_sha": "ab63efb49c518eedee5df056bdc54fd51a515600",
+                        "installed_by": ["modules"]
+                    },
+                    "amulety/balmpaired": {
+                        "branch": "master",
+                        "git_sha": "8d237889d110c792fa1fd4c656ca9698cde0aa56",
+                        "installed_by": ["modules"]
+                    },
+                    "amulety/esm2": {
+                        "branch": "master",
+                        "git_sha": "4b78419111c3618f76d714f1542c6eb672431ad6",
+                        "installed_by": ["modules"]
+                    },
+                    "amulety/translate": {
+                        "branch": "master",
+                        "git_sha": "ddf8244c4d46f9369f99b88c88eccc1b41295aa0",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "02fd5bd7275abad27aad32d5c852e0a9b1b98882",
@@ -17,7 +42,7 @@
                     },
                     "cellranger/vdj": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
@@ -33,6 +58,11 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "af27af1be706e6a2bb8fe454175b0cdf77f47b49",
+                        "installed_by": ["modules"]
+                    },
+                    "trust4": {
+                        "branch": "master",
+                        "git_sha": "b1e1040b80168a2946adc8c28c7569efa511b015",
                         "installed_by": ["modules"]
                     }
                 }

@@ -14,3 +14,5 @@ nf-params.json
 tests/
 test_flow/
 null/
+.nf-test/
+.nf-test.log

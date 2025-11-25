@@ -3,13 +3,14 @@ process PRESTO_PAIRSEQ {
     label "process_low"
     label 'immcantation'
 
-    conda "bioconda::presto=0.7.1"
+    conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
+        'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path("${meta.id}_R1.fastq"), path("${meta.id}_R2.fastq")
+    val(barcode_position)
 
     output:
     tuple val(meta), path("*R1_pair-pass.fastq"), path("*R2_pair-pass.fastq") , emit: reads
@@ -17,7 +18,7 @@ process PRESTO_PAIRSEQ {
     path "versions.yml" , emit: versions
 
     script:
-    def copyfield = (params.index_file | params.umi_position == 'R1') ? "--1f BARCODE" : "--2f BARCODE"
+    def copyfield = (barcode_position == 'R1')? '--1f BARCODE' : (barcode_position == 'R2')? '--2f BARCODE' : (barcode_position == 'R1R2')? '--1f BARCODE --2f BARCODE' : (barcode_position == 'clustersets')? '--1f CLUSTER --2f CLUSTER' : ''
     def args = task.ext.args?: ''
     """
     PairSeq.py -1 ${meta.id}_R1.fastq -2 ${meta.id}_R2.fastq $copyfield $args > ${meta.id}_command_log.txt

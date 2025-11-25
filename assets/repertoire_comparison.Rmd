@@ -33,8 +33,11 @@ library(stringr)
 library(plotly)
 library(airr)
 
-theme_set(theme_bw(base_family = "ArialMT") +
-            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
+ggplot_theme <- theme_bw(base_family = "ArialMT") +
+            theme(panel.grid.major = element_blank(),
+            panel.border = element_rect(colour = "black", fill=NA, size=0.5),
+            panel.grid.minor = element_blank(), text = element_text(family="ArialMT"))
+theme_set(ggplot_theme)
 knitr::opts_chunk$set(echo = FALSE)
 
 # Setting data table and creating output folders
@@ -74,13 +77,13 @@ tryCatch( {
     write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
 
     plot_table <- tidyr::pivot_longer(tab_seqs,
-                                      cols=Sequences_R1:Igblast,
+                                      cols=Sequences:Igblast,
                                       names_to = "steps",
                                       values_to ="count")
-    plot_table$steps <- factor(plot_table$steps, levels=c("Sequences_R1", "Sequences_R2", "Filtered_quality_R1",
-                                                            "Filtered_quality_R2", "Mask_primers_R1", "Mask_primers_R2",
-                                                            "Paired", "Build_consensus", "Assemble_pairs", "Unique",
-                                                            "Representative_2", "Igblast"))
+    firstcol = which(colnames(tab_seqs) == "Sequences")
+    lastcol = which(colnames(tab_seqs) == "Igblast")
+    plot_table$steps <- factor(plot_table$steps, levels=colnames(tab_seqs)[firstcol:lastcol])
+
     seqs_plot <- ggplot(data=plot_table,
                         aes(x=steps, y=count, group=sample_id)) +
                   geom_line(aes(colour=sample_id)) +
@@ -90,7 +93,8 @@ tryCatch( {
                   ggtitle("Number of sequences after each of the sequence assembly steps") +
                   theme(axis.text.x= element_text(angle = 45))
 
-    ggplotly(seqs_plot)
+    p <- ggplotly(seqs_plot)
+  p
 
 
   },
@@ -106,15 +110,25 @@ The full table can be found under [Table_sequences_assembled](repertoire_compari
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
 
-# Splitting on last underscore for sample_id
-if (any(is.na(tab_seqs_assembled$sample_id))) {
-  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$file_0, function(x) unlist(strsplit(as.character(x), "_\\s*(?=[^_]+$)", perl=TRUE))[1])
+# Splitting on last underscore for sample_id and if there is no underscore split on last dot
+if (is.null(tab_seqs_assembled$sample_id)) {
+  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$input, function(x) {
+    if (grepl("_", x)) {
+      unlist(strsplit(as.character(x), "_(?=[^_]+$)", perl=TRUE))[1]
+    } else if (grepl("\\.", x)) {
+      unlist(strsplit(as.character(x), "\\.(?=[^\\.]+$)", perl=TRUE))[1]
+    } else {
+      x
+    }
+  })
 }
 
 dat <- tab_seqs_assembled %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
         tidyr::pivot_wider(id_cols=sample_id,
                             names_from=task,
-                            values_from=to_num_seqs)
+                            values_from=output_size)
 dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
@@ -127,8 +141,8 @@ write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t"
 ```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
 
 tab_seqs_assembled <- tab_seqs_assembled %>%
-        filter( !grepl("-fail.tsv", to_name) ) %>%
-        filter( !grepl("productive-F.tsv", to_name) ) %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
         dplyr::filter( task %in% c("sample_id","AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))
@@ -138,29 +152,36 @@ tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes
                                                         "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
                                                         "ClonePass"))
 
+tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)
+# Remove rows with NA or zero output_size
+tab_seqs_assembled <- tab_seqs_assembled %>%
+  filter(!is.na(output_size) & output_size > 0)
+
 seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
-                    aes(x=task, y=to_num_seqs, group=sample_id)) +
+                    aes(x=task, y=output_size, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
               scale_y_log10() +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
-              theme(axis.text.x= element_text(angle = 45))
+              theme(axis.text.x = element_text(angle = 45)
+              )
 
-ggplotly(seqs_plot_assembled)
+p <- ggplotly(seqs_plot_assembled)
+p
 ```
 
 ```{r read_data, include=FALSE}
 # paths to the files are found in the first column of all_repertoires_report_tabs.txt,
 # in the current folder
-all_files <- system(paste0("find '", datadir, "' -name '*clone-pass.tsv'"), intern=T)
+all_files <- system(paste0("find '", datadir, "' -name '*-pass.tsv'"), intern=T)
 
 vfamily_dir <- paste(outdir, "V_family", sep="/")
 dir.create(vfamily_dir)
 
 # Generate one big dataframe from all patient dataframes
 col_select <- c(
-  "sample_id", "subject_id", "sequence_id", "clone_id",
+  "sample_id", "subject_id", "sequence_id",
   "v_call", "d_call", "j_call",
   "locus",
   "junction",
@@ -169,167 +190,28 @@ col_select <- c(
 df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
 
 
-# Remove underscores in these columns
-df_all$subject_id <- stringr::str_replace_all(df_all$subject_id, "_", "")
-df_all$sample_id <- stringr::str_replace_all(df_all$sample_id , "_", "")
-
-# Annotate sample and samplepop (sample + population) by add ing all the conditions
-df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
-
-# Uncomment to save a table with all the sequencess across samples together
-# write.table(df_all, paste0(outdir,"/all_data.tsv"), sep = "\t", quote=F, row.names = F, col.names = T)
-
-# Set number of bootrstraps
-nboot <- 200
 ```
-
-
-<!-- Uncomment to include Clonal abundance and clonal diversity in the repertoire comparison report
-
-# Clonal abundance
-
-For plotting the clonal abundance, the clones were ordered by size from bigger clones to smaller clones (x-axis, Rank).
-The Abundance of each clone was represented as the percentage of unique sequences in the clone, with respect to the total
-number of unique sequences in that subject (By Patient) or in the B-cell or T-cell sample (By Cell Population).
-
-To correct for the different number of sequences in each of the samples, the Bootstrapping technique was employed,
-in which `r nboot` random bootstrap samples were taken, with size the number of sequences in the sample with less sequences (N).
-The solid line shows the mean Abundance of the bootstrap samples, whereas the transparent area shows the full Abundance
-range of the bootstrap samples.
-
-All clonal abundance plots and tables with abundance values can be found under `repertoire_analysis/Abundance`.
-
--->
-
-```{r clonal_abundance, echo=FALSE, eval=FALSE}
-# Set line above to eval=TRUE to include clonal abundance
-diversity_dir <- paste(outdir, "Diversity", sep="/")
-abundance_dir <- paste(outdir, "Abundance", sep="/")
-dir.create(diversity_dir)
-dir.create(abundance_dir)
-
-abund <- estimateAbundance(df_all, group = "subj_locus", ci=0.95, nboot=nboot)
-abund@abundance$sample_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-abund@abundance$subject_id <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-abund@abundance$locus <- sapply(abund@abundance$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-
-abund_main <- paste0("Clonal abundance (N=", abund@n[1], ")")
-
-p_ca <- ggplot(abund@abundance, aes(x = rank, y = p)) +
-    geom_ribbon(aes(ymin = lower,
-                    ymax = upper, fill = sample_id), alpha = 0.4) +
-    geom_line(aes(color = sample_id)) +
-    ggtitle(abund_main) +
-    xlab('log(Rank)') + ylab('Abundance') +
-    scale_x_log10(limits = NULL,
-                breaks = scales::trans_breaks("log10", function(x) 10^x),
-                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-    scale_y_continuous(labels = scales::percent)
-
-p_ca
-
-```
-
-```{r plot_abundance, include = FALSE, eval=FALSE}
-# Set to eval=TRUE to include clonal abundance
-ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.pdf"), device="pdf", width = 25, height = 10, units="cm")
-ggsave(plot=p_ca, filename = paste0(abundance_dir,"/Clonal_abundance_subject.png"), device="png", width = 25, height = 10, units="cm")
-write.table(abund@abundance, file = paste0(abundance_dir, "/Clonal_abundance_data_subject.tsv"), sep="\t", quote = F, row.names = F)
-```
-
-<!-- Uncomment to include Clonal diversity and clonal diversity in the repertoire comparison report
-
-# Clonal diversity
-
-The clonal diversity $D$ of the repertoire was calculated according to the general formula of Hill Diversity
-numbers:
-
-$$
-\begin{aligned}
-    ^{q}D = \left( \sum_{i=1}^Rp_i^q \right)^{1/(1-q)}
-\end{aligned}
-$$
-
-where:
-
-* $p_i$ is the proportion of unique sequences belonging to clone $i$.
-* $q$ are the values of the different diversity numbers.
-* $R$ is the Richness, the number of different clones in the sample.
-
-At $q=1$ the function is undefined and the limit to zero equals the exponential of the Shannon Entropy:
-
-$$
-\begin{aligned}
-    ^{1}D = exp \left(  \sum_{i=1}^Rp_i ln(p_i)  \right)
-\end{aligned}
-$$
-
-The intuition about the different Hill Diversity values is the following:
-
-* At $q=0$ the diversity index equals the number of clones in the sample.
-* At $q=1$ the diversity index is the geometric mean of the clones in the sample,
-weighted by their proportion in the sample.
-* At $q>1$ more weight is given to the clones with higher proportions in the sample.
-
-All clonal diversity plots and tables with diversity values can be found under `repertoire_analysis/Diversity`.
-To correct for the different number of sequences in each of the samples, the Bootstrapping technique was employed,
-in which `r nboot` random bootstrap samples were taken, with size the number of sequences in the sample with less sequences (N).
-The solid line shows the mean Diversity of the bootstrap samples, whereas the transparent area shows the full Diversity
-range of the bootstrap samples.
--->
-
-```{r clonal_diversity, echo = FALSE, eval=FALSE}
-# Set line above to eval=TRUE to include clonal diversity
-sample_div <- alphaDiversity(abund, group="subj_locus", min_q=0, max_q=4, step_q=0.05,
-                            ci=0.95, nboot=nboot)
-sample_main <- paste0("Sample diversity (N=", sample_div@n[1], ")")
-
-sample_div@diversity$sample_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-sample_div@diversity$subject_id <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-sample_div@diversity$locus <- sapply(sample_div@diversity$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-div_p <- ggplot(sample_div@diversity, aes(x = q, y = d, group=sample_id)) +
-    geom_ribbon(aes(ymin = d_lower,
-                    ymax = d_upper,
-                    fill = sample_id), alpha = 0.4) +
-    geom_line(aes(color = sample_id)) +
-    xlab("q") + ylab("Diversity(q)") +
-    ggtitle(sample_main)
-
-div_p
-```
-```{r plot_diversity, include = FALSE, eval=FALSE}
-# Set to eval=TRUE to include clonal diversity
-ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.png"), device="png", width = 25, height = 10, units="cm")
-ggsave(plot=div_p, filename=paste0(diversity_dir,"/Diversity_patient_grid.pdf"), device="pdf", width = 25, height = 10, units="cm")
-write.table(sample_div@diversity, file = paste0(diversity_dir, "/Clonal_diversity_data_subject.tsv"), sep="\t", quote = F, row.names = F)
-```
-
 
 # V gene usage
 
 ## V gene family usage
 
-The V gene usage (in percentage) in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
-
-Gene family usage is normalized by the number of clones.
+The V gene usage in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ```{r gene_family, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family", clone="clone_id")
-family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="family")
 
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id)) +
+g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
+    ggplot_theme +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
     theme(legend.position = "right")
-ggplotly(g2)
+p <- ggplotly(g2)
+p
 
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 18, height = 15, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 18, height = 15, units = "cm")
@@ -339,47 +221,22 @@ write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"
 
 ## V gene usage {.tabset .tabset-fade .tabset-pills}
 
-The V gene usage (in percentage) in each of the samples is represented below.
+The V gene usage in each of the samples is represented below.
 All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
-### By clones {-}
-
-```{r gene_clonal, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene", clone = "clone_id")
-family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
-
-g2 <- ggplot(family, aes(x=gene, y=clone_freq, fill=sample_id, group=sample_id)) +
-    scale_color_brewer(palette="Set1") +
-    geom_bar(position = "dodge", stat="identity") +
-    ggtitle("V Gene Family Usage") +
-    theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
-    ylab("Frequency") +
-    xlab("")
-ggplotly(g2)
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_clone_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
-
-write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_clone_data.tsv"), sep = "\t", quote = F, row.names = F)
-```
-
-### By sequences {-}
-
-```{r gene_seq, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
-family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
+```{r gene_seq, echo=F, fig.width=10, fig.height=5}
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="gene")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Usage") +
+    ggplot_theme +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("")
-ggplotly(g2)
+p <- ggplotly(g2)
+p
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
 
@@ -388,7 +245,9 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence
 
 # Citations
 
-If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
+If you use nf-core/airrflow for your analysis, please cite our paper:
+
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole G. Jensen, David Ladd, Mark Polster, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework. (2024) PLOS Computational Biology, 20(7), e1012265. doi: [https://doi.org/10.1371/journal.pcbi.1012265](https://doi.org/10.1371/journal.pcbi.1012265). Pubmed PMID: 39058741.
 
 In addition, citations for the tools and data used in this pipeline are as follows:
 
@@ -461,4 +320,3 @@ In addition, citations for the tools and data used in this pipeline are as follo
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
 
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.
-

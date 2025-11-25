@@ -1,0 +1,195 @@
+{
+    "-profile test_embeddings_H": {
+        "content": [
+            21,
+            {
+                "ADD_META_TO_TAB": {
+                    "dplyr": "1.1.4",
+                    "optparse": "1.7.5",
+                    "R": "4.5.1"
+                },
+                "AIRRFLOW_REPORT": {
+                    "alakazam": "1.3.1",
+                    "shazam": "1.2.1",
+                    "stringr": "1.5.2",
+                    "dplyr": "1.1.4",
+                    "knitr": 1.5,
+                    "R": "4.5.1"
+                },
+                "AMULETY_ANTIBERTA2": {
+                    "amulety": 1.1
+                },
+                "AMULETY_ANTIBERTY": {
+                    "amulety": 1.1
+                },
+                "AMULETY_BALMPAIRED": {
+                    "amulety": 1.1
+                },
+                "AMULETY_ESM2": {
+                    "amulety": 1.1
+                },
+                "AMULETY_TRANSLATE": {
+                    "amulety": 1.0,
+                    "igblastn": "1.22.0"
+                },
+                "CHANGEO_ASSIGNGENES": {
+                    "igblastn": "1.22.0",
+                    "changeo": "1.3.0"
+                },
+                "CHANGEO_CONVERTDB_FASTA_FROM_AIRR": {
+                    "igblastn": "1.22.0",
+                    "changeo": "1.3.0"
+                },
+                "CHANGEO_MAKEDB": {
+                    "igblastn": "1.22.0",
+                    "changeo": "1.3.0"
+                },
+                "CHANGEO_PARSEDB_SPLIT": {
+                    "changeo": "1.3.0"
+                },
+                "FILTER_JUNCTION_MOD3": {
+                    "alakazam": "1.3.1",
+                    "optparse": "1.7.5",
+                    "airr": "1.5.0",
+                    "R": "4.5.1"
+                },
+                "FILTER_QUALITY": {
+                    "alakazam": "1.3.1",
+                    "optparse": "1.7.5",
+                    "stringi": "1.8.3",
+                    "dplyr": "1.1.4",
+                    "airr": "1.5.0",
+                    "DT": "0.34.0",
+                    "R": "4.5.1"
+                },
+                "REPORT_FILE_SIZE": {
+                    "enchantr": "0.1.24"
+                },
+                "SINGLE_CELL_QC": {
+                    "enchantr": "0.1.24"
+                },
+                "VALIDATE_INPUT": {
+                    "enchantr": "0.1.24"
+                },
+                "Workflow": {
+                    "nf-core/airrflow": "v4.4dev"
+                }
+            },
+            [
+                "Airrflow_report.html",
+                "embeddings",
+                "embeddings/antiberta2",
+                "embeddings/antiberta2/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/antiberty",
+                "embeddings/antiberty/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/balm_paired",
+                "embeddings/balm_paired/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/esm2",
+                "embeddings/esm2/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_airrflow_software_mqc_versions.yml",
+                "pipeline_info/samplesheet.valid.tsv",
+                "qc-filtering",
+                "qc-filtering/single-cell-qc",
+                "qc-filtering/single-cell-qc/all_reps_scqc_command_log.txt",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/assets",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/assets/logo.png",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/assets/style.css",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/ggplots",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/ggplots/p-seqs-per-cell.RData",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/index.html",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/params.RData",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/reference-keys.txt",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/sc5p_v2_hs_PBMC_10s_5fb__scqc-pass.tsv",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/search_index.json",
+                "repertoire_comparison",
+                "repertoire_comparison/Sequence_numbers_summary",
+                "repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv",
+                "repertoire_comparison/V_family",
+                "repertoire_comparison/V_family/V_Family_distribution_patient.pdf",
+                "repertoire_comparison/V_family/V_Family_distribution_patient.png",
+                "repertoire_comparison/V_family/V_family_distribution_data.tsv",
+                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_data.tsv",
+                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_patient.pdf",
+                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_patient.png",
+                "report_file_size",
+                "report_file_size/file_size_report",
+                "report_file_size/file_size_report/assets",
+                "report_file_size/file_size_report/assets/logo.png",
+                "report_file_size/file_size_report/assets/style.css",
+                "report_file_size/file_size_report/ggplots",
+                "report_file_size/file_size_report/ggplots/sample_1.RData",
+                "report_file_size/file_size_report/ggplots/sequence_count_plot.RData",
+                "report_file_size/file_size_report/index.html",
+                "report_file_size/file_size_report/params.RData",
+                "report_file_size/file_size_report/reference-keys.txt",
+                "report_file_size/file_size_report/search_index.json",
+                "report_file_size/file_size_report/tables",
+                "report_file_size/file_size_report/tables/log_data.tsv",
+                "report_file_size/file_size_report/tables/sample_1.tsv",
+                "translations",
+                "translations/sc5p_v2_hs_PBMC_10s_5fb_translated.tsv",
+                "validated_input",
+                "validated_input/validate_input_report",
+                "validated_input/validate_input_report/validated_input.tsv",
+                "vdj_annotation",
+                "vdj_annotation/01-assign-genes",
+                "vdj_annotation/01-assign-genes/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/01-assign-genes/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_changeo_assigngenes_command_log.txt",
+                "vdj_annotation/01-assign-genes/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_igblast.fmt7",
+                "vdj_annotation/01-assign-genes/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_sequences.fasta",
+                "vdj_annotation/02-make-db",
+                "vdj_annotation/02-make-db/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/02-make-db/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_db-pass.tsv",
+                "vdj_annotation/02-make-db/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_makedb_command_log.txt",
+                "vdj_annotation/03-quality-filter",
+                "vdj_annotation/03-quality-filter/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/03-quality-filter/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_fq_command_log.txt",
+                "vdj_annotation/03-quality-filter/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_quality-pass.tsv",
+                "vdj_annotation/04-select-productive",
+                "vdj_annotation/04-select-productive/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/04-select-productive/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_productive-T.tsv",
+                "vdj_annotation/04-select-productive/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_split_command_log.txt",
+                "vdj_annotation/05-select-junction-mod3",
+                "vdj_annotation/05-select-junction-mod3/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/05-select-junction-mod3/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_jmod3_command_log.txt",
+                "vdj_annotation/05-select-junction-mod3/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_junction-pass.tsv",
+                "vdj_annotation/06-annotate-metadata",
+                "vdj_annotation/06-annotate-metadata/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/06-annotate-metadata/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_add-meta_command_log.txt",
+                "vdj_annotation/06-annotate-metadata/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_meta-pass.tsv",
+                "vdj_annotation/convert-db",
+                "vdj_annotation/convert-db/sc5p_v2_hs_PBMC_10s_5fb",
+                "vdj_annotation/convert-db/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_convertdb_command_log.txt",
+                "vdj_annotation/convert-db/sc5p_v2_hs_PBMC_10s_5fb/sc5p_v2_hs_PBMC_10s_5fb_sequences.fasta"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "all_reps_scqc_command_log.txt:md5,b0158f853aff4aebb0a511256c548fc3",
+                "style.css:md5,d0833d790556369103776a429102fedf",
+                "style.css:md5,d0833d790556369103776a429102fedf",
+                "sc5p_v2_hs_PBMC_10s_5fb_fq_command_log.txt:md5,e1ab9d2e9f8b40e76d484605db8dacbe",
+                "sc5p_v2_hs_PBMC_10s_5fb_jmod3_command_log.txt:md5,00a78b5733068a68479851c68ed85587",
+                "sc5p_v2_hs_PBMC_10s_5fb_add-meta_command_log.txt:md5,20531fe81652d75eb74532db1621fd74"
+            ],
+            "Table_sequences_assembled.tsv:md5,022a5b76375dbf368512c2697b1225f3"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-11-04T13:46:19.603862605"
+    }
+}

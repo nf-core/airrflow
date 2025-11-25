@@ -14,12 +14,12 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_presto_assemblepairs_logs
     ch_presto_collapseseq_logs
     ch_presto_splitseq_logs
+    ch_input_check_logs
     ch_reassign_logs
     ch_changeo_makedb_logs
     ch_vdj_annotation_logs
     ch_bulk_qc_and_filter_logs
     ch_sc_qc_and_filter_logs
-    ch_clonal_analysis_logs
     ch_repertoires // Repertoire tsv files from clonal analysis process
     ch_input // Input samplesheet
     ch_report_rmd // Report Rmarkdown file
@@ -30,7 +30,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     main:
     ch_versions = Channel.empty()
 
-    if (params.mode == "fastq" && params.library_generation_method != "sc_10x_genomics") {
+    if (params.mode == "fastq" && params.library_generation_method != "sc_10x_genomics" && params.library_generation_method != "trust4" ) {
         PARSE_LOGS(
             ch_presto_filterseq_logs,
             ch_presto_maskprimers_logs,
@@ -51,10 +51,11 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_parsed_logs = Channel.empty()
     }
 
-    ch_logs = ch_vdj_annotation_logs.mix(ch_bulk_qc_and_filter_logs,
+    ch_logs = ch_vdj_annotation_logs.mix(
+                                        ch_input_check_logs,
+                                        ch_bulk_qc_and_filter_logs,
                                         ch_reassign_logs,
-                                        ch_sc_qc_and_filter_logs,
-                                        ch_clonal_analysis_logs)
+                                        ch_sc_qc_and_filter_logs)
     ch_logs_tabs =  ch_logs.collect()
                         .flatten()
                         .map{ it -> it.getName().toString() }

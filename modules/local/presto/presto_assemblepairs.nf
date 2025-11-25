@@ -3,10 +3,10 @@ process PRESTO_ASSEMBLEPAIRS {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    conda "bioconda::presto=0.7.1"
+    conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.1--pyhdfd78af_0' :
-        'biocontainers/presto:0.7.1--pyhdfd78af_0' }"
+        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
+        'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)
@@ -14,7 +14,6 @@ process PRESTO_ASSEMBLEPAIRS {
     output:
     tuple val(meta), path("*_assemble-pass.fastq"), emit: reads
     path("*_command_log.txt"), emit: logs
-    path("*.log")
     path("*_table.tab")
     path "versions.yml" , emit: versions
 

@@ -4,7 +4,7 @@
 
 > **nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework**
 >
-> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole Jensen, David Ladd, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. BioRxiv. 2024. doi: [10.1101/2024.01.18.576147](https://doi.org/10.1101/2024.01.18.576147).
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole G. Jensen, David Ladd, Mark Polster, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. (2024) PLOS Computational Biology, 20(7), e1012265. doi: [https://doi.org/10.1371/journal.pcbi.1012265](https://doi.org/10.1371/journal.pcbi.1012265). Pubmed PMID: 39058741.
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 

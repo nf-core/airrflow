@@ -5,13 +5,12 @@ process REPORT_FILE_SIZE {
     tag "file_size"
     label 'immcantation'
     label 'process_single'
+    label 'immcantation_container'
 
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/immcantation/airrflow:4.0.0':
-        'docker.io/immcantation/airrflow:4.0.0' }"
+    container "docker.io/immcantation/airrflow:4.4.0"
 
     input:
     path logs

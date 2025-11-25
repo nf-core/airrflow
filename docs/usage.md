@@ -6,15 +6,36 @@
 
 ## Introduction
 
-The nf-core/airrflow pipeline allows processing BCR and TCR targeted sequencing data from bulk and single-cell sequencing protocols. It performs sequence assembly, V(D)J assignment, clonotyping, lineage reconsctruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework.
+nf-core/airrflow allows processing B-cell receptor (BCR) and and T-cell receptor (TCR) sequencing data from bulk and single-cell sequencing protocols. It allows the processing of targeted bulk and single-cell adaptive immune receptor sequencing data (AIRR-seq), as well as the extraction of TCR and BCR sequences from untargeted bulk and single-cell RNA-seq data. The pipeline enables and end-to-end analysis, departing from raw reads or readily assembled sequences, and performs sequence assembly, V(D)J assignment, clonal group inference, lineage reconstruction and repertoire analysis using the [Immcantation](https://immcantation.readthedocs.io/en/stable/) framework, as well as other immune repertoire analysis tools.
 
-![nf-core/airrflow overview](images/airrflow_workflow_overview.png)
+In addition to this page, you can find additional information on how to use the pipeline on the following pages:
+
+- [bulk_tutorial](usage/bulk_tutorial.md): a step by step tutorial on how to run nf-core/airrflow for bulk data.
+- [single_cell_tutorial](usage/single_cell_tutorial.md): a step by step tutorial on how to run nf-core/airrflow for single-cell data.
 
 ## Running the pipeline
 
 ### Quickstart
 
-A typical command for running the pipeline for **bulk raw fastq files** is:
+> [!INSTALLATION]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+
+First, ensure that the pipeline tests run on your infrastructure:
+
+```bash
+nextflow run nf-core/airrflow -profile test,<docker/singularity/apptainer/podman/shifter/charliecloud/conda/institute> --outdir <OUTDIR>
+```
+
+A typical command for running the pipeline for **bulk raw fastq files** using available pre-set protocol profiles is shown below. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles).
+
+```bash
+nextflow run nf-core/airrflow \
+-profile nebnext_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
+It is also possible to process custom sequencing protocols with custom primers by manually specifying the primers, UMI length (if available) and position:
 
 ```bash
 nextflow run nf-core/airrflow \
@@ -29,26 +50,16 @@ nextflow run nf-core/airrflow \
 --outdir results
 ```
 
-You can optionally set a protocol profile if you're running the pipeline with data from one of the supported profiles. The full list of supported profiles can be found in the section [Supported protocol profiles](#supported-protocol-profiles). An example command running the NEBNext UMI protocol profile with docker containers is:
-
-```bash
-nextflow run nf-core/airrflow \
--profile nebnext_umi,docker \
---mode fastq \
---input input_samplesheet.tsv \
---outdir results
-```
-
 A typical command to run the pipeline from **single cell raw fastq files** is:
 
 ```bash
-nextflow run nf-core/airrflow -r dev \
+nextflow run nf-core/airrflow \
 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
 --mode fastq \
 --input input_samplesheet.tsv \
 --library_generation_method sc_10x_genomics \
 --reference_10x reference/refdata-cellranger-vdj-GRCh38-alts-ensembl-5.0.0.tar.gz \
---outdir ./results
+--outdir results
 ```
 
 A typical command for running the pipeline departing from **single-cell AIRR rearrangement tables or assembled bulk sequencing fasta** data is:
@@ -61,8 +72,22 @@ nextflow run nf-core/airrflow \
 --outdir results
 ```
 
-Check the section [Input samplesheet](#input-samplesheet) below for instructions on how to create the samplesheet, and the [Supported library generation protocols](#supported-bulk-library-generation-methods-protocols) section below for examples on how to run the pipeline for different bulk and the 10xGenomics single cell sequencing protocol.
-For more information about the parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
+It is also possible to reconstruct BCR and TCR sequences from untargeted bulk and single-cell sequencing data. A typical command to run the pipeline from **single-cell RNA-seq fastq files** is shown below. For more information, check the section on [supported untargeted RNA-seq based methods](#supported-untargeted-rna-seq-based-methods) below.
+
+```bash
+nextflow run nf-core/airrfow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method trust4 \
+--umi_read R1 \
+--cell_barcode_read R1 \
+--read_format bc:0:15,um:16:27 \
+--outdir results
+```
+
+Check the section [Input samplesheet](#input-samplesheet) below for instructions on how to create the samplesheet, and the [Supported library generation protocols](#supported-bulk-library-generation-methods-protocols) section below for examples on how to run the pipeline for the different bulk and single-cell sequencing protocols.
+For more detailed information about all the available parameters, please refer to the [parameters documentation](https://nf-co.re/airrflow/parameters).
 The command above will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -92,7 +117,6 @@ with:
 ```yaml title="params.yaml"
 input: './samplesheet.csv'
 outdir: './results/'
-genome: 'GRCh37'
 <...>
 ```
 
@@ -114,7 +138,7 @@ First, go to the [nf-core/airrflow releases page](https://github.com/nf-core/air
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
-To further assist in reproducibility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and reuse [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
 :::tip
 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
@@ -122,7 +146,7 @@ If you wish to share such profile (such as upload as supplementary material for 
 
 ## Input samplesheet
 
-### Fastq input samplesheet (bulk sequencing)
+### Fastq input samplesheet (bulk AIRR sequencing)
 
 The required input file for processing raw BCR or TCR bulk targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. An example samplesheet is:
 
@@ -144,7 +168,7 @@ The required input file for processing raw BCR or TCR bulk targeted sequencing d
 - `age`: Subject biological age.
 - `single_cell`: TRUE or FALSE.
 
-Other optional columns can be added. These columns will be available when building the contrasts for the repertoire comparison report. It is recommended that these columns also follow the AIRR nomenclature. Examples are:
+Other optional columns can be added. These columns will be available as metadata in the final repertoire table. It is recommended that these columns also follow the AIRR nomenclature. Examples are:
 
 - `intervention`: Description of intervention.
 - `disease_diagnosis`: Diagnosis of subject.
@@ -152,19 +176,19 @@ Other optional columns can be added. These columns will be available when buildi
 - `collection_time_point_reference`: Event in the study schedule to which `Sample collection time` relates to (e.g. primary vaccination, intervention start).
 - `cell_subset`: Commonly-used designation of isolated cell population.
 
-The metadata specified in the input file will then be automatically annotated in a column with the same header in the tables generated by the pipeline.
+It is possible to provide several fastq files per sample (e.g. sequenced over different chips or lanes). In this case the different fastq files per sample will be merged together prior to processing. Provide one fastq pair R1/R2 per row, and the same `sample_id` field for these rows.
 
-### Fastq input samplesheet (single cell sequencing)
+### Fastq input samplesheet (single-cell AIRR sequencing)
 
-The required input file for processing raw BCR or TCR single cell targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. You can refer to the bulk fastq input section for documentation on the individual columns.
+The required input file for processing raw BCR or TCR single cell targeted sequencing data is a sample sheet in TSV format (tab separated). The columns `sample_id`, `filename_R1`, `filename_R2`, `subject_id`, `species`, `tissue`, `pcr_target_locus`, `single_cell`, `sex`, `age` and `biomaterial_provider` are required. Any other columns you add will be available in the final repertoire file as extra metadata fields. You can refer to the bulk fastq input section for documentation on the individual columns.
 An example samplesheet is:
 
-| sample_id | filename_R1                     | filename_R2                     | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell | intervention   | collection_time_point_relative | cell_subset  |
-| --------- | ------------------------------- | ------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- | -------------- | ------------------------------ | ------------ |
-| sample01  | sample1_S1_L001_R1_001.fastq.gz | sample1_S1_L001_R2_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
-| sample02  | sample2_S1_L001_R1_001.fastq.gz | sample2_S1_L001_R2_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | FALSE       | Drug_treatment | Baseline                       | plasmablasts |
+| sample_id | filename_R1                      | filename_R2                      | subject_id | species | pcr_target_locus | tissue | sex    | age | biomaterial_provider | single_cell |
+| --------- | -------------------------------- | -------------------------------- | ---------- | ------- | ---------------- | ------ | ------ | --- | -------------------- | ----------- |
+| sample01  | sample01_S1_L001_R1_001.fastq.gz | sample01_S1_L001_R2_001.fastq.gz | Subject02  | human   | IG               | blood  | NA     | 53  | sequencing_facility  | TRUE        |
+| sample02  | sample02_S1_L001_R1_001.fastq.gz | sample02_S1_L001_R2_001.fastq.gz | Subject02  | human   | TR               | blood  | female | 78  | sequencing_facility  | TRUE        |
 
-> FASTQ files must confirm the 10xGenomics cellranger naming conventions<br> >**`[SAMPLE-NAME]`_S1_L00`[LANE-NUMBER]` _`[READ-TYPE]`\_001.fastq.gz**
+> FASTQ files must conform with the 10xGenomics cellranger naming conventions with the same sample name as provided in the sample*id column <br> >\*\*`[SAMPLE-NAME]`* S`[CHIP-NUMBER]`_ L00`[LANE-NUMBER]`_`[R1/R2]`\_001.fastq.gz\*\*
 >
 > Read type is one of
 >
@@ -172,6 +196,13 @@ An example samplesheet is:
 > - `I2`: Sample index read (optional)
 > - `R1`: Read 1
 > - `R2`: Read 2
+
+It is possible to provide several fastq files per sample (e.g. sequenced over different chips or lanes). In this case the different fastq files per sample will be provided to the same cellranger process. These rows should then have an identical `sample_id` field.
+
+### Fastq input samplesheet (untargeted bulk or single-cell RNA-seq)
+
+When running the untargeted protocol, BCR or TCR sequences will be extracted from the untargeted bulk or single-cell RNA sequencing with tools such as [TRUST4](https://github.com/liulab-dfci/TRUST4).
+The required input file is the same as for the [Fastq bulk AIRR samplesheet](#fastq-input-samplesheet-bulk-airr-sequencing) or [Fastq single-cell AIRR samplesheet](#fastq-input-samplesheet-single-cell-sequencing) depending on the input data type (bulk RNA-seq or single-cell RNA-seq).
 
 ### Assembled input samplesheet (bulk or single-cell sequencing)
 
@@ -220,43 +251,54 @@ nextflow run nf-core/airrflow -r <release> \
 --outdir results
 ```
 
-This profile executes the commands based on the pRESTO pre-set pipeline [presto-abseq.sh](https://bitbucket.org/kleinstein/immcantation/src/master/pipelines/presto-abseq.sh). A summary of the performed steps is:
+This profile executes the commands based on the pRESTO pre-set pipeline [presto-abseq.sh](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/pipelines/presto-abseq.sh). A summary of the performed steps is:
 
 - Filter sequences by base quality.
-- Score and mask the provided R1 primers and R2 template switch oligo. Primer defaults are taken from the [Immcantation repository](https://bitbucket.org/kleinstein/immcantation/src/master/protocols/AbSeq/).
+- Score and mask the provided R1 primers and R2 template switch oligo. Primer defaults are taken from the [Immcantation repository](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/).
 - Pair sequences, build UMI consensus sequence.
 - Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
 - Align and annotate the internal C Region (for the BCR specific protocol) for a more specific isotype annotation.
 - Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers:
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
 -profile nebnext_umi_bcr,docker \
 --input input_samplesheet.tsv \
---cprimers <path/to/constant_region_primers> \
---internal_cregion_sequences <path/to/internal_cregion_sequences> \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_R1_Mouse_IG_Primers.fasta \
+--internal_cregion_sequences https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_Mouse_IG_InternalCRegion.fasta \
 --outdir results
 ```
 
-### Clontech / Takara SMARTer Human BCR Profiling kit
-
-- [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
-
-You can use the `clontech_umi_bcr` or `clontech_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
+And similarly for TCR libraries:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
--profile clontech_umi_bcr,docker \
+-profile nebnext_umi_tcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_R1_Mouse_TR_Primers.fasta \
+--internal_cregion_sequences https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_Mouse_TR_InternalCRegion.fasta \
+--outdir results
+```
+
+### Takara SMART-Seq Human BCR/TCR Profiling kit
+
+- [TaKaRa SMART-Seq Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/smart-seq-human-bcr-with-umis?srsltid=AfmBOopqw7s_fGzQVjcEL5-Su4cI1M4Lj1_72wMvwFK7wWUBhOz6BU-R)
+
+You can use the `takara_smartseq_umi_bcr` or `takara_smartseq_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smartseq_umi_bcr,docker \
 --input input_samplesheet.tsv \
 --outdir results
 ```
 
-This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://bitbucket.org/kleinstein/immcantation/src/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
+This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
 
 - Filter sequences by base quality.
-- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://bitbucket.org/kleinstein/immcantation/src/master/protocols/Universal/).
+- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/).
 - Identify the primers sequences and UMI (12 nt length) in the R2 reads.
 - Pair sequences, build UMI consensus sequence.
 - Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
@@ -265,33 +307,94 @@ This profile executes the sequence assembly commands based on the pRESTO pre-set
 
 After the sequence assembly steps, the remaining steps are common for all protocols.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences:
+> [!NOTE]
+> Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
--profile clontech_umi_bcr,docker \
+-profile takara_smartseq_umi_bcr,docker \
 --input input_samplesheet.tsv \
---cprimers <path/to/reverse_complemented_universal_Cregion_sequences> \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
 --outdir results
 ```
 
-## Supported bulk library generation methods (protocols)
+And for TCR data:
 
-When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smartseq_umi_tcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
+--outdir results
+```
+
+> [!NOTE]
+> This protocol was previously called `clontech_umi_bcr`/`clontech_umi_tcr` and we've updated it to TAKARA SMART-Seq to reflect the current name of the experimental kit.
+
+### Takara SMARTer Human BCR/TCR Profiling kit
+
+- [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
+
+You can use the `takara_smarter_umi_bcr` or `takara_smarter_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smarter_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
+This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
+
+- Filter sequences by base quality.
+- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/).
+- Identify the primers sequences and UMI (12 nt length) in the R2 reads.
+- Pair sequences, build UMI consensus sequence.
+- Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
+- Align and annotate the C Region sequences.
+- Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
+
+After the sequence assembly steps, the remaining steps are common for all protocols.
+
+> [!NOTE]
+> Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smarter_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
+--outdir results
+```
+
+And for TCR data:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smarter_umi_tcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
+--outdir results
+```
+
+## Supported custom bulk library generation methods (protocols)
+
+For common sequencing protocols such as commercial kits please check the section above if your kit has a preset profile first, as this will greatly simplify running the pipeline. When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
+
 The following table matches the library generation methods as described in the [AIRR metadata annotation guidelines](https://docs.airr-community.org/en/stable/miairr/metadata_guidelines.html#library-generation-method) to the value that can be provided to the `--library_generation_method` parameter.
 
-| Library generation methods (AIRR) | Description                                                                                | Name in pipeline | Commercial protocols                      |
-| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- | ----------------------------------------- |
-| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |                                           |
-| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |                                           |
-| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |                                           |
-| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   | TAKARA SMARTer TCR v2, TAKARA SMARTer BCR |
-| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |                                           |
-| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |                                           |
-| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |                                           |
-| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |                                           |
-| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |                                           |
-| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |                                           |
+| Library generation methods (AIRR) | Description                                                                                | Name in pipeline |
+| --------------------------------- | ------------------------------------------------------------------------------------------ | ---------------- |
+| RT(RHP)+PCR                       | RT-PCR using random hexamer primers                                                        | Not supported    |
+| RT(oligo-dT)+PCR                  | RT-PCR using oligo-dT primers                                                              | Not supported    |
+| RT(oligo-dT)+TS+PCR               | 5’-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers    | dt_5p_race       |
+| RT(oligo-dT)+TS(UMI)+PCR          | 5’-RACE PCR using oligo-dT primers and template switch primers containing UMI              | dt_5p_race_umi   |
+| RT(specific)+PCR                  | RT-PCR using transcript-specific primers                                                   | specific_pcr     |
+| RT(specific)+TS+PCR               | 5’-RACE PCR using transcript- specific primers                                             | Not supported    |
+| RT(specific)+TS(UMI)+PCR          | 5’-RACE PCR using transcript- specific primers and template switch primers containing UMIs | Not supported    |
+| RT(specific+UMI)+PCR              | RT-PCR using transcript-specific primers containing UMIs                                   | specific_pcr_umi |
+| RT(specific+UMI)+TS+PCR           | 5’-RACE PCR using transcript- specific primers containing UMIs                             | Not supported    |
+| RT(specific)+TS                   | RT-based generation of dsDNA without subsequent PCR. This is used by RNA-seq kits.         | Not supported    |
 
 ### Multiplex specific PCR (with or without UMI)
 
@@ -404,68 +507,6 @@ nextflow run nf-core/airrflow -profile docker \
 --outdir ./results
 ```
 
-### dT-Oligo RT and 5'RACE PCR
-
-This sequencing type requires setting `--library_generation_method race_5p_umi` or `--library_generation_method race_5p_umi` if UMIs are not being employed, and providing sequences for the C-region primers as well as the linker or template switch oligo sequences with the parameter `--race_linker`. Examples are provided below to run airrflow to process amplicons generated with the TAKARA 5'RACE SMARTer Human BCR and TCR protocols (library structure schema shown below).
-
-#### Takara Bio SMARTer Human BCR
-
-The read configuration when sequencing with the TAKARA Bio SMARTer Human BCR protocol is the following:
-
-![nf-core/airrflow](images/TAKARA_RACE_BCR.png)
-
-```bash
-nextflow run nf-core/airrflow -profile docker \
---input samplesheet.tsv \
---library_generation_method dt_5p_race_umi \
---cprimers CPrimers.fasta \
---race_linker linker.fasta \
---umi_length 12 \
---umi_position R2 \
---cprimer_start 7 \
---cprimer_position R1 \
---outdir ./results
-```
-
-#### Takara Bio SMARTer Human TCR v2
-
-The read configuration when sequencing with the Takara Bio SMARTer Human TCR v2 protocol is the following:
-
-![nf-core/airrflow](images/TAKARA_RACE_TCR.png)
-
-```bash
-nextflow run nf-core/airrflow -profile docker \
---input samplesheet.tsv \
---library_generation_method dt_5p_race_umi \
---cprimers CPrimers.fasta \
---race_linker linker.fasta \
---umi_length 12 \
---umi_position R2 \
---cprimer_start 5 \
---cprimer_position R1 \
---outdir ./results
-```
-
-For this protocol, the takara linkers are:
-
-```txt
->takara-linker
-GTAC
-```
-
-And the C-region primers are:
-
-```txt
->TRAC
-CAGGGTCAGGGTTCTGGATATN
->TRBC
-GGAACACSTTKTTCAGGTCCTC
->TRDC
-GTTTGGTATGAGGCTGACTTCN
->TRGC
-CATCTGCATCAAGTTGTTTATC
-```
-
 ## UMI barcode handling
 
 Unique Molecular Identifiers (UMIs) enable the quantification of BCR or TCR abundance in the original sample by allowing to distinguish PCR duplicates from original sample duplicates.
@@ -490,7 +531,8 @@ When processing single cell sequencing data departing from raw `fastq` reads, cu
 ### 10xGenomics
 
 This sequencing type requires setting `--library_generation_method sc_10x_genomics`.
-The `cellranger vdj` automatically uses the Chromium cellular barcodes and UMIs to perform sequence assembly, paired clonotype calling and to assemble V(D)J transcripts per cell.
+The `cellranger vdj` tool automatically uses the Chromium cell barcodes and UMIs to perform sequence assembly, paired clonotype calling and to assemble V(D)J transcripts per cell. The pipeline will then perform gene reassignment and clonotyping with the Immcantation framework unless otherwise specified.
+
 Examples are provided below to run airrflow to process 10xGenomics raw FASTQ data.
 
 ```bash
@@ -510,6 +552,73 @@ nextflow run nf-core/airrflow -r dev \
 - The 10xGenomics reference can be downloaded from the [download page](https://www.10xgenomics.com/support/software/cell-ranger/downloads)
 - To generate a V(D)J segment fasta file as reference from IMGT one can follow the [cellranger docs](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt).
 
+## Supported untargeted RNA-seq based methods
+
+nf-core/airrflow supports untargeted bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow. <br>
+To use untargeted RNA-seq based input, specify `--library_generation_method trust4`.
+
+### Bulk RNA-seq
+
+A typical command to run the pipeline from **bulk RNA-seq fastq files** is:
+
+```bash
+nextflow run nf-core/airrfow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method trust4 \
+--outdir results
+```
+
+### Single-cell RNA-seq
+
+A typical command to run the pipeline from **single-cell RNA-seq fastq files** is:
+
+```bash
+nextflow run nf-core/airrfow \
+-profile <docker/singularity/podman/shifter/charliecloud/conda/institute> \
+--mode fastq \
+--input input_samplesheet.tsv \
+--library_generation_method trust4 \
+--umi_read R1 \
+--cell_barcode_read R1 \
+--read_format bc:0:15,um:16:27 \
+--outdir results
+```
+
+- If UMI's are present, the read containing them must be specified using the `--umi_read` parameter.
+- The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNA-seq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
+
+## Important considerations for clonal analysis
+
+An important step in the analysis of AIRR sequencing data is inferring B cell and T cell clones, or clonal groups, sometimes also called clonotypes. These are cells that are derived from the same progenitor cell through clonal expansion. For T cells, this definition is more strict as T cells do not undergo somatic hypermutation, so the TCRs from T cells in the same clone should be identical. For B cells, on the other hand, the BCRs from cells in the same clone can differ due to somatic hypermutation. They also can have a variety of isotypes.
+
+There are two crucial considerations when defining clonal groups with nf-core/airrflow: across which samples should clonal groups be defined, and what should be the clonal threshold, i.e. how different can these receptors be, so that these are assigned to the same clonal group. These are discussed in detail in the following sections.
+
+### Defining clonal groups across samples
+
+Often times we want to analyze clonal groups from the same individual or animal model across time, different conditions or across samples extracted from different tissues. To ensure that the same clone ID (field `clone_id` in the output AIRR rearrangement file) is assigned to the same BCR / TCR clone across these conditions to be able to track the clones, the clonal inference step should be done pulling the sequences from these samples together. This is why, by default, nf-core/airrflow uses the `subject_id` column to group samples prior to defining clonal groups, so it is important to set the exact same subject ID to samples from the same individual across different conditions.
+
+The sample grouping can also be controlled with the [`--cloneby`](https://nf-co.re/airrflow/4.2.0/parameters/#cloneby) parameter, by providing the name of the column containing the group information that should be used to pull the samples together before defining clonal groups (samples or rows with the same string in this column will be grouped together). You can create a new column if you wish for this purpose.
+
+### Clonal inference method
+
+nf-core/airrflow utilizes the Hierarchical clustering method in the [SCOPer](https://scoper.readthedocs.io/) Immcantation tool to infer clonal groups by default, which initially partitions the BCR / TCR sequences according to V gene, J gene and junction length. Then, it defines clonal groups within each partition by performing hierarchical clustering of the sequences within a partition and cutting the clusters according to an automatically detected or user-defined threshold. More details about this method can be found on the respective SCOPer [vignette](https://scoper.readthedocs.io/en/stable/vignettes/Scoper-Vignette/#). Details on how to determine the clonal threshold can be found in the next section.
+
+### Setting a clonal threshold
+
+The clonal threshold can also be customized through the `--clonal_threshold` parameter. The clonal threshold specifies how different two BCRs can be so that are assigned to the same clonal group. The value is specified in length-normalized hamming distance across the BCR junction regions. By default, `--clonal_threshold` is set to be 'auto', allowing the clonal threshold to be determined automatically using a method included in the [SHazaM](https://shazam.readthedocs.io/) Immcantation tool. You can read more details about the method in the SHazaM [vignette](https://shazam.readthedocs.io/en/stable/vignettes/DistToNearest-Vignette/).
+
+For BCR data, we recommend using this default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it is fitting the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 (length-normalized Hamming distance of nearest neighbors) for human BCR data.
+
+Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, the `--clonal_threshold` parameter should be set to 0 for TCR data.
+
+### Including BCR lineage tree computation
+
+BCR lineage tree computation is performed using the [Dowser](https://dowser.readthedocs.io/) Immcantation package. This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter set to true. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` so all the previous analysis steps are cached and not recomputed.
+
+Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
+
 ## Core Nextflow arguments
 
 > [!NOTE]
@@ -522,7 +631,7 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
 > [!IMPORTANT]
-> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility. Conda is not supported for this pipeline.
 
 The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to check if your system is supported, please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
@@ -565,7 +674,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/airrflow/blob/132ab3d129c0df3f2de0ede7a7afaf549277c512/conf/base.config#L17) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
