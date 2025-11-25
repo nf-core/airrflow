@@ -6,15 +6,17 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 You can run this tutorial using the Github Codespaces platform. Codespaces already has Nextflow and Singularity pre-installed, and it can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
 
-In the dropdown menu, go to the `Codespaces` tab. You can create a basic "2-core" Codespace by clicking the `+` icon. However, as more CPUs and memories are needed for nf-core/airrflow task, you need to press the `...` sign and choose `+ New with options...`. 
+In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then select `+ New with options...`.
 
 ![Create Codespaces with options](../images/Create_codespaces.png)
 
-Afterwards, you will be directed to another page to choose the setting of your platform. Select `4-core` for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
+After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
 
 ![Chose 4-core](../images/Codespaces_4core.png)
 
-If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces part in [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
+If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
+
+When running this tutorial on your local machine, you'll first have to set up Nextflow and a container engine (Docker or Singularity).
 
 > [!NOTE]
 > If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data. To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
@@ -26,7 +28,14 @@ Once you have set up Nextflow and container (Docker or Singularity) for your loc
 ```bash
 nextflow run nf-core/airrflow -r 4.3.1 -profile test,docker --outdir test_results
 ```
-Change the `docker` profile to `singularity` if you use Codespace since The docker profile currently does not work in Codespaces. 
+Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces. You can first set up a Singularity cache directory which will allow the reuse of Singularity container across all runs:
+
+```bash
+mkdir singularity_cache
+export NXF_SINGULARITY_CACHEDIR="/workspaces/airrflow/singularity_cache"
+```
+
+Then run nf-core/airrflow with the test data:
 
 ```bash
 nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_results
@@ -35,13 +44,16 @@ nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_r
 > [!NOTE]
 > The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release.
 
+> [!NOTE]
+> Because Codespaces provides limited CPU and RAM resources, the test run may take 20-25 minutes. The process will be faster on systems with greater CPU and RAM capacity.
+
 If the tests run through correctly, you should see this output in your command line:
 
 ```bash
 -[nf-core/airrflow] Pipeline completed successfully-
-Completed at: 17-Nov-2025 19:53:55
-Duration    : 19m 48s
-CPU hours   : 1.0
+Completed at: 25-Nov-2025 21:07:46
+Duration    : 23m 56s
+CPU hours   : 1.1
 Succeeded   : 221
 ```
 
@@ -63,12 +75,12 @@ process {
 ```
 
 > [!TIP]
-> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
+> Before setting memory and CPUs in the configuration file, we recommend verifying the available memory and CPUs on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more CPUs than available or run out of memory.
 
 > [!NOTE]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
-We prepared the [samplesheet](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv) and the [configuration file](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/resource.config) for this tutorial. If you run the pipeline locally, download both files to the directory where you intend to run nf-core/airrflow.
+We prepared the [samplesheet](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv) and the [configuration file](bulk_tutorial/bulk_sample_code/resource.config) for this tutorial. If you run the pipeline locally, download both files to the directory where you intend to run nf-core/airrflow.
 
 ## Choosing the right protocol profile
 

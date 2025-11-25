@@ -6,51 +6,55 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 You can run this tutorial using the Github Codespaces platform. Codespaces already has Nextflow and Singularity pre-installed, and it can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
 
-In the dropdown menu, go to the `Codespaces` tab. After clicking on the `...` sign, and the `+ New with options...` button.
+In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then select `+ New with options...`.
 
 ![Create Codespaces with options](../images/Create_codespaces.png)
 
-Choose the setting of your platform. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
+After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
 
 ![Chose 4-core](../images/Codespaces_4core.png)
 
-If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview) nf-core documentation. 
+If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
 
-The Codespaces environment already comes with Singularity and Nextflow pre-installed. When running this tutorial on your local machine, you'll first have to set up Nextflow and a container engine (Docker or Singularity).
+When running this tutorial on your local machine, you'll first have to set up Nextflow and a container engine (Docker or Singularity).
 
 > [!NOTE]
 > If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
-Once you have set up Nextflow and container (Docker or Singularity) for your local machine or Codespace environment, test nf-core/airrflow with the built-in test data.
+Once you have set up Nextflow and container (Docker or Singularity) for your local machine or Codespaces environment, test nf-core/airrflow with the built-in test data.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 -profile test_assembled_hs,docker --outdir test_results
+nextflow run nf-core/airrflow -r 4.3.1 -profile test,docker --outdir test_results
 ```
-Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces.
-
-We can first set up a Singularity cache directory. This will allow us to reuse the containers across all runs:
+Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces. You can first set up a Singularity cache directory which will allow the reuse of Singularity container across all runs:
 
 ```bash
 mkdir singularity_cache
 export NXF_SINGULARITY_CACHEDIR="/workspaces/airrflow/singularity_cache"
+```
+
+Then run nf-core/airrflow with the test data:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 -profile test_assembled_hs,singularity --outdir test_results
+nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_results
 ```
 
 > [!NOTE]
 > The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release.
 
+> [!NOTE]
+> Because Codespaces provides limited CPU and RAM resources, the test run may take 20-25 minutes. The process will be faster on systems with greater CPU and RAM capacity.
+
 If the tests run through correctly, you should see this output in your command line:
 
 ```bash
 -[nf-core/airrflow] Pipeline completed successfully-
-Completed at: 25-Nov-2025 16:23:32
-Duration    : 11m 43s
-CPU hours   : 0.4
-Succeeded   : 32
+Completed at: 25-Nov-2025 21:07:46
+Duration    : 23m 56s
+CPU hours   : 1.1
+Succeeded   : 221
 ```
 
 ## Supported input formats
@@ -80,21 +84,18 @@ The samplesheet collects experimental details that are important for the data an
 
 Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#assembled-input-samplesheet-bulk-or-single-cell-sequencing).
 
-The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option. In this example we set the maximum RAM memory to 16GB, we restrict the pipeline to use 4 CPUs and to run for a maximum of 24 hours.
+The resource configuration file sets the compute infrastructure maximum available number of CPUs, RAM memory and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource config should be provided with the `-c` option. In this example we set the maximum RAM memory to 15GB, we restrict the pipeline to use 4 CPUs and to run for a maximum of 24 hours.
 
 ```json title="resource.config"
 process {
-    resourceLimits = [ memory: 16.GB, time: 24.h, cpus: 4 ]
-}
-apptainer{
-  cacheDir = "/workspaces/airrflow/singularity_cache"
+    resourceLimits = [ memory: 15.GB, time: 24.h, cpus: 4 ]
 }
 ```
 
-We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv) and the [configuration file](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config) for this tutorial. Download both files to the directory where you intend to run nf-core/airrflow.
+We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv) and the [configuration file](single_cell_tutorial/sample_data_code/resource.config) for this tutorial. Download both files to the directory where you intend to run nf-core/airrflow.
 
 > [!TIP]
-> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime for large-size dataset.
+> Before setting memory and CPUs in the configuration file, we recommend verifying the available memory and CPUs on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more CPUs than available or run out of memory. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime for large-size dataset.
 
 > [!NOTE]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
@@ -113,7 +114,7 @@ nextflow run nf-core/airrflow -r 4.3.1 \
 -resume
 ```
 
-Of course you can wrap all your code in a [bash file](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh). With the bash file, it's easy to run the pipeline with a single-line command.
+Of course you can wrap all your code in a [bash file](single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh). With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
 bash airrflow_sc_from_assembled.sh
@@ -177,7 +178,7 @@ To run nf-core/airrflow on single cell TCR or BCR sequencing data from fastq fil
 We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/10x_sc_raw.tsv) and the [configuration file](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config) for this tutorial. Download these two files to the directory where you intend to run nf-core/airrflow.
 
 > [!TIP]
-> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
+> Before setting memory and CPUs in the configuration file, we recommend verifying the available memory and CPUs on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more CPUs than available or run out of memory.
 
 Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics website](https://www.10xgenomics.com/support/software/cell-ranger/downloads). Both human and mouse V(D)J references are available. Download the reference that corresponds to the species of your dataset.
 
@@ -200,7 +201,7 @@ nextflow run nf-core/airrflow -r 4.3.1 \
 
 In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical junction regions. For this reason, we set the `--clonal_threshold` parameter to 0. For more details on important considerations when performing clonal analysis check [FAQ](./FAQ.md).
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
@@ -209,7 +210,6 @@ bash airrflow_sc_from_fastq.sh
 
 > [!NOTE]
 > Due to the limited RAM and storage space, the single cell raw reads example in this tutorial cannot be run on Codespace.
-```bash
 
 After launching the pipeline the following will be printed to the console output, followed by some the default parameters used by the pipeline and execution log of airrflow processes:
 
