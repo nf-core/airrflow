@@ -11,5 +11,14 @@ lint:
         - params.report_logo
         - params.report_logo_img
         - params.config_profile_url
+nf_core_version: 3.5.1
 repository_type: pipeline
-nf_core_version: "2.14.1"
+template:
+  author: Gisela Gabernet, Susanna Marquez, Alexander Peltzer, Simon Heumos
+  description: B and T cell repertoire analysis pipeline with the Immcantation framework.
+  force: false
+  is_nfcore: true
+  name: airrflow
+  org: nf-core
+  outdir: .
+  version: 4.1.0
