@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Update Takara protocol names and docs. Add Takara SMART-seq protocol.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Add nf-test tests.
+- [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
 
 ### `Fixed`
 
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Renamed define_clones to clonal_assignment.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in number of sequences report.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in report file size.
+- [#422](https://github.com/nf-core/airrflow/pull/422) Fixed annoying automatic clonal threshold message on any failure.
 
 ### `Dependencies`
 
