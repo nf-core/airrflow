@@ -8,11 +8,11 @@ You can run this tutorial using the Github Codespaces platform. Codespaces alrea
 
 In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then select `+ New with options...`.
 
-![Create Codespaces with options](../images/Create_codespaces.png)
+![Create Codespaces with options](https://github.com/nf-core/airrflow/tree/dev/docs/images/Create_codespaces.png)
 
 After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
 
-![Chose 4-core](../images/Codespaces_4core.png)
+![Chose 4-core](https://github.com/nf-core/airrflow/tree/dev/docs/images/Codespaces_4core.png)
 
 If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
 
@@ -92,7 +92,7 @@ process {
 }
 ```
 
-We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv) and the [configuration file](single_cell_tutorial/sample_data_code/resource.config) for this tutorial. Download both files to the directory where you intend to run nf-core/airrflow.
+We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/usage/single_cell_tutorial/sample_data_code/assembled_samplesheet.tsv) and the [configuration file](https://github.com/nf-core/airrflow/tree/dev/docs/usage/single_cell_tutorial/sample_data_code/resource.config) for this tutorial. Download both files to the directory where you intend to run nf-core/airrflow.
 
 > [!TIP]
 > Before setting memory and CPUs in the configuration file, we recommend verifying the available memory and CPUs on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more CPUs than available or run out of memory. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime for large-size dataset.
@@ -114,7 +114,7 @@ nextflow run nf-core/airrflow -r 4.3.1 \
 -resume
 ```
 
-Of course you can wrap all your code in a [bash file](single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh). With the bash file, it's easy to run the pipeline with a single-line command.
+Of course you can wrap all your code in a [bash file](https://github.com/nf-core/airrflow/tree/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled.sh). With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
 bash airrflow_sc_from_assembled.sh
@@ -122,7 +122,7 @@ bash airrflow_sc_from_assembled.sh
 
 If you are running the pipeline on Codespace, remember to replace `docker` profile with `singularity`. 
 
-Or run this [bash file](single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled_codespace.sh) within the folder where it locates. 
+Or run this [bash file](https://github.com/nf-core/airrflow/tree/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_assembled_codespace.sh) within the folder where it locates. 
 
 ```bash
 bash airrflow_sc_from_assembled_codespace.sh
@@ -201,7 +201,7 @@ nextflow run nf-core/airrflow -r 4.3.1 \
 
 In this tutorial, since the samples are TCRs, which do not have somatic hypermutation, clones are defined strictly by identical junction regions. For this reason, we set the `--clonal_threshold` parameter to 0. For more details on important considerations when performing clonal analysis check [FAQ](./FAQ.md).
 
-Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
+Of course you can wrap all your code in a bash file. We prepared one for you and it's available [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/single_cell_tutorial/sample_data_code/airrflow_sc_from_fastq.sh).
 With the bash file, it's easy to run the pipeline with a single-line command.
 
 ```bash
