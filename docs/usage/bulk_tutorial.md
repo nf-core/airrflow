@@ -10,11 +10,11 @@ In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then sel
 
 ![Create Codespaces with options](https://github.com/nf-core/airrflow/tree/dev/docs/images/Create_codespaces.png)
 
-After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space. 
+After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space.
 
 ![Chose 4-core](https://github.com/nf-core/airrflow/tree/dev/docs/images/Codespaces_4core.png)
 
-If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview). 
+If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview).
 
 When running this tutorial on your local machine, you'll first have to set up Nextflow and a container engine (Docker or Singularity).
 
@@ -28,6 +28,7 @@ Once you have set up Nextflow and container (Docker or Singularity) for your loc
 ```bash
 nextflow run nf-core/airrflow -r 4.3.1 -profile test,docker --outdir test_results
 ```
+
 Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces. You can first set up a Singularity cache directory which will allow the reuse of Singularity container across all runs:
 
 ```bash
