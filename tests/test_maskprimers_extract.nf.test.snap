@@ -1,7 +1,7 @@
 {
-    "-profile test": {
+    "-profile test_maskprimers_extract": {
         "content": [
-            169,
+            161,
             {
                 "ADD_META_TO_TAB": {
                     "dplyr": "1.1.4",
@@ -34,9 +34,6 @@
                     "enchantr": "0.1.24"
                 },
                 "COLLAPSE_DUPLICATES": {
-                    "enchantr": "0.1.24"
-                },
-                "DOWSER_LINEAGES": {
                     "enchantr": "0.1.24"
                 },
                 "FASTP": {
@@ -77,7 +74,7 @@
                 "PRESTO_ASSEMBLEPAIRS_UMI": {
                     "presto": "0.7.6"
                 },
-                "PRESTO_BUILDCONSENSUS_UMI": {
+                "PRESTO_BUILDCONSENSUS_EXTRACT": {
                     "presto": "0.7.6"
                 },
                 "PRESTO_CLUSTERSETS_UMI": {
@@ -90,25 +87,22 @@
                 "PRESTO_FILTERSEQ_UMI": {
                     "presto": "0.7.6"
                 },
-                "PRESTO_MASKPRIMERS_SCORE_UMI_R1": {
+                "PRESTO_MASKPRIMERS_EXTRACT_R1": {
                     "presto": "0.7.6"
                 },
-                "PRESTO_MASKPRIMERS_SCORE_UMI_R2": {
+                "PRESTO_MASKPRIMERS_EXTRACT_R2": {
                     "presto": "0.7.6"
                 },
                 "PRESTO_PAIRSEQ_CLUSTERSETS": {
                     "presto": "0.7.6"
                 },
-                "PRESTO_PAIRSEQ_UMI": {
+                "PRESTO_PAIRSEQ_EXTRACT": {
                     "presto": "0.7.6"
                 },
                 "PRESTO_PARSEHEADERS_COLLAPSE_UMI": {
                     "presto": "0.7.6"
                 },
                 "PRESTO_PARSEHEADERS_METADATA_UMI": {
-                    "presto": "0.7.6"
-                },
-                "PRESTO_PARSEHEADERS_PRIMERS_UMI": {
                     "presto": "0.7.6"
                 },
                 "PRESTO_PARSE_CLUSTER_UMI": {
@@ -205,29 +199,6 @@
                 "clonal_analysis/clonal_assignment/all_reps_clone_report/tables/clonal_diversity.tsv",
                 "clonal_analysis/clonal_assignment/all_reps_clone_report/tables/clone_sizes_table.tsv",
                 "clonal_analysis/clonal_assignment/all_reps_clone_report/tables/num_clones_table.tsv",
-                "clonal_analysis/dowser_lineages",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_command_log.txt",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/assets",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/assets/logo.png",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/assets/style.css",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/formatted_clones.RDS",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/index.html",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/params.RData",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/reference-keys.txt",
-                "clonal_analysis/dowser_lineages/Patient1_dowser_report/search_index.json",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_command_log.txt",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/all_trees.pdf",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/assets",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/assets/logo.png",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/assets/style.css",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/formatted_clones.RDS",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/index.html",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/params.RData",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/reference-keys.txt",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/search_index.json",
-                "clonal_analysis/dowser_lineages/Patient2_dowser_report/trees_object.RDS",
                 "clonal_analysis/find_threshold",
                 "clonal_analysis/find_threshold/all_reps_dist_report",
                 "clonal_analysis/find_threshold/all_reps_dist_report/assets",
@@ -301,6 +272,7 @@
                 "multiqc/multiqc_data/fastp-seq-quality-plot_Read_2_Before_filtering.txt",
                 "multiqc/multiqc_data/fastp_filtered_reads_plot.txt",
                 "multiqc/multiqc_data/fastqc-1-status-check-heatmap.txt",
+                "multiqc/multiqc_data/fastqc-1_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_overrepresented_sequences_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_per_base_n_content_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_per_base_sequence_quality_plot.txt",
@@ -338,6 +310,7 @@
                 "multiqc/multiqc_plots/pdf/fastp-seq-quality-plot_Read_2_Before_filtering.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_adapter_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_overrepresented_sequences_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_sequence_quality_plot.pdf",
@@ -365,6 +338,7 @@
                 "multiqc/multiqc_plots/png/fastp-seq-quality-plot_Read_2_Before_filtering.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc-1_adapter_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_overrepresented_sequences_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_sequence_quality_plot.png",
@@ -392,6 +366,7 @@
                 "multiqc/multiqc_plots/svg/fastp-seq-quality-plot_Read_2_Before_filtering.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_adapter_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_overrepresented_sequences_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_sequence_quality_plot.svg",
@@ -792,6 +767,7 @@
                 "vdj_annotation/03-quality-filter/Sample8/Sample8_quality-pass.tsv",
                 "vdj_annotation/04-select-productive",
                 "vdj_annotation/04-select-productive/Sample2",
+                "vdj_annotation/04-select-productive/Sample2/Sample2_productive-F.tsv",
                 "vdj_annotation/04-select-productive/Sample2/Sample2_productive-T.tsv",
                 "vdj_annotation/04-select-productive/Sample2/Sample2_split_command_log.txt",
                 "vdj_annotation/04-select-productive/Sample3",
@@ -799,6 +775,7 @@
                 "vdj_annotation/04-select-productive/Sample3/Sample3_productive-T.tsv",
                 "vdj_annotation/04-select-productive/Sample3/Sample3_split_command_log.txt",
                 "vdj_annotation/04-select-productive/Sample4",
+                "vdj_annotation/04-select-productive/Sample4/Sample4_productive-F.tsv",
                 "vdj_annotation/04-select-productive/Sample4/Sample4_productive-T.tsv",
                 "vdj_annotation/04-select-productive/Sample4/Sample4_split_command_log.txt",
                 "vdj_annotation/04-select-productive/Sample6",
@@ -853,61 +830,57 @@
                 "vdj_annotation/06-annotate-metadata/Sample8/Sample8_meta-pass.tsv"
             ],
             [
-                "Patient1_clone_command_log.txt:md5,0dac6854409ae783fd8fbda391821521",
+                "Patient1_clone_command_log.txt:md5,501cdb6ff49c142be0dfab18d743e12b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient2_clone_command_log.txt:md5,33577bf0346f04389bd748845cebd23d",
+                "Patient2_clone_command_log.txt:md5,4e1cb8f0f70ca52d3a5e38c6c0d40f67",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_clone_command_log.txt:md5,8330aad6ad2fc8ff9eb8b27ce4b96cca",
-                "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient1_dowser_command_log.txt:md5,c57e1e23a1b48d636b3d499998aa8527",
-                "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient2_dowser_command_log.txt:md5,ef468c73cfcb68d55eafdba9f8edf04c",
+                "all_reps_clone_command_log.txt:md5,fed85bba9ad456d01679618cd26449f2",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,9d11dfc74e37fc71180e648dbbc186bb",
+                "all_reps_threshold_command_log.txt:md5,1ea888c5fcc181731d84283ffc24c20e",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,f08f62309e204a8eedf4371e4ac7b500",
-                "multiqc_fastqc_fastqc-1.txt:md5,f6b8822f161130fda71c58ed55136f2d",
-                "multiqc_general_stats.txt:md5,dfcf7745fc773fe631d3e4a35726765b",
-                "Sample2_collapse_command_log.txt:md5,c5ba8730adf7ae2c3fe0e669a1f4d774",
+                "multiqc_fastqc_fastqc-1.txt:md5,2838cc6832c933802ee6217ed2d9b81c",
+                "multiqc_general_stats.txt:md5,6bcde1f55b5f03bbd11d2e16126a8707",
+                "Sample2_collapse_command_log.txt:md5,67f7f6f84dd3373b8299496f98f47cfc",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample3_collapse_command_log.txt:md5,83ebaac5c24188d75d3fb4c27721c7c2",
+                "Sample3_collapse_command_log.txt:md5,d507f8b7b9b02363c8ee71f20d7b09ae",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample4_collapse_command_log.txt:md5,1e56768dbe4842d2aa2640f5784e91b2",
+                "Sample4_collapse_command_log.txt:md5,733cf3069416bb52205cac6cbd783510",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample6_collapse_command_log.txt:md5,38d8c7f4ace3b4bb90952153388b12f2",
+                "Sample6_collapse_command_log.txt:md5,fb9e6a65fb70ec143b7dedb5f713030a",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample7_collapse_command_log.txt:md5,f9d223c91fb66c10d4aeb07f2993b9b6",
+                "Sample7_collapse_command_log.txt:md5,591e59648f935b3ed28bd3be664c70b9",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample8_collapse_command_log.txt:md5,b5b6ddb5c8b175bc2eabe1c46debc053",
+                "Sample8_collapse_command_log.txt:md5,24330339af3fa0b4ab7b9130fb41a3e6",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample2_fq_command_log.txt:md5,d96db33a6d4e4fc6464c27215311ace9",
-                "Sample3_fq_command_log.txt:md5,ebbb286043612bda6a251d6c3b11e2cd",
-                "Sample4_fq_command_log.txt:md5,38b63191af90d1e7ec020d2b5be35f95",
-                "Sample6_fq_command_log.txt:md5,33ea943de145b90f5f1378275d8739d6",
-                "Sample7_fq_command_log.txt:md5,72afb8eaa0491db61c14bff34e9fbed9",
-                "Sample8_fq_command_log.txt:md5,4afa733a5dc06b0d82ce8f0a29a75530",
-                "Sample2_jmod3_command_log.txt:md5,fd3a985fda70b64ce10423c3cd681f76",
-                "Sample3_jmod3_command_log.txt:md5,0a4537aa75e11ee93c6131a22f647090",
-                "Sample4_jmod3_command_log.txt:md5,aeb62b63f138c6310a5b141197984484",
-                "Sample6_jmod3_command_log.txt:md5,b8dc9e57d5227d3a379075c46a729ee3",
-                "Sample7_jmod3_command_log.txt:md5,430f86477368e3b18ca9b733602d5c6e",
-                "Sample8_jmod3_command_log.txt:md5,7f93d2f7e7662e43ee3a7460208be72b",
-                "Sample2_add-meta_command_log.txt:md5,baf202bacd7a92bbb7888f8c12791e52",
-                "Sample3_add-meta_command_log.txt:md5,0ec4555e62c1ef2ee9c03a4f3dc303cb",
-                "Sample4_add-meta_command_log.txt:md5,d1ff6db15a183f03cb4b7853df66e2e2",
-                "Sample6_add-meta_command_log.txt:md5,70b00ba883c70c3070831895ccfa072c",
-                "Sample7_add-meta_command_log.txt:md5,7f45c2264149e92259b260eb940957f8",
-                "Sample8_add-meta_command_log.txt:md5,eaaaa70f2f95d61750d77605798a75b9"
+                "Sample2_fq_command_log.txt:md5,bd8c06aaba04d0a265074e981bbf076e",
+                "Sample3_fq_command_log.txt:md5,99a4e3fdeee47a490855c0379fb80fbf",
+                "Sample4_fq_command_log.txt:md5,f59aa330b9c1632c6bea306da3420269",
+                "Sample6_fq_command_log.txt:md5,1956a80ac59219ecec494bcf9a751e65",
+                "Sample7_fq_command_log.txt:md5,5d7d9bed68e1dfdad9a2f5530f136f2f",
+                "Sample8_fq_command_log.txt:md5,bfacb5bc581ccd347df3757e4378f7cb",
+                "Sample2_jmod3_command_log.txt:md5,fb22a6b24db751a103771ec6e953da36",
+                "Sample3_jmod3_command_log.txt:md5,39f1b82c6730030cae2e32b0ba2b6ff4",
+                "Sample4_jmod3_command_log.txt:md5,818971c067c759427254b490376f4f1d",
+                "Sample6_jmod3_command_log.txt:md5,0da5032788a79b7e78e02e97c76117c5",
+                "Sample7_jmod3_command_log.txt:md5,5b5b247eaaeee79e5344cf7eaea8b916",
+                "Sample8_jmod3_command_log.txt:md5,25972077608dfd68e4d4b14280054daa",
+                "Sample2_add-meta_command_log.txt:md5,7324425249ba73762c1355c86fcb4fd8",
+                "Sample3_add-meta_command_log.txt:md5,96adafb3b7ea48e9f819c3a5d3cfb5a9",
+                "Sample4_add-meta_command_log.txt:md5,5c53dca75b9251d6ef0cb7154485e2fb",
+                "Sample6_add-meta_command_log.txt:md5,52cce06bb9fe091ea82b979579be1bba",
+                "Sample7_add-meta_command_log.txt:md5,8161bbbce8b1eefd2d50564abd6e502a",
+                "Sample8_add-meta_command_log.txt:md5,02c9814e510532a66973e65ab59d37ef"
             ],
-            "Table_sequences_assembled.tsv:md5,7330606135fab6f1bc7c33de4e455512",
-            "Table_sequences_assembly.tsv:md5,d6f5ac80a7781b76ec008c2ee4487cd6"
+            "Table_sequences_assembled.tsv:md5,6061c883e48468fac38132dc0e5e701d",
+            "Table_sequences_assembly.tsv:md5,9faa608eb75dda932075d1a5d989356e"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-25T15:39:33.230939384"
+        "timestamp": "2025-11-25T16:13:09.446444829"
     }
 }
