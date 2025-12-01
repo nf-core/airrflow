@@ -387,8 +387,7 @@ colnames = [
     "Build_consensus",
     "Assemble_pairs",
     "Unique",
-    "Representative_2",
-    "Igblast",
+    "Representative_2"
 ]
 
 print(df_process_list[0].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype"))
@@ -403,8 +402,7 @@ values = [
     df_process_list[4].set_index("Sample").loc[:, "pass_pairs"],
     df_process_list[5].set_index("Sample").loc[:, "pass_pairs"],
     df_process_list[6].set_index("Sample").loc[:, "keep"],
-    df_process_list[7].set_index("Sample").loc[:, "repres_2"],
-    df_process_list[7].set_index("Sample").loc[:, "pass_igblast"],
+    df_process_list[7].set_index("Sample").loc[:, "repres_2"]
 ]
 
 final_table = pd.concat(values, axis=1, join="outer")
