@@ -8,11 +8,15 @@ You can run this tutorial using the Github Codespaces platform. Codespaces alrea
 
 In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then select `+ New with options...`.
 
-![Create Codespaces with options](https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Create_codespaces.png)
+<p align="center">
+<img src="https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Create_codespaces.png" width="400" alt="Create Codespaces with options">
+</p>
 
 After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space.
 
-![Chose 4-core](https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Codespaces_4core.png)
+<p align="center">
+<img src="https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Codespaces_4core.png" width="400" alt="Chose 4-core">
+</p>
 
 If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview).
 
