@@ -8,11 +8,11 @@ You can run this tutorial using the Github Codespaces platform. Codespaces alrea
 
 In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then select `+ New with options...`.
 
-![Create Codespaces with options](https://github.com/nf-core/airrflow/tree/dev/docs/images/Create_codespaces.png)
+![Create Codespaces with options](https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Create_codespaces.png)
 
 After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space.
 
-![Chose 4-core](https://github.com/nf-core/airrflow/tree/dev/docs/images/Codespaces_4core.png)
+![Chose 4-core](https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Codespaces_4core.png)
 
 If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview).
 
@@ -43,7 +43,7 @@ nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_r
 ```
 
 > [!NOTE]
-> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release.
+> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking and using the latest release](https://nf-co.re/airrflow/releases_stats/) .
 
 > [!NOTE]
 > Because Codespaces provides limited CPU and RAM resources, the test run may take 20-25 minutes. The process will be faster on systems with greater CPU and RAM capacity.
