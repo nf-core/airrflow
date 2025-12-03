@@ -313,8 +313,7 @@ colnames = [
     "Mask_primers_R1",
     "Mask_primers_R2",
     "Unique",
-    "Representative_2",
-    "Igblast",
+    "Representative_2"
 ]
 
 # Tables provide extra info and help debugging
@@ -342,8 +341,7 @@ values = [
     df_process_list[2].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R1"].tolist(),
     df_process_list[2].sort_values(by=["Sample"]).pivot(index="Sample", columns="readtype")["pass"]["R2"].tolist(),
     df_process_list[3].sort_values(by=["Sample"]).loc[:, "keep"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist(),
-    df_process_list[4].sort_values(by=["Sample"]).loc[:, "pass_igblast"].tolist(),
+    df_process_list[4].sort_values(by=["Sample"]).loc[:, "repres_2"].tolist()
 ]
 
 final_table = dict(zip(colnames, values))
