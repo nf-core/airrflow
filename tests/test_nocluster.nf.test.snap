@@ -823,12 +823,12 @@
                 "Sample8_add-meta_command_log.txt:md5,eaaaa70f2f95d61750d77605798a75b9"
             ],
             "Table_sequences_assembled.tsv:md5,9579aa25f717297d3b53ba77ef34d6d0",
-            "Table_sequences_assembly.tsv:md5,c433fd030bfd99dbf4a0bfc4fb4b2945"
+            "Table_sequences_assembly.tsv:md5,96afd43375b294c8238afdb5285874bc"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-25T16:23:12.281654979"
+        "timestamp": "2025-12-03T11:37:00.914571022"
     }
 }
