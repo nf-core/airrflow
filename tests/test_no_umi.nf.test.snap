@@ -417,12 +417,12 @@
                 "Sample1_add-meta_command_log.txt:md5,375939c5827b70235b0c68ce79b3fe45"
             ],
             "Table_sequences_assembled.tsv:md5,ef32428733c1d28b17d031d92d21cf4c",
-            "Table_sequences_assembly.tsv:md5,be372896a834fc17d262623ff718d28f"
+            "Table_sequences_assembly.tsv:md5,a3c840988b32d00ebe6440a8c1b4c8c9"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-25T16:19:11.009870361"
+        "timestamp": "2025-12-03T11:32:51.746896469"
     }
 }
