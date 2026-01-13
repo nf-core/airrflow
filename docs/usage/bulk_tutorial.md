@@ -4,31 +4,61 @@ This tutorial provides a step by step introduction on how to run nf-core/airrflo
 
 ## Pre-requisites
 
+You can run this tutorial using the Github Codespaces platform. Codespaces already has Nextflow and Singularity pre-installed, and it can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
+
+In the dropdown menu, go to the `Codespaces` tab. Click the `...` sign, then select `+ New with options...`.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Create_codespaces.png" width="400" alt="Create Codespaces with options">
+</p>
+
+After that, you’ll be directed to the configuration page. Select "4-core" for `machine type`, which will give you 4 CPUs, 16GB RAM and 32GB space.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/nf-core/airrflow/dev/docs/images/Codespaces_4core.png" width="400" alt="Chose 4-core">
+</p>
+
+If you want to know more about Codespaces, check [the Codespaces overview](https://docs.github.com/en/codespaces/about-codespaces/what-are-codespaces) or the Codespaces section in nf-core documentation [the Devcontainers overview](https://nf-co.re/docs/tutorials/devcontainer/overview).
+
+When running this tutorial on your local machine, you'll first have to set up Nextflow and a container engine (Docker or Singularity).
+
 > [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data.
-
-For the purpose of running this tutorial on your local machine, we recommend a Docker installation. To install Docker, follow the instructions [here](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
-
-Alternatively, you can run this tutorial using the Gitpod platform which has Nextflow, nf-core and Docker pre-installed. There are three ways to open the Gitpod platform. Please watch this [video](https://www.youtube.com/watch?v=ij1msCffQZA&list=PL3TSF5whlprXVp-7Br2oKwQgU4bji1S7H&index=2) to set it up. If you want to know more about Gitpod, check [the Gitpod overview](https://nf-co.re/docs/tutorials/gitpod/overview).
+> If you want to run this tutorial on your local machine, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set up Nextflow and a container engine needed to run this pipeline. At the moment, nf-core/airrflow does NOT support using conda virtual environments for dependency management, only containers are supported. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) before running the workflow on actual data. To install Docker, follow the [instructions](https://docs.docker.com/engine/install/). After installation Docker on Linux, don't forget to check the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ## Testing the pipeline with built-in tests
 
-Once you have set up your Nextflow and container (Docker or Singularity), test nf-core/airrflow with the built-in test data.
+Once you have set up Nextflow and container (Docker or Singularity) for your local machine or Codespace environment, test nf-core/airrflow with the built-in test data.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.0 -profile test,docker --outdir test_results
+nextflow run nf-core/airrflow -r 4.3.1 -profile test,docker --outdir test_results
+```
+
+Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces. You can first set up a Singularity cache directory which will allow the reuse of Singularity container across all runs:
+
+```bash
+mkdir singularity_cache
+export NXF_SINGULARITY_CACHEDIR="/workspaces/airrflow/singularity_cache"
+```
+
+Then run nf-core/airrflow with the test data:
+
+```bash
+nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_results
 ```
 
 > [!NOTE]
-> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking](https://nf-co.re/airrflow/releases_stats/) and using the latest release.
+> The '-r' flag in the command specifies which nf-core/airrflow release to run. We recommend always [checking and using the latest release](https://nf-co.re/airrflow/releases_stats/) .
+
+> [!NOTE]
+> Because Codespaces provides limited CPU and RAM resources, the test run may take 20-25 minutes. The process will be faster on systems with greater CPU and RAM capacity.
 
 If the tests run through correctly, you should see this output in your command line:
 
 ```bash
 -[nf-core/airrflow] Pipeline completed successfully-
-Completed at: 11-Mar-2025 11:30:35
-Duration    : 5m 50s
-CPU hours   : 0.6
+Completed at: 25-Nov-2025 21:07:46
+Duration    : 23m 56s
+CPU hours   : 1.1
 Succeeded   : 221
 ```
 
@@ -41,31 +71,30 @@ In this tutorial, we will use nf-core/airrflow to analyze bulk BCR sequencing da
 To run the pipeline on bulk BCR/TCR sequencing data, several files must be prepared in advance:
 
 - A tab-separated samplesheet containing the information of each sample. Details on the required columns of a samplesheet are available [here](https://nf-co.re/airrflow/usage#input-samplesheet).
-- A configuration file specifying the system's maximum available RAM memory, CPUs and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource configuration file is provided with the `-c` option. In this example we set the maximum RAM memory to 20GB, we restrict the pipeline to use 4 CPUs and to run for a maximum of 24 hours. Depending on the size of your dataset, it might be required to extend the running time. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
+- A configuration file specifying the system's maximum available RAM memory, CPUs and running time. This will ensure that no pipeline process requests more resources than available in the compute infrastructure where the pipeline is running. The resource configuration file is provided with the `-c` option. In this example we set the maximum RAM memory to 15GB, we restrict the pipeline to use 4 CPUs and to run for a maximum of 24 hours. You can also remove the "time" parameter from the configuration file to allow for unlimited runtime.
 
 ```json title="resource.config"
 process {
-   resourceLimits = [cpus: 4, memory: 20.GB, time: 24.h]
+   resourceLimits = [cpus: 4, memory: 15.GB, time: 24.h]
 }
 ```
 
 > [!TIP]
-> Before setting memory and cpus in the configuration file, we recommend verifying the available memory and cpus on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more cpus than available or run out of memory.
+> Before setting memory and CPUs in the configuration file, we recommend verifying the available memory and CPUs on your system. Otherwise, exceeding the system's capacity may result in an error indicating that you requested more CPUs than available or run out of memory.
 
 > [!NOTE]
 > When running nf-core/airrflow with your own data, provide the full path to your input files under the filename column.
 
-A prepared samplesheet for this tutorial can be found [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv), and the configuration file is available [here](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/resource.config).
-Download both files to the directory where you intend to run nf-core/airrflow.
+We prepared the [samplesheet](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/metadata_pcr_umi_airr_300.tsv) and the [configuration file](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/resource.config) for this tutorial. If you run the pipeline locally, download both files to the directory where you intend to run nf-core/airrflow.
 
 ## Choosing the right protocol profile
 
 Bulk BCR and TCR targeted sequencing can be performed with a wide variety of protocols, using different library preparation methods. Different protocols usually use different amplification primers, UMI barcode lengths and position, which require different parameter settings to run nf-core/airrflow. To make it easier to run the pipeline on commonly used commercially available kits, we provide parameter presets as profiles. A full [list of protocol profiles](https://nf-co.re/airrflow/docs/usage/#supported-protocol-profiles) is available on the usage documentation page.
 
-You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as any parameters in the launch command will override the parameters in the profile.
+You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as the parameters in the launch command will override the parameters in the profile.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.0 \
+nextflow run nf-core/airrflow -r 4.3.1 \
 -profile <protocol-profile-name>,docker \
 --input samplesheet.tsv \
 -c resource.config \
@@ -82,10 +111,10 @@ If your dataset was generated using a custom library preparation method, you can
 
 The BCRseq dataset used in this tutorial was obtained with a multiplexed PCR protocol using custom C-region and V-region primers. We stored the sequences for the V-region primers as well as the C-region primers in AWS S3, and the links are provided in the Nextflow command which will be fetched by Nextflow automatically when executing the command. You can also provide the full path to the custom primers fasta files.
 
-The command to launch nf-core/airrflow for the dataset in this tutorial is the following:
+To run the pipeline locally, use the following command to launch nf-core/airrflow for the dataset in this tutorial:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.0 \
+nextflow run nf-core/airrflow -r 4.3.1 \
 -profile docker \
 --mode fastq \
 --input metadata_pcr_umi_airr_300.tsv \
@@ -108,7 +137,15 @@ With the bash file, it's easy to run the pipeline with a single-line command.
 bash airrflow_bulk_b_fastq.sh
 ```
 
-If no UMI barcodes were used, set the `--library_generation_method specific_pcr`, and the UMI length will be set automatically to 0.
+> [!NOTE]
+> Due to the limited RAM and storage space on Codespace, please use the [subset of dataset](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/subset_metadata_pcr_umi_airr_300.tsv) to run the pipeline. Meanwhile, replace 'docker' profile with 'singularity' in the command. We have prepared a corresponding [bash file](https://github.com/nf-core/airrflow/tree/dev/docs/usage/bulk_tutorial/bulk_sample_code/airrflow_bulk_b_fastq_codespace.sh) for you. Run it within the folder where the bash file locates on Codespace with the single-line command below.
+
+```bash
+bash airrflow_bulk_b_fastq_codespace.sh
+```
+
+> [!TIP]
+> If no UMI barcodes were used, set the `--library_generation_method specific_pcr`, and the UMI length will be set automatically to 0.
 
 > [!TIP]
 > Please ensure you modify the parameters when running the pipeline on your own data to match the specific details of your library preparation protocol.
@@ -123,7 +160,7 @@ After launching the pipeline the following will be printed to the console output
  N E X T F L O W   ~  version 24.10.5
 
 WARN: It appears you have never run this project before -- Option `-resume` is ignored
-Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.3.0]
+Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.3.1]
 
 
 ------------------------------------------------------
@@ -132,7 +169,7 @@ Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revisio
   |\ | |__  __ /  ` /  \ |__) |__         }  {
   | \| |       \__, \__/ |  \ |___     \`-._,-`-,
                                         `._,._,'
-  nf-core/airrflow 4.3.0
+  nf-core/airrflow 4.3.1
 ------------------------------------------------------
 ```
 
@@ -164,7 +201,7 @@ Airrflow_report.html
 - pipeline_info
 ```
 
-The summary report, named `Airrflow_report.html`, provides an overview of the analysis results, such as an overview of the number of sequences per sample in each of the pipeline steps, the V(D)J gene assignment and QC, and V gene family usage. Additionally, it contains links to detailed reports for other specific analysis steps.
+The summary report, named `Airrflow_report.html`, provides an overview of the analysis results, such as an overview of the number of sequences per sample after each of the pipeline steps, the V(D)J gene assignment and QC, and V gene family usage. Additionally, it contains links to detailed reports for other specific analysis steps.
 
 The analysis steps and their corresponding folders, where the results are stored, are briefly listed below. Detailed documentation on the pipeline output can be found on the [Output documentation page](https://nf-co.re/airrflow/docs/output/).
 
@@ -173,7 +210,7 @@ The analysis steps and their corresponding folders, where the results are stored
    - `FastQC` is applied to do some quality control checks on raw sequence data. The fastqc report for each fastq file is under the folder named 'fastqc'. The aggregated QC reports for all samples can also be checked in the MultiQC report.
 
 2. Sequence assembly
-   - [`pRESTO`](https://presto.readthedocs.io/en/stable/) is a tool part of Immcantation for processing raw reads from high-throughput sequencing of B cell and T cell repertoires. It includes features for quality control, primer masking, annotation of reads with sequence embedded barcodes, generation of unique molecular identifier (UMI) consensus sequences, assembly of paired-end reads and identification of duplicate sequences. The 'presto' folder contains the intermediate pRESTO steps logs.
+   - [`pRESTO`](https://presto.readthedocs.io/en/stable/) is a tool part of Immcantation for processing raw reads from high-throughput sequencing of B cell and T cell repertoires. It includes features for quality control, primer masking, annotation of reads with sequence embedded barcodes, generation of unique molecular identifier (UMI) consensus sequences, assembly of paired-end reads and identification of duplicate sequences. The 'presto' folder contains the intermediate pRESTO step logs.
 
 3. V(D)J annotation and filtering
    - In this step, V(D)J gene segments are inferred using the provided germline reference and [`IgBLAST`](https://www.ncbi.nlm.nih.gov/igblast/). Alignments are annotated in AIRR format. Non-productive sequences and sequences with low alignment quality are filtered out unless otherwise specified. The intermediate results are stored under the folder named 'vdj_annotation'.

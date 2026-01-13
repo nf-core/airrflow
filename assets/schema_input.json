@@ -37,7 +37,7 @@
                 "errorMessage": "Sex must be provided, specify NA if unknown."
             },
             "age": {
-                "type": ["string", "integer"],
+                "type": ["string", "number"],
                 "errorMessage": "Age must be provided, specify NA if unknown."
             },
             "biomaterial_provider": {
@@ -51,25 +51,21 @@
             },
             "filename_R1": {
                 "type": "string",
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "Filename for R1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+$",
+                "errorMessage": "Filename for R1 cannot contain spaces."
             },
             "filename_R2": {
                 "type": "string",
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "Filename for R2 must not contain spaces and must have extension '.fq.gz' or '.fastq.gz'."
+                "pattern": "^\\S+$",
+                "errorMessage": "Filename for R2 cannot contain spaces."
             },
             "filename_I1": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "Filename for indices must not contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+$",
+                "errorMessage": "Filename for I1 cannot contain spaces."
             },
             "filename": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
                 "pattern": "^\\S+$",
                 "errorMessage": "Filename cannot contain spaces."
             }

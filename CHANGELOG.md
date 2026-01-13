@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Add first nf-test.
 - [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
 - [#425](https://github.com/nf-core/airrflow/pull/416) Add all nf-tests.
+- [#431](https://github.com/nf-core/airrflow/pull/431) Update nf-test snapshots and acknowledgements.
 
 ### `Fixed`
 
