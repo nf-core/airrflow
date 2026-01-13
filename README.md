@@ -189,6 +189,12 @@ We thank the following people for their extensive assistance in the development 
 - [Simon Heumos](https://github.com/subwaystation)
 - [Mark Polster](https://github.com/mapo9)
 
+## Acknowledgements
+
+[![NIH National Institute of Allergy and Infectious Diseases ](docs/images/NIAID-logo-cropped.png)](https://www.niaid.nih.gov/)
+
+The nf-core/airrflow pipeline development is partly supported by the National Institute of Allergy and Infectious Diseases of the National Institutes of Health (NIH) grant U01AI184647 to Gisela Gabernet.
+
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
