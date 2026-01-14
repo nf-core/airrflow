@@ -102,6 +102,7 @@ workflow PRESTO_SANS_UMI {
         }
 
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_ALIGN_SANSUMI_FWD.out.versions)
+        ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_ALIGN_SANSUMI_REV.out.versions)
 
         ch_maskprimers_logs = PRESTO_MASKPRIMERS_ALIGN_SANSUMI_FWD.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_ALIGN_SANSUMI_REV.out.logs)

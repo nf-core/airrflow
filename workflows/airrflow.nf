@@ -70,12 +70,13 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_airr
 workflow AIRRFLOW {
 
     take:
-        ch_input // channel: samplesheet read in from --input
+        ch_input
 
     main:
 
         ch_versions = Channel.empty()
         ch_reassign_logs = Channel.empty()
+        ch_input_check_logs = Channel.empty()
 
         // Download or fetch databases
         DATABASES()
@@ -168,6 +169,7 @@ workflow AIRRFLOW {
                 params.cloneby
             )
             ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions )
+            ch_input_check_logs = ASSEMBLED_INPUT_CHECK.out.logs
 
             if (params.reassign) {
                 CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
@@ -276,6 +278,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs.collect().ifEmpty([]),
                 ch_presto_collapseseq_logs.collect().ifEmpty([]),
                 ch_presto_splitseq_logs.collect().ifEmpty([]),
+                ch_input_check_logs.collect().ifEmpty([]),
                 ch_reassign_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
@@ -294,7 +297,25 @@ workflow AIRRFLOW {
     //
     // Collate and save software versions
     //
-    softwareVersionsToYAML(ch_versions)
+    def topic_versions = Channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by:0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  +  'airrflow_software_'  + 'mqc_'  + 'versions.yml',

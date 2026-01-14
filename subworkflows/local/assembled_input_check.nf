@@ -15,6 +15,8 @@ workflow ASSEMBLED_INPUT_CHECK {
     cloneby
 
     main:
+    ch_logs = Channel.empty()
+
     SAMPLESHEET_CHECK_ASSEMBLED ( samplesheet )
     VALIDATE_INPUT ( samplesheet, miairr, collapseby, cloneby ) //removed reassign
     ch_validated_input = VALIDATE_INPUT.out.validated_input
@@ -27,14 +29,20 @@ workflow ASSEMBLED_INPUT_CHECK {
             }
             .set{ ch_metadata }
 
-    ch_unique_fasta = RENAME_FILE_FASTA( ch_metadata.fasta )
-    ch_unique_tsv = RENAME_FILE_TSV( ch_metadata.tsv )
+    RENAME_FILE_FASTA( ch_metadata.fasta )
+    ch_unique_fasta = RENAME_FILE_FASTA.out.file
+    ch_logs = ch_logs.mix(RENAME_FILE_FASTA.out.logs)
+
+    RENAME_FILE_TSV( ch_metadata.tsv )
+    ch_unique_tsv = RENAME_FILE_TSV.out.file
+    ch_logs = ch_logs.mix(RENAME_FILE_TSV.out.logs)
 
     emit:
     ch_fasta = ch_unique_fasta
     ch_tsv = ch_unique_tsv
     validated_input = ch_validated_input
     versions = VALIDATE_INPUT.out.versions
+    logs = ch_logs
 }
 
 // Function to map

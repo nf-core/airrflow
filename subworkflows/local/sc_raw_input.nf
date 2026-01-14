@@ -43,6 +43,7 @@ workflow SC_RAW_INPUT {
             UNZIP_CELLRANGERDB(
                 params.reference_10x
             )
+            ch_versions = ch_versions.mix(UNZIP_CELLRANGERDB.out.versions)
             UNZIP_CELLRANGERDB.out.unzipped.set { ch_sc_reference }
         } else {
             ch_sc_reference = Channel.fromPath(params.reference_10x, checkIfExists: true)
@@ -80,7 +81,7 @@ workflow SC_RAW_INPUT {
                 RENAME_FILE_TSV.out.file
             )
 
-    ch_versions = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions
+    ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions)
 
     ch_fasta = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
 

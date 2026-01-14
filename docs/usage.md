@@ -140,8 +140,9 @@ This version number will be logged in reports when you run the pipeline, so that
 
 To further assist in reproducibility, you can use share and reuse [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
-> [!TIP]
-> If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+:::tip
+If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+:::
 
 ## Input samplesheet
 
@@ -250,23 +251,23 @@ nextflow run nf-core/airrflow -r <release> \
 --outdir results
 ```
 
-This profile executes the commands based on the pRESTO pre-set pipeline [presto-abseq.sh](https://bitbucket.org/kleinstein/immcantation/src/master/pipelines/presto-abseq.sh). A summary of the performed steps is:
+This profile executes the commands based on the pRESTO pre-set pipeline [presto-abseq.sh](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/pipelines/presto-abseq.sh). A summary of the performed steps is:
 
 - Filter sequences by base quality.
-- Score and mask the provided R1 primers and R2 template switch oligo. Primer defaults are taken from the [Immcantation repository](https://bitbucket.org/kleinstein/immcantation/src/master/protocols/AbSeq/).
+- Score and mask the provided R1 primers and R2 template switch oligo. Primer defaults are taken from the [Immcantation repository](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/).
 - Pair sequences, build UMI consensus sequence.
 - Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
 - Align and annotate the internal C Region (for the BCR specific protocol) for a more specific isotype annotation.
 - Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers. Here is an example using the mouse IG primers from the Immcantation Bitbucket repository:
+Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primers. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
 -profile nebnext_umi_bcr,docker \
 --input input_samplesheet.tsv \
---cprimers https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_R1_Mouse_IG_Primers.fasta \
---internal_cregion_sequences https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_Mouse_IG_InternalCRegion.fasta \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_R1_Mouse_IG_Primers.fasta \
+--internal_cregion_sequences https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_Mouse_IG_InternalCRegion.fasta \
 --outdir results
 ```
 
@@ -276,28 +277,28 @@ And similarly for TCR libraries:
 nextflow run nf-core/airrflow -r <release> \
 -profile nebnext_umi_tcr,docker \
 --input input_samplesheet.tsv \
---cprimers https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_R1_Mouse_TR_Primers.fasta \
---internal_cregion_sequences https://bitbucket.org/kleinstein/immcantation/raw/354f49228a43b4c2858d67fb09886126b314e317/protocols/AbSeq/AbSeq_Mouse_TR_InternalCRegion.fasta \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_R1_Mouse_TR_Primers.fasta \
+--internal_cregion_sequences https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/AbSeq/AbSeq_Mouse_TR_InternalCRegion.fasta \
 --outdir results
 ```
 
-### Clontech / Takara SMARTer Human BCR/TCR Profiling kit
+### Takara SMART-Seq Human BCR/TCR Profiling kit
 
-- [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
+- [TaKaRa SMART-Seq Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/smart-seq-human-bcr-with-umis?srsltid=AfmBOopqw7s_fGzQVjcEL5-Su4cI1M4Lj1_72wMvwFK7wWUBhOz6BU-R)
 
-You can use the `clontech_umi_bcr` or `clontech_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
+You can use the `takara_smartseq_umi_bcr` or `takara_smartseq_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
--profile clontech_umi_bcr,docker \
+-profile takara_smartseq_umi_bcr,docker \
 --input input_samplesheet.tsv \
 --outdir results
 ```
 
-This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://bitbucket.org/kleinstein/immcantation/src/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
+This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
 
 - Filter sequences by base quality.
-- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://bitbucket.org/kleinstein/immcantation/src/master/protocols/Universal/).
+- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/).
 - Identify the primers sequences and UMI (12 nt length) in the R2 reads.
 - Pair sequences, build UMI consensus sequence.
 - Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
@@ -306,13 +307,14 @@ This profile executes the sequence assembly commands based on the pRESTO pre-set
 
 After the sequence assembly steps, the remaining steps are common for all protocols.
 
-Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation Bitbucket repository:
+> [!NOTE]
+> Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
--profile clontech_umi_bcr,docker \
+-profile takara_smartseq_umi_bcr,docker \
 --input input_samplesheet.tsv \
---cprimers https://bitbucket.org/kleinstein/immcantation/raw/c98269b194e9c6262fe3b098be3600ba7f64b85c/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
 --outdir results
 ```
 
@@ -320,15 +322,65 @@ And for TCR data:
 
 ```bash
 nextflow run nf-core/airrflow -r <release> \
--profile clontech_umi_tcr,docker \
+-profile takara_smartseq_umi_tcr,docker \
 --input input_samplesheet.tsv \
---cprimers https://bitbucket.org/kleinstein/immcantation/raw/c98269b194e9c6262fe3b098be3600ba7f64b85c/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
+--outdir results
+```
+
+> [!NOTE]
+> This protocol was previously called `clontech_umi_bcr`/`clontech_umi_tcr` and we've updated it to TAKARA SMART-Seq to reflect the current name of the experimental kit.
+
+### Takara SMARTer Human BCR/TCR Profiling kit
+
+- [TaKaRa SMARTer Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/human-bcr-profiling-kit-for-illumina-sequencing)
+
+You can use the `takara_smarter_umi_bcr` or `takara_smarter_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smarter_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--outdir results
+```
+
+This profile executes the sequence assembly commands based on the pRESTO pre-set pipeline [presto-clontech-umi.sh](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/pipelines/presto-clontech-umi.sh). A summary of the performed steps is:
+
+- Filter sequences by base quality.
+- Align and annotate the universal C region seqeunces in the R1 reads. Defaults are taken from the [Immcantation repository](https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/).
+- Identify the primers sequences and UMI (12 nt length) in the R2 reads.
+- Pair sequences, build UMI consensus sequence.
+- Assemble read pairs with the pRESTO `AssemblePairs sequential` option.
+- Align and annotate the C Region sequences.
+- Remove duplicate sequences and filter to sequences with at least 2 supporting sources.
+
+After the sequence assembly steps, the remaining steps are common for all protocols.
+
+> [!NOTE]
+> Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smarter_umi_bcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
+--outdir results
+```
+
+And for TCR data:
+
+```bash
+nextflow run nf-core/airrflow -r <release> \
+-profile takara_smarter_umi_tcr,docker \
+--input input_samplesheet.tsv \
+--cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
 --outdir results
 ```
 
 ## Supported custom bulk library generation methods (protocols)
 
 For common sequencing protocols such as commercial kits please check the section above if your kit has a preset profile first, as this will greatly simplify running the pipeline. When processing bulk sequencing data departing from raw `fastq` reads, several sequencing protocols are supported which can be provided with the parameter `--library_generation_method`.
+
 The following table matches the library generation methods as described in the [AIRR metadata annotation guidelines](https://docs.airr-community.org/en/stable/miairr/metadata_guidelines.html#library-generation-method) to the value that can be provided to the `--library_generation_method` parameter.
 
 | Library generation methods (AIRR) | Description                                                                                | Name in pipeline |
@@ -600,7 +652,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `shifter`
   - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 - `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  - A generic configuration profile to be used with [Charliecloud](https://charliecloud.io/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`

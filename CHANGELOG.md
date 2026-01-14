@@ -3,6 +3,38 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.4dev]
+
+### `Added`
+
+- [#413](https://github.com/nf-core/airrflow/pull/413) Bump versions to dev.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Updated nf-core template to v3.3.2.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Speeding up tests with smaller test data.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Update Takara protocol names and docs. Add Takara SMART-seq protocol.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Add first nf-test.
+- [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
+- [#425](https://github.com/nf-core/airrflow/pull/416) Add all nf-tests.
+- [#431](https://github.com/nf-core/airrflow/pull/431) Update nf-test snapshots and acknowledgements.
+
+### `Fixed`
+
+- [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Subsample reads for report_threshold process.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Removed a variable that was defined twice.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Renamed define_clones to clonal_assignment.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in number of sequences report.
+- [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in report file size.
+- [#422](https://github.com/nf-core/airrflow/pull/422) Fixed annoying automatic clonal threshold message on any failure.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.20      | 0.1.24      |
+| presto     | 0.7.4       | 0.7.6       |
+| dowser     | 2.3         | 2.4.0       |
+
 ## [4.3.1] - Revelio hotfix
 
 ### `Added`
@@ -24,6 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
 - [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
+- [#385](https://github.com/nf-core/airrflow/pull/385) Added trust4 barcodewhitelist parameter
 
 ### `Fixed`
 
