@@ -293,13 +293,12 @@
                 "PGP1_add-meta_command_log.txt:md5,1b89785869ec1755fc89f459a1d2f2a2",
                 "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,675e83b0cdcfa384e317fe8197109afb"
             ],
-            "Table_sequences_assembled.tsv:md5,e7e0db60f3a86be806df570ef6930565",
-            "/home/gisela/Projects/Pipelines/nf-core-airrflow/.nf-test/tests/1e95b1788946700f1fad1fcd3340a4e0/output/repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv"
+            "Table_sequences_assembled.tsv:md5,e7e0db60f3a86be806df570ef6930565"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-13T16:52:09.255713947"
+        "timestamp": "2026-01-14T09:57:37.997603334"
     }
 }

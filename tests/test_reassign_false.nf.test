@@ -31,7 +31,6 @@ nextflow_pipeline {
                     stable_path,
                     // Additional files that are excluded in .nftignore but need to be checked
                     "$outputDir/repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv",
-                    "$outputDir/repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv"
                 ).match() }
             )
         }

@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in number of sequences report.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Fixed bug in report file size.
 - [#422](https://github.com/nf-core/airrflow/pull/422) Fixed annoying automatic clonal threshold message on any failure.
-- Fixed reassign false option and added tests.
+- [#418](https://github.com/nf-core/airrflow/pull/418) Fixed reassign false option and added tests.
 
 ### `Dependencies`
 
