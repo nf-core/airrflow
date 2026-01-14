@@ -55,9 +55,6 @@ if (packageVersion("alakazam") < "1.0.3") {
     }
 }
 
-# Concordant locus
-same_locus <- getLocus(db[["v_call"]]) == db[["locus"]]
-
 # Max 10% N
 n_count <- stri_count(db$sequence_alignment, regex = "Nn")
 positions_count <- stri_count(db$sequence_alignment, regex = "[^-.]")
@@ -71,18 +68,36 @@ low_n <- n_count <= 0.10
 # Min length 200 nt
 long_seq <- stri_count(db$sequence_alignment, regex = "[^-.Nn]") >= 200
 
-log <- data.frame(
-    "same_locus" = same_locus,
-    "low_n" = low_n,
-    "long_seq" = long_seq, stringsAsFactors = F
-)
+if ("locus" %in% colnames(db)) {
+    # Concordant locus
+    same_locus <- getLocus(db[["v_call"]]) == db[["locus"]]
 
-summary <- log %>%
-    group_by(same_locus, low_n, long_seq) %>%
-    summarize(n = n(), .groups = "drop_last")
+    # Generate logs and summary
+    log <- data.frame(
+        "same_locus" = same_locus,
+        "low_n" = low_n,
+        "long_seq" = long_seq, stringsAsFactors = F
+    )
+    summary <- log %>%
+        group_by(same_locus, low_n, long_seq) %>%
+        summarize(n = n(), .groups = "drop_last")
+    filter_pass <- same_locus & low_n & long_seq
+} else {
+    db$locus <- getLocus(db[["v_call"]])
 
-# Filter and save
-filter_pass <- same_locus & low_n & long_seq
+    # Generate logs and summary
+    log <- data.frame(
+        "low_n" = low_n,
+        "long_seq" = long_seq, stringsAsFactors = F
+    )
+
+    summary <- log %>%
+        group_by(low_n, long_seq) %>%
+        summarize(n = n(), .groups = "drop_last")
+
+    filter_pass <- low_n & long_seq
+}
+
 
 if (!is.null(opt$OUTPUT)) {
     output_fn <- paste0(opt$OUTPUT, "_quality-pass.tsv")
