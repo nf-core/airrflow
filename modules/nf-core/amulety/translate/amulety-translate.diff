@@ -1,0 +1,101 @@
+Changes in component 'nf-core/amulety/translate'
+'modules/nf-core/amulety/translate/environment.yml' is unchanged
+Changes in 'amulety/translate/main.nf':
+--- modules/nf-core/amulety/translate/main.nf
++++ modules/nf-core/amulety/translate/main.nf
+@@ -13,8 +13,9 @@
+ 
+     output:
+     tuple val(meta), path("*_translated.tsv"), emit: repertoire_translated
+-    tuple val("${task.process}"), val('amulety'), eval("amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'"), emit: versions_amulety, topic: versions
+-    tuple val("${task.process}"), val('igblastn'), eval("igblastn -version | grep -o 'igblast[0-9\\. ]\\+' | grep -o '[0-9\\. ]\\+'"), emit: versions_igblastn, topic: versions
++    path "versions.yml", emit: versions
++    //tuple val("${task.process}"), val('amulety'), eval("amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'"), emit: versions_amulety, topic: versions
++    //tuple val("${task.process}"), val('igblastn'), eval("igblastn -version | grep -o 'igblast[0-9\\. ]\\+' | grep -o '[0-9\\. ]\\+'"), emit: versions_igblastn, topic: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+@@ -32,11 +33,23 @@
+     --reference-dir ${reference_igblast}
+ 
+     mv *_translated.tsv ${prefix}_translated.tsv
++
++    cat <<-END_VERSIONS > versions.yml
++    "${task.process}":
++        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
++        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
++    END_VERSIONS
+     """
+ 
+     stub:
+     def prefix = task.ext.prefix ?: "${meta.id}"
+     """
+     touch ${prefix}_translated.tsv
++
++    cat <<-END_VERSIONS > versions.yml
++    "${task.process}":
++        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
++        igblastn: \$( igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+" )
++    END_VERSIONS
+     """
+ }
+
+Changes in 'amulety/translate/meta.yml':
+--- modules/nf-core/amulety/translate/meta.yml
++++ modules/nf-core/amulety/translate/meta.yml
+@@ -60,47 +60,11 @@
+ 
+           ontologies:
+             - edam: http://edamontology.org/format_3475 # TSV
+-  versions_amulety:
+-    - - ${task.process}:
+-          type: string
+-          description: The process the versions were collected from
+-      - amulety:
+-          type: string
+-          description: The tool name
+-      - "amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'":
+-          type: string
+-          description: The command used to generate the version of the tool
+-  versions_igblastn:
+-    - - ${task.process}:
+-          type: string
+-          description: The process the versions were collected from
+-      - igblastn:
+-          type: string
+-          description: The tool name
+-      - "igblastn -version | grep -o 'igblast[0-9\\. ]\\+' | grep -o '[0-9\\. ]\\+'":
+-          type: string
+-          description: The command used to generate the version of the tool
+-
+-topics:
+   versions:
+-    - - ${task.process}:
+-          type: string
+-          description: The process the versions were collected from
+-      - amulety:
+-          type: string
+-          description: The tool name
+-      - "amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'":
+-          type: string
+-          description: The command used to generate the version of the tool
+-    - - ${task.process}:
+-          type: string
+-          description: The process the versions were collected from
+-      - igblastn:
+-          type: string
+-          description: The tool name
+-      - "igblastn -version | grep -o 'igblast[0-9\\. ]\\+' | grep -o '[0-9\\. ]\\+'":
+-          type: string
+-          description: The command used to generate the version of the tool
++    - "versions.yml":
++        type: file
++        description: File containing software versions
++        pattern: "versions.yml"
+ 
+ authors:
+   - "@ggabernet"
+
+'modules/nf-core/amulety/translate/tests/main.nf.test' is unchanged
+'modules/nf-core/amulety/translate/tests/main.nf.test.snap' is unchanged
+************************************************************

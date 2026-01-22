@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
 - [#425](https://github.com/nf-core/airrflow/pull/416) Add all nf-tests.
 - [#431](https://github.com/nf-core/airrflow/pull/431) Update nf-test snapshots and acknowledgements.
+- Update amulety modules and version.
 
 ### `Fixed`
 
@@ -35,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | enchantr   | 0.1.20      | 0.1.24      |
 | presto     | 0.7.4       | 0.7.6       |
 | dowser     | 2.3         | 2.4.0       |
+| amulety    | 1.0         | 2.1.1       |
 
 ## [4.3.1] - Revelio hotfix
 

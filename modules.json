@@ -5,65 +5,70 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "amulety/antiberta2": {
+                    "amulety/embed": {
                         "branch": "master",
-                        "git_sha": "52948eb3c1f839d2434161fa41582faa108698ad",
-                        "installed_by": ["modules"]
-                    },
-                    "amulety/antiberty": {
-                        "branch": "master",
-                        "git_sha": "ab63efb49c518eedee5df056bdc54fd51a515600",
-                        "installed_by": ["modules"]
-                    },
-                    "amulety/balmpaired": {
-                        "branch": "master",
-                        "git_sha": "8d237889d110c792fa1fd4c656ca9698cde0aa56",
-                        "installed_by": ["modules"]
-                    },
-                    "amulety/esm2": {
-                        "branch": "master",
-                        "git_sha": "4b78419111c3618f76d714f1542c6eb672431ad6",
-                        "installed_by": ["modules"]
+                        "git_sha": "8aa7ece5e5296eb48ed5f1f12c1897e8e26ac404",
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/amulety/embed/amulety-embed.diff"
                     },
                     "amulety/translate": {
                         "branch": "master",
-                        "git_sha": "ddf8244c4d46f9369f99b88c88eccc1b41295aa0",
-                        "installed_by": ["modules"]
+                        "git_sha": "8aa7ece5e5296eb48ed5f1f12c1897e8e26ac404",
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/amulety/translate/amulety-translate.diff"
                     },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "02fd5bd7275abad27aad32d5c852e0a9b1b98882",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "cellranger/mkvdjref": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "cellranger/vdj": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "af27af1be706e6a2bb8fe454175b0cdf77f47b49",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "trust4": {
                         "branch": "master",
                         "git_sha": "b1e1040b80168a2946adc8c28c7569efa511b015",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     }
                 }
             },
@@ -72,17 +77,23 @@
                     "utils_nextflow_pipeline": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
                         "git_sha": "271e7fc14eb1320364416d996fb077421f3faed2",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
                         "git_sha": "4b406a74dc0449c0401ed87d5bfff4252fd277fd",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     }
                 }
             }

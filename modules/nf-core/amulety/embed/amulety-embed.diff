@@ -1,0 +1,65 @@
+Changes in component 'nf-core/amulety/embed'
+Changes in 'amulety/embed/environment.yml':
+--- modules/nf-core/amulety/embed/environment.yml
++++ modules/nf-core/amulety/embed/environment.yml
+@@ -5,3 +5,5 @@
+   - bioconda
+ dependencies:
+   - "bioconda::amulety=2.1.1"
++  - "conda-forge::wget"
++  - "conda-forge::curl"
+
+Changes in 'amulety/embed/main.nf':
+--- modules/nf-core/amulety/embed/main.nf
++++ modules/nf-core/amulety/embed/main.nf
+@@ -6,8 +6,7 @@
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'oras://community.wave.seqera.io/library/amulety_wget:6bee673d7a6a9753':
+-        'community.wave.seqera.io/library/amulety_wget:662e66d72e77dc3a' }"
+-
++        'community.wave.seqera.io/library/amulety_curl_wget:6dbce90a8391f7ad' }"
+     input:
+     tuple val(meta), path(tsv)
+     val(chain)
+@@ -15,7 +14,8 @@
+ 
+     output:
+     tuple val(meta), path("*.tsv"), emit: embedding
+-    tuple val("${task.process}"), val('amulety'), eval("amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'"), emit: versions_amulety, topic: versions
++    path "versions.yml", emit: versions
++    //tuple val("${task.process}"), val('amulety'), eval("amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'"), emit: versions_amulety, topic: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+@@ -33,6 +33,11 @@
+         --chain $chain \\
+         --model $model \\
+         --output-file-path ${prefix}.tsv
++
++    cat <<-END_VERSIONS > versions.yml
++    "${task.process}":
++        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
++    END_VERSIONS
+     """
+ 
+     stub:
+@@ -41,5 +46,10 @@
+ 
+     """
+     touch ${prefix}.tsv
++
++    cat <<-END_VERSIONS > versions.yml
++    "${task.process}":
++        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
++    END_VERSIONS
+     """
+ }
+
+'modules/nf-core/amulety/embed/meta.yml' is unchanged
+'modules/nf-core/amulety/embed/tests/main.nf.test' is unchanged
+'modules/nf-core/amulety/embed/tests/gpu.nf.test' is unchanged
+'modules/nf-core/amulety/embed/tests/gpu.nf.test.snap' is unchanged
+'modules/nf-core/amulety/embed/tests/nextflow.config' is unchanged
+'modules/nf-core/amulety/embed/tests/main.nf.test.snap' is unchanged
+************************************************************
