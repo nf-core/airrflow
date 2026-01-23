@@ -16,20 +16,20 @@
                     "knitr": 1.5,
                     "R": "4.5.1"
                 },
-                "AMULETY_ANTIBERTA2": {
-                    "amulety": 1.1
+                "AMULETY_EMBED_ANTIBERTA2": {
+                    "amulety": "2.1.1"
                 },
-                "AMULETY_ANTIBERTY": {
-                    "amulety": 1.1
+                "AMULETY_EMBED_ANTIBERTY": {
+                    "amulety": "2.1.1"
                 },
-                "AMULETY_BALMPAIRED": {
-                    "amulety": 1.1
+                "AMULETY_EMBED_BALMPAIRED": {
+                    "amulety": "2.1.1"
                 },
-                "AMULETY_ESM2": {
-                    "amulety": 1.1
+                "AMULETY_EMBED_ESM2": {
+                    "amulety": "2.1.1"
                 },
                 "AMULETY_TRANSLATE": {
-                    "amulety": 1.0,
+                    "amulety": "2.1.1",
                     "igblastn": "1.22.0"
                 },
                 "CHANGEO_ASSIGNGENES": {
@@ -80,12 +80,16 @@
                 "embeddings",
                 "embeddings/antiberta2",
                 "embeddings/antiberta2/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/antiberta2/sc5p_v2_hs_PBMC_10s_5fb_metadata.tsv",
                 "embeddings/antiberty",
                 "embeddings/antiberty/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/antiberty/sc5p_v2_hs_PBMC_10s_5fb_metadata.tsv",
                 "embeddings/balm_paired",
                 "embeddings/balm_paired/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/balm_paired/sc5p_v2_hs_PBMC_10s_5fb_metadata.tsv",
                 "embeddings/esm2",
                 "embeddings/esm2/sc5p_v2_hs_PBMC_10s_5fb.tsv",
+                "embeddings/esm2/sc5p_v2_hs_PBMC_10s_5fb_metadata.tsv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
@@ -188,8 +192,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T13:57:05.355592288"
+        "timestamp": "2026-01-22T17:25:51.473655318"
     }
 }
