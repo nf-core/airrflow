@@ -5,6 +5,7 @@ lint:
     - report_comment
   files_unchanged:
     - .gitignore
+    - .github/PULL_REQUEST_TEMPLATE.md
   nextflow_config:
     - config_defaults:
         - params.miairr
