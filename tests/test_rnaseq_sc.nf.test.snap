@@ -68,7 +68,7 @@
                     "trust4": "TRUST4 using v1.1.5-r573"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v4.4dev"
+                    "nf-core/airrflow": "v4.4.0"
                 }
             },
             [
@@ -334,8 +334,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T14:30:08.009106704"
+        "timestamp": "2026-01-23T14:13:54.703994829"
     }
 }

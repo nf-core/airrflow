@@ -72,7 +72,7 @@
                     "unzip_cellrangerdb": null
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v4.4dev"
+                    "nf-core/airrflow": "v4.4.0"
                 }
             },
             [
@@ -281,6 +281,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-22T16:40:53.182865924"
+        "timestamp": "2026-01-23T13:18:30.134091641"
     }
 }
