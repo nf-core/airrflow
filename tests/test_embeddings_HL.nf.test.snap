@@ -72,7 +72,7 @@
                     "enchantr": "0.1.24"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v4.4dev"
+                    "nf-core/airrflow": "v4.4.0"
                 }
             },
             [
@@ -194,6 +194,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-22T17:25:51.473655318"
+        "timestamp": "2026-01-23T13:40:07.898559034"
     }
 }
