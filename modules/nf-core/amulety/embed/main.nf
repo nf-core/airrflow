@@ -5,7 +5,7 @@ process AMULETY_EMBED {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/amulety_wget:6bee673d7a6a9753':
+        'oras://community.wave.seqera.io/library/amulety_curl_wget:896b1c9b3a0f937b':
         'community.wave.seqera.io/library/amulety_curl_wget:6dbce90a8391f7ad' }"
     input:
     tuple val(meta), path(tsv)
