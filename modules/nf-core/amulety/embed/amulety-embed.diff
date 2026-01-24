@@ -12,12 +12,14 @@ Changes in 'amulety/embed/environment.yml':
 Changes in 'amulety/embed/main.nf':
 --- modules/nf-core/amulety/embed/main.nf
 +++ modules/nf-core/amulety/embed/main.nf
-@@ -6,8 +6,7 @@
+@@ -5,9 +5,8 @@
+ 
      conda "${moduleDir}/environment.yml"
      container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-         'oras://community.wave.seqera.io/library/amulety_wget:6bee673d7a6a9753':
+-        'oras://community.wave.seqera.io/library/amulety_wget:6bee673d7a6a9753':
 -        'community.wave.seqera.io/library/amulety_wget:662e66d72e77dc3a' }"
 -
++        'oras://community.wave.seqera.io/library/amulety_curl_wget:896b1c9b3a0f937b':
 +        'community.wave.seqera.io/library/amulety_curl_wget:6dbce90a8391f7ad' }"
      input:
      tuple val(meta), path(tsv)
