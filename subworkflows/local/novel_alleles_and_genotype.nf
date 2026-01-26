@@ -1,9 +1,9 @@
 include { NOVEL_ALLELE_INFERENCE } from '../../modules/local/enchantr/novel_allele_inference'
 include { BAYESIAN_GENOTYPE_INFERENCE  } from '../../modules/local/enchantr/bayesian_genotype_inference'
 include { REASSIGN_ALLELES as REASSIGN_ALLELES_NOVEL; REASSIGN_ALLELES as REASSIGN_ALLELES_GENOTYPE} from '../../modules/local/enchantr/reassign_alleles'
+include { CLONAL_ANALYSIS } from 'clonal_analysis.nf'
 
-
-workflow CLONAL_ANALYSIS {
+workflow NOVEL_ALLELES_AND_GENOTYPE {
     take:
     ch_repertoire
     ch_reference_fasta
@@ -27,11 +27,19 @@ workflow CLONAL_ANALYSIS {
         NOVEL_ALLELE_INFERENCE.out.reference
     )
 
+    // infer clones (gets the reference from novel alleles inference in any case)
+
+    CLONAL_ANALYSIS(
+                REASSIGN_ALLELES_NOVEL.out.repertoire,
+                NOVEL_ALLELE_INFERENCE.out.reference,
+                ch_logo.collect().ifEmpty([])
+            )
+    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
 
     // infer genotype (gets the reference from novel alleles inference in any case)
 
     BAYESIAN_GENOTYPE_INFERENCE (
-        REASSIGN_ALLELES_NOVEL.out.repertoire,
+        CLONAL_ANALYSIS.out.repertoire,
         NOVEL_ALLELE_INFERENCE.out.reference
     )
 
