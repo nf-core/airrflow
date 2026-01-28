@@ -5,8 +5,9 @@ process AMULETY_EMBED {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/amulety_curl_wget:896b1c9b3a0f937b':
-        'community.wave.seqera.io/library/amulety_curl_wget:6dbce90a8391f7ad' }"
+        'oras://community.wave.seqera.io/library/amulety_curl_wget:7e9b99e37a280bac':
+        'community.wave.seqera.io/library/amulety_curl_wget:1b7068eb7e2d4527' }"
+
     input:
     tuple val(meta), path(tsv)
     val(chain)
@@ -14,8 +15,7 @@ process AMULETY_EMBED {
 
     output:
     tuple val(meta), path("*.tsv"), emit: embedding
-    path "versions.yml", emit: versions
-    //tuple val("${task.process}"), val('amulety'), eval("amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'"), emit: versions_amulety, topic: versions
+    tuple val("${task.process}"), val('amulety'), eval("amulety --help 2>&1 | grep -o 'version [0-9\\.]\\+' | grep -o '[0-9\\.]\\+'"), emit: versions_amulety, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,11 +33,6 @@ process AMULETY_EMBED {
         --chain $chain \\
         --model $model \\
         --output-file-path ${prefix}.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
-    END_VERSIONS
     """
 
     stub:
@@ -46,10 +41,5 @@ process AMULETY_EMBED {
 
     """
     touch ${prefix}.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        amulety: \$( amulety --help 2>&1 | grep -o "version [0-9\\.]\\+" | grep -o "[0-9\\.]\\+" )
-    END_VERSIONS
     """
 }
