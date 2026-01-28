@@ -1,40 +1,40 @@
 AIRR Formats WG field name	NCBI BioSample attribute	Keyword relation	Mandatory BioSample attribute	Note
 study_id	bioproject_accession	MAPPED	FALSE	Reference to the associated BioProject record
-subject_id	isolate	MAPPED	TRUE	
-synthetic	synthetic	AIRR_CUSTOM	FALSE	
-organism	organism	IDENTICAL	TRUE	
-sex	sex	IDENTICAL	TRUE	
+subject_id	isolate	MAPPED	TRUE
+synthetic	synthetic	AIRR_CUSTOM	FALSE
+organism	organism	IDENTICAL	TRUE
+sex	sex	IDENTICAL	TRUE
 age	age	IDENTICAL	TRUE	To be IDENTICAL, `age` MUST be age of subject at sampling time point. In contrast, MiAIRR also allows other reference time points for `age`
 age_event	age_event	AIRR_CUSTOM	FALSE	Value for this field MUST be `sampling` to be consistent with BioSample's `age` definition. See `age`
 ancestry_population	population	MAPPED	FALSE	BioSample attributes `(super_)population_*` were not used as they encode keywords from the Coriell Institute, whose suitability for MiAIRR has not yet been fully evalutated
-ethnicity	ethnicity	IDENTICAL	FALSE	
-race	race	IDENTICAL	FALSE	
+ethnicity	ethnicity	IDENTICAL	FALSE
+race	race	IDENTICAL	FALSE
 strain_name	strain	MAPPED	FALSE	BioSample has separate attributes for `strain` and `breed`. MiAIRR has only one keyword (`strain_name`) for this information
 linked_subjects	linked_subjects	AIRR_CUSTOM	FALSE	BioSample attributes `family_*` were not used as they suggest a restriction to genetic relationship
 link_type	link_type	AIRR_CUSTOM	FALSE	BioSample attributes `family_*` were not used as they suggest a restriction to genetic relationship
-study_group_description	study_group_description	AIRR_CUSTOM	FALSE	
-disease_diagnosis	disease	MAPPED	FALSE	
-disease_length	disease_length	AIRR_CUSTOM	FALSE	
-disease_stage	disease_stage	IDENTICAL	FALSE	
-prior_therapies	prior_therapies	AIRR_CUSTOM	FALSE	
-immunogen	immunogen	AIRR_CUSTOM	FALSE	
-intervention	treatment	MAPPED	FALSE	
-medical_history	medical_history	AIRR_CUSTOM	FALSE	
+study_group_description	study_group_description	AIRR_CUSTOM	FALSE
+disease_diagnosis	disease	MAPPED	FALSE
+disease_length	disease_length	AIRR_CUSTOM	FALSE
+disease_stage	disease_stage	IDENTICAL	FALSE
+prior_therapies	prior_therapies	AIRR_CUSTOM	FALSE
+immunogen	immunogen	AIRR_CUSTOM	FALSE
+intervention	treatment	MAPPED	FALSE
+medical_history	medical_history	AIRR_CUSTOM	FALSE
 sample_id	sample_name	MAPPED	TRUE	BioSample attirbute `bio_material` has an overlapping meaning, however it is not required for submission
-sample_type	sample_type	IDENTICAL	FALSE	
-tissue	tissue	IDENTICAL	TRUE	
-anatomic_site	anatomic_site	AIRR_CUSTOM	FALSE	
-disease_state_sample	health_state	MAPPED	FALSE	
+sample_type	sample_type	IDENTICAL	FALSE
+tissue	tissue	IDENTICAL	TRUE
+anatomic_site	anatomic_site	AIRR_CUSTOM	FALSE
+disease_state_sample	health_state	MAPPED	FALSE
 collection_time_point_relative	collection_time_point_relative	AIRR_CUSTOM	FALSE	BioSample attribute `collection_date` was not used as it defines an absolute date
-collection_time_point_reference	collection_time_point_reference	AIRR_CUSTOM	FALSE	
-biomaterial_provider	biomaterial_provider	IDENTICAL	TRUE	
-tissue_processing	tissue_processing	AIRR_CUSTOM	FALSE	
-cell_subset	cell_type	MAPPED	FALSE	
-cell_phenotype	cell_phenotype	AIRR_CUSTOM	FALSE	
-single_cell	single_cell	AIRR_CUSTOM	FALSE	
-cell_number	cell_number	AIRR_CUSTOM	FALSE	
-cells_per_reaction	cells_per_reaction	AIRR_CUSTOM	FALSE	
-cell_storage	cell_storage	AIRR_CUSTOM	FALSE	
-cell_quality	cell_quality	AIRR_CUSTOM	FALSE	
-cell_isolation	cell_isolation	AIRR_CUSTOM	FALSE	
-cell_processing_protocol	cell_processing_protocol	AIRR_CUSTOM	FALSE	
+collection_time_point_reference	collection_time_point_reference	AIRR_CUSTOM	FALSE
+biomaterial_provider	biomaterial_provider	IDENTICAL	TRUE
+tissue_processing	tissue_processing	AIRR_CUSTOM	FALSE
+cell_subset	cell_type	MAPPED	FALSE
+cell_phenotype	cell_phenotype	AIRR_CUSTOM	FALSE
+single_cell	single_cell	AIRR_CUSTOM	FALSE
+cell_number	cell_number	AIRR_CUSTOM	FALSE
+cells_per_reaction	cells_per_reaction	AIRR_CUSTOM	FALSE
+cell_storage	cell_storage	AIRR_CUSTOM	FALSE
+cell_quality	cell_quality	AIRR_CUSTOM	FALSE
+cell_isolation	cell_isolation	AIRR_CUSTOM	FALSE
+cell_processing_protocol	cell_processing_protocol	AIRR_CUSTOM	FALSE
