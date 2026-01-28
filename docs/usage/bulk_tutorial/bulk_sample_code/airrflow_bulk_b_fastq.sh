@@ -1,6 +1,6 @@
 #! usr/bin/bash
 
-nextflow run nf-core/airrflow -r 4.3.1 \
+nextflow run nf-core/airrflow -r 4.4.0 \
 -profile docker \
 --mode fastq \
 --input metadata_pcr_umi_airr_300.tsv \

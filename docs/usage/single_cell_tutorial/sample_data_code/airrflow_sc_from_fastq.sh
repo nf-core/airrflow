@@ -1,6 +1,6 @@
 #! usr/bin/bash
 
-nextflow run nf-core/airrflow -r 4.3.1 \
+nextflow run nf-core/airrflow -r 4.4.0 \
 -profile docker \
 --mode fastq \
 --input 10x_sc_raw.tsv \

@@ -30,7 +30,7 @@ When running this tutorial on your local machine, you'll first have to set up Ne
 Once you have set up Nextflow and container (Docker or Singularity) for your local machine or Codespace environment, test nf-core/airrflow with the built-in test data.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 -profile test,docker --outdir test_results
+nextflow run nf-core/airrflow -r 4.4.0 -profile test,docker --outdir test_results
 ```
 
 Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces. You can first set up a Singularity cache directory which will allow the reuse of Singularity container across all runs:
@@ -43,7 +43,7 @@ export NXF_SINGULARITY_CACHEDIR="/workspaces/airrflow/singularity_cache"
 Then run nf-core/airrflow with the test data:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 -profile test,singularity --outdir test_results
+nextflow run nf-core/airrflow -r 4.4.0 -profile test,singularity --outdir test_results
 ```
 
 > [!NOTE]
@@ -94,7 +94,7 @@ Bulk BCR and TCR targeted sequencing can be performed with a wide variety of pro
 You can provide a protocol profile with the `-profile` parameter, followed by other profiles, such as the container engine profile in a comma separated fashion. You will then usually only need to provide the input samplesheet, resource config file and output directory path. However, if you want to override any option or add additional parameters, you can provide them to the airrflow launching command as the parameters in the launch command will override the parameters in the profile.
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 \
+nextflow run nf-core/airrflow -r 4.4.0 \
 -profile <protocol-profile-name>,docker \
 --input samplesheet.tsv \
 -c resource.config \
@@ -114,7 +114,7 @@ The BCRseq dataset used in this tutorial was obtained with a multiplexed PCR pro
 To run the pipeline locally, use the following command to launch nf-core/airrflow for the dataset in this tutorial:
 
 ```bash
-nextflow run nf-core/airrflow -r 4.3.1 \
+nextflow run nf-core/airrflow -r 4.4.0 \
 -profile docker \
 --mode fastq \
 --input metadata_pcr_umi_airr_300.tsv \
@@ -160,7 +160,7 @@ After launching the pipeline the following will be printed to the console output
  N E X T F L O W   ~  version 24.10.5
 
 WARN: It appears you have never run this project before -- Option `-resume` is ignored
-Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.3.1]
+Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revision: d91dd840f4 [4.4.0]
 
 
 ------------------------------------------------------
@@ -169,7 +169,7 @@ Launching `https://github.com/nf-core/airrflow` [fabulous_cantor] DSL2 - revisio
   |\ | |__  __ /  ` /  \ |__) |__         }  {
   | \| |       \__, \__/ |  \ |___     \`-._,-`-,
                                         `._,._,'
-  nf-core/airrflow 4.3.1
+  nf-core/airrflow 4.4.0
 ------------------------------------------------------
 ```
 
