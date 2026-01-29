@@ -39,7 +39,6 @@ workflow CLONAL_ANALYSIS {
         def raw_list = ch_threshold
             .splitText( limit:1 ) { it.trim().toString() }
             .map { it -> it.trim() }
-            .dump(tag: 'clone_threshold_raw')
             .collect()
 
         // Process the collected list to identify when no valid thresholds were found
