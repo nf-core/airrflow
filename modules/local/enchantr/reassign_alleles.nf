@@ -57,7 +57,6 @@ process REASSIGN_ALLELES {
                                         'species'='auto', \\
                                         'outputby'='${params.cloneby}', \\
                                         'segments'='${segs}', \\
-                                        'force'=FALSE, \\
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_reassign_alleles_command_log' ${args}))"
 

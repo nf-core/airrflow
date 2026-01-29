@@ -51,7 +51,6 @@ process NOVEL_ALLELE_INFERENCE {
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
-                                        'force'=FALSE, \\
                                         'outdir'=getwd(), \\
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_novel_allele_inference_command_log' ${args}))"

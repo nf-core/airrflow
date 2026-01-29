@@ -52,7 +52,6 @@ process BAYESIAN_GENOTYPE_INFERENCE {
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
                                         'genotypeby'='${params.genotypeby}', \\
-                                        'force'=FALSE, \\
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_bayesian_genotype_inference_command_log' ${args}))"
 
