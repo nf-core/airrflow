@@ -252,7 +252,7 @@ workflow AIRRFLOW {
         //      when genotyping is performed.
 
         // Novel alleles and genotype inference
-        if (!params.genotyping) {
+        if (params.genotyping) {
             NOVEL_ALLELES_AND_GENOTYPE(
                 ch_repertoires_after_qc,
                 VDJ_ANNOTATION.out.reference_fasta.collect(),
