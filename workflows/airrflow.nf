@@ -247,22 +247,12 @@ workflow AIRRFLOW {
         ch_repertoires_after_qc = ch_bulk_filtered
                                         .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
 
-        // Novel allele inference and genotyping
-        if (params.genotyping) {
-            NOVEL_ALLELES_AND_GENOTYPING(
-                ch_repertoires_after_qc,
-                VDJ_ANNOTATION.out.reference_fasta.collect(),
-                ch_validated_samplesheet.collect(),
-                ch_report_logo_img.collect().ifEmpty([])
-            )
-        }
-
         // TODO: for now clonal analysis and genotyping are independent,
         //      but once genotyping is implemented the personalized reference should be used for clonal analysis
         //      when genotyping is performed.
 
         // Novel alleles and genotype inference
-        if (!params.skip_novel_alleles_and_genotype) {
+        if (!params.genotyping) {
             NOVEL_ALLELES_AND_GENOTYPE(
                 ch_repertoires_after_qc,
                 VDJ_ANNOTATION.out.reference_fasta.collect(),
