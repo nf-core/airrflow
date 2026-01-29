@@ -252,7 +252,8 @@ workflow AIRRFLOW {
             NOVEL_ALLELES_AND_GENOTYPING(
                 ch_repertoires_after_qc,
                 VDJ_ANNOTATION.out.reference_fasta.collect(),
-                ch_validated_samplesheet.collect()
+                ch_validated_samplesheet.collect(),
+                ch_report_logo_img.collect().ifEmpty([])
             )
         }
 
