@@ -18,9 +18,7 @@ workflow FASTQ_INPUT_CHECK {
         .tsv
         .splitCsv ( header:true, sep:'\t' )
         .map { create_fastq_channels(it) }
-        .dump (tag: 'fastq_channel_before_merge_samples')
         .groupTuple(by: [0])
-        .dump(tag: 'fastq_channel_after_merge_samples_grouped')
         .branch {
             meta, fastqs ->
                 single: fastqs.size() == 1
