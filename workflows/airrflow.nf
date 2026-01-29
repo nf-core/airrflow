@@ -45,6 +45,7 @@ include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_inp
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
 include { TRANSLATE_EMBED              } from '../subworkflows/local/translate_embed'
+include { NOVEL_ALLELES_AND_GENOTYPE    } from '../subworkflows/local/novel_alleles_and_genotype'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,6 +249,15 @@ workflow AIRRFLOW {
         ch_repertoires_after_qc = ch_bulk_filtered
                                         .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
                                         .dump(tag: 'sc bulk mix')
+
+        // Novel alleles and genotype inference
+        if (!params.skip_novel_alleles_and_genotype) {
+            NOVEL_ALLELES_AND_GENOTYPE(
+                ch_repertoires_after_qc,
+                VDJ_ANNOTATION.out.reference_fasta.collect()
+            )
+            ch_versions = ch_versions.mix( NOVEL_ALLELES_AND_GENOTYPE.out.versions )
+        }
 
         // Clonal analysis
         if (!params.skip_clonal_analysis) {
