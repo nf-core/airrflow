@@ -312,7 +312,7 @@ After the sequence assembly steps, the remaining steps are common for all protoc
 
 > [!NOTE]
 > Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
-> 
+>
 > ```bash
 > nextflow run nf-core/airrflow -r <release> \
 > -profile takara_smartseq_umi_bcr,docker \
@@ -320,9 +320,9 @@ After the sequence assembly steps, the remaining steps are common for all protoc
 > --cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
 > --outdir results
 > ```
-> 
+>
 > And for TCR data:
-> 
+>
 > ```bash
 > nextflow run nf-core/airrflow -r <release> \
 > -profile takara_smartseq_umi_tcr,docker \
@@ -358,7 +358,7 @@ After the sequence assembly steps, the remaining steps are common for all protoc
 
 > [!NOTE]
 > Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
-> 
+>
 > ```bash
 > nextflow run nf-core/airrflow -r <release> \
 > -profile takara_smarter_umi_bcr,docker \
@@ -366,9 +366,9 @@ After the sequence assembly steps, the remaining steps are common for all protoc
 > --cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
 > --outdir results
 > ```
-> 
+>
 > And for TCR data:
-> 
+>
 > ```bash
 > nextflow run nf-core/airrflow -r <release> \
 > -profile takara_smarter_umi_tcr,docker \
