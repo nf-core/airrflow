@@ -40,6 +40,7 @@ include { VDJ_ANNOTATION                } from '../subworkflows/local/vdj_annota
 include { BULK_QC_AND_FILTER            } from '../subworkflows/local/bulk_qc_and_filter'
 include { SINGLE_CELL_QC_AND_FILTERING  } from '../subworkflows/local/single_cell_qc_and_filtering'
 include { CLONAL_ANALYSIS               } from '../subworkflows/local/clonal_analysis'
+include { NOVEL_ALLELES_AND_GENOTYPING   } from '../subworkflows/local/novel_alleles_and_genotyping'
 include { REPERTOIRE_ANALYSIS_REPORTING } from '../subworkflows/local/repertoire_analysis_reporting'
 include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_input'
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
@@ -245,6 +246,19 @@ workflow AIRRFLOW {
         // Mixing bulk and single cell channels after filtering
         ch_repertoires_after_qc = ch_bulk_filtered
                                         .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
+
+        // Novel allele inference and genotyping
+        if (params.genotyping) {
+            NOVEL_ALLELES_AND_GENOTYPING(
+                ch_repertoires_after_qc,
+                VDJ_ANNOTATION.out.reference_fasta.collect(),
+                ch_validated_samplesheet.collect()
+            )
+        }
+
+        // TODO: for now clonal analysis and genotyping are independent,
+        //      but once genotyping is implemented the personalized reference should be used for clonal analysis
+        //      when genotyping is performed.
 
         // Clonal analysis
         if (!params.skip_clonal_analysis) {

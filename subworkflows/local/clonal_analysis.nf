@@ -79,7 +79,7 @@ workflow CLONAL_ANALYSIS {
         }
     }
 
-    // prepare ch for define clones
+    // merge all repertoires by cloneby metadata field
     ch_repertoire.map{ it -> [ it[0]."${params.cloneby}",
                                 it[0].id,
                                 it[0].subject_id,
