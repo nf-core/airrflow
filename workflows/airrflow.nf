@@ -46,7 +46,6 @@ include { SC_RAW_INPUT                  } from '../subworkflows/local/sc_raw_inp
 include { FASTQ_INPUT_CHECK             } from '../subworkflows/local/fastq_input_check'
 include { RNASEQ_INPUT                  } from '../subworkflows/local/rnaseq_input'
 include { TRANSLATE_EMBED              } from '../subworkflows/local/translate_embed'
-include { NOVEL_ALLELES_AND_GENOTYPING    } from '../subworkflows/local/novel_alleles_and_genotyping'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
