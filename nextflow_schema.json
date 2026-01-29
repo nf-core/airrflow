@@ -553,6 +553,37 @@
             "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
             "fa_icon": "fab fa-pagelines"
         },
+        "genotyping_and_novel_alleles_options": {
+            "title": "Genotyping and Novel Alleles options",
+            "type": "object",
+            "description": "Options for genotyping and novel allele inference.",
+            "default": "",
+            "properties": {
+                "genotyping": {
+                    "type": "boolean",
+                    "description": "Perform TIgGER genotype inference.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "genotypeby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to infer genotype.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "novel_allele_inference": {
+                    "type": "boolean",
+                    "description": "Perform TIgGER novel allele inference.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "outputby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files for output in reassign alleles.",
+                    "fa_icon": "fab fa-pagelines"
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
         "translation_and_embedding_options": {
             "title": "Translation and embedding options",
             "type": "object",
@@ -846,6 +877,9 @@
         },
         {
             "$ref": "#/$defs/clonal_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/genotyping_and_novel_alleles_options"
         },
         {
             "$ref": "#/$defs/translation_and_embedding_options"
