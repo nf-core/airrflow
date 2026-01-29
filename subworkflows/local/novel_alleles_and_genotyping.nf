@@ -50,7 +50,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     // infer clones (gets the reference from novel alleles inference in any case)
 
     CLONAL_ANALYSIS(
-                REASSIGN_ALLELES_NOVEL.out.repertoire,
+                REASSIGN_ALLELES_NOVEL.out.repertoires,
                 NOVEL_ALLELE_INFERENCE.out.reference,
                 ch_logo.collect().ifEmpty([])
             )

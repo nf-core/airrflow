@@ -35,7 +35,6 @@ process REASSIGN_ALLELES {
     // *After novel alleles we just need to change the V, it's a time waste to go over all segments.
     //TODO: Check if we need the outputby parameter. Right now this is the same as the cloneby parameter.
     output:
-    path("*/*/db_genotype"), emit: reference // reference folder
     path("*/*_reassigned.tsv"), emit: repertoires // reassigned repertoire
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
