@@ -370,9 +370,9 @@
             "fa_icon": "fas fa-adjust"
         },
         "rnaseq_based_analysis_options": {
-            "title": "Unselected RNA-seq based analysis options",
+            "title": "Untargeted RNA-seq based analysis options",
             "type": "object",
-            "description": "Options specific for raw unselected RNA-seq input.",
+            "description": "Options specific for raw untargeted RNA-seq input.",
             "default": "",
             "properties": {
                 "trust4_cell_barcode_read": {
@@ -384,7 +384,7 @@
                 },
                 "trust4_umi_read": {
                     "type": "string",
-                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
+                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R2 fastq file.",
                     "help_text": "file containing 10x Genomics-like UMIs",
                     "enum": ["R1", "R2"],
                     "fa_icon": "fas fa-barcode"

@@ -22,7 +22,6 @@ workflow CLONAL_ANALYSIS {
         ch_find_threshold_samplesheet =  ch_find_threshold
                         .flatten()
                         .map{ it -> it.getName().toString() }
-                        .dump(tag: 'ch_find_threshold_samplesheet')
                         .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         FIND_CLONAL_THRESHOLD (
@@ -39,7 +38,6 @@ workflow CLONAL_ANALYSIS {
         def raw_list = ch_threshold
             .splitText( limit:1 ) { it.trim().toString() }
             .map { it -> it.trim() }
-            .dump(tag: 'clone_threshold_raw')
             .collect()
 
         // Process the collected list to identify when no valid thresholds were found
@@ -69,7 +67,6 @@ workflow CLONAL_ANALYSIS {
         ch_find_threshold_samplesheet =  ch_find_threshold
                         .flatten()
                         .map{ it -> it.getName().toString() }
-                        .dump(tag: 'ch_find_threshold_samplesheet')
                         .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         if (!params.skip_report_threshold){
@@ -82,7 +79,7 @@ workflow CLONAL_ANALYSIS {
         }
     }
 
-    // prepare ch for define clones
+    // merge all repertoires by cloneby metadata field
     ch_repertoire.map{ it -> [ it[0]."${params.cloneby}",
                                 it[0].id,
                                 it[0].subject_id,
@@ -116,7 +113,6 @@ workflow CLONAL_ANALYSIS {
                                         .collect()
                                         .flatten()
                                         .map{ it -> it.getName().toString() }
-                                        .dump(tag: 'ch_all_repertoires_cloned_samplesheet')
                                         .collectFile(name: 'all_repertoires_cloned_samplesheet.txt', newLine: true)
 
         CLONAL_ASSIGNMENT_REPORT(

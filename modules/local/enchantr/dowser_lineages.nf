@@ -25,7 +25,7 @@ process DOWSER_LINEAGES {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "docker.io/immcantation/airrflow:4.4.0"
+    container "docker.io/immcantation/airrflow:5.0"
 
     input:
     tuple val(meta), path(tabs)
