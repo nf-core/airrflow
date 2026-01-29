@@ -574,12 +574,6 @@
                     "type": "boolean",
                     "description": "Perform TIgGER novel allele inference.",
                     "fa_icon": "fas fa-dna"
-                },
-                "outputby": {
-                    "type": "string",
-                    "default": "subject_id",
-                    "description": "Name of the field used to group data files for output in reassign alleles.",
-                    "fa_icon": "fab fa-pagelines"
                 }
             },
             "fa_icon": "fas fa-dna"
