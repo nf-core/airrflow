@@ -5,7 +5,7 @@ process PRESTO_ASSEMBLEPAIRS_SEQUENTIAL {
 
     conda "bioconda::presto=0.7.6 bioconda::igblast=1.22.0 conda-forge::wget=1.21.4 conda-forge::biopython=1.85"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/igblast_presto_biopython_wget:b876f8e800cf2d0a':
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/633f1ff1426784e70bde4cd52ea1e46f690fd97876e4fbedd8dfe01977f94e5a/data':
         'community.wave.seqera.io/library/igblast_presto_biopython_wget:82da8ebc3ab7e416' }"
 
     input:
