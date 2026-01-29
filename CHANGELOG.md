@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.4.0] - Tarantallegra
+## [5.0] - Tarantallegra
 
 ### `Added`
 
@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#431](https://github.com/nf-core/airrflow/pull/431) Update nf-test snapshots and acknowledgements.
 - [#436](https://github.com/nf-core/airrflow/pull/436) Update amulety modules and version.
 - [#437](https://github.com/nf-core/airrflow/pull/437) Bump versions to 4.4.0.
+- [#441](https://github.com/nf-core/airrflow/pull/441) Bump versions to 5.0, small syntax and docs fixes.
 
 ### `Fixed`
 
