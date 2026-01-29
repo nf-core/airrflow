@@ -265,7 +265,8 @@ workflow AIRRFLOW {
         if (!params.skip_novel_alleles_and_genotype) {
             NOVEL_ALLELES_AND_GENOTYPE(
                 ch_repertoires_after_qc,
-                VDJ_ANNOTATION.out.reference_fasta.collect()
+                VDJ_ANNOTATION.out.reference_fasta.collect(),
+                ch_report_logo_img.collect().ifEmpty([])
             )
             ch_versions = ch_versions.mix( NOVEL_ALLELES_AND_GENOTYPE.out.versions )
         }

@@ -8,6 +8,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     ch_repertoire
     ch_reference_fasta
     ch_validated_samplesheet
+    ch_logo
 
     main:
     ch_versions = Channel.empty()
@@ -39,7 +40,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         ch_grouped_repertoires,
         NOVEL_ALLELE_INFERENCE.out.reference,
         ch_validated_samplesheet.collect(),
-        "segments" //TODO: update this to pass actual segments.
+        "v" //TODO: update this to pass actual segments.
     )
 
     // infer clones (gets the reference from novel alleles inference in any case)
@@ -65,7 +66,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         REASSIGN_ALLELES_NOVEL.out.repertoires,
         BAYESIAN_GENOTYPE_INFERENCE.out.reference,
         ch_validated_samplesheet.collect(),
-        "segments" //TODO: update this to pass actual segments.
+        "auto" //TODO: update this to pass actual segments.
     )
 
 
