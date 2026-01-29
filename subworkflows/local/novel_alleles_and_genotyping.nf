@@ -32,7 +32,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         NOVEL_ALLELE_INFERENCE (
             ch_grouped_repertoires,
             ch_reference_fasta,
-            ch_validated_samplesheet.collect()
+            []
         )
 
         // reassign novel alleles (we can skip this step if no novel alleles were inferred)
@@ -40,7 +40,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         REASSIGN_ALLELES_NOVEL (
             ch_grouped_repertoires,
             NOVEL_ALLELE_INFERENCE.out.reference,
-            ch_validated_samplesheet.collect(),
+            [],
             "v" //TODO: update this to pass actual segments. We only need to reassign V after novel allele inference.
         )
     }
@@ -61,7 +61,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     BAYESIAN_GENOTYPE_INFERENCE (
         REASSIGN_ALLELES_NOVEL.out.repertoires,
         NOVEL_ALLELE_INFERENCE.out.reference,
-        ch_validated_samplesheet.collect()
+        []
     )
 
     // reassign genotypes (gets the reference from genotype inference in any case)
@@ -69,7 +69,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     REASSIGN_ALLELES_GENOTYPE (
         REASSIGN_ALLELES_NOVEL.out.repertoires,
         BAYESIAN_GENOTYPE_INFERENCE.out.reference,
-        ch_validated_samplesheet.collect(),
+        [],
         "auto" //TODO: update this to pass actual segments. We're running over all segment after genotype inference.
     )
 
