@@ -59,7 +59,6 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_logs_tabs =  ch_logs.collect()
                         .flatten()
                         .map{ it -> it.getName().toString() }
-                        .dump(tag: 'ch_logs_tabs')
                         .collectFile(name: 'all_logs_tabs.txt', newLine: true)
 
     REPORT_FILE_SIZE(

@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.4dev]
+## [5.0] - Tarantallegra
 
 ### `Added`
 
@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#422](https://github.com/nf-core/airrflow/pull/422) Template update to nf-core v3.4.1
 - [#425](https://github.com/nf-core/airrflow/pull/416) Add all nf-tests.
 - [#431](https://github.com/nf-core/airrflow/pull/431) Update nf-test snapshots and acknowledgements.
+- [#436](https://github.com/nf-core/airrflow/pull/436) Update amulety modules and version.
+- [#437](https://github.com/nf-core/airrflow/pull/437) Bump versions to 4.4.0.
+- [#441](https://github.com/nf-core/airrflow/pull/441) Bump versions to 5.0, small syntax and docs fixes.
 
 ### `Fixed`
 
@@ -35,6 +38,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | enchantr   | 0.1.20      | 0.1.24      |
 | presto     | 0.7.4       | 0.7.6       |
 | dowser     | 2.3         | 2.4.0       |
+| amulety    | 1.0         | 2.1.1       |
+| multiqc    | 1.27        | 1.32        |
+| trust4     | 1.0.13      | 1.1.5       |
+
+### `Deprecations and changes`
+
+- The `clontech_umi_tcr` protocol has been renamed to `takara_smartseq_umi_tcr` to reflect the new protocol name.
 
 ## [4.3.1] - Revelio hotfix
 

@@ -24,16 +24,18 @@ process REASSIGN_ALLELES {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
-    container "docker.io/immcantation/airrflow:4.2.0"
+    container "docker.io/immcantation/airrflow:genotyping"
 
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
-    val segments // which segments to reassign alleles to
     path reference_fasta
     path repertoires_samplesheet
+    val segments // which segments to reassign alleles to 
+    //TODO: did we want to handle all segments at once? Then this val channel would not be needed.
 
     output:
     path("*/*/db_genotype"), emit: reference // reference folder
+    path("*/*_reassigned.tsv"), emit: repertoires // reassigned repertoire
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions

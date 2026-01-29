@@ -96,7 +96,7 @@
                     "pandas": "1.1.5"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v4.4dev"
+                    "nf-core/airrflow": "v5.0"
                 }
             },
             [
@@ -421,8 +421,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-03T11:32:51.746896469"
+        "timestamp": "2026-01-23T14:02:27.434483205"
     }
 }
