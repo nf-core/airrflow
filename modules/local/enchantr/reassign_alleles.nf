@@ -32,7 +32,8 @@ process REASSIGN_ALLELES {
     path repertoires_samplesheet
     val segments // which segments to reassign alleles to 
     //TODO: did we want to handle all segments at once? Then this val channel would not be needed.
-
+    // *After novel alleles we just need to change the V, it's a time waste to go over all segments.
+    //TODO: Check if we need the outputby parameter. Right now this is the same as the cloneby parameter.
     output:
     path("*/*/db_genotype"), emit: reference // reference folder
     path("*/*_reassigned.tsv"), emit: repertoires // reassigned repertoire
@@ -55,7 +56,7 @@ process REASSIGN_ALLELES {
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
-                                        'outputby'='${params.outputby}', \\
+                                        'outputby'='${params.cloneby}', \\
                                         'segments'='${segs}', \\
                                         'force'=FALSE, \\
                                         'outdir'=getwd(), \\
