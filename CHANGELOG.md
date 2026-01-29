@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | presto     | 0.7.4       | 0.7.6       |
 | dowser     | 2.3         | 2.4.0       |
 | amulety    | 1.0         | 2.1.1       |
+| multiqc    | 1.27        | 1.32        |
+| trust4     | 1.0.13      | 1.1.5       |
+
+### `Deprecations and changes`
+
+- The `clontech_umi_tcr` protocol has been renamed to `takara_smartseq_umi_tcr` to reflect the new protocol name.
 
 ## [4.3.1] - Revelio hotfix
 
