@@ -17,19 +17,19 @@
                     "R": "4.5.1"
                 },
                 "AMULETY_EMBED_ANTIBERTA2": {
-                    "amulety": "2.1.1"
+                    "amulety": "2.1.2"
                 },
                 "AMULETY_EMBED_ANTIBERTY": {
-                    "amulety": "2.1.1"
+                    "amulety": "2.1.2"
                 },
                 "AMULETY_EMBED_BALMPAIRED": {
-                    "amulety": "2.1.1"
+                    "amulety": "2.1.2"
                 },
                 "AMULETY_EMBED_ESM2": {
-                    "amulety": "2.1.1"
+                    "amulety": "2.1.2"
                 },
                 "AMULETY_TRANSLATE": {
-                    "amulety": "2.1.1",
+                    "amulety": "2.1.2",
                     "igblastn": "1.22.0"
                 },
                 "CHANGEO_ASSIGNGENES": {
@@ -194,6 +194,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-23T13:40:07.898559034"
+        "timestamp": "2026-01-28T16:01:50.061747638"
     }
 }

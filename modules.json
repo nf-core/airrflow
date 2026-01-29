@@ -7,15 +7,13 @@
                 "nf-core": {
                     "amulety/embed": {
                         "branch": "master",
-                        "git_sha": "8aa7ece5e5296eb48ed5f1f12c1897e8e26ac404",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/amulety/embed/amulety-embed.diff"
+                        "git_sha": "c64cb8c7b8154e752dcd124c7bf3a77c1584a647",
+                        "installed_by": ["modules"]
                     },
                     "amulety/translate": {
                         "branch": "master",
-                        "git_sha": "8aa7ece5e5296eb48ed5f1f12c1897e8e26ac404",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/amulety/translate/amulety-translate.diff"
+                        "git_sha": "c64cb8c7b8154e752dcd124c7bf3a77c1584a647",
+                        "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",

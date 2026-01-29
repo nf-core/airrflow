@@ -16,7 +16,6 @@ workflow TRANSLATE_EMBED {
         ch_repertoire,
         ch_reference_igblast
     )
-    ch_versions = ch_versions.mix(AMULETY_TRANSLATE.out.versions)
 
     if (params.embeddings && params.embeddings.split(',').contains('antiberty') ){
         AMULETY_EMBED_ANTIBERTY(
@@ -24,7 +23,6 @@ workflow TRANSLATE_EMBED {
             params.embedding_chain,
             "antiberty"
         )
-        ch_versions = ch_versions.mix(AMULETY_EMBED_ANTIBERTY.out.versions)
     }
 
     if (params.embeddings && params.embeddings.split(',').contains('antiberta2') ){
@@ -33,7 +31,6 @@ workflow TRANSLATE_EMBED {
             params.embedding_chain,
             "antiberta2"
         )
-        ch_versions = ch_versions.mix(AMULETY_EMBED_ANTIBERTA2.out.versions)
     }
 
     if (params.embeddings && params.embeddings.split(',').contains('esm2') ){
@@ -42,7 +39,6 @@ workflow TRANSLATE_EMBED {
             params.embedding_chain,
             "esm2"
         )
-        ch_versions = ch_versions.mix(AMULETY_EMBED_ESM2.out.versions)
     }
 
     if (params.embeddings && params.embeddings.split(',').contains('balmpaired') ){
@@ -51,7 +47,6 @@ workflow TRANSLATE_EMBED {
             params.embedding_chain,
             "balm-paired"
         )
-        ch_versions = ch_versions.mix(AMULETY_EMBED_BALMPAIRED.out.versions)
     }
 
 
