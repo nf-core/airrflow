@@ -21,9 +21,9 @@ process PREPARE_TRUST4_REFERENCE {
     ${reference_igblast}/fasta/imgt_${meta.species.toLowerCase()}_*.fasta >> trust4_reference.fa
 
     cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
-            END_VERSIONS
+    "${task.process}":
+        cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+    END_VERSIONS
     """
 
 
