@@ -2,6 +2,8 @@
 
 This tutorial provides a step by step introduction on how to run nf-core/airrflow on single-cell BCR-seq data or single-cell TCR-seq data.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TT6eaoiZQvg?si=Psbo9cQ7KemfiBd5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Pre-requisites
 
 You can run this tutorial using the Github Codespaces platform. Codespaces already has Nextflow and Singularity pre-installed, and it can automatically be used for every nf-core repository. To create a Codespace instance for nf-core/airrflow, first click on the button labelled `Code` at the top of [nf-core/airrflow repository](https://github.com/nf-core/airrflow).
