@@ -50,7 +50,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     // infer clones (gets the reference from novel alleles inference in any case)
 
     CLONAL_ANALYSIS(
-                REASSIGN_ALLELES_NOVEL.out.repertoires,
+                REASSIGN_ALLELES_NOVEL.out.tab,
                 NOVEL_ALLELE_INFERENCE.out.reference,
                 ch_logo.collect().ifEmpty([])
             )
@@ -59,15 +59,15 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     // infer genotype (gets the reference from novel alleles inference in any case)
 
     BAYESIAN_GENOTYPE_INFERENCE (
-        REASSIGN_ALLELES_NOVEL.out.repertoires,
+        CLONAL_ANALYSIS.out.repertoire,
         NOVEL_ALLELE_INFERENCE.out.reference,
         []
     )
-
+1
     // reassign genotypes (gets the reference from genotype inference in any case)
 
     REASSIGN_ALLELES_GENOTYPE (
-        REASSIGN_ALLELES_NOVEL.out.repertoires,
+        ch_grouped_repertoires,
         BAYESIAN_GENOTYPE_INFERENCE.out.reference,
         [],
         "auto" //TODO: update this to pass actual segments. We're running over all segment after genotype inference.
@@ -75,7 +75,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
 
 
     emit:
-    repertoire = ch_repertoire
+    repertoire = REASSIGN_ALLELES_GENOTYPE.out.tab
     versions = ch_versions
     logs = ch_logs
 }
