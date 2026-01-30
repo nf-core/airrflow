@@ -51,6 +51,9 @@
                     "DT": "0.34.0",
                     "R": "4.5.1"
                 },
+                "PREPARE_TRUST4_REFERENCE": {
+                    "cat": 8.3
+                },
                 "REPORT_FILE_SIZE": {
                     "enchantr": "0.1.24"
                 },
@@ -336,6 +339,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-23T14:13:54.703994829"
+        "timestamp": "2026-01-29T23:37:25.220264085"
     }
 }
