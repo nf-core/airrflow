@@ -52,7 +52,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         // TODO: Check if we need the cloneby parameter, or here it can be the same as genotypeby.
         CLONAL_ASSIGNMENT_COMPUTE(
             ch_for_genotyping,
-            params.genotype_clone_threshold,
+            [params.genotype_clone_threshold],
             ch_reference_fasta.collect(),
             []
         )
