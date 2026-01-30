@@ -56,15 +56,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
             ch_reference_fasta.collect(),
             []
         )
-
-        // CLONAL_ANALYSIS(
-        //             ch_for_genotyping,
-        //             ch_for_reference,
-        //             ch_logo.collect().ifEmpty([])
-        //         )
-        // ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
-
-        ch_for_genotyping = CLONAL_ASSIGNMENT_COMPUTE.out.tab//CLONAL_ANALYSIS.out.repertoire
+        ch_for_genotyping = CLONAL_ASSIGNMENT_COMPUTE.out.tab
     }
 
     // infer genotype
