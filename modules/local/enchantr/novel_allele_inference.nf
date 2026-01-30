@@ -32,7 +32,7 @@ process NOVEL_ALLELE_INFERENCE {
     path repertoires_samplesheet
 
     output:
-    path("*/*/db_novel"), emit: reference // reference folder
+    path "*_report/db_novel", emit: reference // reference folder
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report", optional: true, emit: report
     path "versions.yml", emit: versions
