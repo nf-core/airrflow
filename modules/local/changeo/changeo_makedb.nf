@@ -4,10 +4,10 @@ process CHANGEO_MAKEDB {
     label 'immcantation'
 
 
-    conda "bioconda::changeo=1.3.0 bioconda::igblast=1.22.0 conda-forge::wget=1.20.1"
+    conda "bioconda::changeo=1.3.4 bioconda::igblast=1.22.0 conda-forge::wget=1.25.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:a9ee25632c9b10bbb012da76e6eb539acca8f9cd-1' :
-        'biocontainers/mulled-v2-7d8e418eb73acc6a80daea8e111c94cf19a4ecfd:a9ee25632c9b10bbb012da76e6eb539acca8f9cd-1' }"
+        'oras://community.wave.seqera.io/library/changeo_igblast_wget:dcfe290eb28df215' :
+        'community.wave.seqera.io/library/changeo_igblast_wget:192e77f3b68daa50' }"
 
     input:
     tuple val(meta), path(reads) // reads in fasta format

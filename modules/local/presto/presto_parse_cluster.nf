@@ -3,10 +3,10 @@ process PRESTO_PARSE_CLUSTER {
     label "process_low"
     label 'immcantation'
 
-    conda "bioconda::presto=0.7.6"
+    conda "bioconda::presto=0.7.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
-        'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
+        'oras://community.wave.seqera.io/library/pip_presto:0f8e73dc0555493d' :
+        'biocontainers/presto:0.7.7--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)
