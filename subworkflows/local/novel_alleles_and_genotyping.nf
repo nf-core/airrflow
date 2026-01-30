@@ -41,7 +41,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
             ch_grouped_repertoires,
             NOVEL_ALLELE_INFERENCE.out.reference,
             [],
-            "v" //TODO: update this to pass actual segments. We only need to reassign V after novel allele inference.
+            ["v"] //TODO: update this to pass actual segments. We only need to reassign V after novel allele inference.
         )
         ch_for_genotyping = REASSIGN_ALLELES_NOVEL.out.tab
         ch_for_reference = NOVEL_ALLELE_INFERENCE.out.reference
@@ -78,7 +78,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         ch_for_genotyping,
         BAYESIAN_GENOTYPE_INFERENCE.out.reference,
         [],
-        "auto" //TODO: update this to pass actual segments. We're running over all segment after genotype inference.
+        ["auto"] //TODO: update this to pass actual segments. We're running over all segment after genotype inference.
     )
 
 
