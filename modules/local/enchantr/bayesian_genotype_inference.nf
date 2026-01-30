@@ -33,7 +33,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
 
     output:
     path "*_report/db_genotype", emit: reference // reference folder
-    path("*/*_command_log.txt"), emit: logs //process logs
+    path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
 
@@ -52,6 +52,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='human', \\
                                         'genotypeby'='${params.genotypeby}', \\
+                                        'single_clone_representative'='${params.single_clone_representative}', \\
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_bayesian_genotype_inference_command_log' ${args}))"
 

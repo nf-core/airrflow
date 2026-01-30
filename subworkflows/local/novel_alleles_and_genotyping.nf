@@ -43,31 +43,39 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
             [],
             "v" //TODO: update this to pass actual segments. We only need to reassign V after novel allele inference.
         )
+        ch_for_genotyping = REASSIGN_ALLELES_NOVEL.out.tab
+        ch_for_reference = NOVEL_ALLELE_INFERENCE.out.reference
+    } else {
+        ch_for_genotyping = ch_grouped_repertoires
+        ch_for_reference = ch_reference_fasta
     }
 
     // TODO: what are we doing with the reference if we are not running novel allele inference?
-
+    // TODO: we can use a constant clonal threshold. 
     // infer clones (gets the reference from novel alleles inference in any case)
+    
+    if (params.single_clone_representative) {
+        CLONAL_ANALYSIS(
+                    ch_for_genotyping,
+                    ch_for_reference,
+                    ch_logo.collect().ifEmpty([])
+                )
+        ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
 
-    CLONAL_ANALYSIS(
-                REASSIGN_ALLELES_NOVEL.out.tab,
-                NOVEL_ALLELE_INFERENCE.out.reference,
-                ch_logo.collect().ifEmpty([])
-            )
-    ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
-
+        ch_for_genotyping = CLONAL_ANALYSIS.out.repertoire
+    }
     // infer genotype (gets the reference from novel alleles inference in any case)
 
     BAYESIAN_GENOTYPE_INFERENCE (
-        CLONAL_ANALYSIS.out.repertoire,
-        NOVEL_ALLELE_INFERENCE.out.reference,
+        ch_for_genotyping,
+        ch_for_reference,
         []
     )
-1
+
     // reassign genotypes (gets the reference from genotype inference in any case)
 
     REASSIGN_ALLELES_GENOTYPE (
-        ch_grouped_repertoires,
+        ch_for_genotyping,
         BAYESIAN_GENOTYPE_INFERENCE.out.reference,
         [],
         "auto" //TODO: update this to pass actual segments. We're running over all segment after genotype inference.
