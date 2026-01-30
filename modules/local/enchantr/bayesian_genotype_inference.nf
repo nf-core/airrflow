@@ -32,7 +32,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     path repertoires_samplesheet
 
     output:
-    path "*_report/db_genotype", emit: reference // reference folder
+    path "*_report/references/*/db_genotype", emit: reference // reference folder
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
