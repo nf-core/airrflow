@@ -2,6 +2,7 @@ include { NOVEL_ALLELE_INFERENCE } from '../../modules/local/enchantr/novel_alle
 include { BAYESIAN_GENOTYPE_INFERENCE  } from '../../modules/local/enchantr/bayesian_genotype_inference'
 include { REASSIGN_ALLELES as REASSIGN_ALLELES_NOVEL; REASSIGN_ALLELES as REASSIGN_ALLELES_GENOTYPE} from '../../modules/local/enchantr/reassign_alleles'
 include { CLONAL_ANALYSIS } from './clonal_analysis.nf'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_COMPUTE  } from '../../modules/local/enchantr/clonal_assignment'
 
 workflow NOVEL_ALLELES_AND_GENOTYPING {
     take:
@@ -26,13 +27,11 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
                 .map{ get_meta_tabs(it) }
                 .set{ ch_grouped_repertoires }
 
-    //TODO: conditional on params.novel_allele_inference
     // infer novel alleles
     if (params.novel_allele_inference) {
         NOVEL_ALLELE_INFERENCE (
             ch_grouped_repertoires,
-            ch_reference_fasta,
-            []
+            ch_reference_fasta
         )
 
         // reassign novel alleles (we can skip this step if no novel alleles were inferred)
@@ -40,8 +39,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         REASSIGN_ALLELES_NOVEL (
             ch_grouped_repertoires,
             NOVEL_ALLELE_INFERENCE.out.reference,
-            [],
-            ["v"] //TODO: update this to pass actual segments. We only need to reassign V after novel allele inference.
+            ["v"]
         )
         ch_for_genotyping = REASSIGN_ALLELES_NOVEL.out.tab
         ch_for_reference = NOVEL_ALLELE_INFERENCE.out.reference
@@ -50,37 +48,37 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         ch_for_reference = ch_reference_fasta
     }
 
-    // TODO: what are we doing with the reference if we are not running novel allele inference?
-    // TODO: we can use a constant clonal threshold. 
-    // infer clones (gets the reference from novel alleles inference in any case)
-    
     if (params.single_clone_representative) {
-        CLONAL_ANALYSIS(
-                    ch_for_genotyping,
-                    ch_for_reference,
-                    ch_logo.collect().ifEmpty([])
-                )
-        ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
+        // TODO: Check if we need the cloneby parameter, or here it can be the same as genotypeby.
+        CLONAL_ASSIGNMENT_COMPUTE(
+            ch_for_genotyping,
+            params.genotype_clone_threshold,
+            ch_reference_fasta.collect(),
+            []
+        )
 
-        ch_for_genotyping = CLONAL_ANALYSIS.out.repertoire
+        // CLONAL_ANALYSIS(
+        //             ch_for_genotyping,
+        //             ch_for_reference,
+        //             ch_logo.collect().ifEmpty([])
+        //         )
+        // ch_versions = ch_versions.mix( CLONAL_ANALYSIS.out.versions)
+
+        ch_for_genotyping = CLONAL_ASSIGNMENT_COMPUTE.out.tab//CLONAL_ANALYSIS.out.repertoire
     }
-    // infer genotype (gets the reference from novel alleles inference in any case)
 
+    // infer genotype
     BAYESIAN_GENOTYPE_INFERENCE (
         ch_for_genotyping,
-        ch_for_reference,
-        []
+        ch_for_reference
     )
 
-    // reassign genotypes (gets the reference from genotype inference in any case)
-
+    // reassign genotypes
     REASSIGN_ALLELES_GENOTYPE (
         ch_for_genotyping,
         BAYESIAN_GENOTYPE_INFERENCE.out.reference,
-        [],
-        ["auto"] //TODO: update this to pass actual segments. We're running over all segment after genotype inference.
+        ["auto"]
     )
-
 
     emit:
     repertoire = REASSIGN_ALLELES_GENOTYPE.out.tab

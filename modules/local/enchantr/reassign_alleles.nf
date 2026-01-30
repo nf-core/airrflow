@@ -29,7 +29,6 @@ process REASSIGN_ALLELES {
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     path reference_fasta
-    path repertoires_samplesheet
     val segments // which segments to reassign alleles to 
     //TODO: did we want to handle all segments at once? Then this val channel would not be needed.
     // *After novel alleles we just need to change the V, it's a time waste to go over all segments.
@@ -44,12 +43,7 @@ process REASSIGN_ALLELES {
     script:
     def args = task.ext.args ? asString(task.ext.args) : ''
     def segs = segments.join(",")
-    def input = ""
-    if (repertoires_samplesheet) {
-        input = repertoires_samplesheet
-    } else {
-        input = tabs.join(',')
-    }
+    def input = tabs.join(',')
     """
     Rscript -e "enchantr::enchantr_report('reassign_alleles', \\
                                         report_params=list('input'='${input}', \\

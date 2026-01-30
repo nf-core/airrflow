@@ -29,7 +29,6 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     input:
     tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
     path reference_fasta
-    path repertoires_samplesheet
 
     output:
     path "*_report/references/*/db_genotype", emit: reference // reference folder
@@ -40,12 +39,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
 
     script:
     def args = task.ext.args ? asString(task.ext.args) : ''
-    def input = ""
-    if (repertoires_samplesheet) {
-        input = repertoires_samplesheet
-    } else {
-        input = tabs.join(',')
-    }
+    def input = tabs.join(',')
     """
     Rscript -e "enchantr::enchantr_report('tigger_bayesian_genotype', \\
                                         report_params=list('input'='${input}', \\

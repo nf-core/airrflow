@@ -570,6 +570,17 @@
                     "description": "Name of the field used to group data files to infer genotype.",
                     "fa_icon": "fab fa-pagelines"
                 },
+                "genotype_clone_threshold": {
+                    "type": "string",
+                    "default": "0.2",
+                    "description": "Threshold for determining if two sequences come from the same clone or not.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "single_clone_representative": {
+                    "type": "boolean",
+                    "description": "Perform TIgGER novel allele inference.",
+                    "fa_icon": "fas fa-dna"
+                },
                 "novel_allele_inference": {
                     "type": "boolean",
                     "description": "Perform TIgGER novel allele inference.",
