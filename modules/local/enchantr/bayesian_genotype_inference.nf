@@ -33,7 +33,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
 
     output:
     path "*_report/db_genotype", emit: reference // reference folder
-    path("*_command_log.txt"), emit: logs //process logs
+    path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
 
@@ -50,7 +50,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     Rscript -e "enchantr::enchantr_report('tigger_bayesian_genotype', \\
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
-                                        'species'='human', \\
+                                        'species'='auto', \\
                                         'genotypeby'='${params.genotypeby}', \\
                                         'single_clone_representative'='${params.single_clone_representative}', \\
                                         'outdir'=getwd(), \\
