@@ -5,7 +5,7 @@ process PRESTO_MASKPRIMERS_EXTRACT {
 
     conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/presto:0.7.6--ac08dbe217c927bd' :
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c5/c538a0e310c303233164cbe486b5e5f6bddcf18975a9b20ac2f590f151f03e62/data' :
         'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:

@@ -24,4 +24,4 @@ template:
   name: airrflow
   org: nf-core
   outdir: .
-  version: 4.4.0
+  version: "5.0.0"

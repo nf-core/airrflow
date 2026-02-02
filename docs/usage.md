@@ -284,6 +284,9 @@ nextflow run nf-core/airrflow -r <release> \
 
 ### Takara SMART-Seq Human BCR/TCR Profiling kit
 
+> [!NOTE]
+> This protocol was previously called `clontech_umi_bcr`/`clontech_umi_tcr` and we've updated it to TAKARA SMART-Seq to reflect the current name of the experimental kit.
+
 - [TaKaRa SMART-Seq Human BCR kit](https://www.takarabio.com/products/next-generation-sequencing/immune-profiling/human-repertoire/smart-seq-human-bcr-with-umis?srsltid=AfmBOopqw7s_fGzQVjcEL5-Su4cI1M4Lj1_72wMvwFK7wWUBhOz6BU-R)
 
 You can use the `takara_smartseq_umi_bcr` or `takara_smartseq_umi_tcr` preset defaults for analyzing bulk fastq sequencing data that was generated with the Takara SMARTer Human Profiling kit. An example using docker containers for the analysis is:
@@ -309,27 +312,24 @@ After the sequence assembly steps, the remaining steps are common for all protoc
 
 > [!NOTE]
 > Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
-
-```bash
-nextflow run nf-core/airrflow -r <release> \
--profile takara_smartseq_umi_bcr,docker \
---input input_samplesheet.tsv \
---cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
---outdir results
-```
-
-And for TCR data:
-
-```bash
-nextflow run nf-core/airrflow -r <release> \
--profile takara_smartseq_umi_tcr,docker \
---input input_samplesheet.tsv \
---cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
---outdir results
-```
-
-> [!NOTE]
-> This protocol was previously called `clontech_umi_bcr`/`clontech_umi_tcr` and we've updated it to TAKARA SMART-Seq to reflect the current name of the experimental kit.
+>
+> ```bash
+> nextflow run nf-core/airrflow -r <release> \
+> -profile takara_smartseq_umi_bcr,docker \
+> --input input_samplesheet.tsv \
+> --cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
+> --outdir results
+> ```
+>
+> And for TCR data:
+>
+> ```bash
+> nextflow run nf-core/airrflow -r <release> \
+> -profile takara_smartseq_umi_tcr,docker \
+> --input input_samplesheet.tsv \
+> --cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
+> --outdir results
+> ```
 
 ### Takara SMARTer Human BCR/TCR Profiling kit
 
@@ -358,24 +358,24 @@ After the sequence assembly steps, the remaining steps are common for all protoc
 
 > [!NOTE]
 > Please note that the default primer sequences and internal CRegion sequences are for human. If you wish to run this protocol on mouse or other species, please provide the alternative primer sequences. Here is an example using the mouse IG primers from the Immcantation GitHub repository:
-
-```bash
-nextflow run nf-core/airrflow -r <release> \
--profile takara_smarter_umi_bcr,docker \
---input input_samplesheet.tsv \
---cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
---outdir results
-```
-
-And for TCR data:
-
-```bash
-nextflow run nf-core/airrflow -r <release> \
--profile takara_smarter_umi_tcr,docker \
---input input_samplesheet.tsv \
---cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
---outdir results
-```
+>
+> ```bash
+> nextflow run nf-core/airrflow -r <release> \
+> -profile takara_smarter_umi_bcr,docker \
+> --input input_samplesheet.tsv \
+> --cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_IG_CRegion_RC.fasta \
+> --outdir results
+> ```
+>
+> And for TCR data:
+>
+> ```bash
+> nextflow run nf-core/airrflow -r <release> \
+> -profile takara_smarter_umi_tcr,docker \
+> --input input_samplesheet.tsv \
+> --cprimers https://raw.githubusercontent.com/immcantation/immcantation/refs/heads/master/protocols/Universal/Mouse_TR_CRegion_RC.fasta \
+> --outdir results
+> ```
 
 ## Supported custom bulk library generation methods (protocols)
 
@@ -554,7 +554,7 @@ nextflow run nf-core/airrflow -r dev \
 
 ## Supported untargeted RNA-seq based methods
 
-nf-core/airrflow supports untargeted bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow. <br>
+nf-core/airrflow supports untargeted bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow.
 To use untargeted RNA-seq based input, specify `--library_generation_method trust4`.
 
 ### Bulk RNA-seq
@@ -615,7 +615,7 @@ Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly
 
 ### Including BCR lineage tree computation
 
-BCR lineage tree computation is performed using the [Dowser](https://dowser.readthedocs.io/) Immcantation package. This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter set to true. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` so all the previous analysis steps are cached and not recomputed.
+BCR lineage tree computation is performed using the [Dowser](https://dowser.readthedocs.io/) Immcantation package. This step is skipped by default because it can be time-consuming depending on the size of the input data and the size of the clonal groups. To enable lineage tree computation, add the `--lineage_trees` parameter set to true. You can easily add lineage tree computation to a previous analysis by re-running the pipeline with the `-resume` flag so all the previous analysis steps are cached and not recomputed.
 
 Dowser supports different methods for the lineage tree computation, `raxml` is the default but you can set other methods with the `--lineage_tree_builder` parameter, and provide the software executable with the `--lineage_tree_exec` parameter.
 

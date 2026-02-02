@@ -117,9 +117,9 @@ workflow PRESTO_UMI {
 
     // Split reads into R1 and R2
     ch_reads_R1 = PRESTO_FILTERSEQ_UMI.out.reads
-                                        .map{ reads -> [reads[0], reads[1]] }.dump(tag: 'ch_reads_R1')
+                                        .map{ reads -> [reads[0], reads[1]] }
     ch_reads_R2 = PRESTO_FILTERSEQ_UMI.out.reads
-                                        .map{ reads -> [reads[0], reads[2]] }.dump(tag: 'ch_reads_R2')
+                                        .map{ reads -> [reads[0], reads[2]] }
 
     // Mask primers
     if (params.maskprimers_align_race) {
@@ -147,10 +147,10 @@ workflow PRESTO_UMI {
         ch_versions = ch_versions.mix(PRESTO_ALIGN_PRIMERS.out.versions)
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_EXTRACT.out.versions)
         // Merge again R1 and R2 by sample ID.
-        ch_maskprimers_reads_R1 = PRESTO_ALIGN_PRIMERS.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R1')
-        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_EXTRACT.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R2')
+        ch_maskprimers_reads_R1 = PRESTO_ALIGN_PRIMERS.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
+        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_EXTRACT.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
         ch_maskprimers_reads = ch_maskprimers_reads_R1.join(ch_maskprimers_reads_R2)
-                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_maskprimers_reads_after_remerge')
+                                                        .map{ it -> [it[1], it[2], it[4]] }
 
         ch_maskprimers_logs = PRESTO_ALIGN_PRIMERS.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_EXTRACT.out.logs)
@@ -226,10 +226,10 @@ workflow PRESTO_UMI {
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_ALIGN_UMI_R2.out.versions)
 
         // Merge again R1 and R2 by sample ID.
-        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_ALIGN_UMI_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R1')
-        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_ALIGN_UMI_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R2')
+        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_ALIGN_UMI_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
+        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_ALIGN_UMI_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
         ch_maskprimers_reads = ch_maskprimers_reads_R1.join(ch_maskprimers_reads_R2)
-                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_maskprimers_reads_after_remerge')
+                                                        .map{ it -> [it[1], it[2], it[4]] }
 
         ch_maskprimers_logs = PRESTO_MASKPRIMERS_ALIGN_UMI_R1.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_ALIGN_UMI_R2.out.logs)
@@ -304,10 +304,10 @@ workflow PRESTO_UMI {
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_EXTRACT_R2.out.versions)
 
         // Merge again R1 and R2 by sample ID.
-        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_EXTRACT_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R1')
-        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_EXTRACT_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R2')
+        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_EXTRACT_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
+        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_EXTRACT_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
         ch_maskprimers_reads = ch_maskprimers_reads_R1.join(ch_maskprimers_reads_R2)
-                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_maskprimers_reads_after_remerge')
+                                                        .map{ it -> [it[1], it[2], it[4]] }
 
         ch_maskprimers_logs = PRESTO_MASKPRIMERS_EXTRACT_R1.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_EXTRACT_R2.out.logs)
@@ -383,10 +383,10 @@ workflow PRESTO_UMI {
         ch_versions = ch_versions.mix(PRESTO_MASKPRIMERS_SCORE_UMI_R2.out.versions)
 
         // Merge again R1 and R2 by sample ID.
-        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_SCORE_UMI_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R1')
-        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_SCORE_UMI_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}.dump(tag: 'ch_maskprimers_reads_R2')
+        ch_maskprimers_reads_R1 = PRESTO_MASKPRIMERS_SCORE_UMI_R1.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
+        ch_maskprimers_reads_R2 = PRESTO_MASKPRIMERS_SCORE_UMI_R2.out.reads.map{ reads -> [reads[0].id, reads[0], reads[1]]}
         ch_maskprimers_reads = ch_maskprimers_reads_R1.join(ch_maskprimers_reads_R2)
-                                                        .map{ it -> [it[1], it[2], it[4]] }.dump(tag: 'ch_maskprimers_reads_after_remerge')
+                                                        .map{ it -> [it[1], it[2], it[4]] }
 
         ch_maskprimers_logs = PRESTO_MASKPRIMERS_SCORE_UMI_R1.out.logs
         ch_maskprimers_logs = ch_maskprimers_logs.mix(PRESTO_MASKPRIMERS_SCORE_UMI_R2.out.logs)

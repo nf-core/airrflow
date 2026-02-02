@@ -1,4 +1,4 @@
-nextflow run nf-core/airrflow -r 4.4.0 \
+nextflow run nf-core/airrflow -r 5.0.0 \
 -profile singularity \
 --mode fastq \
 --input subset_metadata_pcr_umi_airr_300.tsv \

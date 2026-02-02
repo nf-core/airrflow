@@ -225,7 +225,6 @@ workflow AIRRFLOW {
 
         // Bulk: Assign germlines and filtering
         ch_repertoire_by_processing.bulk
-            .dump(tag: 'bulk')
 
         BULK_QC_AND_FILTER(
             ch_repertoire_by_processing.bulk,
@@ -237,7 +236,6 @@ workflow AIRRFLOW {
 
         // Single cell: QC and filtering
         ch_repertoire_by_processing.single
-            .dump(tag: 'single')
 
         SINGLE_CELL_QC_AND_FILTERING(
             ch_repertoire_by_processing.single
@@ -247,7 +245,6 @@ workflow AIRRFLOW {
         // Mixing bulk and single cell channels after filtering
         ch_repertoires_after_qc = ch_bulk_filtered
                                         .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
-                                        .dump(tag: 'sc bulk mix')
 
         // Clonal analysis
         if (!params.skip_clonal_analysis) {

@@ -63,12 +63,13 @@ workflow RNASEQ_INPUT {
         ch_rename_fastq
     )
 
-    ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads.dump(tag: "fastp_filtered")
+    ch_reads_fastp_filtered = RENAME_FASTQ_TRUST4.out.reads
 
     PREPARE_TRUST4_REFERENCE(
         ch_reads_fastp_filtered.first(),
         ch_igblast_reference
     )
+    ch_versions = ch_versions.mix(PREPARE_TRUST4_REFERENCE.out.versions)
 
     // create trust4 input
     ch_reads_trust4 = ch_reads_fastp_filtered.map{ meta, read_1, read_2  -> [ meta, [], [read_1, read_2] ] }
