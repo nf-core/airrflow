@@ -1,7 +1,7 @@
 include { FIND_THRESHOLD as FIND_CLONAL_THRESHOLD } from '../../modules/local/enchantr/find_threshold'
 include { FIND_THRESHOLD as REPORT_THRESHOLD } from '../../modules/local/enchantr/find_threshold'
-include { DEFINE_CLONES as DEFINE_CLONES_COMPUTE  } from '../../modules/local/enchantr/define_clones'
-include { DEFINE_CLONES as DEFINE_CLONES_REPORT } from '../../modules/local/enchantr/define_clones'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_COMPUTE  } from '../../modules/local/enchantr/clonal_assignment'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_REPORT } from '../../modules/local/enchantr/clonal_assignment'
 include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
 
 workflow CLONAL_ANALYSIS {
@@ -22,7 +22,6 @@ workflow CLONAL_ANALYSIS {
         ch_find_threshold_samplesheet =  ch_find_threshold
                         .flatten()
                         .map{ it -> it.getName().toString() }
-                        .dump(tag: 'ch_find_threshold_samplesheet')
                         .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         FIND_CLONAL_THRESHOLD (
@@ -30,15 +29,35 @@ workflow CLONAL_ANALYSIS {
             ch_logo,
             ch_find_threshold_samplesheet
         )
-        ch_threshold = FIND_CLONAL_THRESHOLD.out.mean_threshold
+        def ch_threshold = FIND_CLONAL_THRESHOLD.out.mean_threshold
         ch_versions = ch_versions.mix(FIND_CLONAL_THRESHOLD.out.versions)
 
-        clone_threshold = ch_threshold
+        // Collect raw threshold values into a single list so we can distinguish
+        // between (A) no values at all (likely upstream failure), and
+        // (B) values present but all invalid thresholds ('' / 'NA' / 'NaN').
+        def raw_list = ch_threshold
             .splitText( limit:1 ) { it.trim().toString() }
-            .dump(tag: 'clone_threshold')
-            .filter { it != 'NA'}
-            .filter { it != 'NaN' }
-            .ifEmpty { error "Automatic clone_threshold is 'NA'. Consider setting --clonal_threshold manually."}
+            .map { it -> it.trim() }
+            .collect()
+
+        // Process the collected list to identify when no valid thresholds were found
+        clone_threshold = raw_list
+            .map { list ->
+                if (!list || list.size() == 0) {
+                    // upstream produced nothing — do not print a message here
+                    return []
+                }
+
+                def valid = list.findAll { it != '' && it != 'NA' && it != 'NaN' }
+                if (valid.size() == 0) {
+                    // The automatic threshold finder returned values but all were
+                    // NA, NaN or empty strings - ask the user to set a manual value.
+                    error "Automatic clone_threshold detection failed. Consider setting --clonal_threshold manually."
+                }
+
+                return valid
+            }
+            .flatten()
 
     } else {
         clone_threshold = params.clonal_threshold
@@ -48,7 +67,6 @@ workflow CLONAL_ANALYSIS {
         ch_find_threshold_samplesheet =  ch_find_threshold
                         .flatten()
                         .map{ it -> it.getName().toString() }
-                        .dump(tag: 'ch_find_threshold_samplesheet')
                         .collectFile(name: 'find_threshold_samplesheet.txt', newLine: true)
 
         if (!params.skip_report_threshold){
@@ -71,19 +89,19 @@ workflow CLONAL_ANALYSIS {
                                 it[1] ] }
                 .groupTuple()
                 .map{ get_meta_tabs(it) }
-                .set{ ch_define_clones }
+                .set{ ch_clonal_assignment }
 
-    DEFINE_CLONES_COMPUTE(
-        ch_define_clones,
+    CLONAL_ASSIGNMENT_COMPUTE(
+        ch_clonal_assignment,
         clone_threshold.collect(),
         ch_reference_fasta.collect(),
         []
     )
 
-    ch_versions = ch_versions.mix(DEFINE_CLONES_COMPUTE.out.versions)
+    ch_versions = ch_versions.mix(CLONAL_ASSIGNMENT_COMPUTE.out.versions)
 
     // prepare ch for define clones all samples report
-    DEFINE_CLONES_COMPUTE.out.tab
+    CLONAL_ASSIGNMENT_COMPUTE.out.tab
             .map { it -> it[1]}
             .collect()
             .map { it -> [ [id:'all_reps'], it ] }
@@ -95,27 +113,26 @@ workflow CLONAL_ANALYSIS {
                                         .collect()
                                         .flatten()
                                         .map{ it -> it.getName().toString() }
-                                        .dump(tag: 'ch_all_repertoires_cloned_samplesheet')
                                         .collectFile(name: 'all_repertoires_cloned_samplesheet.txt', newLine: true)
 
-        DEFINE_CLONES_REPORT(
+        CLONAL_ASSIGNMENT_REPORT(
             ch_all_repertoires_cloned,
             clone_threshold.collect(),
             ch_reference_fasta.collect(),
             ch_all_repertoires_cloned_samplesheet
         )
-        ch_versions = DEFINE_CLONES_REPORT.out.versions
+        ch_versions = ch_versions.mix(CLONAL_ASSIGNMENT_REPORT.out.versions)
     }
 
     if (params.lineage_trees){
         DOWSER_LINEAGES(
-            DEFINE_CLONES_COMPUTE.out.tab
+            CLONAL_ASSIGNMENT_COMPUTE.out.tab
         )
         ch_versions = ch_versions.mix(DOWSER_LINEAGES.out.versions)
     }
 
     emit:
-    repertoire = DEFINE_CLONES_COMPUTE.out.tab
+    repertoire = CLONAL_ASSIGNMENT_COMPUTE.out.tab
     versions = ch_versions
     logs = ch_logs
 }

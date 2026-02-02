@@ -5,29 +5,14 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "amulety/antiberta2": {
+                    "amulety/embed": {
                         "branch": "master",
-                        "git_sha": "52948eb3c1f839d2434161fa41582faa108698ad",
-                        "installed_by": ["modules"]
-                    },
-                    "amulety/antiberty": {
-                        "branch": "master",
-                        "git_sha": "ab63efb49c518eedee5df056bdc54fd51a515600",
-                        "installed_by": ["modules"]
-                    },
-                    "amulety/balmpaired": {
-                        "branch": "master",
-                        "git_sha": "8d237889d110c792fa1fd4c656ca9698cde0aa56",
-                        "installed_by": ["modules"]
-                    },
-                    "amulety/esm2": {
-                        "branch": "master",
-                        "git_sha": "4b78419111c3618f76d714f1542c6eb672431ad6",
+                        "git_sha": "b9e13c4115eaa12f4ce1ba67433ddab33b0f4545",
                         "installed_by": ["modules"]
                     },
                     "amulety/translate": {
                         "branch": "master",
-                        "git_sha": "ddf8244c4d46f9369f99b88c88eccc1b41295aa0",
+                        "git_sha": "b9e13c4115eaa12f4ce1ba67433ddab33b0f4545",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -52,17 +37,17 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "08108058ea36a63f141c25c4e75f9f872a5b2296",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "f0719ae309075ae4a291533883847c3f7c441dad",
+                        "git_sha": "af27af1be706e6a2bb8fe454175b0cdf77f47b49",
                         "installed_by": ["modules"]
                     },
                     "trust4": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "b1e1040b80168a2946adc8c28c7569efa511b015",
                         "installed_by": ["modules"]
                     }
                 }
@@ -71,17 +56,17 @@
                 "nf-core": {
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "c2b22d85f30a706a3073387f30380704fcae013b",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "51ae5406a030d4da1e49e4dab49756844fdd6c7a",
+                        "git_sha": "271e7fc14eb1320364416d996fb077421f3faed2",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
+                        "git_sha": "4b406a74dc0449c0401ed87d5bfff4252fd277fd",
                         "installed_by": ["subworkflows"]
                     }
                 }

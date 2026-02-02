@@ -70,12 +70,13 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_airr
 workflow AIRRFLOW {
 
     take:
-        ch_input // channel: samplesheet read in from --input
+        ch_input
 
     main:
 
         ch_versions = Channel.empty()
         ch_reassign_logs = Channel.empty()
+        ch_input_check_logs = Channel.empty()
 
         // Download or fetch databases
         DATABASES()
@@ -96,51 +97,52 @@ workflow AIRRFLOW {
 
                 ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
 
-            ch_presto_filterseq_logs                = Channel.empty()
-            ch_presto_maskprimers_logs              = Channel.empty()
-            ch_presto_pairseq_logs                  = Channel.empty()
-            ch_presto_clustersets_logs              = Channel.empty()
-            ch_presto_buildconsensus_logs           = Channel.empty()
-            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
-            ch_presto_assemblepairs_logs            = Channel.empty()
-            ch_presto_collapseseq_logs              = Channel.empty()
-            ch_presto_splitseq_logs                 = Channel.empty()
-            ch_fastp_html                           = Channel.empty()
-            ch_fastp_json                           = Channel.empty()
-            ch_fastqc_postassembly_mqc              = Channel.empty()
+                ch_presto_filterseq_logs                = Channel.empty()
+                ch_presto_maskprimers_logs              = Channel.empty()
+                ch_presto_pairseq_logs                  = Channel.empty()
+                ch_presto_clustersets_logs              = Channel.empty()
+                ch_presto_buildconsensus_logs           = Channel.empty()
+                ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+                ch_presto_assemblepairs_logs            = Channel.empty()
+                ch_presto_collapseseq_logs              = Channel.empty()
+                ch_presto_splitseq_logs                 = Channel.empty()
+                ch_fastp_html                           = Channel.empty()
+                ch_fastp_json                           = Channel.empty()
+                ch_fastqc_postassembly_mqc              = Channel.empty()
+                ch_tsv_files                            = Channel.empty()
 
-        }  else if (params.library_generation_method == "trust4") {
-            // Extract VDJ sequences from "general" RNA seq data using TRUST4
+            }  else if (params.library_generation_method == "trust4") {
+                // Extract VDJ sequences from "general" RNA seq data using TRUST4
 
-            RNASEQ_INPUT (
-                ch_input,
-                DATABASES.out.igblast.collect()
-            )
+                RNASEQ_INPUT (
+                    ch_input,
+                    DATABASES.out.igblast.collect()
+                )
 
-            ch_fasta                                = RNASEQ_INPUT.out.fasta
-            ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
+                ch_fasta                                = RNASEQ_INPUT.out.fasta
+                ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
 
-            ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
+                ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
 
-            ch_presto_filterseq_logs                = Channel.empty()
-            ch_presto_maskprimers_logs              = Channel.empty()
-            ch_presto_pairseq_logs                  = Channel.empty()
-            ch_presto_clustersets_logs              = Channel.empty()
-            ch_presto_buildconsensus_logs           = Channel.empty()
-            ch_presto_postconsensus_pairseq_logs    = Channel.empty()
-            ch_presto_assemblepairs_logs            = Channel.empty()
-            ch_presto_collapseseq_logs              = Channel.empty()
-            ch_presto_splitseq_logs                 = Channel.empty()
-            ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
-            ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
-            ch_fastqc_postassembly_mqc              = Channel.empty()
-        }
-        else {
-            // Perform sequence assembly if input type is fastq from bulk sequencing data
-            SEQUENCE_ASSEMBLY(
-                ch_input,
-                DATABASES.out.igblast.collect()
-            )
+                ch_presto_filterseq_logs                = Channel.empty()
+                ch_presto_maskprimers_logs              = Channel.empty()
+                ch_presto_pairseq_logs                  = Channel.empty()
+                ch_presto_clustersets_logs              = Channel.empty()
+                ch_presto_buildconsensus_logs           = Channel.empty()
+                ch_presto_postconsensus_pairseq_logs    = Channel.empty()
+                ch_presto_assemblepairs_logs            = Channel.empty()
+                ch_presto_collapseseq_logs              = Channel.empty()
+                ch_presto_splitseq_logs                 = Channel.empty()
+                ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
+                ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
+                ch_fastqc_postassembly_mqc              = Channel.empty()
+                ch_tsv_files                            = Channel.empty()
+            } else {
+                // Perform sequence assembly if input type is fastq from bulk sequencing data
+                SEQUENCE_ASSEMBLY(
+                    ch_input,
+                    DATABASES.out.igblast.collect()
+                )
 
                 ch_fasta                                = SEQUENCE_ASSEMBLY.out.fasta
                 ch_versions                             = ch_versions.mix(SEQUENCE_ASSEMBLY.out.versions)
@@ -157,6 +159,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs            = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs.ifEmpty([])
                 ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.ifEmpty([])
                 ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.ifEmpty([])
+                ch_tsv_files                            = Channel.empty()
             }
 
         } else if ( params.mode == "assembled" ) {
@@ -168,6 +171,7 @@ workflow AIRRFLOW {
                 params.cloneby
             )
             ch_versions = ch_versions.mix( ASSEMBLED_INPUT_CHECK.out.versions )
+            ch_input_check_logs = ASSEMBLED_INPUT_CHECK.out.logs
 
             if (params.reassign) {
                 CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
@@ -176,8 +180,10 @@ workflow AIRRFLOW {
                 ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
                 ch_versions = ch_versions.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.versions)
                 ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
+                ch_tsv_files = Channel.empty()
             } else {
                 ch_fasta_from_tsv = Channel.empty()
+                ch_tsv_files = ASSEMBLED_INPUT_CHECK.out.ch_tsv
             }
 
             ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
@@ -199,9 +205,11 @@ workflow AIRRFLOW {
         } else {
             error "Mode parameter value not valid."
         }
+
         // Perform V(D)J annotation and filtering
         VDJ_ANNOTATION(
             ch_fasta,
+            ch_tsv_files,
             ch_validated_samplesheet.collect(),
             DATABASES.out.igblast.collect(),
             DATABASES.out.reference_fasta.collect()
@@ -217,7 +225,6 @@ workflow AIRRFLOW {
 
         // Bulk: Assign germlines and filtering
         ch_repertoire_by_processing.bulk
-            .dump(tag: 'bulk')
 
         BULK_QC_AND_FILTER(
             ch_repertoire_by_processing.bulk,
@@ -229,7 +236,6 @@ workflow AIRRFLOW {
 
         // Single cell: QC and filtering
         ch_repertoire_by_processing.single
-            .dump(tag: 'single')
 
         SINGLE_CELL_QC_AND_FILTERING(
             ch_repertoire_by_processing.single
@@ -239,7 +245,6 @@ workflow AIRRFLOW {
         // Mixing bulk and single cell channels after filtering
         ch_repertoires_after_qc = ch_bulk_filtered
                                         .mix(SINGLE_CELL_QC_AND_FILTERING.out.repertoires)
-                                        .dump(tag: 'sc bulk mix')
 
         // Clonal analysis
         if (!params.skip_clonal_analysis) {
@@ -276,6 +281,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs.collect().ifEmpty([]),
                 ch_presto_collapseseq_logs.collect().ifEmpty([]),
                 ch_presto_splitseq_logs.collect().ifEmpty([]),
+                ch_input_check_logs.collect().ifEmpty([]),
                 ch_reassign_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
@@ -294,7 +300,25 @@ workflow AIRRFLOW {
     //
     // Collate and save software versions
     //
-    softwareVersionsToYAML(ch_versions)
+    def topic_versions = Channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by:0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  +  'airrflow_software_'  + 'mqc_'  + 'versions.yml',

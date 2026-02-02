@@ -19,4 +19,3 @@ do
 done
 cat "${DIR}/head.txt" "${DIR}/All_graphs_patient_nohead.txt" "${DIR}/tail.txt" > "${DIR}/All_graphs_patient.graphml"
 rm "${DIR}/All_graphs_patient_nohead.txt" "${DIR}/head.txt" "${DIR}/tail.txt"
-

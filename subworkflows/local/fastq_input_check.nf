@@ -11,13 +11,14 @@ workflow FASTQ_INPUT_CHECK {
     samplesheet // file: /path/to/samplesheet.tsv
 
     main:
+
+    ch_versions = Channel.empty()
+
     SAMPLESHEET_CHECK ( samplesheet )
         .tsv
         .splitCsv ( header:true, sep:'\t' )
         .map { create_fastq_channels(it) }
-        .dump (tag: 'fastq_channel_before_merge_samples')
         .groupTuple(by: [0])
-        .dump(tag: 'fastq_channel_after_merge_samples_grouped')
         .branch {
             meta, fastqs ->
                 single: fastqs.size() == 1
@@ -27,7 +28,7 @@ workflow FASTQ_INPUT_CHECK {
         }
         .set { ch_reads }
 
-    ch_versions = SAMPLESHEET_CHECK.out.versions
+    ch_versions = ch_versions.mix( SAMPLESHEET_CHECK.out.versions )
 
     // Merge multi-lane sample fastq for protocols except for 10x genomics, trust4 (cellranger handles multi-fastq per sample)
     if (params.library_generation_method == 'sc_10x_genomics' || params.library_generation_method == 'trust4')  {

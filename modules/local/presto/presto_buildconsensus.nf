@@ -3,10 +3,10 @@ process PRESTO_BUILDCONSENSUS {
     label "process_long_parallelized"
     label 'immcantation'
 
-    conda "bioconda::presto=0.7.4"
+    conda "bioconda::presto=0.7.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/presto:0.7.4--pyhdfd78af_0' :
-        'biocontainers/presto:0.7.4--pyhdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c5/c538a0e310c303233164cbe486b5e5f6bddcf18975a9b20ac2f590f151f03e62/data' :
+        'biocontainers/presto:0.7.6--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(R1), path(R2)

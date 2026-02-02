@@ -33,8 +33,11 @@ library(stringr)
 library(plotly)
 library(airr)
 
-theme_set(theme_bw(base_family = "ArialMT") +
-            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), text = element_text(family="ArialMT")))
+ggplot_theme <- theme_bw(base_family = "ArialMT") +
+            theme(panel.grid.major = element_blank(),
+            panel.border = element_rect(colour = "black", fill=NA, size=0.5),
+            panel.grid.minor = element_blank(), text = element_text(family="ArialMT"))
+theme_set(ggplot_theme)
 knitr::opts_chunk$set(echo = FALSE)
 
 # Setting data table and creating output folders
@@ -74,11 +77,11 @@ tryCatch( {
     write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
 
     plot_table <- tidyr::pivot_longer(tab_seqs,
-                                      cols=Sequences:Igblast,
+                                      cols=Sequences:Representative_2,
                                       names_to = "steps",
                                       values_to ="count")
     firstcol = which(colnames(tab_seqs) == "Sequences")
-    lastcol = which(colnames(tab_seqs) == "Igblast")
+    lastcol = which(colnames(tab_seqs) == "Representative_2")
     plot_table$steps <- factor(plot_table$steps, levels=colnames(tab_seqs)[firstcol:lastcol])
 
     seqs_plot <- ggplot(data=plot_table,
@@ -90,7 +93,8 @@ tryCatch( {
                   ggtitle("Number of sequences after each of the sequence assembly steps") +
                   theme(axis.text.x= element_text(angle = 45))
 
-    ggplotly(seqs_plot)
+    p <- ggplotly(seqs_plot)
+  p
 
 
   },
@@ -106,15 +110,25 @@ The full table can be found under [Table_sequences_assembled](repertoire_compari
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
 
-# Splitting on last underscore for sample_id
-if (any(is.na(tab_seqs_assembled$sample_id))) {
-  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$file_0, function(x) unlist(strsplit(as.character(x), "_\\s*(?=[^_]+$)", perl=TRUE))[1])
+# Splitting on last underscore for sample_id and if there is no underscore split on last dot
+if (is.null(tab_seqs_assembled$sample_id)) {
+  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$input, function(x) {
+    if (grepl("_", x)) {
+      unlist(strsplit(as.character(x), "_(?=[^_]+$)", perl=TRUE))[1]
+    } else if (grepl("\\.", x)) {
+      unlist(strsplit(as.character(x), "\\.(?=[^\\.]+$)", perl=TRUE))[1]
+    } else {
+      x
+    }
+  })
 }
 
 dat <- tab_seqs_assembled %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
         tidyr::pivot_wider(id_cols=sample_id,
                             names_from=task,
-                            values_from=to_num_seqs)
+                            values_from=output_size)
 dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
@@ -127,8 +141,8 @@ write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t"
 ```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
 
 tab_seqs_assembled <- tab_seqs_assembled %>%
-        filter( !grepl("-fail.tsv", to_name) ) %>%
-        filter( !grepl("productive-F.tsv", to_name) ) %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
         dplyr::filter( task %in% c("sample_id","AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
                                 "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
                                 "RemoveChimeric","CollapseDuplicates","ClonePass"))
@@ -138,16 +152,23 @@ tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes
                                                         "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
                                                         "ClonePass"))
 
+tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)
+# Remove rows with NA or zero output_size
+tab_seqs_assembled <- tab_seqs_assembled %>%
+  filter(!is.na(output_size) & output_size > 0)
+
 seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
-                    aes(x=task, y=to_num_seqs, group=sample_id)) +
+                    aes(x=task, y=output_size, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
               scale_y_log10() +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
-              theme(axis.text.x= element_text(angle = 45))
+              theme(axis.text.x = element_text(angle = 45)
+              )
 
-ggplotly(seqs_plot_assembled)
+p <- ggplotly(seqs_plot_assembled)
+p
 ```
 
 ```{r read_data, include=FALSE}
@@ -169,36 +190,28 @@ col_select <- c(
 df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
 
 
-# Remove underscores in these columns
-df_all$subject_id <- stringr::str_replace_all(df_all$subject_id, "_", "")
-df_all$sample_id <- stringr::str_replace_all(df_all$sample_id , "_", "")
-
-# Annotate sample and samplepop (sample + population) by add ing all the conditions
-df_all$subj_locus <- as.factor(paste(df_all$sample_id, df_all$subject_id, df_all$pcr_target_locus, sep="_"))
-
 ```
 
 # V gene usage
 
 ## V gene family usage
 
-The V gene usage (in percentage) in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
+The V gene usage in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
 ```{r gene_family, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="family")
-family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="family")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Family Usage") +
+    ggplot_theme +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("") +
     theme(legend.position = "right")
-ggplotly(g2)
+p <- ggplotly(g2)
+p
 
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 18, height = 15, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 18, height = 15, units = "cm")
@@ -208,23 +221,22 @@ write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"
 
 ## V gene usage {.tabset .tabset-fade .tabset-pills}
 
-The V gene usage (in percentage) in each of the samples is represented below.
+The V gene usage in each of the samples is represented below.
 All plots and tables can be found [here](./repertoire_comparison/V_family/).
 
-```{r gene_seq, echo=F}
-family <- countGenes(df_all, gene="v_call", groups="subj_locus", mode="gene")
-family$sample_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[1])
-family$subject_id <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[2])
-family$locus <- sapply(family$subj_locus, function(x) unlist(strsplit(as.character(x), "_"))[3])
+```{r gene_seq, echo=F, fig.width=10, fig.height=5}
+family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="gene")
 
 g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
     scale_color_brewer(palette="Set1") +
     geom_bar(position = "dodge", stat="identity") +
     ggtitle("V Gene Usage") +
+    ggplot_theme +
     theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
     ylab("Frequency") +
     xlab("")
-ggplotly(g2)
+p <- ggplotly(g2)
+p
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
 ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
 
@@ -233,7 +245,9 @@ write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence
 
 # Citations
 
-If you use nf-core/airrflow for your analysis, please cite it using the following DOI: [10.5281/zenodo.3607408](https://doi.org/10.5281/zenodo.3607408)
+If you use nf-core/airrflow for your analysis, please cite our paper:
+
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole G. Jensen, David Ladd, Mark Polster, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework. (2024) PLOS Computational Biology, 20(7), e1012265. doi: [https://doi.org/10.1371/journal.pcbi.1012265](https://doi.org/10.1371/journal.pcbi.1012265). Pubmed PMID: 39058741.
 
 In addition, citations for the tools and data used in this pipeline are as follows:
 
@@ -306,4 +320,3 @@ In addition, citations for the tools and data used in this pipeline are as follo
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
 
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.
-
