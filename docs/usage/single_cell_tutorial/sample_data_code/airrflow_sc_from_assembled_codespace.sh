@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-nextflow run nf-core/airrflow -r 5.0 \
+nextflow run nf-core/airrflow -r 5.0.0 \
 -profile singularity \
 --mode assembled \
 --input assembled_samplesheet.tsv \

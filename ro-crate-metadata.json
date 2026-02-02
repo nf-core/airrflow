@@ -180,10 +180,10 @@
             },
             "url": [
                 "https://github.com/nf-core/airrflow",
-                "https://nf-co.re/airrflow/5.0/"
+                "https://nf-co.re/airrflow/5.0.0/"
             ],
             "version": [
-                "5.0"
+                "5.0.0"
             ]
         },
         {
