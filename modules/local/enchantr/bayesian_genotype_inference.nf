@@ -27,11 +27,10 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     container "docker.io/immcantation/airrflow:genotyping"
 
     input:
-    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
-    path reference_fasta
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format
 
     output:
-    path "*_report/references/*/db_genotype", emit: reference // reference folder
+    tuple val(meta), path("*_report/references/*/db_genotype"), emit: reference // reference folder
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions

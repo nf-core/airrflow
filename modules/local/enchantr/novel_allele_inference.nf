@@ -27,11 +27,10 @@ process NOVEL_ALLELE_INFERENCE {
     container "docker.io/immcantation/airrflow:genotyping"
 
     input:
-    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
-    path reference_fasta
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format, reference fasta
 
     output:
-    path "*_report/db_novel", emit: reference // reference folder
+    tuple val(meta), path("*_report/db_novel"), emit: reference // reference folder
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report", optional: true, emit: report
     path "versions.yml", emit: versions
