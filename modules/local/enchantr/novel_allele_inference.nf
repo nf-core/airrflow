@@ -27,12 +27,10 @@ process NOVEL_ALLELE_INFERENCE {
     container "docker.io/immcantation/airrflow:genotyping"
 
     input:
-    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
-    path reference_fasta
-    path repertoires_samplesheet
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format, reference fasta
 
     output:
-    path("*/*/db_novel"), emit: reference // reference folder
+    tuple val(meta), path("*_report/db_novel"), emit: reference // reference folder
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report", optional: true, emit: report
     path "versions.yml", emit: versions
@@ -40,18 +38,12 @@ process NOVEL_ALLELE_INFERENCE {
 
     script:
     def args = task.ext.args ? asString(task.ext.args) : ''
-    def input = ""
-    if (repertoires_samplesheet) {
-        input = repertoires_samplesheet
-    } else {
-        input = tabs.join(',')
-    }
+    def input = tabs.join(',')
     """
     Rscript -e "enchantr::enchantr_report('novel_allele_inference', \\
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
-                                        'force'=FALSE, \\
                                         'outdir'=getwd(), \\
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_novel_allele_inference_command_log' ${args}))"

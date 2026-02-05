@@ -27,15 +27,14 @@ process REASSIGN_ALLELES {
     container "docker.io/immcantation/airrflow:genotyping"
 
     input:
-    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
-    path reference_fasta
-    path repertoires_samplesheet
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format, reference fasta
     val segments // which segments to reassign alleles to 
+    val outputby // which field to use for output
     //TODO: did we want to handle all segments at once? Then this val channel would not be needed.
-
+    // *After novel alleles we just need to change the V, it's a time waste to go over all segments.
+    //TODO: Check if we need the outputby parameter. Right now this is the same as the genotypeby parameter.
     output:
-    path("*/*/db_genotype"), emit: reference // reference folder
-    path("*/*_reassigned.tsv"), emit: repertoires // reassigned repertoire
+    tuple val(meta), path("*/*/*reassign-pass.tsv"), emit: tab // reassigned repertoire
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "versions.yml", emit: versions
@@ -44,20 +43,15 @@ process REASSIGN_ALLELES {
     script:
     def args = task.ext.args ? asString(task.ext.args) : ''
     def segs = segments.join(",")
-    def input = ""
-    if (repertoires_samplesheet) {
-        input = repertoires_samplesheet
-    } else {
-        input = tabs.join(',')
-    }
+    def input = tabs.join(',')
+    
     """
     Rscript -e "enchantr::enchantr_report('reassign_alleles', \\
                                         report_params=list('input'='${input}', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'species'='auto', \\
-                                        'outputby'='${params.outputby}', \\
+                                        'outputby'='${outputby}', \\
                                         'segments'='${segs}', \\
-                                        'force'=FALSE, \\
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_reassign_alleles_command_log' ${args}))"
 
