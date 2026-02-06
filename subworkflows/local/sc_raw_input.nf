@@ -3,6 +3,9 @@ include { UNZIP_CELLRANGERDB                                            } from '
 include { RENAME_FILE as RENAME_FILE_TSV                                } from '../../modules/local/rename_file'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
+include { FASTP                                                         } from '../../modules/nf-core/fastp/main'
+include { RENAME_FASTQ_CELLRANGER                                       } from '../../modules/local/rename_fastq_cellranger'
+
 
 
 workflow SC_RAW_INPUT {
@@ -52,9 +55,34 @@ workflow SC_RAW_INPUT {
         error "The single-cell 10X genomics library generation method requires you to provide a reference file."
     }
 
+    // Fastp
+    save_merged = false
+    FASTP (
+        ch_reads,
+        [],
+        [],
+        save_merged
+    )
+    ch_versions = ch_versions.mix(FASTP.out.versions)
+
+    ch_rename_fastp = FASTP.out.reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
+    ch_rename_original = ch_reads.map{ meta,reads -> [meta, reads[0], reads[1]] }
+
+    // rename fastq files to follow cellranger standards again
+    RENAME_FASTQ_CELLRANGER(
+        ch_rename_fastp,
+        ch_rename_original
+    )
+
+    RENAME_FASTQ_CELLRANGER.out.reads.dump(tag:"fastq_renamed")
+
+    ch_reads_fastp = RENAME_FASTQ_CELLRANGER.out.reads
+
+    ch_reads_fastp.dump(tag: "mapped_reads")
+
     // run cellranger vdj
     CELLRANGER_VDJ (
-        ch_reads,
+        ch_reads_fastp,
         ch_sc_reference.collect()
     )
     ch_versions = ch_versions.mix(CELLRANGER_VDJ.out.versions)
@@ -90,6 +118,9 @@ workflow SC_RAW_INPUT {
 
     emit:
     versions = ch_versions
+    // fastp
+    fastp_reads_json = FASTP.out.json.collect{ meta,json -> json }
+    fastp_reads_html = FASTP.out.html.collect{ meta,html -> html }
     // complete cellranger output
     outs = ch_cellranger_out
     // cellranger output in airr format
