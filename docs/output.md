@@ -362,7 +362,7 @@ This folder is genereated when `detect_contamination` is set to `true`.
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*collapse_report/`: Report.
     - `repertoires/*collapse-pass.tsv`: Rearrangement table in AIRR-C format with duplicated
-      sequences removed.
+      sequences removed within each input repertoire.
 
 </details>
 

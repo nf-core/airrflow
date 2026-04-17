@@ -20,18 +20,16 @@ process COLLAPSE_DUPLICATES {
     path "versions.yml" , emit: versions
 
     script:
-    def args = task.ext.args ? asString(task.ext.args) : ''
     """
-    echo "${tabs.join('\n')}" > tabs.txt
-    Rscript -e "enchantr::enchantr_report('collapse_duplicates', \\
-        report_params=list('input'='tabs.txt',\\
-        'collapseby'='${params.collapseby}',\\
-        'outdir'=getwd(),\\
-        'nproc'=${task.cpus},\\
-        'outname'='${meta.id}',\\
-        'log'='${meta.id}_collapse_command_log' ${args}))"
+    Rscript ${projectDir}/bin/reveal_collapseDuplicates.R \\
+        --repertoire ${tabs.join(',')} \\
+        --collapseby ${params.collapseby} \\
+        --ids ${meta.id} \\
+        --outname ${meta.id} \\
+        > ${meta.id}_collapse_command_log.txt
 
-    cp -r enchantr ${meta.id}_collapse_report && rm -r enchantr
+    mkdir -p ${meta.id}_collapse_report/repertoires
+    mv *collapse-pass.tsv ${meta.id}_collapse_report/repertoires/
 
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml

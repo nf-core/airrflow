@@ -32,9 +32,6 @@ opt_list <- list(
 )
 # Parse arguments
 opt <- parse_args(OptionParser(option_list=opt_list))
-opt
-
-getwd()
 
 # Check input file
 if (!("REPERTOIRE" %in% names(opt))) {
@@ -51,8 +48,15 @@ if (!is.null(opt$IDS)) {
     stop("Error. Expecting repertoire ids. Provide --ids.")
 }
 
+cat("START> CollapseDuplicates\n")
+cat(paste0("FILE> ", paste(repertoires, collapse = ","), "\n"))
+
 # Read repertoire file
-db <- bind_rows(lapply(repertoires, read_rearrangement))
+db <- bind_rows(lapply(seq_along(repertoires), function(i) {
+    read_rearrangement(repertoires[[i]]) %>%
+        mutate(id = ids[[i]])
+}))
+records_in <- nrow(db)
 
 num_fields <- c("consensus_count", "duplicate_count")
 num_fields <- intersect(num_fields, colnames(db))
@@ -62,7 +66,7 @@ if (length(num_fields)<1) {
 }
 
 collapseby <- strsplit(opt$COLLAPSEBY,",")[[1]]
-singlecell <- strsplit(opt$SINGLECELL,",")[[1]]
+singlecell <- tolower(as.character(opt$SINGLECELL)) %in% c("true", "t", "1")
 if (singlecell) {
     message("Adding cell_id to the collapsing fields.")
     collapseby <- unique(c(collapseby,'cell_id'))
@@ -80,7 +84,7 @@ collapse_groups <- c("v_gene",
 db <- db %>%
     mutate(v_gene=getGene(v_call),
             j_gene=getGene(j_call)) %>%
-    group_by(.dots=collapse_groups) %>%
+    group_by(across(all_of(collapse_groups))) %>%
     do(collapseDuplicates(.,
                             id = "sequence_id",
                             seq = "sequence_alignment",
@@ -96,6 +100,7 @@ db <- db %>%
     ungroup() %>%
     select(-v_gene, -j_gene)
 
+records_out <- nrow(db)
 
 for (i in 1:length(repertoires)) {
     if (!is.null(opt$OUTNAME)) {
@@ -104,4 +109,10 @@ for (i in 1:length(repertoires)) {
         output_fn <- paste0(ids[i],"_collapse-pass.tsv")
     }
     write_rearrangement(db %>% filter(id == ids[i]), file=output_fn)
+    cat(paste0("OUTPUT> ", output_fn, "\n"))
 }
+
+cat(paste0("RECORDS> ", records_in, "\n"))
+cat(paste0("PASS> ", records_out, "\n"))
+cat(paste0("FAIL> ", records_in - records_out, "\n"))
+cat("END> CollapseDuplicates\n")
