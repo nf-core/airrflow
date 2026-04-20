@@ -64,6 +64,10 @@ process CLONAL_ASSIGNMENT {
 
     cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr
 
+    python3 ${projectDir}/bin/restore_clonepass_light.py \\
+        --input-collapse ${tabs} \\
+        --clone-pass ${meta.id}_clone_report/repertoires/${meta.id}__clone-pass.tsv
+
     echo "${task.process}": > versions.yml
     Rscript -e "cat(paste0('  enchantr: ',packageVersion('enchantr'),'\n'))" >> versions.yml
     """
