@@ -564,7 +564,7 @@
             "properties": {
                 "genotyping": {
                     "type": "boolean",
-                    "description": "Perform TIgGER novel allele and genotype inference.",
+                    "description": "Perform genotype inference and allele reassignment for IG and TR loci, plus optional IG novel allele inference. TR loci skip novel allele inference.",
                     "fa_icon": "fas fa-dna"
                 },
                 "genotypeby": {
@@ -581,12 +581,12 @@
                 },
                 "single_clone_representative": {
                     "type": "boolean",
-                    "description": "Keep only one representative sequence per clone to perform genotype inference.",
+                    "description": "Keep only one representative sequence per clone to perform genotype inference. TR loci always skip this preprocessing.",
                     "fa_icon": "fas fa-dna"
                 },
                 "novel_allele_inference": {
                     "type": "boolean",
-                    "description": "Perform TIgGER novel allele inference.",
+                    "description": "Perform TIgGER novel allele inference for IG loci.",
                     "fa_icon": "fas fa-dna"
                 }
             },
