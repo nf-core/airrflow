@@ -21,7 +21,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
     main:
     ch_logs = channel.empty()
 
-    // group repertoires by genotypeby metadata field and locus.
+    // Flatten each repertoire into a tuple keyed by the genotypeby field and locus.
     ch_repertoire
         .combine(ch_reference_fasta)
         .map{ it ->
@@ -44,28 +44,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
                     .set{ ch_repertoires_for_grouping }
 
     ch_repertoires_for_grouping
-                    .map{ it -> [it[0], it[1]] }
-                    .groupTuple()
-                    .map{ it -> [it[0], it[1].unique().size() > 1] }
-                    .set{ ch_mixed_locus_by_genotype }
-
-    ch_repertoires_for_grouping
-                    .map{ it -> [it[0], it] }
-                    .join(ch_mixed_locus_by_genotype)
-                    .map{ it ->
-                        def entry = it[1]
-                        def mixed_locus = it[2]
-                        [ [entry[0], entry[1]],
-                                            entry[2],
-                                            entry[3],
-                                            entry[4],
-                                            entry[5],
-                                            entry[6],
-                                            entry[7],
-                                            entry[8],
-                                            entry[9],
-                                            mixed_locus ] }
-                    .groupTuple()
+                    .groupTuple(by: [0,1])
                     .map{ get_meta_tabs(it) }
                     .set{ ch_grouped_repertoires }
 
@@ -179,28 +158,28 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
 
 // Function to map
 def get_meta_tabs(arr) {
-    def genotype_id = arr[0][0]
-    def grouping_locus = arr[0][1]
+    def genotype_id = arr[0]
+    def grouping_locus = arr[1]
 
     if (!['IG', 'TR'].contains(grouping_locus)) {
         error "Unsupported locus '${grouping_locus}' found for ${genotype_id}. Genotyping supports IG and TR loci only."
     }
 
-    if (arr[3].unique().size() > 1) {
-        error "Multiple subject IDs found for ${genotype_id} (${arr[3].join(', ')}). It is not possible to perform joint genotyping of samples from different subjects. Please check the 'genotypeby' parameter."
+    if (arr[4].unique().size() > 1) {
+        error "Multiple subject IDs found for ${genotype_id} (${arr[4].join(', ')}). It is not possible to perform joint genotyping of samples from different subjects. Please check the 'genotypeby' parameter."
     }
 
     def meta = [:]
-    meta.id            = arr[9].unique().contains(true) ? "${genotype_id}_${grouping_locus}" : genotype_id
-    meta.sample_id          = arr[2].flatten()
-    meta.subject_id         = arr[3].unique().join("")
-    meta.species            = arr[4].unique().join("")
-    meta.single_cell        = arr[5].unique().join("")
+    meta.id                 = "${genotype_id}_${grouping_locus}"
+    meta.sample_id          = arr[3].flatten()
+    meta.subject_id         = arr[4].unique().join("")
+    meta.species            = arr[5].unique().join("")
+    meta.single_cell        = arr[6].unique().join("")
     meta.locus              = grouping_locus
     def array = []
 
-    array = [ meta, arr[7].flatten(), arr[8].unique() ]
-    if (arr[8].size() > 1) {
+    array = [ meta, arr[8].flatten(), arr[9].unique() ]
+    if (arr[9].unique().size() > 1) {
         error "Multiple reference fasta files found for ${meta.id}."
     }
 
