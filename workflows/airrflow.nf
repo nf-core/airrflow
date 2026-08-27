@@ -420,10 +420,6 @@ workflow AIRRFLOW {
         }
 
         if (!skip_report){
-            ch_all_repertoires_after_qc = ch_repertoires_after_qc
-                .map { it -> it[1] }
-                .collect()
-                .map { it -> [ [id:'all_reps'], it ] }
 
             REPERTOIRE_ANALYSIS_REPORTING(
                 ch_presto_filterseq_logs.collect().ifEmpty([]),
@@ -441,7 +437,6 @@ workflow AIRRFLOW {
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
                 BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
                 SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
-                ch_all_repertoires_after_qc,
                 ch_input.collect(),
                 ch_report_rmd.collect(),
                 ch_report_css.collect(),

@@ -20,7 +20,6 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_vdj_annotation_logs
     ch_bulk_qc_and_filter_logs
     ch_sc_qc_and_filter_logs
-    ch_repertoires // Repertoire tsv files from clonal analysis process
     ch_input // Input samplesheet
     ch_report_rmd // Report Rmarkdown file
     ch_report_css // Report CSS file
@@ -72,7 +71,6 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     )
 
     AIRRFLOW_REPORT(
-        ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
         REPORT_FILE_SIZE.out.table.collect().ifEmpty([]),
         ch_report_rmd,

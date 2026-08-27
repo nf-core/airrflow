@@ -5,15 +5,15 @@ process REMOVE_CHIMERIC {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
 
     input:
-    tuple val(meta), path(tab) // sequence tsv in AIRR format
+    tuple val(meta), path(tab) // compressed sequence tsv in AIRR format
     path(reference_fasta)
 
     output:
-    tuple val(meta), path("*chimera-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*chimera-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report" //, emit: chimera_report
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions

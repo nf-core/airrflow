@@ -13,11 +13,11 @@ process FIND_THRESHOLD {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
 
     input:
-    path tab // sequence tsv in AIRR format
+    path tab // compressed sequence tsv in AIRR format
     path logo
     path tabs_samplesheet
     val cloneby
@@ -25,7 +25,6 @@ process FIND_THRESHOLD {
     val singlecell
 
     output:
-    // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path "*_report"
     path "all_reps_dist_report/tables/*_threshold-summary.tsv", emit: threshold_summary, optional:true

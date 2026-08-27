@@ -171,77 +171,7 @@ p <- ggplotly(seqs_plot_assembled)
 p
 ```
 
-```{r read_data, include=FALSE}
-# paths to the files are found in the first column of all_repertoires_report_tabs.txt,
-# in the current folder
-all_files <- system(paste0("find '", datadir, "' -name '*-pass.tsv'"), intern=T)
 
-vfamily_dir <- paste(outdir, "V_family", sep="/")
-dir.create(vfamily_dir)
-
-# Generate one big dataframe from all patient dataframes
-col_select <- c(
-  "sample_id", "subject_id", "sequence_id",
-  "v_call", "d_call", "j_call",
-  "locus",
-  "junction",
-  "pcr_target_locus"
-)
-df_all <- dplyr::bind_rows(lapply(all_files, read_rearrangement, col_select=col_select))
-
-
-```
-
-# V gene usage
-
-## V gene family usage
-
-The V gene usage in each of the samples is represented below. All plots and tables can be found [here](./repertoire_comparison/V_family/).
-
-```{r gene_family, echo=F}
-family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="family")
-
-g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
-    scale_color_brewer(palette="Set1") +
-    geom_bar(position = "dodge", stat="identity") +
-    ggtitle("V Gene Family Usage") +
-    ggplot_theme +
-    theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
-    ylab("Frequency") +
-    xlab("") +
-    theme(legend.position = "right")
-p <- ggplotly(g2)
-p
-
-ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.pdf"), plot = g2, width = 18, height = 15, units = "cm")
-ggsave(filename = paste0(vfamily_dir, "/V_Family_distribution_patient.png"), plot = g2, width = 18, height = 15, units = "cm")
-
-write.table(family, file = paste0(vfamily_dir, "/V_family_distribution_data.tsv"), sep = "\t", quote = F, row.names = F)
-```
-
-## V gene usage {.tabset .tabset-fade .tabset-pills}
-
-The V gene usage in each of the samples is represented below.
-All plots and tables can be found [here](./repertoire_comparison/V_family/).
-
-```{r gene_seq, echo=F, fig.width=10, fig.height=5}
-family <- countGenes(df_all, gene="v_call", groups=c("sample_id","subject_id","locus"), mode="gene")
-
-g2 <- ggplot(family, aes(x=gene, y=seq_freq, fill=sample_id, group=sample_id)) +
-    scale_color_brewer(palette="Set1") +
-    geom_bar(position = "dodge", stat="identity") +
-    ggtitle("V Gene Usage") +
-    ggplot_theme +
-    theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
-    ylab("Frequency") +
-    xlab("")
-p <- ggplotly(g2)
-p
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.pdf"), plot = g2, width = 20, height = 40, units = "cm")
-ggsave(filename = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_patient.png"), plot = g2, width = 20, height = 40, units = "cm")
-
-write.table(family, file = paste0(vfamily_dir, "/V_gene_distribution_by_sequence_data.tsv"), sep = "\t", quote = F, row.names = F)
-```
 
 # Citations
 
