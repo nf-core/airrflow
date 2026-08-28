@@ -106,7 +106,7 @@
                     "bash": "5.0.3"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.0"
+                    "nf-core/airrflow": "v5.1.1"
                 }
             },
             [

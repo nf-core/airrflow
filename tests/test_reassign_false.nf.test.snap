@@ -78,7 +78,7 @@
                     "enchantr": "0.1.25"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.0"
+                    "nf-core/airrflow": "v5.1.1"
                 }
             },
             [

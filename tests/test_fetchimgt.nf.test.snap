@@ -77,7 +77,7 @@
                     "enchantr": "0.1.25"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.0"
+                    "nf-core/airrflow": "v5.1.1"
                 }
             },
             [
@@ -769,30 +769,30 @@
                 "PGP1_clone_command_log.txt:md5,89d4948983db925ff2c325eb6e591fe1",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_x_clone_command_log.txt:md5,5d6395986061a12b39e47dc8de4bf3d4",
+                "subject_x_clone_command_log.txt:md5,d55beba4523262217bac59a545d4ed61",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,cfc4caa7b9c8840cc2ac25d4c7ec83a4",
-                "all_reps_clone_command_log.txt:md5,ca8e99d7dd24dd10dd558344ef2f8a25",
+                "all_reps_threshold_command_log.txt:md5,97a89b8a873b607db92ac4fd5919db6e",
+                "all_reps_clone_command_log.txt:md5,d9672605882a42dad057744cade83024",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "PGP1_collapse_command_log.txt:md5,177cffc8f95725c4126df8d5fb3dba3c",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_scqc_command_log.txt:md5,b3a1af08a34c143b55cf9bb68182b753",
+                "all_reps_scqc_command_log.txt:md5,70a120f8671d53bb2641b2712b1e3d3f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_fq_command_log.txt:md5,17f839dbeba1498f9d6218772b589a06",
-                "sc5p_v2_hs_PBMC_1k_5fb_fq_command_log.txt:md5,8db38744bc61ae45e3fe133efcc7761f",
+                "sc5p_v2_hs_PBMC_1k_5fb_fq_command_log.txt:md5,d490f6aac86d2d7734684745cb10694b",
                 "PGP1_jmod3_command_log.txt:md5,813795c3d2537b1804963709c81696b0",
-                "sc5p_v2_hs_PBMC_1k_5fb_jmod3_command_log.txt:md5,3e8671ce536a5ad0c66ade5cde940054",
+                "sc5p_v2_hs_PBMC_1k_5fb_jmod3_command_log.txt:md5,209fdcce8fb8742b3f17ae531b735ab8",
                 "PGP1_add-meta_command_log.txt:md5,1b89785869ec1755fc89f459a1d2f2a2",
-                "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,675e83b0cdcfa384e317fe8197109afb"
+                "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,675a8d8cd34a20e2c495346bc4e398cf"
             ],
-            "Table_sequences_assembled.tsv:md5,0fa9464286ad0b2f0bac36ad0d5df19b"
+            "Table_sequences_assembled.tsv:md5,112ed7871256edf555da76237970da02"
         ],
+        "timestamp": "2026-08-14T12:06:37.414288577",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-05-29T14:37:11.340552807"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }
