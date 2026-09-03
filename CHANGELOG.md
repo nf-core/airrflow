@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 5.1.2 dev [Unreleased]
+
+### `Fixed`
+
+- [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
+
 ## 5.1.1 - Ventus Hotfix
 
 ### `Fixed`
