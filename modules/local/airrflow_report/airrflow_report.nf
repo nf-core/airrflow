@@ -9,6 +9,7 @@ process AIRRFLOW_REPORT {
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
     path("Table_sequences_assembled.tsv")
+    path("samplesheet.valid.tsv")
     path(repertoire_report)
     path(css)
     path(logo)

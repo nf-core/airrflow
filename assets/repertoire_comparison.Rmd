@@ -66,12 +66,39 @@ A full description of the pipeline results can be found on the Output section of
 
 # Number of sequences
 
-## Sequence assembly steps
+```{r subject_gradient_helper, echo=FALSE, warning=FALSE, include=FALSE}
+# Create alpha value gradient for subjectIDs with multiple sampleIDs
+subject_alpha_gradient <- function(df) {
+  df <- df %>% dplyr::mutate(colour_label = paste0(subject_id, " (", sample_id, ")"))
+
+  subject_samples <- df %>%
+    dplyr::distinct(subject_id, sample_id, colour_label) %>%
+    dplyr::arrange(subject_id, sample_id)
+
+  subjects <- unique(subject_samples$subject_id)
+  base_hues <- scales::hue_pal()(length(subjects))
+  names(base_hues) <- subjects
+
+  palette <- c()
+  for (s in subjects) {
+    rows <- subject_samples[subject_samples$subject_id == s, ]
+    n <- nrow(rows)
+    shades <- scales::seq_gradient_pal(scales::alpha(base_hues[[s]], max(1/n,0.3)), base_hues[[s]])(seq(0, 1, length.out = n))
+    palette[rows$colour_label] <- shades
+  }
+
+  list(data = df, palette = palette, breaks = subject_samples$colour_label)
+}
+```
+
+## Sequence assembly steps {.tabset .tabset-fade .tabset-pills}
 
 Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
 The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
 
-```{r seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
+```{r seq_numbers_data, echo=FALSE, warning=FALSE, include=FALSE}
+# prepare number of sequences table for plotting
+seq_numbers_ok <- TRUE
 tryCatch( {
     tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
     write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
@@ -83,26 +110,67 @@ tryCatch( {
     firstcol = which(colnames(tab_seqs) == "Sequences")
     lastcol = which(colnames(tab_seqs) == "Representative_2")
     plot_table$steps <- factor(plot_table$steps, levels=colnames(tab_seqs)[firstcol:lastcol])
-
-    seqs_plot <- ggplot(data=plot_table,
-                        aes(x=steps, y=count, group=sample_id)) +
-                  geom_line(aes(colour=sample_id)) +
-                  geom_point(aes(colour=sample_id)) +
-                  scale_y_log10() +
-                  xlab("") + ylab("Sequence count") +
-                  ggtitle("Number of sequences after each of the sequence assembly steps") +
-                  theme(axis.text.x= element_text(angle = 45))
-
-    p <- ggplotly(seqs_plot)
-  p
-
-
+    y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(plot_table$count)))
+    y_max <- max(ceiling(max(log10(plot_table$count))),y_min+2)
   },
-  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
+  error=function(e){
+    seq_numbers_ok <<- FALSE
+  }
 )
 ```
 
-## V(D)J gene assignment and QC
+### Sample ID
+
+```{r seq_numbers_plot_sample, echo=FALSE, warning=FALSE, results='asis'}
+# color by sampleID (default) if fastq mode
+if (seq_numbers_ok) {
+  seqs_plot_sample <- ggplot(data=plot_table,
+                      aes(x=steps, y=count, group=sample_id)) +
+                geom_line(aes(colour=sample_id)) +
+                geom_point(aes(colour=sample_id)) +
+                scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1,base=10),
+                    breaks=10^seq(y_min, y_max,by=1),
+                    limits=c(min(10^y_min,min(plot_table$count)),10^y_max)
+                    ) +
+                xlab("") + ylab("Sequence count") +
+                ggtitle("Number of sequences after each of the sequence assembly steps") +
+                theme(axis.text.x= element_text(angle = 45))
+
+  p <- ggplotly(seqs_plot_sample)
+  p
+} else {
+  message("No sequence numbers are available if starting with assembled reads.")
+}
+```
+
+### Subject ID
+```{r seq_numbers_plot_subject, echo=FALSE, warning=FALSE, results='asis'}
+# color by subjectID, with a gradient of shades per subject's samples
+if (seq_numbers_ok) {
+  subj_grad <- subject_alpha_gradient(plot_table)
+  seqs_plot_subject <- ggplot(data=subj_grad$data,
+                      aes(x=steps, y=count, group=sample_id)) +
+                geom_line(aes(colour=colour_label)) +
+                geom_point(aes(colour=colour_label)) +
+                scale_colour_manual(values=subj_grad$palette, breaks=subj_grad$breaks, name="Subject ID (Sample ID)") +
+                scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1,base=10),
+                    breaks=10^seq(y_min, y_max,by=1),
+                    limits=c(min(10^y_min,min(plot_table$count)),10^y_max)
+                    ) +
+                xlab("") + ylab("Sequence count") +
+                ggtitle("Number of sequences after each of the sequence assembly steps") +
+                theme(axis.text.x= element_text(angle = 45))
+
+  p <- ggplotly(seqs_plot_subject)
+  p
+} else {
+  message("No sequence numbers are available if starting with assembled reads.")
+}
+```
+
+## V(D)J gene assignment and QC {.tabset .tabset-fade .tabset-pills}
 
 Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
 The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
@@ -123,6 +191,10 @@ if (is.null(tab_seqs_assembled$sample_id)) {
   })
 }
 
+# Add subject_id
+sample_subject_map <- read.table("./samplesheet.valid.tsv", header=TRUE, sep="\t", check.names=FALSE)[c("sample_id","subject_id")]
+tab_seqs_assembled <- dplyr::left_join(tab_seqs_assembled, sample_subject_map, by="sample_id")
+
 dat <- tab_seqs_assembled %>%
         filter( !grepl("-fail.tsv", output) ) %>%
         filter( !grepl("productive-F.tsv", output) ) %>%
@@ -135,10 +207,6 @@ dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGene
 
 dat <- apply(dat,2,as.character)
 write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
-```
-
-
-```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
 
 tab_seqs_assembled <- tab_seqs_assembled %>%
         filter( !grepl("-fail.tsv", output) ) %>%
@@ -155,19 +223,55 @@ tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes
 tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)
 # Remove rows with NA or zero output_size
 tab_seqs_assembled <- tab_seqs_assembled %>%
-  filter(!is.na(output_size) & output_size > 0)
+  filter(!is.na(output_size))
 
-seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
+y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(tab_seqs_assembled$output_size)))
+y_max <- max(ceiling(max(log10(tab_seqs_assembled$output_size))),y_min+2)
+```
+
+### Sample ID
+
+```{r assembled_seq_numbers_plot_sample, echo=FALSE, warning=FALSE, results='asis'}
+# color by sampleID (default)
+seqs_plot_assembled_sample <- ggplot(data=tab_seqs_assembled,
                     aes(x=task, y=output_size, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
-              scale_y_log10() +
+              scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1,base=10),
+                    breaks=10^seq(y_min, y_max,by=1),
+                    limits=c(min(10^y_min,min(tab_seqs_assembled$output_size)),10^y_max)
+              ) +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
               theme(axis.text.x = element_text(angle = 45)
               )
 
-p <- ggplotly(seqs_plot_assembled)
+p <- ggplotly(seqs_plot_assembled_sample)
+p
+```
+
+### Subject ID
+
+```{r assembled_seq_numbers_plot_subject, echo=FALSE, warning=FALSE, results='asis'}
+# color by subjectID, with a gradient of shades per subject's samples
+subj_grad_assembled <- subject_alpha_gradient(tab_seqs_assembled)
+seqs_plot_assembled_subject <- ggplot(data=subj_grad_assembled$data,
+                    aes(x=task, y=output_size, group=sample_id)) +
+              geom_line(aes(colour=colour_label)) +
+              geom_point(aes(colour=colour_label)) +
+              scale_colour_manual(values=subj_grad_assembled$palette, breaks=subj_grad_assembled$breaks, name="Subject ID (Sample ID)") +
+              scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1,base=10),
+                    breaks=10^seq(y_min, y_max,by=1),
+                    limits=c(min(10^y_min,min(tab_seqs_assembled$output_size)),10^y_max)
+              ) +
+              xlab("") + ylab("Sequence count") +
+              ggtitle("Number of sequences after each of the downstream steps") +
+              theme(axis.text.x = element_text(angle = 45)
+              )
+
+p <- ggplotly(seqs_plot_assembled_subject)
 p
 ```
 
