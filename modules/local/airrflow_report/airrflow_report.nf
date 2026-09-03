@@ -9,6 +9,7 @@ process AIRRFLOW_REPORT {
     tuple val(meta), path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
     path("Table_sequences_assembled.tsv")
+    path("samplesheet.valid.tsv")
     path(repertoire_report)
     path(css)
     path(logo)
@@ -20,6 +21,7 @@ process AIRRFLOW_REPORT {
     tuple val("${task.process}"), val('dplyr'), eval("Rscript -e \"library(dplyr); cat(as.character(packageVersion('dplyr')))\""), emit: versions_dplyr, topic: versions
     tuple val("${task.process}"), val('knitr'), eval("Rscript -e \"library(knitr); cat(as.character(packageVersion('knitr')))\""), emit: versions_knitr, topic: versions
     tuple val("${task.process}"), val('R'), eval("Rscript -e \"cat(as.character(getRversion()))\""), emit: versions_r, topic: versions
+    tuple val("${task.process}"), val('DT'), eval("Rscript -e \"library(DT); cat(as.character(packageVersion('DT')))\""), emit: versions_dt, topic: versions
     path("repertoire_comparison"), emit: results_folder
     path("*.html"), emit: report_html
 

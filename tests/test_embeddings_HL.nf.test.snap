@@ -9,6 +9,7 @@
                     "optparse": "1.8.2"
                 },
                 "AIRRFLOW_REPORT": {
+                    "DT": "0.34.0",
                     "R": "4.5.3",
                     "alakazam": "1.4.3",
                     "dplyr": "1.2.1",
