@@ -12,6 +12,7 @@ process AIRRFLOW_REPORT {
     path(repertoire_report)
     path(css)
     path(logo)
+    path("reads_per_UMI.csv")
 
     output:
     tuple val("${task.process}"), val('alakazam'), eval("Rscript -e \"library(alakazam); cat(as.character(packageVersion('alakazam')))\""), emit: versions_alakazam, topic: versions
@@ -20,6 +21,7 @@ process AIRRFLOW_REPORT {
     tuple val("${task.process}"), val('dplyr'), eval("Rscript -e \"library(dplyr); cat(as.character(packageVersion('dplyr')))\""), emit: versions_dplyr, topic: versions
     tuple val("${task.process}"), val('knitr'), eval("Rscript -e \"library(knitr); cat(as.character(packageVersion('knitr')))\""), emit: versions_knitr, topic: versions
     tuple val("${task.process}"), val('R'), eval("Rscript -e \"cat(as.character(getRversion()))\""), emit: versions_r, topic: versions
+    tuple val("${task.process}"), val('scales'), eval("Rscript -e \"library(scales); cat(as.character(packageVersion('scales')))\""), emit: versions_scales, topic: versions
     path("repertoire_comparison"), emit: results_folder
     path("*.html"), emit: report_html
 

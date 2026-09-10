@@ -1,5 +1,6 @@
 include { PARSE_LOGS } from '../../modules/local/parse_logs'
 include { REPORT_FILE_SIZE } from '../../modules/local/enchantr/report_file_size'
+include { GET_READS_PER_UMI } from '../../modules/local/get_reads_per_umi'
 include { AIRRFLOW_REPORT  } from '../../modules/local/airrflow_report/airrflow_report'
 
 workflow REPERTOIRE_ANALYSIS_REPORTING {
@@ -14,6 +15,8 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_presto_assemblepairs_logs
     ch_presto_collapseseq_logs
     ch_presto_splitseq_logs
+    ch_presto_UMIreads
+    ch_fasta
     ch_input_check_logs
     ch_reassign_logs
     ch_changeo_makedb_logs
@@ -30,6 +33,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     library_generation_method
     umi_length
     cluster_sets
+    trust4_umi_read
 
     main:
 
@@ -65,6 +69,25 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
                         .map{ it -> it.getName().toString() }
                         .collectFile(name: 'all_logs_tabs.txt', newLine: true)
 
+    // if UMI protocol
+    if ((library_generation_method == 'specific_pcr_umi') || (library_generation_method == 'dt_5p_race_umi')) {
+        GET_READS_PER_UMI(
+            ch_presto_UMIreads,
+            [],
+            library_generation_method
+        )
+        ch_reads_umi = GET_READS_PER_UMI.out.readUMI.collect()
+    } else if ((library_generation_method == 'trust4')&&(trust4_umi_read ? trust4_umi_read : [])) {
+        GET_READS_PER_UMI(
+            [],
+            ch_fasta,
+            library_generation_method
+        )
+        ch_reads_umi = GET_READS_PER_UMI.out.readUMI.collect()
+    } else {
+        ch_reads_umi = []
+    }
+
     REPORT_FILE_SIZE(
         ch_logs.collect().ifEmpty([]),
         ch_metadata,
@@ -77,6 +100,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         REPORT_FILE_SIZE.out.table.collect().ifEmpty([]),
         ch_report_rmd,
         ch_report_css,
-        ch_report_logo
+        ch_report_logo,
+        ch_reads_umi
     )
 }

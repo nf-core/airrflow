@@ -171,6 +171,7 @@ workflow AIRRFLOW {
                 ch_cellranger_airr                      = SC_RAW_INPUT.out.airr
                 ch_cellranger_out                       = SC_RAW_INPUT.out.outs
                 ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
+                ch_fasta_barcode_umi                    = channel.empty()
                 ch_presto_filterseq_logs                = channel.empty()
                 ch_presto_maskprimers_logs              = channel.empty()
                 ch_presto_pairseq_logs                  = channel.empty()
@@ -180,6 +181,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs            = channel.empty()
                 ch_presto_collapseseq_logs              = channel.empty()
                 ch_presto_splitseq_logs                 = channel.empty()
+                ch_presto_UMIreads                      = channel.empty()
                 ch_fastp_html                           = channel.empty()
                 ch_fastp_json                           = channel.empty()
                 ch_fastqc_postassembly_mqc              = channel.empty()
@@ -209,7 +211,7 @@ workflow AIRRFLOW {
                 ch_fasta                                = RNASEQ_INPUT.out.fasta
                 ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
                 ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
-
+                ch_fasta_barcode_umi                    = RNASEQ_INPUT.out.fasta_barcode_umi.collect()
                 ch_presto_filterseq_logs                = channel.empty()
                 ch_presto_maskprimers_logs              = channel.empty()
                 ch_presto_pairseq_logs                  = channel.empty()
@@ -219,6 +221,7 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs            = channel.empty()
                 ch_presto_collapseseq_logs              = channel.empty()
                 ch_presto_splitseq_logs                 = channel.empty()
+                ch_presto_UMIreads                      = channel.empty()
                 ch_fastp_html                           = RNASEQ_INPUT.out.fastp_reads_html
                 ch_fastp_json                           = RNASEQ_INPUT.out.fastp_reads_json
                 ch_fastqc_postassembly_mqc              = channel.empty()
@@ -282,7 +285,9 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs            = SEQUENCE_ASSEMBLY.out.presto_assemblepairs_logs.ifEmpty([])
                 ch_presto_collapseseq_logs              = SEQUENCE_ASSEMBLY.out.presto_collapseseq_logs.ifEmpty([])
                 ch_presto_splitseq_logs                 = SEQUENCE_ASSEMBLY.out.presto_splitseq_logs.ifEmpty([])
+                ch_presto_UMIreads                      = SEQUENCE_ASSEMBLY.out.presto_UMIreads.ifEmpty([])
                 ch_tsv_files                            = channel.empty()
+                ch_fasta_barcode_umi                    = channel.empty()
             }
 
         } else if ( mode == "assembled" ) {
@@ -320,6 +325,8 @@ workflow AIRRFLOW {
             ch_presto_assemblepairs_logs         = channel.empty()
             ch_presto_collapseseq_logs           = channel.empty()
             ch_presto_splitseq_logs              = channel.empty()
+            ch_presto_UMIreads                   = channel.empty()
+            ch_fasta_barcode_umi                 = channel.empty()
             ch_fastp_html                        = channel.empty()
             ch_fastp_json                        = channel.empty()
             ch_fastqc_postassembly_mqc           = channel.empty()
@@ -435,6 +442,8 @@ workflow AIRRFLOW {
                 ch_presto_assemblepairs_logs.collect().ifEmpty([]),
                 ch_presto_collapseseq_logs.collect().ifEmpty([]),
                 ch_presto_splitseq_logs.collect().ifEmpty([]),
+                ch_presto_UMIreads.collect().ifEmpty([]),
+                ch_fasta_barcode_umi.collect().ifEmpty([]),
                 ch_input_check_logs.collect().ifEmpty([]),
                 ch_reassign_logs.collect().ifEmpty([]),
                 VDJ_ANNOTATION.out.changeo_makedb_logs.collect().ifEmpty([]),
@@ -450,7 +459,8 @@ workflow AIRRFLOW {
                 mode,
                 library_generation_method,
                 umi_length,
-                cluster_sets
+                cluster_sets,
+                trust4_umi_read
             )
         }
 

@@ -32,6 +32,7 @@ library(shazam)
 library(stringr)
 library(plotly)
 library(airr)
+library(scales)
 
 ggplot_theme <- theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(),
@@ -63,6 +64,38 @@ Additionally, html reports summarizing the results are provided:
 - Report summarizing the lineage trees for each specified cloning group [clonal_analysis/dowser_lineages/](clonal_analysis/dowser_lineages/).
 
 A full description of the pipeline results can be found on the Output section of the [nf-core/airrflow website](https://nf-co.re/airrflow).
+
+# Seqeuencing depth
+Reads per UMI plotted for each of the samples.
+```{r reads_per_UMI_plot, echo=FALSE, warning=FALSE, results='asis'}
+tryCatch( {
+    tab_seq  <- read.table("reads_per_UMI.csv", header=TRUE, sep=",")
+    tab_seq[is.na(tab_seq)] <- 0
+    plot_table <- tidyr::pivot_longer(tab_seq,
+                                      cols=-X,
+                                      names_to = "sample_id",
+                                      values_to ="count")
+
+    x_range <- c(floor(min(plot_table$X)), ceiling(max(plot_table$X)))
+    y_max <- ceiling(max(log10(plot_table$count)))
+    UMI_plot <- ggplot(data=plot_table,
+                        aes(x=X, y=count, group=sample_id)) +
+                  geom_line(aes(colour=sample_id)) +
+                  geom_point(aes(colour=sample_id)) +
+                  xlab('Reads per UMI') + ylab('UMI count') +
+                  scale_x_reverse(breaks=seq(x_range[1], x_range[2], by=ceiling(x_range[2]/10))) +
+                  scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1, base=10),
+                    breaks=c(0,10^seq(1, y_max,length.out=max(3,y_max)))
+                  )
+
+    p <- ggplotly(UMI_plot)
+  p
+
+  },
+  error=function(e){message("No reads per UMI information available.")}
+)
+```
 
 # Number of sequences
 
