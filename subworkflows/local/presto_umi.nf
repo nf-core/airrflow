@@ -493,6 +493,10 @@ workflow PRESTO_UMI {
         ch_buildconsensus_logs = PRESTO_BUILDCONSENSUS_UMI.out.logs
     }
 
+    if (cluster_sets) {
+        ch_readumi = PRESTO_CLUSTERSETS_UMI.out.log_tab
+    }
+
     // Post-consensus pair
     PRESTO_POSTCONSENSUS_PAIRSEQ_UMI (
         ch_postconsensus
