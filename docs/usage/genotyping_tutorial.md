@@ -77,7 +77,7 @@ We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/
 If you are running the pipeline on Codespace, within the directory where the prepared samplesheet and configuration file are located, you can run the following command:
 
 ```bash
-nextflow run nf-core/airrflow -r 5.1.0 \
+nextflow run nf-core/airrflow -r 5.1.1 \
 -profile singularity \
 --mode assembled \
 --genotyping \
@@ -103,7 +103,7 @@ The estimated running time is 15 minutes. We also uploaded the tutorial [results
 If you run the pipeline locally. Download the samplesheet and start the pipeline using the following command.
 
 ```bash
-nextflow run nf-core/airrflow -r 5.1.0 \
+nextflow run nf-core/airrflow -r 5.1.1 \
 -profile docker \
 --mode assembled \
 --genotyping \

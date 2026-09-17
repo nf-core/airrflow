@@ -32,7 +32,7 @@ When running this tutorial on your local machine, you'll first have to set up Ne
 Once you have set up Nextflow and container (Docker or Singularity) for your local machine or Codespaces environment, test nf-core/airrflow with the built-in test data.
 
 ```bash
-nextflow run nf-core/airrflow -r 5.1.0 -profile test,docker --outdir test_results
+nextflow run nf-core/airrflow -r 5.1.1 -profile test,docker --outdir test_results
 ```
 
 Change the `docker` profile to `singularity` if you use Codespaces since Docker currently cannot be used in Codespaces. You can first set up a Singularity cache directory which will allow the reuse of Singularity container across all runs:
@@ -45,7 +45,7 @@ export NXF_SINGULARITY_CACHEDIR="/workspaces/airrflow/singularity_cache"
 Then run nf-core/airrflow with the test data:
 
 ```bash
-nextflow run nf-core/airrflow -r 5.1.0 -profile test,singularity --outdir test_results
+nextflow run nf-core/airrflow -r 5.1.1 -profile test,singularity --outdir test_results
 ```
 
 > [!NOTE]
@@ -112,7 +112,7 @@ We prepared the [samplesheet](https://github.com/nf-core/airrflow/blob/dev/docs/
 With all the files ready, you can start the pipeline with the following command if you run it locally.
 
 ```bash
-nextflow run nf-core/airrflow -r 5.1.0 \
+nextflow run nf-core/airrflow -r 5.1.1 \
 -profile docker \
 --mode assembled \
 --input assembled_samplesheet.tsv \
@@ -196,7 +196,7 @@ Pre-built 10x genomics V(D)J references can be accessed at the [10x Genomics web
 To run the pipeline locally, use the following command to launch nf-core/airrflow for the dataset in this tutorial:
 
 ```bash
-nextflow run nf-core/airrflow -r 5.1.0 \
+nextflow run nf-core/airrflow -r 5.1.1 \
 -profile docker \
 --mode fastq \
 --input 10x_sc_raw.tsv \

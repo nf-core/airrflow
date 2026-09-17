@@ -1,8 +1,7 @@
 def asString (args) {
     if (args.size() == 0 || args[0] == 'none') return ""
     return args.keySet().sort().collect { param ->
-        def value = args[param].toString()
-        value = value.isNumber() ? value : "'${value}'"
+        def value = args[param] instanceof Boolean ? args[param].toString().toUpperCase() : args[param].toString().isNumber() ? args[param].toString() : "'${args[param]}'"
         ",'${param}'=${value}"
     }.join('')
 }

@@ -194,10 +194,10 @@
             },
             "url": [
                 "https://github.com/nf-core/airrflow",
-                "https://nf-co.re/airrflow/5.1.0/"
+                "https://nf-co.re/airrflow/5.1.1/"
             ],
             "version": [
-                "5.1.0"
+                "5.1.1"
             ]
         },
         {
