@@ -14,7 +14,7 @@ process CLONAL_ASSIGNMENT {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
     tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format
@@ -24,7 +24,7 @@ process CLONAL_ASSIGNMENT {
     val singlecell
 
     output:
-    tuple val(meta), path("*/*/*clone-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*/*/*clone-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions

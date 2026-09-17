@@ -10,9 +10,9 @@
                 },
                 "AIRRFLOW_REPORT": {
                     "R": "4.6.1",
-                    "alakazam": "1.4.3",
+                    "alakazam": "1.4.3.999",
                     "dplyr": "1.2.1",
-                    "knitr": "1.51",
+                    "knitr": "1.52",
                     "shazam": "1.3.2",
                     "stringr": "1.6.0"
                 },
@@ -37,27 +37,27 @@
                 "FILTER_JUNCTION_MOD3": {
                     "R": "4.6.1",
                     "airr": "2.0.0",
-                    "alakazam": "1.4.3",
+                    "alakazam": "1.4.3.999",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
                     "R": "4.6.1",
                     "airr": "2.0.0",
-                    "alakazam": "1.4.3",
+                    "alakazam": "1.4.3.999",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
                 },
                 "REPORT_FILE_SIZE": {
-                    "enchantr": "0.1.25.999"
+                    "enchantr": "0.1.26.999"
                 },
                 "SAMPLESHEET_CHECK": {
                     "pandas": "1.1.5",
                     "python": " 3.9.1"
                 },
                 "SINGLE_CELL_QC": {
-                    "enchantr": "0.1.25.999"
+                    "enchantr": "0.1.26.999"
                 },
                 "UNZIP_CELLRANGERDB": {
                     "unzip_cellrangerdb": "1.30"
@@ -104,6 +104,7 @@
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/reference-keys.txt",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/Sample1__scqc-pass.tsv.gz",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/_scqc-contamination-fail.tsv.gz",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/search_index.json",
                 "repertoire_comparison",
                 "repertoire_comparison/Sequence_numbers_summary",
@@ -159,6 +160,7 @@
                 "all_reps_scqc_command_log.txt:md5,9cc3c83beb79f509e78fd3d25f3f7713",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample1__scqc-pass.tsv.gz:md5,1034898f578381239117b45bd856120c",
+                "_scqc-contamination-fail.tsv.gz:md5,654db77c36ca2fa83835681b1c4c3c55",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample1_fq_command_log.txt:md5,681ae237c9b28a23695ee57745d3f0fc",
                 "Sample1_jmod3_command_log.txt:md5,a5367f27524a90c89df50d2a4c5009c3",
@@ -166,7 +168,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,3a75dcfb427de7a4f15617aed91bb5ad"
         ],
-        "timestamp": "2026-09-04T15:40:47.543178482",
+        "timestamp": "2026-09-17T10:25:09.189664373",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
