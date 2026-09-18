@@ -52,7 +52,7 @@
                 "save_intermediate_repertoires": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to save repertoires in every intermediate step",
+                    "description": "Whether to save repertoires in each intermediate step",
                     "fa_icon": "far fa-save"
                 }
             }
