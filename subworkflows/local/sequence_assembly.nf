@@ -14,7 +14,6 @@
 */
 
 // Local: Sub-workflows
-include { FASTQ_INPUT_CHECK           } from '../../subworkflows/local/fastq_input_check'
 include { PRESTO_UMI                  } from '../../subworkflows/local/presto_umi'
 include { PRESTO_SANS_UMI             } from '../../subworkflows/local/presto_sans_umi'
 
@@ -37,7 +36,7 @@ include { PRESTO_SANS_UMI             } from '../../subworkflows/local/presto_sa
 workflow SEQUENCE_ASSEMBLY {
 
     take:
-    ch_input // channel: reads
+    ch_reads // channel: [ val(meta), [ reads ] ]
     ch_igblast
     library_generation_method
     adapter_fasta
@@ -51,8 +50,6 @@ workflow SEQUENCE_ASSEMBLY {
     index_file
     umi_position
     umi_start
-    collapseby
-    cloneby
     save_trimmed
     maskprimers_align
     cprimer_position
@@ -196,21 +193,7 @@ workflow SEQUENCE_ASSEMBLY {
     if (umi_length < 0) {error "Please provide the UMI barcode length in the option `--umi_length`. To run without UMIs, set umi_length to 0."}
     if (!index_file & umi_start != 0) {error "Setting a UMI start position is only allowed when providing the UMIs in a separate index read file. If so, please provide the `--index_file` flag as well."}
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
     ch_versions = channel.empty()
-
-    FASTQ_INPUT_CHECK(
-        ch_input,
-        library_generation_method,
-        collapseby,
-        cloneby,
-        index_file
-    )
-    ch_versions = ch_versions.mix(FASTQ_INPUT_CHECK.out.versions)
-
-    ch_reads = FASTQ_INPUT_CHECK.out.reads
 
     if (umi_length == 0) {
         //
@@ -310,8 +293,6 @@ workflow SEQUENCE_ASSEMBLY {
     emit:
     // assembled sequences in fasta format
     fasta = ch_presto_fasta
-    // validated metadata
-    samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
     //fastp
     fastp_reads_html = ch_fastp_reads_html
     fastp_reads_json = ch_fastp_reads_json

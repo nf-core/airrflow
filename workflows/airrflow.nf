@@ -18,7 +18,7 @@ include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR } from '.
 //
 include { DATABASES                     } from '../subworkflows/local/databases'
 include { SEQUENCE_ASSEMBLY             } from '../subworkflows/local/sequence_assembly'
-include { ASSEMBLED_INPUT_CHECK         } from '../subworkflows/local/assembled_input_check'
+include { INPUT_CHECK                   } from '../subworkflows/local/input_check'
 include { VDJ_ANNOTATION                } from '../subworkflows/local/vdj_annotation'
 include { BULK_QC_AND_FILTER            } from '../subworkflows/local/bulk_qc_and_filter'
 include { SINGLE_CELL_QC_AND_FILTERING  } from '../subworkflows/local/single_cell_qc_and_filtering'
@@ -139,7 +139,23 @@ workflow AIRRFLOW {
 
         ch_versions = channel.empty()
         ch_reassign_logs = channel.empty()
-        ch_input_check_logs = channel.empty()
+
+        // Check the input samplesheet, validate it and stage the input files.
+        // This runs before the databases are fetched so that the sample metadata
+        // (species, locus, subject_id) is available to all downstream subworkflows.
+        INPUT_CHECK(
+            ch_input,
+            mode,
+            library_generation_method,
+            miairr,
+            collapseby,
+            cloneby,
+            reassign,
+            index_file
+        )
+        ch_versions              = ch_versions.mix(INPUT_CHECK.out.versions)
+        ch_input_check_logs      = INPUT_CHECK.out.logs
+        ch_validated_samplesheet = INPUT_CHECK.out.validated_samplesheet.collect()
 
         // Download or fetch databases
         DATABASES(
@@ -154,23 +170,18 @@ workflow AIRRFLOW {
             if (library_generation_method == "sc_10x_genomics") {
 
                 SC_RAW_INPUT(
-                    ch_input,
+                    INPUT_CHECK.out.reads,
                     vprimers,
                     race_linker,
                     cprimers,
                     umi_length,
-                    reference_10x,
-                    library_generation_method,
-                    collapseby,
-                    cloneby,
-                    index_file
+                    reference_10x
                 )
 
                 ch_fasta                                = SC_RAW_INPUT.out.fasta
                 ch_versions                             = ch_versions.mix(SC_RAW_INPUT.out.versions)
                 ch_cellranger_airr                      = SC_RAW_INPUT.out.airr
                 ch_cellranger_out                       = SC_RAW_INPUT.out.outs
-                ch_validated_samplesheet                = SC_RAW_INPUT.out.samplesheet.collect()
                 ch_fasta_barcode_umi                    = channel.empty()
                 ch_presto_filterseq_logs                = channel.empty()
                 ch_presto_maskprimers_logs              = channel.empty()
@@ -191,7 +202,7 @@ workflow AIRRFLOW {
                 // Extract VDJ sequences from "general" RNA seq data using TRUST4
 
                 RNASEQ_INPUT (
-                    ch_input,
+                    INPUT_CHECK.out.reads,
                     DATABASES.out.igblast.collect(),
                     vprimers,
                     race_linker,
@@ -201,16 +212,11 @@ workflow AIRRFLOW {
                     trust4_barcode_whitelist,
                     trust4_cell_barcode_read,
                     trust4_umi_read,
-                    trust4_read_format,
-                    library_generation_method,
-                    collapseby,
-                    cloneby,
-                    index_file
+                    trust4_read_format
                 )
 
                 ch_fasta                                = RNASEQ_INPUT.out.fasta
                 ch_versions                             = ch_versions.mix(RNASEQ_INPUT.out.versions)
-                ch_validated_samplesheet                = RNASEQ_INPUT.out.samplesheet.collect()
                 ch_fasta_barcode_umi                    = RNASEQ_INPUT.out.fasta_barcode_umi.collect()
                 ch_presto_filterseq_logs                = channel.empty()
                 ch_presto_maskprimers_logs              = channel.empty()
@@ -229,7 +235,7 @@ workflow AIRRFLOW {
             } else {
                 // Perform sequence assembly if input type is fastq from bulk sequencing data
                 SEQUENCE_ASSEMBLY(
-                    ch_input,
+                    INPUT_CHECK.out.reads,
                     DATABASES.out.igblast.collect(),
                     library_generation_method,
                     adapter_fasta,
@@ -243,8 +249,6 @@ workflow AIRRFLOW {
                     index_file,
                     umi_position,
                     umi_start,
-                    collapseby,
-                    cloneby,
                     save_trimmed,
                     maskprimers_align,
                     cprimer_position,
@@ -275,7 +279,6 @@ workflow AIRRFLOW {
                 ch_fastp_html                           = SEQUENCE_ASSEMBLY.out.fastp_reads_html
                 ch_fastp_json                           = SEQUENCE_ASSEMBLY.out.fastp_reads_json
                 ch_fastqc_postassembly_mqc              = SEQUENCE_ASSEMBLY.out.fastqc_postassembly
-                ch_validated_samplesheet                = SEQUENCE_ASSEMBLY.out.samplesheet.collect()
                 ch_presto_filterseq_logs                = SEQUENCE_ASSEMBLY.out.presto_filterseq_logs.ifEmpty([])
                 ch_presto_maskprimers_logs              = SEQUENCE_ASSEMBLY.out.presto_maskprimers_logs.ifEmpty([])
                 ch_presto_pairseq_logs                  = SEQUENCE_ASSEMBLY.out.presto_pairseq_logs.ifEmpty([])
@@ -292,29 +295,19 @@ workflow AIRRFLOW {
 
         } else if ( mode == "assembled" ) {
 
-            ASSEMBLED_INPUT_CHECK (
-                ch_input,
-                miairr,
-                collapseby,
-                cloneby,
-                reassign
-            )
-            ch_input_check_logs = ASSEMBLED_INPUT_CHECK.out.logs
-
             if (reassign) {
                 CHANGEO_CONVERTDB_FASTA_FROM_AIRR(
-                    ASSEMBLED_INPUT_CHECK.out.ch_tsv
+                    INPUT_CHECK.out.tsv
                 )
                 ch_fasta_from_tsv = CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.fasta
                 ch_reassign_logs = ch_reassign_logs.mix(CHANGEO_CONVERTDB_FASTA_FROM_AIRR.out.logs)
                 ch_tsv_files = channel.empty()
             } else {
                 ch_fasta_from_tsv = channel.empty()
-                ch_tsv_files = ASSEMBLED_INPUT_CHECK.out.ch_tsv
+                ch_tsv_files = INPUT_CHECK.out.tsv
             }
 
-            ch_fasta = ASSEMBLED_INPUT_CHECK.out.ch_fasta.mix(ch_fasta_from_tsv)
-            ch_validated_samplesheet = ASSEMBLED_INPUT_CHECK.out.validated_input.collect()
+            ch_fasta = INPUT_CHECK.out.fasta.mix(ch_fasta_from_tsv)
 
             ch_presto_filterseq_logs             = channel.empty()
             ch_presto_maskprimers_logs           = channel.empty()
