@@ -3,10 +3,8 @@ process FETCH_DATABASES {
     label 'process_low'
     label 'immcantation'
 
-    conda "bioconda::changeo=1.3.5 bioconda::igblast=1.22.0 conda-forge::wget=1.25.0 bioconda::airr=2.0.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c8/c8d583137003a25ebc5fdd51c08fccacc3f3673c9fc162c92b006335a2cd6df0/data' :
-        'community.wave.seqera.io/library/airr_changeo_igblast_wget:7303fb2eff967b2e' }"
+    conda "bioconda::changeo=1.3.4 bioconda::igblast=1.22.0 conda-forge::wget=1.25.0"
+    container "docker.io/peresay/airrflow-sourcerer:sourcerer-bf1223f-5"
 
     input:
     val(database_type)
