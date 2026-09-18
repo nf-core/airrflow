@@ -111,6 +111,7 @@ params {
     reference_igblast: String = params.pipelines_testdata_base_path + 'database-cache/igblast_base.zip'
     reference_fasta: String = params.pipelines_testdata_base_path + 'database-cache/imgtdb_base.zip'
     fetch_germlines: String = 'none'
+    generate_igblast_aux: Boolean = false
     skip_alignment_filter: Boolean = false
 
     // -----------------------
@@ -327,7 +328,8 @@ workflow NFCORE_AIRRFLOW {
         params.filterseq_q,
         params.buildconsensus_maxerror,
         params.buildconsensus_maxgap,
-        params.primer_consensus
+        params.primer_consensus,
+        params.generate_igblast_aux
     )
     emit:
     multiqc_report = AIRRFLOW.out.multiqc_report // channel: /path/to/multiqc_report.html

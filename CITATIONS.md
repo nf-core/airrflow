@@ -44,6 +44,10 @@
 
   > Camacho C, Coulouris G, Avagyan V, Ma N, Papadopoulos J, Bealer K, Madden TL. (2009). BLAST+: architecture and applications. BMC Bioinformatics 10, 421.
 
+- [receptor_utils](https://pypi.org/project/receptor_utils/)
+
+  > Lees, W. Utilities for working with immune receptor sequences. Used, when `--generate_igblast_aux` is set, to derive the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference.
+
 - [Alakazam](https://doi.org/10.1126/scitranslmed.3008879)
 
   > Stern, J. N. H., Yaari, G., Vander Heiden, J. A., Church, G., Donahue, W. F., Hintzen, R. Q., … O’Connor, K. C. (2014). B cells populating the multiple sclerosis brain mature in the draining cervical lymph nodes. Science Translational Medicine, 6(248).

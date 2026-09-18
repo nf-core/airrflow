@@ -456,6 +456,13 @@
                     "fa_icon": "fas fa-cloud-download-alt",
                     "enum": ["none", "imgt", "airrc-imgt"],
                     "default": "none"
+                },
+                "generate_igblast_aux": {
+                    "type": "boolean",
+                    "description": "Regenerate the IgBLAST .ndm and .aux auxiliary files from the germline reference in use.",
+                    "help_text": "IgBLAST ships a `.ndm` file (V-gene FWR/CDR boundaries) and a `.aux` file (J-gene reading frame and the position of the conserved PHE/TRP) per species. Both encode coordinates that are specific to the germline set they were derived from, so pairing the shipped files with a custom germline reference mis-annotates. When enabled, these two files are rebuilt with `receptor_utils` from the IMGT-gapped per-chain V and J FASTAs of the germline reference in use, and replace the shipped ones inside the IgBLAST database directory. This step runs in its own container that provides `receptor_utils`, so it is not supported with `-profile conda`.",
+                    "fa_icon": "fas fa-ruler-combined",
+                    "default": false
                 }
             },
             "fa_icon": "fas fa-edit"
