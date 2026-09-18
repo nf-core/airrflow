@@ -177,6 +177,10 @@ validate_canonical_assets() {
     shopt -s nullglob
 
     for path in "$fasta_dir"/*.fasta; do
+        # An empty canonical FASTA has no database and cannot have one:
+        # makeblastdb rejects an empty input. A reference that covers only some
+        # species or loci is legitimate, so do not demand a database for it.
+        [[ -s $path ]] || continue
         name=$(basename "$path")
         stem=${name%.fasta}
         if [[ $stem =~ ^(human|mouse)_(ig|tr)_[vdjc]$ || $stem =~ ^aa_(human|mouse)_(ig|tr)_v$ ]]; then
