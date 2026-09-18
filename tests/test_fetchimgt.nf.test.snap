@@ -1,7 +1,7 @@
 {
     "-profile test_fetchimgt": {
         "content": [
-            26,
+            27,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.1",
@@ -95,6 +95,17 @@
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/repertoires",
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/repertoires/PGP1__clone-pass.tsv.gz",
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/search_index.json",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/assets",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/assets/logo.png",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/assets/style.css",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/index.html",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/params.RData",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/reference-keys.txt",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/repertoires",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/repertoires/subject_x__clone-pass.tsv.gz",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/search_index.json",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/subject_x_clone_command_log.txt",
                 "clonal_analysis/find_threshold",
                 "clonal_analysis/find_threshold/all_reps_dist_report",
                 "clonal_analysis/find_threshold/all_reps_dist_report/assets",
@@ -103,6 +114,7 @@
                 "clonal_analysis/find_threshold/all_reps_dist_report/ggplots",
                 "clonal_analysis/find_threshold/all_reps_dist_report/ggplots/PGP1_dtnthrplot.RData",
                 "clonal_analysis/find_threshold/all_reps_dist_report/ggplots/dtnplot.RData",
+                "clonal_analysis/find_threshold/all_reps_dist_report/ggplots/subject_x_dtnthrplot.RData",
                 "clonal_analysis/find_threshold/all_reps_dist_report/index.html",
                 "clonal_analysis/find_threshold/all_reps_dist_report/params.RData",
                 "clonal_analysis/find_threshold/all_reps_dist_report/reference-keys.txt",
@@ -129,7 +141,11 @@
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v-gene-family.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_family_clone_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGH.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGK.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGL.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGH.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGK.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGL.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/index.html",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/params.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/reference-keys.txt",
@@ -760,12 +776,15 @@
             [
                 "PGP1_clone_command_log.txt:md5,f2ef1dc43ac9190b18a269197396d157",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "PGP1__clone-pass.tsv.gz:md5,c1ac6b656b2ea46b0f46f5c74025bb98",
+                "PGP1__clone-pass.tsv.gz:md5,25a40b2918d0386dcfd8836e06648487",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,ddbf70b94e71e6b28f1f1c73847df625",
-                "all_reps_clone_command_log.txt:md5,884b5755e2238a92143582b4c25e7e80",
+                "subject_x__clone-pass.tsv.gz:md5,15d1625bcd6c9304428755334c231d2a",
+                "subject_x_clone_command_log.txt:md5,ce73398cb81f85528c8d18302a82f0eb",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,2ccb59b8cbcbc0236f0169ec92241d8e",
+                "all_reps_threshold_command_log.txt:md5,4fccc7dc2fb534bf31b80d0b63374ab7",
+                "all_reps_clone_command_log.txt:md5,41857fba71aa414c61ee57ed794e7bdd",
+                "style.css:md5,d0833d790556369103776a429102fedf",
+                "All_samples__repertoire-pass.tsv.gz:md5,8c2a9e97140142764a4c3f6fd335e557",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "PGP1_collapse_command_log.txt:md5,f04492451cdd509d412ab79573c1eae4",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -784,7 +803,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,a34b5a4c4bd429a38e71d419411c5073"
         ],
-        "timestamp": "2026-09-17T10:45:55.791262285",
+        "timestamp": "2026-09-18T12:28:56.20333784",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

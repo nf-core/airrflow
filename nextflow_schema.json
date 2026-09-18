@@ -555,7 +555,7 @@
                 },
                 "skip_clonal_analysis": {
                     "type": "boolean",
-                    "description": "Skip all clonal anlaysis processes",
+                    "description": "Skip all clonal analysis processes",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },

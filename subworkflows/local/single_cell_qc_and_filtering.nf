@@ -23,7 +23,7 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
 
     SINGLE_CELL_QC.out.tab
                 .flatten()
-                .map { it -> [ "${it.baseName}".replaceFirst("__scqc-pass", ""), it ] }
+                .map { it -> [ "${it.baseName}".replaceFirst("__scqc-pass.tsv", ""), it ] }
                 .set{ch_repertoire_after_scqc_with_sampleid}
 
     ch_logs = ch_logs.mix(SINGLE_CELL_QC.out.logs)
