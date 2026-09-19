@@ -59,5 +59,11 @@ process CLONAL_ASSIGNMENT {
 
     cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr
 
+    # enchantr names the output after the cloneby value; meta.id adds the locus when
+    # the group was split and is identical when it was not.
+    for f in */*/*clone-pass.tsv*; do
+        new="\$(dirname \$f)/${meta.id}__\${f##*__}"
+        [ "\$f" = "\$new" ] || mv "\$f" "\$new"
+    done
     """
 }

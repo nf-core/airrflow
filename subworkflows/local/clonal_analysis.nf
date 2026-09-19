@@ -90,17 +90,36 @@ workflow CLONAL_ANALYSIS {
         }
     }
 
-    // merge all repertoires by cloneby metadata field
-    ch_repertoire_reference.map{ it -> [ it[0][cloneby],
-                                it[0].id,
-                                it[0].sample_id,
-                                it[0].subject_id,
-                                it[0].species,
-                                it[0].single_cell,
-                                it[0].locus,
+    // Group by the cloneby field and the effective locus: two loci of one subject
+    // carry different references and cannot share a clone group.
+    ch_repertoire_reference.map{ it ->
+                            def meta = it[0]
+                            def grouping_locus = meta.locus.toUpperCase()
+                            [ meta[cloneby],
+                                grouping_locus,
+                                meta.id,
+                                meta.sample_id,
+                                meta.subject_id,
+                                meta.species,
+                                meta.single_cell,
+                                meta.locus,
                                 it[1],
                                 it[2] ] }
+                .set{ ch_repertoire_flat }
+
+    // Only a cloneby value spanning more than one locus needs the suffix, otherwise
+    // every existing clone-group output would be renamed.
+    ch_repertoire_flat
+                .map{ it -> [ it[0], it[1] ] }
                 .groupTuple()
+                .map{ clone_id, loci -> [ clone_id, loci.unique().size() > 1 ] }
+                .set{ ch_mixed_locus }
+
+    ch_repertoire_flat
+                .map{ it -> [ it[0], it ] }
+                .combine( ch_mixed_locus, by: 0 )
+                .map{ _clone_id, row, mixed -> row + [ mixed ] }
+                .groupTuple(by: [0,1])
                 .map{ get_meta_tabs(it, genotypeby, cloneby) }
                 .set{ ch_repertoire_grouped }
 
@@ -151,23 +170,29 @@ workflow CLONAL_ANALYSIS {
 }
 
 // Function to map
+// arr[0] cloneby value, arr[1] grouping locus, arr[10] whether it spans >1 locus.
 def get_meta_tabs(arr, genotypeby, cloneby) {
-    if (arr[3].unique().size() > 1) {
-            error "Multiple subject_id found for ${arr[0]} (${arr[3].join(', ')}). Please check your input parameters and ensure that all samples with the same 'cloneby' value have the same 'subject_id' value."
+    def clone_id = arr[0]
+    def grouping_locus = arr[1]
+
+    if (arr[4].unique().size() > 1) {
+            error "Multiple subject_id found for ${clone_id} (${arr[4].join(', ')}). Please check your input parameters and ensure that all samples with the same 'cloneby' value have the same 'subject_id' value."
     }
 
+    def locus_class = arr[7].unique().join("")
+
     def meta = [:]
-    meta.id                 = [arr[0]].unique().join("")
-    meta.sample_id          = arr[2].flatten()
-    meta.subject_id         = arr[3].unique().join("")
-    meta.species            = arr[4].unique().join("")
-    meta.single_cell        = arr[5].unique().join("")
-    meta.locus              = arr[6].unique().join("")
+    meta.id                 = arr[10].unique().contains(true) ? "${clone_id}_${grouping_locus}".toString() : clone_id.toString()
+    meta.sample_id          = arr[3].flatten()
+    meta.subject_id         = arr[4].unique().join("")
+    meta.species            = arr[5].unique().join("")
+    meta.single_cell        = arr[6].unique().join("")
+    meta.locus              = locus_class
 
     def array = []
 
-        array = [ meta, arr[7].flatten(), arr[8].unique() ]
-        if (arr[8].size() > 1) {
+        array = [ meta, arr[8].flatten(), arr[9].unique() ]
+        if (arr[9].size() > 1) {
             error "Multiple reference fasta files found for ${meta.id}. Please check your input parameters and ensure that all samples with the same ${genotypeby} value (parameter 'genotype_by') have the same ${cloneby} value (parameter 'clone_by')."
         }
     return array
