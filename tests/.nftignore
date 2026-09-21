@@ -14,6 +14,7 @@ pipeline_info/*.{html,json,txt,yml}
 **/*.html
 **/*.pdf
 **/*.tsv
+**/*.tsv.gz
 **/*.RData
 **/*.json
 **/*.zip

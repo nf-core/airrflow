@@ -251,19 +251,15 @@
             [
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "mouse_x_clone_command_log.txt:md5,4668385a1e4bac7c04abf5e8a830e083",
-                "mouse_x__clone-pass.tsv.gz:md5,e73802d4569768ee144b97652b947638",
                 "mouse_x_dowser_command_log.txt:md5,5f685c591f48be13a4ef7b52727a8fcd",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,3e9ba139cd829e9f6639e29760c5cd57",
                 "all_reps_clone_command_log.txt:md5,68dd44e05cb15eeb5e2695c324ab0367",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,0512a4522296d62490c544c082b63044",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "all_reps_scqc_command_log.txt:md5,cfaee5e274821f0f7ba1e0ed944e1f27",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "_scqc-contamination-fail.tsv.gz:md5,b207d91b6aa6888ca0d796573ff41566",
-                "sc5p_v2_mm_c57bl6_splenocyte_1k_b__scqc-pass.tsv.gz:md5,caebce4883bb14659af910751382cd3c",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "sc5p_v2_mm_c57bl6_splenocyte_1k_b_fq_command_log.txt:md5,819e0643cfbeb1cbbfc6c3e009d3a55e",
                 "sc5p_v2_mm_c57bl6_splenocyte_1k_b_jmod3_command_log.txt:md5,4e54840ab0c887251aa13177af2b396e",
@@ -271,7 +267,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,d89e0c27616af9e691be714c8acb18c6"
         ],
-        "timestamp": "2026-09-18T12:01:31.240411505",
+        "timestamp": "2026-09-21T11:44:53.360810736",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

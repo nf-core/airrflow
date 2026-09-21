@@ -336,9 +336,7 @@
             [
                 "PGP1_clone_command_log.txt:md5,4f9fbea2b2536ef2f3faef014b8dcb2b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "PGP1__clone-pass.tsv.gz:md5,b067612f0fd55b4678951c5a571541c4",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_x__clone-pass.tsv.gz:md5,4d17ce6d1cf3c0ba58cc59de77fb8382",
                 "subject_x_clone_command_log.txt:md5,ab5cff6ae68d29593f2e9c3e57c83489",
                 "PGP1_dowser_command_log.txt:md5,3c195638bace278dc2f5a7d665f2ab70",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -348,18 +346,13 @@
                 "all_reps_threshold_command_log.txt:md5,611e47ba1ffedc3402c03398f1459509",
                 "all_reps_clone_command_log.txt:md5,a5780eb81e63bba73f9590debcee5fdd",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,eedb53859588d50897b1e367a8da9b9c",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "PGP1_chimera-pass.tsv.gz:md5,f8a5d6f669c0b3b4a4d0ed550be4f823",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_chimeric_command_log.txt:md5,d3c6db69f22997140c9a6971987abccf",
                 "PGP1_collapse_command_log.txt:md5,8e45e8fca2363e77ba7c3f722391b7ce",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "PGP1_PGP1_collapse-pass.tsv.gz:md5,f62b0fe37aabea67a868f826a9e3f966",
                 "all_reps_scqc_command_log.txt:md5,ca15dfaba65daa829e429beeb65af45c",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "_scqc-contamination-fail.tsv.gz:md5,b207d91b6aa6888ca0d796573ff41566",
-                "sc5p_v2_hs_PBMC_1k_5fb__scqc-pass.tsv.gz:md5,3b4aa3602f47529f434d5c67b90a00b9",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_fq_command_log.txt:md5,17f839dbeba1498f9d6218772b589a06",
                 "sc5p_v2_hs_PBMC_1k_5fb_fq_command_log.txt:md5,8db38744bc61ae45e3fe133efcc7761f",
@@ -370,7 +363,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,0acb0e01f4a018f40c6f42859fc9d1d4"
         ],
-        "timestamp": "2026-09-18T11:57:21.129122403",
+        "timestamp": "2026-09-21T11:40:40.068943932",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

@@ -313,10 +313,8 @@
             [
                 "Patient01_clone_command_log.txt:md5,9d24d85eae8f3a67cc786413e80344d6",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient01__clone-pass.tsv.gz:md5,5e59137396c23edf2faafda338f9fe58",
                 "all_reps_clone_command_log.txt:md5,eb6a638174a9e9a372f6f56bbb5de8e5",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,c7fdb4048be06f028144f3bb2421fc54",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,15475c7dbcf14e9b2695bb7846527272",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
@@ -325,7 +323,6 @@
                 "trust4_reference.fa:md5,a2bd1e99b52d42c49776f55aef6cb00c",
                 "Sample01_collapse_command_log.txt:md5,219cf3180d52be26885e56e37578ae90",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample01_Sample01_collapse-pass.tsv.gz:md5,37a24edbe99a742bbb0a0c1e38d88760",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample01_annot.fa:md5,a6a0c19ca412846322e8e24d4292088d",
                 "Sample01_assembled_reads.fa:md5,886a1b1d2367b8eec15debf601000c45",
@@ -340,7 +337,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,ed13c90a4a6508a01e46de1592b5be6a"
         ],
-        "timestamp": "2026-09-18T13:17:04.323781549",
+        "timestamp": "2026-09-21T13:01:13.393300641",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

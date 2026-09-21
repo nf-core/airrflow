@@ -701,23 +701,17 @@
             [
                 "PGP1_clone_command_log.txt:md5,f2ef1dc43ac9190b18a269197396d157",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "PGP1__clone-pass.tsv.gz:md5,82810e4be7bf0f442b11bb706d6d3eac",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_x__clone-pass.tsv.gz:md5,c948368c1b583567d78571b6f36287b8",
                 "subject_x_clone_command_log.txt:md5,ab5cff6ae68d29593f2e9c3e57c83489",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,71a3bea9b9a8ca279410c6cec6672885",
                 "all_reps_clone_command_log.txt:md5,7c04e25e9c9a7242d85b22deeadf23ab",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,063b69557a097d5b43a0a6b386d43c57",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "PGP1_collapse_command_log.txt:md5,f04492451cdd509d412ab79573c1eae4",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "PGP1_PGP1_collapse-pass.tsv.gz:md5,454d426af38820dbd68cf7a5f0763b68",
                 "all_reps_scqc_command_log.txt:md5,ca15dfaba65daa829e429beeb65af45c",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "_scqc-contamination-fail.tsv.gz:md5,b207d91b6aa6888ca0d796573ff41566",
-                "sc5p_v2_hs_PBMC_1k_5fb__scqc-pass.tsv.gz:md5,1976f24a7f76dbab495a8f96f682fa77",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_fq_command_log.txt:md5,17f839dbeba1498f9d6218772b589a06",
                 "sc5p_v2_hs_PBMC_1k_5fb_fq_command_log.txt:md5,8db38744bc61ae45e3fe133efcc7761f",
@@ -728,7 +722,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,71f4c68541e10ebbf1fdf69e36a65e83"
         ],
-        "timestamp": "2026-09-18T12:21:52.490281198",
+        "timestamp": "2026-09-21T12:06:56.122363664",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

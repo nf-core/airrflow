@@ -527,13 +527,10 @@
             [
                 "Patient1_clone_command_log.txt:md5,593bd12c5baa68dabbb91769c9147e3e",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient1__clone-pass.tsv.gz:md5,846a9c088dabb464adf9a939b981ade7",
                 "Patient2_clone_command_log.txt:md5,df975d73b4527c45b5e901a31a795d35",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient2__clone-pass.tsv.gz:md5,d00a6dd5798b6c26a2d4a88de14e4d59",
                 "all_reps_clone_command_log.txt:md5,b1e335720db3557ab518d47a2b3aad6e",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,6c6aede0ee60ae8178836c6959e617e3",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,055f2853529d4376bf7339fcd199c352",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
@@ -542,10 +539,8 @@
                 "multiqc_general_stats.txt:md5,b1831b09fe16804f558ff79730ba69ec",
                 "Sample1_collapse_command_log.txt:md5,6bf37a75466052705ce3e45bbfd52f5f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample1_Sample1_collapse-pass.tsv.gz:md5,4427d32a77926ebc1db90b66fe7a39b6",
                 "Sample2_collapse_command_log.txt:md5,cc006122b9bf572e6d33d0a8321a324a",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample2_Sample2_collapse-pass.tsv.gz:md5,9abc8a3ff14ce80f4298ffad5246febe",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample1_fq_command_log.txt:md5,092d5205b71bc2366921e90c1650766c",
                 "Sample2_fq_command_log.txt:md5,a109da50d9d30fd06a9311b95b5c25e8",
@@ -557,7 +552,7 @@
             "Table_sequences_assembled.tsv:md5,3fa49351514136395229045189e25bc2",
             "Table_sequences_assembly.tsv:md5,0b9420b78c3737bf95183b8af80d67bb"
         ],
-        "timestamp": "2026-09-17T11:42:37.597086866",
+        "timestamp": "2026-09-21T13:13:01.752123423",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

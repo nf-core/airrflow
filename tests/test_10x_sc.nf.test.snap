@@ -276,17 +276,13 @@
                 "regions.fa:md5,1953406d913fb0fd753c6b56e847da83",
                 "Patient1_clone_command_log.txt:md5,03ec38036b8f62ba6c26336cf3a54e3e",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient1__clone-pass.tsv.gz:md5,6cac7f6bbaeeea9df7966b4b1abcf0cb",
                 "all_reps_clone_command_log.txt:md5,a9e3d5d21fff4d82e33eec48344d3288",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "All_samples__repertoire-pass.tsv.gz:md5,843e918d590335f111a9b64f28e26efc",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,e3bce9a8aa9aab5fe13f20e8f746709f",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "all_reps_scqc_command_log.txt:md5,9cc3c83beb79f509e78fd3d25f3f7713",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample1__scqc-pass.tsv.gz:md5,1034898f578381239117b45bd856120c",
-                "_scqc-contamination-fail.tsv.gz:md5,654db77c36ca2fa83835681b1c4c3c55",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "regions.fa:md5,1953406d913fb0fd753c6b56e847da83",
                 "supp_regions.fa:md5,70bd8e62f963ee1d1d0733794e2f523e",
@@ -296,7 +292,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,3a75dcfb427de7a4f15617aed91bb5ad"
         ],
-        "timestamp": "2026-09-18T11:53:10.898096713",
+        "timestamp": "2026-09-21T11:36:30.139546062",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
