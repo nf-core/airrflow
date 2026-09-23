@@ -84,19 +84,23 @@ tryCatch( {
     lastcol = which(colnames(tab_seqs) == "Representative_2")
     plot_table$steps <- factor(plot_table$steps, levels=colnames(tab_seqs)[firstcol:lastcol])
 
+    y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(plot_table$count)))
+    y_max <- max(ceiling(max(log10(plot_table$count))),y_min+2)
     seqs_plot <- ggplot(data=plot_table,
                         aes(x=steps, y=count, group=sample_id)) +
-                  geom_line(aes(colour=sample_id)) +
-                  geom_point(aes(colour=sample_id)) +
-                  scale_y_log10() +
-                  xlab("") + ylab("Sequence count") +
-                  ggtitle("Number of sequences after each of the sequence assembly steps") +
-                  theme(axis.text.x= element_text(angle = 45))
+                    geom_line(aes(colour=sample_id)) +
+                    geom_point(aes(colour=sample_id)) +
+                    scale_y_continuous(
+                        trans=scales::pseudo_log_trans(sigma=1,base=10),
+                        breaks=10^seq(y_min, y_max,by=1),
+                        limits=c(min(10^y_min,min(plot_table$count)),10^y_max)
+                        ) +
+                    xlab("") + ylab("Sequence count") +
+                    ggtitle("Number of sequences after each of the sequence assembly steps") +
+                    theme(axis.text.x= element_text(angle = 45))
 
     p <- ggplotly(seqs_plot)
-  p
-
-
+    p
   },
   error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
 )
@@ -155,13 +159,19 @@ tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes
 tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)
 # Remove rows with NA or zero output_size
 tab_seqs_assembled <- tab_seqs_assembled %>%
-  filter(!is.na(output_size) & output_size > 0)
+  filter(!is.na(output_size))
 
+y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(tab_seqs_assembled$output_size)))
+y_max <- max(ceiling(max(log10(tab_seqs_assembled$output_size))),y_min+2)
 seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
                     aes(x=task, y=output_size, group=sample_id)) +
               geom_line(aes(colour=sample_id)) +
               geom_point(aes(colour=sample_id)) +
-              scale_y_log10() +
+              scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1,base=10),
+                    breaks=10^seq(y_min, y_max,by=1),
+                    limits=c(min(10^y_min,min(tab_seqs_assembled$output_size)),10^y_max)
+              ) +
               xlab("") + ylab("Sequence count") +
               ggtitle("Number of sequences after each of the downstream steps") +
               theme(axis.text.x = element_text(angle = 45)
