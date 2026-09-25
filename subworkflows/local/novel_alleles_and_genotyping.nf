@@ -75,7 +75,7 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
         REASSIGN_ALLELES_NOVEL (
             ch_reassign_alleles,
             ["v"],
-            genotypeby //TODO: @ayeletperes check if this is correct
+            genotypeby
         )
 
         REASSIGN_ALLELES_NOVEL.out.tab.dump(tag: "reassign alleles novel")
