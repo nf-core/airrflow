@@ -3,11 +3,27 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 5.1.2 dev [Unreleased]
+## 5.2.0dev
 
 ### `Fixed`
 
 - [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.25      | 0.1.26.999  |
+| airr       | 1.6.1       | 2.0.0       |
+| alakazam   | 1.4.3       | 1.4.3.999   |
+| tigger     | 1.1.3       | 1.1.3.999   |
+
+### `Deprecations and changes`
+
+- [#473](https://github.com/nf-core/airrflow/issues/473) Changed to read and write repertoire files in gzip-compressed format.
+- Changed the mutation frequency calculation region from the whole sequences to by default V region.
+- Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.
+- Added the step to save sequences failed contamination detection in single cell QC.
 
 ## 5.1.1 - Ventus Hotfix
 

@@ -4,15 +4,15 @@
             33,
             {
                 "ADD_META_TO_TAB": {
-                    "R": "4.5.3",
+                    "R": "4.6.1",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2"
                 },
                 "AIRRFLOW_REPORT": {
-                    "R": "4.5.3",
-                    "alakazam": "1.4.3",
+                    "R": "4.6.1",
+                    "alakazam": "1.4.3.999",
                     "dplyr": "1.2.1",
-                    "knitr": "1.51",
+                    "knitr": "1.52",
                     "shazam": "1.3.2",
                     "stringr": "1.6.0"
                 },
@@ -36,49 +36,49 @@
                     "changeo": "1.3.4"
                 },
                 "CLONAL_ASSIGNMENT": {
-                    "enchantr": "0.1.25",
+                    "enchantr": "0.1.26.999",
                     "scoper": "1.5.0"
                 },
                 "COLLAPSE_DUPLICATES": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "DOWSER_LINEAGES": {
-                    "dowser": "2.4.1",
-                    "enchantr": "0.1.25"
+                    "dowser": "2.5.2",
+                    "enchantr": "0.1.26.999"
                 },
                 "FILTER_JUNCTION_MOD3": {
-                    "R": "4.5.3",
-                    "airr": "1.6.1",
-                    "alakazam": "1.4.3",
+                    "R": "4.6.1",
+                    "airr": "2.0.0",
+                    "alakazam": "1.4.3.999",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
-                    "R": "4.5.3",
-                    "airr": "1.6.1",
-                    "alakazam": "1.4.3",
+                    "R": "4.6.1",
+                    "airr": "2.0.0",
+                    "alakazam": "1.4.3.999",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
-                    "stringi": "1.8.7"
+                    "stringi": "1.8.9"
                 },
                 "FIND_CLONAL_THRESHOLD": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "REMOVE_CHIMERIC": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "REPERTOIRE_ANALYSIS": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "REPORT_FILE_SIZE": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "SAMPLESHEET_CHECK_ASSEMBLED": {
                     "pandas": "1.1.5",
                     "python": " 3.9.1"
                 },
                 "SINGLE_CELL_QC": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "UNZIP_IGBLAST": {
                     "unzip": "6.00"
@@ -90,7 +90,7 @@
                     "bash": "5.0.3"
                 },
                 "VALIDATE_INPUT": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "Workflow": {
                     "nf-core/airrflow": "v5.1.1"
@@ -109,7 +109,7 @@
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/params.RData",
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/reference-keys.txt",
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/repertoires",
-                "clonal_analysis/clonal_assignment/PGP1_clone_report/repertoires/PGP1__clone-pass.tsv",
+                "clonal_analysis/clonal_assignment/PGP1_clone_report/repertoires/PGP1__clone-pass.tsv.gz",
                 "clonal_analysis/clonal_assignment/PGP1_clone_report/search_index.json",
                 "clonal_analysis/clonal_assignment/subject_x_clone_report",
                 "clonal_analysis/clonal_assignment/subject_x_clone_report/assets",
@@ -119,7 +119,7 @@
                 "clonal_analysis/clonal_assignment/subject_x_clone_report/params.RData",
                 "clonal_analysis/clonal_assignment/subject_x_clone_report/reference-keys.txt",
                 "clonal_analysis/clonal_assignment/subject_x_clone_report/repertoires",
-                "clonal_analysis/clonal_assignment/subject_x_clone_report/repertoires/subject_x__clone-pass.tsv",
+                "clonal_analysis/clonal_assignment/subject_x_clone_report/repertoires/subject_x__clone-pass.tsv.gz",
                 "clonal_analysis/clonal_assignment/subject_x_clone_report/search_index.json",
                 "clonal_analysis/clonal_assignment/subject_x_clone_report/subject_x_clone_command_log.txt",
                 "clonal_analysis/dowser_lineages",
@@ -172,17 +172,31 @@
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/abundanceSample.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/clone_size_cdf_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/clone_size_plot.RData",
-                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/div_at_q.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/div-at-q.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/diversitySample.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/isotype_distribution_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/mutation_frequency_sample.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/mutation_frequency_sample_locus.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v-gene-family.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_family_clone_plot.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGH.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGK.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGL.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGH.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGK.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGL.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/index.html",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/params.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/reference-keys.txt",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires",
-                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires/All_samples__repertoire-pass.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires/All_samples__repertoire-pass.tsv.gz",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/search_index.json",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/Isotype_Distribution.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_family_usage_byClone.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_family_usage_bySequence.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_usage_byClone.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_usage_bySequence.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clonal_abundance.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clonal_diversity.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clone_sizes_table.tsv",
@@ -208,7 +222,7 @@
                 "qc-filtering/bulk-qc-filtering/01-create-germlines/PGP1/PGP1_germ-pass.tsv",
                 "qc-filtering/bulk-qc-filtering/02-chimera-filter",
                 "qc-filtering/bulk-qc-filtering/02-chimera-filter/PGP1",
-                "qc-filtering/bulk-qc-filtering/02-chimera-filter/PGP1/PGP1_chimera-pass.tsv",
+                "qc-filtering/bulk-qc-filtering/02-chimera-filter/PGP1/PGP1_chimera-pass.tsv.gz",
                 "qc-filtering/bulk-qc-filtering/02-chimera-filter/PGP1/PGP1_chimera_report",
                 "qc-filtering/bulk-qc-filtering/02-chimera-filter/PGP1/PGP1_chimera_report/assets",
                 "qc-filtering/bulk-qc-filtering/02-chimera-filter/PGP1/PGP1_chimera_report/assets/logo.png",
@@ -228,7 +242,7 @@
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/PGP1_collapse_report/params.RData",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/PGP1_collapse_report/reference-keys.txt",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/PGP1_collapse_report/repertoires",
-                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/PGP1_collapse_report/repertoires/PGP1_PGP1_collapse-pass.tsv",
+                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/PGP1_collapse_report/repertoires/PGP1_PGP1_collapse-pass.tsv.gz",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/PGP1_collapse_report/search_index.json",
                 "qc-filtering/single-cell-qc",
                 "qc-filtering/single-cell-qc/all_reps_scqc_command_log.txt",
@@ -242,18 +256,12 @@
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/params.RData",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/reference-keys.txt",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires",
-                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/sc5p_v2_hs_PBMC_1k_5fb__scqc-pass.tsv",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/_scqc-contamination-fail.tsv.gz",
+                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/sc5p_v2_hs_PBMC_1k_5fb__scqc-pass.tsv.gz",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/search_index.json",
                 "repertoire_comparison",
                 "repertoire_comparison/Sequence_numbers_summary",
                 "repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv",
-                "repertoire_comparison/V_family",
-                "repertoire_comparison/V_family/V_Family_distribution_patient.pdf",
-                "repertoire_comparison/V_family/V_Family_distribution_patient.png",
-                "repertoire_comparison/V_family/V_family_distribution_data.tsv",
-                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_data.tsv",
-                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_patient.pdf",
-                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_patient.png",
                 "report_file_size",
                 "report_file_size/file_size_report",
                 "report_file_size/file_size_report/assets",
@@ -326,24 +334,24 @@
                 "vdj_annotation/convert-db/sc5p_v2_hs_PBMC_1k_5fb/sc5p_v2_hs_PBMC_1k_5fb_sequences.fasta"
             ],
             [
-                "PGP1_clone_command_log.txt:md5,8a7a36cd1a4aaff37e5cfde4bd56c1f4",
+                "PGP1_clone_command_log.txt:md5,4f9fbea2b2536ef2f3faef014b8dcb2b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_x_clone_command_log.txt:md5,5d6395986061a12b39e47dc8de4bf3d4",
-                "PGP1_dowser_command_log.txt:md5,397742a945c40efee61b4e637159bb8f",
+                "subject_x_clone_command_log.txt:md5,ab5cff6ae68d29593f2e9c3e57c83489",
+                "PGP1_dowser_command_log.txt:md5,3c195638bace278dc2f5a7d665f2ab70",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_x_dowser_command_log.txt:md5,27cc8e08a046224e7760d68c89203008",
+                "subject_x_dowser_command_log.txt:md5,7e8bd11ef0d232439e7606f90bd69646",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,0ab419629a18657594c2330f4539a05c",
-                "all_reps_clone_command_log.txt:md5,4922236bf5f53e762965cd04109101fe",
+                "all_reps_threshold_command_log.txt:md5,611e47ba1ffedc3402c03398f1459509",
+                "all_reps_clone_command_log.txt:md5,a5780eb81e63bba73f9590debcee5fdd",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "PGP1_chimeric_command_log.txt:md5,709f2a7a656506d226337fb1b8e2ca41",
-                "PGP1_collapse_command_log.txt:md5,9ef86b07c0292ee3b446d99228e7dee2",
+                "PGP1_chimeric_command_log.txt:md5,d3c6db69f22997140c9a6971987abccf",
+                "PGP1_collapse_command_log.txt:md5,8e45e8fca2363e77ba7c3f722391b7ce",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_scqc_command_log.txt:md5,b3a1af08a34c143b55cf9bb68182b753",
+                "all_reps_scqc_command_log.txt:md5,ca15dfaba65daa829e429beeb65af45c",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_fq_command_log.txt:md5,17f839dbeba1498f9d6218772b589a06",
@@ -353,12 +361,12 @@
                 "PGP1_add-meta_command_log.txt:md5,1b89785869ec1755fc89f459a1d2f2a2",
                 "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,675e83b0cdcfa384e317fe8197109afb"
             ],
-            "Table_sequences_assembled.tsv:md5,f7a5bbe842d269dfe8f8feb2c8ba939f"
+            "Table_sequences_assembled.tsv:md5,0acb0e01f4a018f40c6f42859fc9d1d4"
         ],
+        "timestamp": "2026-09-21T11:40:40.068943932",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-05-29T14:11:38.901839844"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

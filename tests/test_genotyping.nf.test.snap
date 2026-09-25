@@ -4,21 +4,21 @@
             48,
             {
                 "ADD_META_TO_TAB": {
-                    "R": "4.5.3",
+                    "R": "4.6.1",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2"
                 },
                 "AIRRFLOW_REPORT": {
-                    "R": "4.5.3",
-                    "alakazam": "1.4.3",
+                    "R": "4.6.1",
+                    "alakazam": "1.4.3.999",
                     "dplyr": "1.2.1",
-                    "knitr": "1.51",
+                    "knitr": "1.52",
                     "shazam": "1.3.2",
                     "stringr": "1.6.0"
                 },
                 "BAYESIAN_GENOTYPE_INFERENCE": {
-                    "enchantr": "0.1.25",
-                    "tigger": "1.1.3"
+                    "enchantr": "0.1.26.999",
+                    "tigger": "1.1.3.999"
                 },
                 "CHANGEO_ASSIGNGENES": {
                     "changeo": "1.3.4",
@@ -36,46 +36,46 @@
                     "changeo": "1.3.4"
                 },
                 "CLONAL_ASSIGNMENT": {
-                    "enchantr": "0.1.25",
+                    "enchantr": "0.1.26.999",
                     "scoper": "1.5.0"
                 },
                 "CLONAL_ASSIGNMENT_GENOTYPING": {
-                    "enchantr": "0.1.25",
+                    "enchantr": "0.1.26.999",
                     "scoper": "1.5.0"
                 },
                 "COLLAPSE_DUPLICATES": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "FILTER_JUNCTION_MOD3": {
-                    "R": "4.5.3",
-                    "airr": "1.6.1",
-                    "alakazam": "1.4.3",
+                    "R": "4.6.1",
+                    "airr": "2.0.0",
+                    "alakazam": "1.4.3.999",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
-                    "R": "4.5.3",
-                    "airr": "1.6.1",
-                    "alakazam": "1.4.3",
+                    "R": "4.6.1",
+                    "airr": "2.0.0",
+                    "alakazam": "1.4.3.999",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
-                    "stringi": "1.8.7"
+                    "stringi": "1.8.9"
                 },
                 "NOVEL_ALLELE_INFERENCE": {
-                    "enchantr": "0.1.25",
-                    "tigger": "1.1.3"
+                    "enchantr": "0.1.26.999",
+                    "tigger": "1.1.3.999"
                 },
                 "REASSIGN_ALLELES_GENOTYPE": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "REASSIGN_ALLELES_NOVEL": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "REPERTOIRE_ANALYSIS": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "REPORT_FILE_SIZE": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "SAMPLESHEET_CHECK_ASSEMBLED": {
                     "pandas": "1.1.5",
@@ -91,7 +91,7 @@
                     "bash": "5.0.3"
                 },
                 "VALIDATE_INPUT": {
-                    "enchantr": "0.1.25"
+                    "enchantr": "0.1.26.999"
                 },
                 "Workflow": {
                     "nf-core/airrflow": "v5.1.1"
@@ -109,7 +109,7 @@
                 "clonal_analysis/clonal_assignment/subject_A_clone_report/params.RData",
                 "clonal_analysis/clonal_assignment/subject_A_clone_report/reference-keys.txt",
                 "clonal_analysis/clonal_assignment/subject_A_clone_report/repertoires",
-                "clonal_analysis/clonal_assignment/subject_A_clone_report/repertoires/subject_A__clone-pass.tsv",
+                "clonal_analysis/clonal_assignment/subject_A_clone_report/repertoires/subject_A__clone-pass.tsv.gz",
                 "clonal_analysis/clonal_assignment/subject_A_clone_report/search_index.json",
                 "clonal_analysis/clonal_assignment/subject_A_clone_report/subject_A_clone_command_log.txt",
                 "clonal_analysis/clonal_assignment/subject_B_clone_report",
@@ -120,7 +120,7 @@
                 "clonal_analysis/clonal_assignment/subject_B_clone_report/params.RData",
                 "clonal_analysis/clonal_assignment/subject_B_clone_report/reference-keys.txt",
                 "clonal_analysis/clonal_assignment/subject_B_clone_report/repertoires",
-                "clonal_analysis/clonal_assignment/subject_B_clone_report/repertoires/subject_B__clone-pass.tsv",
+                "clonal_analysis/clonal_assignment/subject_B_clone_report/repertoires/subject_B__clone-pass.tsv.gz",
                 "clonal_analysis/clonal_assignment/subject_B_clone_report/search_index.json",
                 "clonal_analysis/clonal_assignment/subject_B_clone_report/subject_B_clone_command_log.txt",
                 "clonal_analysis/repertoire_analysis",
@@ -135,17 +135,27 @@
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/abundanceSample.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/clone_size_cdf_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/clone_size_plot.RData",
-                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/div_at_q.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/div-at-q.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/diversitySample.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/isotype_distribution_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/mutation_frequency_sample.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/mutation_frequency_sample_locus.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v-gene-family.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_family_clone_plot.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_IGH.RData",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_plot_IGH.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/index.html",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/params.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/reference-keys.txt",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires",
-                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires/All_samples__repertoire-pass.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires/All_samples__repertoire-pass.tsv.gz",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/search_index.json",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/Isotype_Distribution.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_family_usage_byClone.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_family_usage_bySequence.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_usage_byClone.tsv",
+                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_usage_bySequence.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clonal_abundance.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clonal_diversity.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clonal_overlap.tsv",
@@ -206,7 +216,7 @@
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/params.RData",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/reference-keys.txt",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/repertoires",
-                "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/repertoires/subject_A_allele-reassignment_reassign-pass.tsv",
+                "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/repertoires/subject_A_allele-reassignment_reassign-pass.tsv.gz",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/search_index.json",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_A/subject_A_reassign_alleles_report/subject_A_reassign_alleles_command_log.txt",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B",
@@ -252,7 +262,7 @@
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/params.RData",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/reference-keys.txt",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/repertoires",
-                "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/repertoires/subject_B_allele-reassignment_reassign-pass.tsv",
+                "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/repertoires/subject_B_allele-reassignment_reassign-pass.tsv.gz",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/search_index.json",
                 "novel_alleles_and_genotyping/01-novel_allele_inference/subject_B/subject_B_reassign_alleles_report/subject_B_reassign_alleles_command_log.txt",
                 "novel_alleles_and_genotyping/02-genotype_inference",
@@ -304,7 +314,7 @@
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/params.RData",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/reference-keys.txt",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/repertoires",
-                "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/repertoires/subject_A_allele-reassignment_reassign-pass.tsv",
+                "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/repertoires/subject_A_allele-reassignment_reassign-pass.tsv.gz",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/search_index.json",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_A/subject_A_reassign_alleles_report/subject_A_reassign_alleles_command_log.txt",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_B",
@@ -355,7 +365,7 @@
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/params.RData",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/reference-keys.txt",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/repertoires",
-                "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/repertoires/subject_B_allele-reassignment_reassign-pass.tsv",
+                "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/repertoires/subject_B_allele-reassignment_reassign-pass.tsv.gz",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/search_index.json",
                 "novel_alleles_and_genotyping/02-genotype_inference/subject_B/subject_B_reassign_alleles_report/subject_B_reassign_alleles_command_log.txt",
                 "pipeline_info",
@@ -373,7 +383,7 @@
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_A_collapse_report/params.RData",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_A_collapse_report/reference-keys.txt",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_A_collapse_report/repertoires",
-                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_A_collapse_report/repertoires/sample_A_sample_A_collapse-pass.tsv",
+                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_A_collapse_report/repertoires/sample_A_sample_A_collapse-pass.tsv.gz",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_A_collapse_report/search_index.json",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_command_log.txt",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report",
@@ -384,7 +394,7 @@
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report/params.RData",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report/reference-keys.txt",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report/repertoires",
-                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report/repertoires/sample_B_sample_B_collapse-pass.tsv",
+                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report/repertoires/sample_B_sample_B_collapse-pass.tsv.gz",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_B_collapse_report/search_index.json",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_command_log.txt",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report",
@@ -395,18 +405,11 @@
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report/params.RData",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report/reference-keys.txt",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report/repertoires",
-                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report/repertoires/sample_C_sample_C_collapse-pass.tsv",
+                "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report/repertoires/sample_C_sample_C_collapse-pass.tsv.gz",
                 "qc-filtering/bulk-qc-filtering/04-collapse-duplicates/sample_C_collapse_report/search_index.json",
                 "repertoire_comparison",
                 "repertoire_comparison/Sequence_numbers_summary",
                 "repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv",
-                "repertoire_comparison/V_family",
-                "repertoire_comparison/V_family/V_Family_distribution_patient.pdf",
-                "repertoire_comparison/V_family/V_Family_distribution_patient.png",
-                "repertoire_comparison/V_family/V_family_distribution_data.tsv",
-                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_data.tsv",
-                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_patient.pdf",
-                "repertoire_comparison/V_family/V_gene_distribution_by_sequence_patient.png",
                 "report_file_size",
                 "report_file_size/file_size_report",
                 "report_file_size/file_size_report/assets",
@@ -506,35 +509,35 @@
             ],
             [
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_A_clone_command_log.txt:md5,5941e649b24afd2b54cd200072a3187c",
+                "subject_A_clone_command_log.txt:md5,f19ba5a233bceaa3435542c6ef1e8f44",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_B_clone_command_log.txt:md5,30ed45bd5de441fd680a3c7dabefbd1e",
-                "all_reps_clone_command_log.txt:md5,bbe7be6822e97440dfe57b1f310a806b",
+                "subject_B_clone_command_log.txt:md5,f31f723a777a3cbefdbc4fd1a3fd240a",
+                "all_reps_clone_command_log.txt:md5,4d7eb9771dae1553ce149729ad2fc1c8",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_A_novel_allele_inference_command_log.txt:md5,3d18584fb4b8329b797b00f89fc8c3b5",
-                "tigger-novel_novel_allele_evidence.rda:md5,4ddadc5281094fa0bbd521a3447112bc",
+                "subject_A_novel_allele_inference_command_log.txt:md5,3663fd69136c4bacefa68ad2f13e1e04",
+                "tigger-novel_novel_allele_evidence.rda:md5,8c36a54553a117ddeb89d283f91cf66a",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_A_reassign_alleles_command_log.txt:md5,ea311a42d150046778415ce2378f9aae",
+                "subject_A_reassign_alleles_command_log.txt:md5,49b25fb14ae5d2eff95decc5c328c97f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_B_novel_allele_inference_command_log.txt:md5,5bffdbfd020d3a1383dd92e90cbcbb29",
-                "tigger-novel_novel_allele_evidence.rda:md5,eba6fbbd0918a328b43a56579d0411c9",
+                "subject_B_novel_allele_inference_command_log.txt:md5,ab887a2412b37504bad0034725b28222",
+                "tigger-novel_novel_allele_evidence.rda:md5,97124273ce43270d8a0ebda838030dbe",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_B_reassign_alleles_command_log.txt:md5,3b7d62a07f364b44683c321a74d8909a",
+                "subject_B_reassign_alleles_command_log.txt:md5,6b704a7431b7a23ccee2b22d57f1ac8b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_A_bayesian_genotype_inference_command_log.txt:md5,5e1bc42878f5733f84ceb4a9dd6a1864",
+                "subject_A_bayesian_genotype_inference_command_log.txt:md5,185b9544fca9c334fdf404a6a838ec6b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_A_reassign_alleles_command_log.txt:md5,ea311a42d150046778415ce2378f9aae",
+                "subject_A_reassign_alleles_command_log.txt:md5,49b25fb14ae5d2eff95decc5c328c97f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_B_bayesian_genotype_inference_command_log.txt:md5,98e6ff4a923f03db8730765064b29d01",
+                "subject_B_bayesian_genotype_inference_command_log.txt:md5,e15dd8c5f530934e1743ad8ddcefc923",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_B_reassign_alleles_command_log.txt:md5,3b7d62a07f364b44683c321a74d8909a",
-                "sample_A_collapse_command_log.txt:md5,93f994bc3f0873d1fae9628d22e239e6",
+                "subject_B_reassign_alleles_command_log.txt:md5,6b704a7431b7a23ccee2b22d57f1ac8b",
+                "sample_A_collapse_command_log.txt:md5,708abff5dac35e8ff23db3e48d2f99c0",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sample_B_collapse_command_log.txt:md5,b9ec44a26356378852c56a0877cd4fae",
+                "sample_B_collapse_command_log.txt:md5,7d2a68a887bc0759d938b4fb63c08e04",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sample_C_collapse_command_log.txt:md5,ce304d2006be6c5db7eaf82f89122128",
+                "sample_C_collapse_command_log.txt:md5,28576099918034ed563e5804f373c11b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "sample_A_fq_command_log.txt:md5,e4ae9b80415ad43ace45446f5beac40a",
@@ -547,12 +550,12 @@
                 "sample_B_add-meta_command_log.txt:md5,5ac8fcd6fac3bb4901d9ca3c3991fdf7",
                 "sample_C_add-meta_command_log.txt:md5,fab8a6e0ae5a517b47325df5161e8e55"
             ],
-            "Table_sequences_assembled.tsv:md5,51968bd468a92b89c478e8f30c7b56c9"
+            "Table_sequences_assembled.tsv:md5,a0c2c47aac2e3cdde4e9b9f31dac761b"
         ],
+        "timestamp": "2026-09-22T09:22:05.29851528",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-05-29T14:57:43.058652912"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }
