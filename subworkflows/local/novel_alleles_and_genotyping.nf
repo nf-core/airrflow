@@ -61,9 +61,10 @@ workflow NOVEL_ALLELES_AND_GENOTYPING {
             ch_grouped_repertoires_by_locus.ig
         )
 
-        // reassign novel alleles (we can skip this step if no novel alleles were inferred)
+        // reassign only reads carrying a novel allele's parent: the reassign step gets
+        // the novel allele table instead of the reference
         ch_grouped_repertoires_by_locus.ig
-            .join(NOVEL_ALLELE_INFERENCE.out.reference)
+            .join(NOVEL_ALLELE_INFERENCE.out.table)
             .map { it ->
                 def meta = it[0]
                 def reps = it[1]

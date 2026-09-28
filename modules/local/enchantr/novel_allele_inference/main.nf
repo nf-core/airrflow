@@ -20,6 +20,7 @@ process NOVEL_ALLELE_INFERENCE {
 
     output:
     tuple val(meta), path("*_report/db_novel"), emit: reference // reference folder
+    tuple val(meta), path("*_report/tables/*_novel_report.tsv"), emit: table // novel alleles (header only if none)
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report", optional: true, emit: report
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
