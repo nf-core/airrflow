@@ -129,9 +129,10 @@ dat <- tab_seqs_assembled %>%
         tidyr::pivot_wider(id_cols=sample_id,
                             names_from=task,
                             values_from=output_size)
-dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
-                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
-                                "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
+dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast",
+                                "FilterQuality","ParseDb-split", "FilterJunctionMod3","AddMetadata","HeavyChainFilter",
+                                "RemoveContaminants","CreateGermlines","RemoveChimeric","CollapseDuplicates",
+                                "ClonePass"))) %>% dplyr::arrange(sample_id)
 
 dat <- apply(dat,2,as.character)
 write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
@@ -144,12 +145,12 @@ tab_seqs_assembled <- tab_seqs_assembled %>%
         filter( !grepl("-fail.tsv", output) ) %>%
         filter( !grepl("productive-F.tsv", output) ) %>%
         dplyr::filter( task %in% c("sample_id","AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
-                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
-                                "RemoveChimeric","CollapseDuplicates","ClonePass"))
+                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","HeavyChainFilter","RemoveContaminants",
+                                "CreateGermlines","RemoveChimeric","CollapseDuplicates","ClonePass"))
 
 tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
-                                                        "ParseDb-split", "FilterJunctionMod3", "AddMetadata", "SingleCellQC",
-                                                        "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
+                                                        "ParseDb-split", "FilterJunctionMod3", "AddMetadata", "HeavyChainFilter",
+                                                        "RemoveContaminants","CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
                                                         "ClonePass"))
 
 tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)

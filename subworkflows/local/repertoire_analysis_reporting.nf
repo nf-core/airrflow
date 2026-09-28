@@ -1,5 +1,6 @@
 include { PARSE_LOGS } from '../../modules/local/parse_logs'
 include { REPORT_FILE_SIZE } from '../../modules/local/enchantr/report_file_size'
+include { ASSEMBLED_LOGS } from '../../modules/local/log_assembled'
 include { AIRRFLOW_REPORT  } from '../../modules/local/airrflow_report/airrflow_report'
 
 workflow REPERTOIRE_ANALYSIS_REPORTING {
@@ -20,6 +21,7 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
     ch_vdj_annotation_logs
     ch_bulk_qc_and_filter_logs
     ch_sc_qc_and_filter_logs
+    ch_contamination
     ch_repertoires // Repertoire tsv files from clonal analysis process
     ch_input // Input samplesheet
     ch_report_rmd // Report Rmarkdown file
@@ -71,10 +73,15 @@ workflow REPERTOIRE_ANALYSIS_REPORTING {
         ch_logs_tabs
     )
 
+    ASSEMBLED_LOGS(
+        ch_logs.collect().ifEmpty([]),
+        ch_contamination.collect().ifEmpty([])
+    )
+
     AIRRFLOW_REPORT(
         ch_repertoires,
         ch_parsed_logs.collect().ifEmpty([]),
-        REPORT_FILE_SIZE.out.table.collect().ifEmpty([]),
+        ASSEMBLED_LOGS.out.logs.collect().ifEmpty([]),
         ch_report_rmd,
         ch_report_css,
         ch_report_logo

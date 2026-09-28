@@ -21,6 +21,7 @@ process SINGLE_CELL_QC {
     path("*/*/*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path("*_report"), emit: report
+    path("*/ggplots/*.csv"), emit: contamination, optional: true
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
 
     script:
@@ -35,6 +36,11 @@ process SINGLE_CELL_QC {
         report_params=list('input'='tabs.txt',\\
         'outdir'=getwd(), \\
         'log'='all_reps_scqc_command_log'  ${args} ))"
+
+    if [ -f enchantr/ggplots/p-sc-duplicates.RData ]; then
+        Rscript -e "load('enchantr/ggplots/p-sc-duplicates.RData'); write.csv(p_sc_duplicates\\\$data, 'enchantr/ggplots/p-sc-duplicates.csv', row.names=FALSE)"
+    fi
+
 
     cp -r enchantr all_reps_scqc_report && rm -rf enchantr
 

@@ -34,4 +34,5 @@ workflow SINGLE_CELL_QC_AND_FILTERING {
     emit:
     repertoires = ch_repertoire_after_scqc_withmeta
     logs = ch_logs
+    contamination = SINGLE_CELL_QC.out.contamination
 }
