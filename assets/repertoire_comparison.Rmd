@@ -134,7 +134,6 @@ dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGene
                                 "RemoveContaminants","CreateGermlines","RemoveChimeric","CollapseDuplicates",
                                 "ClonePass"))) %>% dplyr::arrange(sample_id)
 
-dat <- apply(dat,2,as.character)
 write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
 ```
 
