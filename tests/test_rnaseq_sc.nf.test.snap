@@ -1,7 +1,7 @@
 {
     "-profile test_rnaseq_sc": {
         "content": [
-            23,
+            24,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.5.3",
@@ -15,6 +15,10 @@
                     "knitr": "1.51",
                     "shazam": "1.3.2",
                     "stringr": "1.6.0"
+                },
+                "ASSEMBLED_LOGS": {
+                    "pandas": "1.1.5",
+                    "python": " 3.9.1"
                 },
                 "CHANGEO_ASSIGNGENES": {
                     "changeo": "1.3.4",
@@ -93,6 +97,8 @@
             },
             [
                 "Airrflow_report.html",
+                "assembled_logs",
+                "assembled_logs/Table_sequences_assembled.tsv",
                 "clonal_analysis",
                 "clonal_analysis/clonal_assignment",
                 "clonal_analysis/clonal_assignment/sc_01_clone_report",
@@ -342,7 +348,7 @@
                 "sc_test_jmod3_command_log.txt:md5,1d8837654ec001b78aee887c6d2e949f",
                 "sc_test_add-meta_command_log.txt:md5,dc03cb4db93415ec2b97df8af31faa26"
             ],
-            "Table_sequences_assembled.tsv:md5,a5fda74e0c2309efa9e26e23da98392e"
+            "Table_sequences_assembled.tsv:md5,9d5bd8e94c3a908d338e72d8d11f5af5"
         ],
         "meta": {
             "nf-test": "0.9.3",
