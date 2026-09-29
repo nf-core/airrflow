@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 5.2.0dev
+
+### `Added`
+
+- [#505](https://github.com/nf-core/airrflow/pull/505) Added a new module for parsing log files to split SingleCellQC in the second number of sequences plot into HeavyChainFilter and RemoveContaminants. 
+
 ## 5.1.1 - Ventus Hotfix
 
 ### `Fixed`

@@ -101,7 +101,7 @@ if os.path.isfile('p-sc-duplicates.csv'):
     n_before_contamination = df_contamination.set_index('sample_id').to_dict()['input_size']
 
     # number of sequences before removing contaminants
-    df_log['output_size'] = df_log['sample_id'].apply(lambda sample: n_before_contamination[sample])
+    df_log['output_size'] = df_log['sample_id'].apply(lambda sample: n_before_contamination[sample] if sample in n_before_contamination.keys() else 0)
     df_combined = pd.concat([df_contamination, df_log, df[df['task']!='SingleCellQC']])
 else:
 
