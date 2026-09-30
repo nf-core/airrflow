@@ -29,7 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.
 - Added the step to save sequences failed contamination detection in single cell QC.
 
-
 ## 5.1.1 - Ventus Hotfix
 
 ### `Fixed`
