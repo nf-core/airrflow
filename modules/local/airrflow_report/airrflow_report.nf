@@ -1,12 +1,11 @@
 process AIRRFLOW_REPORT {
-    tag "${meta.id}"
+    tag "all"
     label 'process_high'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
-    tuple val(meta), path(tab) // sequence tsv table in AIRR format
     path("Table_sequences.tsv")
     path("Table_sequences_assembled.tsv")
     path(repertoire_report)
