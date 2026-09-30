@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-- [#505](https://github.com/nf-core/airrflow/pull/505) Added a new module for parsing log files to split SingleCellQC in the second number of sequences plot into HeavyChainFilter and RemoveContaminants. 
+- [#506](https://github.com/nf-core/airrflow/pull/506) Added a new module for parsing log files to split SingleCellQC in the second number of sequences plot into HeavyChainFilter and RemoveContaminants.
 
 ## 5.1.1 - Ventus Hotfix
 
