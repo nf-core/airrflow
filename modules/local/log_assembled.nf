@@ -19,6 +19,6 @@ process ASSEMBLED_LOGS {
     script:
     """
     log_parsing_assembled.py
+
     """
-   
 }

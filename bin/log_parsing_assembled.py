@@ -44,14 +44,14 @@ for log_file in sorted(glob.glob("logs/*command_log*")):
         task = fields["START"] + ("-" + fields["COMMAND"] if "COMMAND" in fields else "")
 
         sample_id = os.path.basename(log_file).split(processes[task])[0]
-        if "BulkOverlap" in task: 
+        if "BulkOverlap" in task:
             sample_id = None
 
         # get number of output files from process
         n_max = max([int(num) for key in fields.keys() for num in re.findall(r"[1-9]\d*", key)] + [0])
 
         if n_max == 0 or "ParseDb" in task:
-            if "MakeDB" in task: 
+            if "MakeDB" in task:
                 input_file = fields['ALIGNER_FILE']
             else:
                 input_file = fields.get("FILE")
