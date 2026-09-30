@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 5.2.0dev
 
+### `Added`
+
+- [#506](https://github.com/nf-core/airrflow/pull/506) Added a new module for parsing log files to split SingleCellQC in the second number of sequences plot into HeavyChainFilter and RemoveContaminants.
+
 ### `Fixed`
 
 - [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.

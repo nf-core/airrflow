@@ -1,7 +1,7 @@
 {
     "-profile test_nebnext_umi": {
         "content": [
-            35,
+            36,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.1",
@@ -15,6 +15,10 @@
                     "knitr": "1.52",
                     "shazam": "1.3.2",
                     "stringr": "1.6.0"
+                },
+                "ASSEMBLED_LOGS": {
+                    "pandas": "1.1.5",
+                    "python": " 3.9.1"
                 },
                 "CHANGEO_ASSIGNGENES": {
                     "changeo": "1.3.4",
@@ -126,6 +130,8 @@
             },
             [
                 "Airrflow_report.html",
+                "assembled_logs",
+                "assembled_logs/Table_sequences_assembled.tsv",
                 "clonal_analysis",
                 "clonal_analysis/clonal_assignment",
                 "clonal_analysis/clonal_assignment/subj1_clone_report",
@@ -448,7 +454,7 @@
                 "SRR4026043_jmod3_command_log.txt:md5,e63a7575265f9b8d9a309327fe620ced",
                 "SRR4026043_add-meta_command_log.txt:md5,c6313218dc1b03190a32c82dca06bc49"
             ],
-            "Table_sequences_assembled.tsv:md5,e33dcc6a71d0d76901a71b448fecadd8",
+            "Table_sequences_assembled.tsv:md5,d787748a5612a93c46b92a41bdaf0600",
             "Table_sequences_assembly.tsv:md5,fc7ddd00b6fa07bfe3498874974d34d5"
         ],
         "timestamp": "2026-09-21T12:46:34.86282085",

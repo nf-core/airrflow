@@ -437,6 +437,7 @@ workflow AIRRFLOW {
                 VDJ_ANNOTATION.out.logs.collect().ifEmpty([]),
                 BULK_QC_AND_FILTER.out.logs.collect().ifEmpty([]),
                 SINGLE_CELL_QC_AND_FILTERING.out.logs.collect().ifEmpty([]),
+                SINGLE_CELL_QC_AND_FILTERING.out.contamination.collect().ifEmpty([]),
                 ch_input.collect(),
                 ch_report_rmd.collect(),
                 ch_report_css.collect(),
