@@ -48,6 +48,12 @@
                     "default": "${projectDir}/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping",
                     "fa_icon": "fas fa-table"
+                },
+                "save_intermediate_repertoires": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to save repertoires in each intermediate step",
+                    "fa_icon": "far fa-save"
                 }
             }
         },
@@ -384,7 +390,7 @@
                 },
                 "trust4_umi_read": {
                     "type": "string",
-                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R2 fastq file.",
+                    "description": "Indicate if UMI indices are recorded in the R1 or R2 fastq file.",
                     "help_text": "file containing 10x Genomics-like UMIs",
                     "enum": ["R1", "R2"],
                     "fa_icon": "fas fa-barcode"
@@ -549,7 +555,7 @@
                 },
                 "skip_clonal_analysis": {
                     "type": "boolean",
-                    "description": "Skip all clonal anlaysis processes",
+                    "description": "Skip all clonal analysis processes",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },

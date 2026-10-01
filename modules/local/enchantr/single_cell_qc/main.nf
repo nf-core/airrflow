@@ -12,13 +12,13 @@ process SINGLE_CELL_QC {
     label 'process_medium'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
     path(tabs)
 
     output:
-    path("*/*/*scqc-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    path("*/*/*scqc-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     path("*_report"), emit: report
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
