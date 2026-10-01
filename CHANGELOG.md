@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 5.2.0dev
 
+### `Added`
+
+- [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
+
 ### `Fixed`
 
 - [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
