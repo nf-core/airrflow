@@ -32,11 +32,8 @@ library(shazam)
 library(stringr)
 library(plotly)
 library(airr)
-<<<<<<< HEAD
 library(DT)
-=======
 library(scales)
->>>>>>> dev
 
 ggplot_theme <- theme_bw(base_family = "ArialMT") +
             theme(panel.grid.major = element_blank(),
