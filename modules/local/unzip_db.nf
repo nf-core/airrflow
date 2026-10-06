@@ -4,7 +4,7 @@ process UNZIP_DB {
 
     conda "conda-forge::sed=4.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img' :
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/5c/5c8501d51f053cc82a0f87fe60516b362df73b37e56175d57d526f300684b802/data' :
         'docker.io/biocontainers/biocontainers:v1.2.0_cv1' }"
 
     input:
