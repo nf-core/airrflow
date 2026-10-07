@@ -53,7 +53,7 @@
                     "stringi": "1.8.7"
                 },
                 "GUNZIP_UMI": {
-                    "gunzip": "1.10"
+                    "gunzip": "1.14"
                 },
                 "PARSE_LOGS": {
                     "pandas": "1.1.5",
@@ -446,10 +446,10 @@
             "Table_sequences_assembled.tsv:md5,e33dcc6a71d0d76901a71b448fecadd8",
             "Table_sequences_assembly.tsv:md5,fc7ddd00b6fa07bfe3498874974d34d5"
         ],
+        "timestamp": "2026-10-07T16:06:03.260082901",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-06-02T12:35:11.458843237"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

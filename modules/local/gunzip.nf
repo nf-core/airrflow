@@ -3,7 +3,8 @@ process GUNZIP {
     label 'process_medium'
 
     conda "conda-forge::sed=4.7"
-    container 'docker.io/biocontainers/biocontainers:v1.2.0_cv1'
+    conda "conda-forge::unzip=6.0 conda-forge::gzip=1.14"
+    container 'community.wave.seqera.io/library/gzip_unzip:c40ea0e78704cb64'
 
     input:
     tuple val(meta), path(R1), path(R2)

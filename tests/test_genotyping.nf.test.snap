@@ -549,10 +549,10 @@
             ],
             "Table_sequences_assembled.tsv:md5,51968bd468a92b89c478e8f30c7b56c9"
         ],
+        "timestamp": "2026-10-07T16:52:39.717812991",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-05-29T14:57:43.058652912"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

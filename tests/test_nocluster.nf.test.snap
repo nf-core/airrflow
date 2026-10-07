@@ -53,7 +53,7 @@
                     "stringi": "1.8.7"
                 },
                 "GUNZIP_UMI": {
-                    "gunzip": "1.10"
+                    "gunzip": "1.14"
                 },
                 "MERGE_UMI": {
                     "biopython": "1.81",
@@ -816,10 +816,10 @@
             "Table_sequences_assembled.tsv:md5,9579aa25f717297d3b53ba77ef34d6d0",
             "Table_sequences_assembly.tsv:md5,86c11b020c1c0adfb7189d5b56cca548"
         ],
+        "timestamp": "2026-10-07T16:13:35.465933006",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-06-02T12:42:34.794832894"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

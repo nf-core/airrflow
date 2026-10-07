@@ -56,7 +56,7 @@
                     "enchantr": "0.1.25"
                 },
                 "GUNZIP_UMI": {
-                    "gunzip": "1.10"
+                    "gunzip": "1.14"
                 },
                 "MERGE_UMI": {
                     "biopython": "1.81",
@@ -882,10 +882,10 @@
             "Table_sequences_assembled.tsv:md5,6061c883e48468fac38132dc0e5e701d",
             "Table_sequences_assembly.tsv:md5,085537ed208b545052495b4276cbd147"
         ],
+        "timestamp": "2026-10-07T16:02:25.750457726",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-06-02T12:31:37.865900228"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }
