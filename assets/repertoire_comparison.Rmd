@@ -75,40 +75,6 @@ samplesheet <- read.table("./samplesheet.valid.tsv", header = TRUE, sep = "\t", 
 DT::datatable(samplesheet, rownames = FALSE, options = list(scrollX = TRUE, scrollY = "400px", paging = FALSE, scrollCollapse = TRUE))
 ```
 
-# Seqeuencing depth
-Reads per UMI plotted for each of the samples.
-```{r reads_per_UMI_plot, echo=FALSE, warning=FALSE, results='asis'}
-tryCatch( {
-    tab_seq  <- read.table("reads_per_UMI.csv", header=TRUE, sep=",")
-    tab_seq[is.na(tab_seq)] <- 0
-    plot_table <- tidyr::pivot_longer(tab_seq,
-                                      cols=-X,
-                                      names_to = "sample_id",
-                                      values_to ="count")
-
-    x_range <- c(floor(min(plot_table$X)), ceiling(max(plot_table$X)))
-    y_max <- ceiling(max(log10(plot_table$count)))
-    UMI_plot <- ggplot(data=plot_table,
-                        aes(x=X, y=count, group=sample_id)) +
-                  geom_line(aes(colour=sample_id)) +
-                  geom_point(aes(colour=sample_id)) +
-                  xlab('Reads per UMI') + ylab('UMI count') +
-                  scale_x_reverse(breaks=seq(x_range[1], x_range[2], by=ceiling(x_range[2]/10))) +
-                  scale_y_continuous(
-                    trans=scales::pseudo_log_trans(sigma=1, base=10),
-                    breaks=c(0,10^seq(1, y_max,length.out=max(3,y_max)))
-                  )
-
-    p <- ggplotly(UMI_plot)
-  p
-
-  },
-  error=function(e){message("No reads per UMI information available.")}
-)
-```
-
-# Number of sequences
-
 ```{r subject_gradient_helper, echo=FALSE, warning=FALSE, include=FALSE}
 # Create alpha value gradient for subjectIDs with multiple sampleIDs
 subject_alpha_gradient <- function(df) {
@@ -132,7 +98,77 @@ subject_alpha_gradient <- function(df) {
 
   list(data = df, palette = palette, breaks = subject_samples$colour_label)
 }
+
+sample_subject_map <- read.table("./samplesheet.valid.tsv", header=TRUE, sep="\t")[c("sample_id","subject_id")]
 ```
+
+# Seqeuencing depth {.tabset .tabset-fade .tabset-pills}
+Reads per UMI plotted for each of the samples.
+```{r reads_per_UMI_data, echo=FALSE, warning=FALSE, include=FALSE}
+# prepare reads per UMI table for plotting
+umi_ok <- TRUE
+tryCatch( {
+    tab_seq <- read.table("reads_per_UMI.csv", header=TRUE, sep=",")
+
+    tab_seq[is.na(tab_seq)] <- 0
+    umi_table <- tidyr::pivot_longer(tab_seq,
+                                      cols=-X,
+                                      names_to="sample_id",
+                                      values_to="count")
+
+    umi_table <- dplyr::left_join(umi_table, sample_subject_map, by="sample_id")
+    x_range <- c(floor(min(umi_table$X)), ceiling(max(umi_table$X)))
+    y_max <- ceiling(max(log10(umi_table$count)))
+  },
+  error=function(e){ umi_ok <<- FALSE }
+)
+```
+
+## Sample ID
+
+```{r reads_per_UMI_plot_sample, echo=FALSE, warning=FALSE, results='asis'}
+# color by sampleID (default)
+if (umi_ok) {
+  UMI_plot_sample <- ggplot(data=umi_table,
+                            aes(x=X, y=count, group=sample_id)) +
+      geom_line(aes(colour=sample_id)) +
+      geom_point(aes(colour=sample_id)) +
+      xlab('Reads per UMI') + ylab('UMI count') +
+      scale_x_reverse(breaks=seq(x_range[1], x_range[2], by=ceiling(x_range[2]/10))) +
+      scale_y_continuous(
+        trans=scales::pseudo_log_trans(sigma=1, base=10),
+        breaks=c(0,10^seq(1, y_max, length.out=max(3,y_max))))
+  p <- ggplotly(UMI_plot_sample)
+  p
+} else {
+  message("No reads per UMI information available.")
+}
+```
+
+## Subject ID
+
+```{r reads_per_UMI_plot_subject, echo=FALSE, warning=FALSE, results='asis'}
+# color by subjectID, with a gradient of shades per subject's samples
+if (umi_ok) {
+  subj_grad_umi <- subject_alpha_gradient(umi_table)
+  UMI_plot_subject <- ggplot(data=subj_grad_umi$data,
+                              aes(x=X, y=count, group=sample_id)) +
+      geom_line(aes(colour=colour_label)) +
+      geom_point(aes(colour=colour_label)) +
+      scale_colour_manual(values=subj_grad_umi$palette, breaks=subj_grad_umi$breaks, name="Subject ID (Sample ID)") +
+      xlab('Reads per UMI') + ylab('UMI count') +
+      scale_x_reverse(breaks=seq(x_range[1], x_range[2], by=ceiling(x_range[2]/10))) +
+      scale_y_continuous(trans=scales::pseudo_log_trans(sigma=1, base=10),
+                         breaks=c(0,10^seq(1, y_max, length.out=max(3,y_max))))
+  p <- ggplotly(UMI_plot_subject)
+  p
+} else {
+  message("No reads per UMI information available.")
+}
+```
+
+# Number of sequences
+
 
 ## Sequence assembly steps {.tabset .tabset-fade .tabset-pills}
 
@@ -236,9 +272,6 @@ The full table can be found under [Table_sequences_assembled](repertoire_compari
 
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
-
-# Add subject_id
-sample_subject_map <- read.table("./samplesheet.valid.tsv", header=TRUE, sep="\t", check.names=FALSE)[c("sample_id","subject_id")]
 
 if (is.null(tab_seqs_assembled$sample_id)) {
   ids <- sample_subject_map$sample_id[order(nchar(sample_subject_map$sample_id), decreasing=TRUE)]
