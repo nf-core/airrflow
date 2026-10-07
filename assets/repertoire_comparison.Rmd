@@ -273,13 +273,11 @@ The full table can be found under [Table_sequences_assembled](repertoire_compari
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
 
-if (is.null(tab_seqs_assembled$sample_id)) {
-  ids <- sample_subject_map$sample_id[order(nchar(sample_subject_map$sample_id), decreasing=TRUE)]
-  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$input, function(x) {
-    hit <- ids[startsWith(as.character(x), ids)]
-    if (length(hit) == 1) hit[1] else sub("_[^_]+$|\\.[^.]+$", "", as.character(x))
-  })
-}
+ids <- sample_subject_map$sample_id[order(nchar(sample_subject_map$sample_id), decreasing=TRUE)]
+tab_seqs_assembled$sample_id[is.na(tab_seqs_assembled$sample_id)] <- sapply(tab_seqs_assembled$input[is.na(tab_seqs_assembled$sample_id)], function(x) {
+  hit <- ids[startsWith(as.character(x), ids)]
+  if (length(hit) == 1) hit[1] else sub("_[^_]+$|\\.[^.]+$", "", as.character(x))
+})
 
 tab_seqs_assembled <- dplyr::left_join(tab_seqs_assembled, sample_subject_map, by="sample_id")
 
