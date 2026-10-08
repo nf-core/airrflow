@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
 
