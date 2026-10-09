@@ -12,10 +12,10 @@ process NOVEL_ALLELE_INFERENCE {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
-    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format, reference fasta
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, compressed sequence tsv in AIRR format, reference fasta
 
     output:
     tuple val(meta), path("*_report/db_novel"), emit: reference // reference folder
@@ -30,7 +30,7 @@ process NOVEL_ALLELE_INFERENCE {
         error "nf-core/airrflow currently does not support Conda. Please use a container profile instead."
     }
     def args = task.ext.args ? asString(task.ext.args) : ''
-    def input = tabs.join(',')
+    def input = tabs.collect { it.toString() }.sort().join(',')
     """
     Rscript -e "enchantr::enchantr_report('novel_allele_inference', \\
                                         report_params=list('input'='${input}', \\

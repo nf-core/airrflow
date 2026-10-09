@@ -247,6 +247,7 @@ workflow SEQUENCE_ASSEMBLY {
         ch_presto_clustersets_logs = channel.empty()
         ch_presto_buildconsensus_logs = channel.empty()
         ch_presto_postconsensus_pairseq_logs = channel.empty()
+        ch_presto_UMIreads = channel.empty()
 
     } else {
         //
@@ -302,6 +303,7 @@ workflow SEQUENCE_ASSEMBLY {
         ch_presto_assemblepairs_logs = PRESTO_UMI.out.presto_assemblepairs_logs
         ch_presto_collapseseq_logs = PRESTO_UMI.out.presto_collapseseq_logs
         ch_presto_splitseq_logs = PRESTO_UMI.out.presto_splitseq_logs
+        ch_presto_UMIreads = PRESTO_UMI.out.presto_UMIreads
     }
 
 
@@ -325,5 +327,6 @@ workflow SEQUENCE_ASSEMBLY {
     presto_assemblepairs_logs = ch_presto_assemblepairs_logs
     presto_collapseseq_logs = ch_presto_collapseseq_logs
     presto_splitseq_logs = ch_presto_splitseq_logs
+    presto_UMIreads = ch_presto_UMIreads
     versions = ch_versions
 }
