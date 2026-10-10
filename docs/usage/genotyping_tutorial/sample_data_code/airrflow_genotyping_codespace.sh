@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-nextflow run nf-core/airrflow -r 5.1.1 \
+nextflow run nf-core/airrflow -r 5.1.2 \
 -profile singularity \
 --mode assembled \
 --genotyping \

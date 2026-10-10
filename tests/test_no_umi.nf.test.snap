@@ -56,7 +56,7 @@
                     "enchantr": "0.1.25"
                 },
                 "GUNZIP_SANS_UMI": {
-                    "gunzip": "1.10"
+                    "gunzip": "1.14"
                 },
                 "PARSE_LOGS": {
                     "pandas": "1.1.5",
@@ -106,7 +106,7 @@
                     "bash": "5.0.3"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.1"
+                    "nf-core/airrflow": "v5.1.2"
                 }
             },
             [
@@ -422,10 +422,10 @@
             "Table_sequences_assembled.tsv:md5,ef32428733c1d28b17d031d92d21cf4c",
             "Table_sequences_assembly.tsv:md5,e076e4d094c581de9603dfa57e096c5e"
         ],
+        "timestamp": "2026-10-07T16:09:34.056018743",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-06-02T12:38:40.945068748"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }
