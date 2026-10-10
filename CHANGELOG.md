@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
-- Update singularity and docker containers to replace the expired ones in modules gunzip.nf and unzip_db.nf.
+- Update singularity and docker containers to replace the ones with expired certificates in modules gunzip.nf and unzip_db.nf.
 
 ## 5.1.1 - Ventus Hotfix
 
