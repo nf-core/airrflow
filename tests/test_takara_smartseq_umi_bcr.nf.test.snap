@@ -59,7 +59,7 @@
                     "python": " 3.9.1"
                 },
                 "GUNZIP_UMI": {
-                    "gunzip": "1.10"
+                    "gunzip": "1.14"
                 },
                 "PARSE_LOGS": {
                     "pandas": "1.1.5",
@@ -124,7 +124,7 @@
                     "bash": "5.0.3"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.1"
+                    "nf-core/airrflow": "v5.1.2"
                 }
             },
             [
@@ -461,7 +461,7 @@
             "Table_sequences_assembled.tsv:md5,96febf2694851d86d752bb031caaead4",
             "Table_sequences_assembly.tsv:md5,ed82f2ea29349bc60844bb7f52df2fda"
         ],
-        "timestamp": "2026-09-21T13:09:29.063816707",
+        "timestamp": "2026-10-07T16:27:10.636951392",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

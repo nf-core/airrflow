@@ -62,7 +62,7 @@
                     "python": " 3.9.1"
                 },
                 "GUNZIP_UMI": {
-                    "gunzip": "1.10"
+                    "gunzip": "1.14"
                 },
                 "MERGE_UMI": {
                     "biopython": "1.81",
@@ -138,7 +138,7 @@
                     "bash": "5.0.3"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.1"
+                    "nf-core/airrflow": "v5.1.2"
                 }
             },
             [
@@ -887,7 +887,7 @@
             "Table_sequences_assembled.tsv:md5,7330606135fab6f1bc7c33de4e455512",
             "Table_sequences_assembly.tsv:md5,f877503295ce385c15fb5a75e05984cf"
         ],
-        "timestamp": "2026-09-21T12:37:32.649921223",
+        "timestamp": "2026-10-07T15:57:40.699110098",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
