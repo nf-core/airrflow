@@ -1,10 +1,11 @@
 process MAKE_IGBLAST_AUX {
     label 'process_low'
 
-    // No conda directive: receptor_utils is pip-only, it is not on bioconda.
-    // The sourcerer image carries receptor_utils and makeblastdb, which the
-    // internal_data annotation database rebuild needs.
-    container "docker.io/peresay/airrflow-sourcerer:sourcerer-bf1223f-5"
+    // blast provides makeblastdb, which the internal_data V database rebuild needs.
+    conda "bioconda::blast=2.17.0 conda-forge::python=3.11 pip:receptor-utils==0.0.67"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/2540941dbd0f691b5f5cb49cb37118e1efefd538897954e28d05be42e0d17fbe/data' :
+        'community.wave.seqera.io/library/blast_python_pip_receptor-utils:9470ae020c3cb9d0' }"
 
     input:
     path(igblast_dir, stageAs: "input_igblast_base")

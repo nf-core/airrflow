@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
-- Added the `--generate_igblast_aux` parameter (default `false`), which regenerates the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference in use with `receptor_utils`, replacing the ones shipped with IgBLAST. Needs a container profile; not available under `-profile conda`.
+- Added the `--generate_igblast_aux` parameter (default `false`), which regenerates the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference in use with `receptor_utils`, replacing the ones shipped with IgBLAST.
 - [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
