@@ -46,7 +46,7 @@ def check_samplesheet(file_in, assembled):
     - contains the compulsory fields: sample_id, filename_R1, filename_R2, subject_id, pcr_target_locus, species, single_cell
     - sample ids are unique
     - samples from the same subject come from the same species
-    - pcr_target_locus is "IG"/"ig" or "TR"/"tr"
+    - pcr_target_locus is a receptor class (IG, TR) or a single locus (IGH, IGK, TRB, ...), in any case
     - species is "human" or "mouse"
     """
 
@@ -167,10 +167,12 @@ def check_samplesheet(file_in, assembled):
             else:
                 print("WARNING: Sample IDs are not unique! FastQs with the same sample ID will be merged.")
 
-        ## Check that pcr_target_locus is IG or TR
+        ## Check that pcr_target_locus is a receptor class or a single locus
+        # The same set enchantr's validate_input accepts; the class is its first two letters.
+        valid_loci = ["IG", "TR", "IGH", "IGI", "IGK", "IGL", "TRA", "TRB", "TRG", "TRD"]
         for val in tab["pcr_target_locus"]:
-            if val.upper() not in ["IG", "TR"]:
-                print_error("pcr_target_locus must be one of: IG, TR.")
+            if val.upper() not in valid_loci:
+                print_error("pcr_target_locus must be one of: {}.".format(", ".join(valid_loci)))
 
         ## Check that species is human or mouse
         for val in tab["species"]:

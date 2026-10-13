@@ -124,7 +124,9 @@ def create_fastq_channels(LinkedHashMap col, collapseby, cloneby, index_file) {
     meta.cloneby_group      = col[cloneby]
     meta.filetype           = "fastq"
     meta.single_cell        = col.single_cell.toLowerCase()
-    meta.locus              = col.pcr_target_locus
+    meta.pcr_target_locus   = col.pcr_target_locus
+    // IgBLAST and Change-O take the receptor class, so IGH runs as IG.
+    meta.locus              = col.pcr_target_locus.take(2)
     meta.single_end         = false
 
     def array = []

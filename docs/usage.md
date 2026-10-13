@@ -165,7 +165,7 @@ The required input file for processing raw BCR or TCR bulk targeted sequencing d
 - `subject_id`: Subject ID assigned by submitter, unique within study.
 - `species`: species from which the sample was taken. Supported species are `human` and `mouse`.
 - `tissue`: tissue from which the sample was taken. E.g. `blood`, `PBMC`, `brain`.
-- `pcr_target_locus`: Designation of the target locus (`IG` or `TR`).
+- `pcr_target_locus`: Designation of the target locus: a receptor class (`IG` or `TR`) or a single locus (`IGH`, `IGI`, `IGK`, `IGL`, `TRA`, `TRB`, `TRG` or `TRD`). Annotation always uses the class.
 - `biomaterial_provider`: Institution / research group that provided the samples.
 - `sex`: Subject biological sex (`female`, `male`, etc.).
 - `age`: Subject biological age.
@@ -233,7 +233,7 @@ nf-core/airrflow offers full support for the [AIRR standards 1.4](https://docs.a
 | subject_id                | Samplesheet column |                               | Subject ID assigned by submitter, unique within study |
 | species                   | Samplesheet column |                               | Subject species                                       |
 | tissue                    | Samplesheet column |                               | Sample tissue                                         |
-| pcr_target_locus          | Samplesheet column |                               | Designation of the target locus (IG or TR)            |
+| pcr_target_locus          | Samplesheet column |                               | Designation of the target locus (IG, TR, or a single locus such as IGH) |
 | sex                       | Samplesheet column |                               | Subject sex                                           |
 | age                       | Samplesheet column |                               | Subject age                                           |
 | biomaterial_provider      | Samplesheet column |                               | Name of sample biomaterial provider                   |
