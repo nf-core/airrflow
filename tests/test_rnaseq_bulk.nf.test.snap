@@ -320,8 +320,8 @@
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,15475c7dbcf14e9b2695bb7846527272",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,a015e81113c7b8d1fa914cabd8552e06",
-                "multiqc_general_stats.txt:md5,83c841dc870276672d0321d5c3796216",
+                "multiqc_fastp.txt:md5,674483272e42197c18747d86074772fc",
+                "multiqc_general_stats.txt:md5,ba1c51a05cf3067b189f83c384247f57",
                 "trust4_reference.fa:md5,a2bd1e99b52d42c49776f55aef6cb00c",
                 "Sample01_collapse_command_log.txt:md5,219cf3180d52be26885e56e37578ae90",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -339,7 +339,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,ed13c90a4a6508a01e46de1592b5be6a"
         ],
-        "timestamp": "2026-09-21T13:01:13.393300641",
+        "timestamp": "2026-10-13T15:37:36.058462652",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
