@@ -14,15 +14,31 @@ while getopts "d:" OPT; do
     esac
 done
 
-echo "Fetching databases with sourcerer (${DATABASE_TYPE})..."
+echo "Fetching databases with immvoke (${DATABASE_TYPE})..."
 
-# 'all' is every species sourcerer supports for this source, in one call, with
+# 'all' is every species immvoke supports for this source, in one call, with
 # provenance merged across them.
-sourcerer "${DATABASE_TYPE}" download all --outdir sourcerer_out
-mv sourcerer_out/reference_base reference_base
+immvoke "${DATABASE_TYPE}" download all --outdir immvoke_out
+mv immvoke_out/reference_base reference_base
 
 # Build the IgBLAST databases from the reference tree: cleans the FASTAs, runs
 # makeblastdb, and mirrors the NCBI internal_data / optional_file trees.
-sourcerer reference build reference_base --out igblast_base
+immvoke reference build reference_base --out igblast_base
+
+# A fetch that silently returns less than the source holds would only surface as a
+# bad annotation, so check the databases the source is expected to carry. OGRDB
+# curates immunoglobulin sets only, so TR is not expected there.
+expected="human_ig_v human_ig_d human_ig_j"
+if [ "${DATABASE_TYPE}" != "ogrdb" ]; then
+    expected="${expected} human_tr_v human_tr_d human_tr_j"
+fi
+missing=""
+for db in ${expected}; do
+    [ -f "igblast_base/database/${db}.ndb" ] || missing="${missing} ${db}"
+done
+if [ -n "${missing}" ]; then
+    echo "The ${DATABASE_TYPE} fetch built no database for:${missing}" >&2
+    exit 1
+fi
 
 echo "FetchDBs process finished."
