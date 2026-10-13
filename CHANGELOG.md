@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Deprecations and changes`
 
-- Germline references are fetched and built into IgBLAST databases with immvoke, which replaces `fetch_references.sh`, `fetch_igblastdb.sh` and `fetch_ogrdb_release_meta.py`. The fetched reference no longer includes spliced leader sequences.
+- [#516](https://github.com/nf-core/airrflow/pull/516) Germline references are fetched and built into IgBLAST databases with immvoke, which replaces `fetch_references.sh`, `fetch_igblastdb.sh` and `fetch_ogrdb_release_meta.py`. The fetched reference no longer includes spliced leader sequences.
 - [#473](https://github.com/nf-core/airrflow/issues/473) Changed to read and write repertoire files in gzip-compressed format.
 - Changed the mutation frequency calculation region from the whole sequences to by default V region.
 - Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.
