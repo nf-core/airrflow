@@ -46,13 +46,13 @@ knitr::opts_chunk$set(echo = FALSE)
 step_help <- list(
   # Sequence assembly steps
   "Sequences"           = "Number of read pairs after read quality control and adapter trimming by fastp.",
-  "Filtered_quality"    = "Number of reads with base quality above --filterseq_q.",
-  "Filtered_quality_R1" = "Number of R1 reads with base quality above --filterseq_q.",
-  "Filtered_quality_R2" = "Number of R2 reads with base quality above --filterseq_q.",
+  "Filtered_quality"    = "Number of reads with mean Phred quality score above filterseq_q.",
+  "Filtered_quality_R1" = "Number of R1 reads with mean Phred quality score above filterseq_q.",
+  "Filtered_quality_R2" = "Number of R2 reads with mean Phred quality score above filterseq_q.",
   "Mask_primers_R1"     = "Number of R1 reads with matching primer in the primer file.",
   "Mask_primers_R2"     = "Number of R2 reads with matching primer in the primer file.",
   "Paired"              = "Number of read pairs for which R1 and R2 passed the filtering steps.",
-  "Build_consensus"     = "Number of consensus sequences. Multiple reads sharing a barcode are collapsed into one consensus sequence. When the UMI diversity is insufficient sequences are optionally clustered according to similarity before a consensus sequence is built. A drop in the number of sequences is expected in this step. Dependent on --primer_consensus,--buildconsensus_maxerror and --buildconsensus_maxgap.",
+  "Build_consensus"     = "Number of consensus sequences. Multiple reads sharing the same barcode and exhibiting sufficient sequence similarity are collapsed into a single consensus sequence. When UMI diversity is insufficient, reads can optionally be clustered based on sequence similarity before consensus generation. A drop in the number of sequences is expected at this step.",
   "Assemble_pairs"      = "Number of successful sequence assemblies.",
   "Unique"              = "Number of unique assemblies after collapsing exact duplicates. Identical sequences are merged and their read counts summed.",
   "Representative_2"    = "Number of unique assemblies supported by at least two reads. Assemblies seen only once are discarded.",
@@ -63,9 +63,9 @@ step_help <- list(
   "ParseDb-split"       = "Number of assemblies identified as functional rearrangements by IgBLAST.",
   "FilterJunctionMod3"  = "Number of assemblies with a junction length divisible by 3.",
   "AddMetadata"         = "Number of assemblies with annotated metadata.",
-  "SingleCellQC"        = "Number of single-cell assemblies after removing contaminants and assemblies having no or multiple heavy chains.",
+  "SingleCellQC"        = "Number of single-cell assemblies with one and only one heavy chain.",
   "RemoveChimeric"      = "Number of assemblies that are not chimeric.",
-  "CollapseDuplicates"  = "Number of assemblies after deduplication.",
+  "CollapseDuplicates"  = "Number of assemblies after removing duplicated `sequence_alignment`.",
   "CreateGermlines"     = "Number of assemblies for which a germline sequence could be reconstructed from the assigned V, D and J genes.",
   "ClonePass"           = "Number of assemblies assigned to a clonal group."
 )
@@ -201,7 +201,7 @@ tryCatch( {
 ## Sequence assembly steps
 
 When provided with raw read data, the pipeline performs read quality control and sequence assembly.
-The line plot below shows the number or reads and assemblies for each of the samples after each of the steps performed.
+The plot below shows the number of reads and assemblies for each of the samples after each of the qc and assembly step.
 The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
 Click the plot labels for a more detailed description.
 
@@ -243,8 +243,8 @@ tryCatch( {
 
 ## V(D)J gene assignment and QC
 
-When provided with assembled sequences or after performing sequence assembly, the pipeline performs V(D)J gene annotation and quality control of alignments used for gene assignment.
-The line plot below displays the number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
+The pipeline performs V(D)J gene annotation on the assembled sequences, followed by additional quality control of the alignments.
+The plot below displays the number of sequences for each of the samples after gene assignment and further quality control steps.
 The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
 Click the plot labels for a more detailed description.
 
@@ -324,7 +324,7 @@ p
 The pipeline performs clonal assignment using hierarchical clustering.
 
 ## Clustering threshold identification
-When `--clonal_threshold` is set to 'auto', a hamming distance threshold for cluster assignment is estimated.
+When `--clonal_threshold` is set to 'auto', a hamming distance threshold is estimated for trimming the hierarchical clustering into B cell clones. 
 A report showing the estimated thresholds and nearest-neighbor distributions of all subjects can be found at [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
 
 ## Clonal assignment
