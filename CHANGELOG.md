@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
 
@@ -32,6 +33,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#508](https://github.com/nf-core/airrflow/issues/508) Restructured the final report.
 - Added descriptions to the steps shown in the two 'Number of sequences' plots.
 - Added the ability to restrict plots in the final report to samples selected in the metadata table.
+
+## 5.1.2 - Ventus hotfix II
+
+### `Fixed`
+
+- Update singularity and docker containers to replace the ones with expired certificates in modules gunzip.nf and unzip_db.nf.
 
 ## 5.1.1 - Ventus Hotfix
 

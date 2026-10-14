@@ -96,7 +96,7 @@
                     "enchantr": "0.1.26.999"
                 },
                 "Workflow": {
-                    "nf-core/airrflow": "v5.1.1"
+                    "nf-core/airrflow": "v5.1.2"
                 }
             },
             [
@@ -554,7 +554,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,a0c2c47aac2e3cdde4e9b9f31dac761b"
         ],
-        "timestamp": "2026-09-22T09:22:05.29851528",
+        "timestamp": "2026-10-07T16:52:39.717812991",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
