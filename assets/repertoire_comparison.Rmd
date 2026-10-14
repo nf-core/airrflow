@@ -45,7 +45,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # x-tick info text
 step_help <- list(
   # Sequence assembly steps
-  "Sequences"           = "Number of read pairs after read quality control and adapter trimming.",
+  "Sequences"           = "Number of read pairs after read quality control and adapter trimming by fastp.",
   "Filtered_quality"    = "Number of reads with base quality above --filterseq_q.",
   "Filtered_quality_R1" = "Number of R1 reads with base quality above --filterseq_q.",
   "Filtered_quality_R2" = "Number of R2 reads with base quality above --filterseq_q.",
