@@ -51,7 +51,7 @@ step_help <- list(
   "Filtered_quality_R2" = "Number of R2 reads with mean Phred quality score above filterseq_q.",
   "Mask_primers_R1"     = "Number of R1 reads with matching primer in the primer file.",
   "Mask_primers_R2"     = "Number of R2 reads with matching primer in the primer file.",
-  "Paired"              = "Number of read pairs for which R1 and R2 passed the filtering steps.",
+  "Paired"              = "Number of R1 and R2 read pairs where both reads passed the primer masking.",
   "Build_consensus"     = "Number of consensus sequences. Multiple reads sharing the same barcode and exhibiting sufficient sequence similarity are collapsed into a single consensus sequence. When UMI diversity is insufficient, reads can optionally be clustered based on sequence similarity before consensus generation. A drop in the number of sequences is expected at this step.",
   "Assemble_pairs"      = "Number of successful sequence assemblies.",
   "Unique"              = "Number of unique assemblies after collapsing exact duplicates. Identical sequences are merged and their read counts summed.",
@@ -455,7 +455,7 @@ p
 The pipeline performs clonal assignment using hierarchical clustering.
 
 ## Clustering threshold identification
-When `--clonal_threshold` is set to 'auto', a hamming distance threshold is estimated for trimming the hierarchical clustering into B cell clones. 
+When `--clonal_threshold` is set to 'auto', a hamming distance threshold is estimated for trimming the hierarchical clustering into B cell clones.
 A report showing the estimated thresholds and nearest-neighbor distributions of all subjects can be found at [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
 
 ## Clonal assignment
