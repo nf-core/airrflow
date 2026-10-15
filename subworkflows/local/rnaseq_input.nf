@@ -27,8 +27,6 @@ workflow RNASEQ_INPUT {
     ch_versions = channel.empty()
     ch_logs = channel.empty()
 
-
-
     // validate library generation method parameters
     if (vprimers) {
         error "The TRUST4 library generation method does not require V-region primers, please provide a reference file instead or select another library method option."
