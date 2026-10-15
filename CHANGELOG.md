@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- `pcr_target_locus` accepts a single locus (`IGH`, `IGI`, `IGK`, `IGL`, `TRA`, `TRB`, `TRG`, `TRD`), or a comma-separated list of loci from one class such as `IGK,IGL`, as well as a receptor class. Annotation still runs on the class.
 - [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Deprecations and changes`
 
+- The samplesheet is validated at the start of the run, before the germline references are fetched.
 - [#473](https://github.com/nf-core/airrflow/issues/473) Changed to read and write repertoire files in gzip-compressed format.
 - Changed the mutation frequency calculation region from the whole sequences to by default V region.
 - Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.
