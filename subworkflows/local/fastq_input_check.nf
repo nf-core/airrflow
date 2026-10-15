@@ -72,6 +72,7 @@ def create_fastq_channels(LinkedHashMap col, collapseby, cloneby, index_file) {
     meta.single_cell        = col.single_cell.toLowerCase()
     meta.pcr_target_locus   = col.pcr_target_locus
     // IgBLAST and Change-O take the receptor class, so IGH (or IGK,IGL) runs as IG.
+    // Validated upstream (schema + check_samplesheet.py): starts with IG or TR.
     meta.locus              = col.pcr_target_locus.take(2)
     meta.single_end         = false
 
