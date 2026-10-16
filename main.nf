@@ -87,7 +87,7 @@ params {
     primer_maxlen: Integer = 50
 
     // Remove contaminants
-    remove_contaminants: Boolean = false
+    remove_contaminants: Boolean = true
 
     // Build consensus
     primer_consensus: Float = 0.6
