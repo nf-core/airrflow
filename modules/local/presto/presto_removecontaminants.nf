@@ -15,7 +15,10 @@ process PRESTO_REMOVECONTAMINANTS {
     output:
     path("*R1_pair-pass_contam-pass.fastq"), emit: reads_R1
     path("*R2_pair-pass_contam-pass.fastq"), emit: reads_R2
+    path("*_failed.fastq"), emit: failed_reads, optional: true
     path "*_command_log.txt", emit: logs
+    path "*.png", emit: plots
+    path "*.log", emit: logfiles
     tuple val("${task.process}"), val('presto'), eval('RemoveContaminants.py --version | grep -o "[0-9][0-9.]*" | head -n 1'), emit: versions_presto, topic: versions
 
     script:
