@@ -11,14 +11,16 @@ process NOVEL_ALLELE_INFERENCE {
 
     label 'process_long_parallelized'
     label 'immcantation'
+    label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.0dev"
+    container "docker.io/immcantation/airrflow:5.2.1dev"
 
     input:
     tuple val(meta), path(tabs), path(reference_fasta) // meta, compressed sequence tsv in AIRR format, reference fasta
 
     output:
     tuple val(meta), path("*_report/db_novel"), emit: reference // reference folder
+    tuple val(meta), path("*_report/tables/*_novel_report.tsv"), emit: table // novel alleles (header only if none)
     path("*/*_command_log.txt"), emit: logs //process logs
     path "*_report", optional: true, emit: report
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
