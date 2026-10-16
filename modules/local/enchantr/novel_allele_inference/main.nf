@@ -12,10 +12,10 @@ process NOVEL_ALLELE_INFERENCE {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
-    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format, reference fasta
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, compressed sequence tsv in AIRR format, reference fasta
 
     output:
     tuple val(meta), path("*_report/db_novel"), emit: reference // reference folder
