@@ -22,6 +22,7 @@ include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_UMI                }    from 
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_ALIGN              }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_EXTRACT            }    from '../../modules/local/presto/presto_pairseq'
 include { PRESTO_PAIRSEQ        as  PRESTO_PAIRSEQ_CLUSTERSETS        }    from '../../modules/local/presto/presto_pairseq'
+include { PRESTO_REMOVECONTAMINANTS                                   }    from '../../modules/local/presto/presto_removecontaminants'
 include { PRESTO_CLUSTERSETS    as  PRESTO_CLUSTERSETS_UMI            }    from '../../modules/local/presto/presto_clustersets'
 include { PRESTO_PARSE_CLUSTER  as  PRESTO_PARSE_CLUSTER_UMI          }    from '../../modules/local/presto/presto_parse_cluster'
 include { PRESTO_BUILDCONSENSUS as  PRESTO_BUILDCONSENSUS_UMI         }    from '../../modules/local/presto/presto_buildconsensus'
@@ -77,6 +78,7 @@ workflow PRESTO_UMI {
     buildconsensus_maxerror
     buildconsensus_maxgap
     primer_consensus
+    remove_contaminants
 
     main:
     ch_versions = channel.empty()
@@ -189,7 +191,7 @@ workflow PRESTO_UMI {
             ch_maskprimers_reads,
             barcode_position
         )
-        ch_for_clustersets = PRESTO_PAIRSEQ_ALIGN.out.reads
+        ch_for_rm_contaminants = PRESTO_PAIRSEQ_ALIGN.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_ALIGN.out.logs
 
     } else if (maskprimers_align) {
@@ -267,7 +269,7 @@ workflow PRESTO_UMI {
             barcode_position
         )
 
-        ch_for_clustersets = PRESTO_PAIRSEQ_UMI.out.reads
+        ch_for_rm_contaminants = PRESTO_PAIRSEQ_UMI.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs
 
     } else if (maskprimers_extract){
@@ -339,7 +341,7 @@ workflow PRESTO_UMI {
             ch_maskprimers_reads,
             barcode_position
         )
-        ch_for_clustersets = PRESTO_PAIRSEQ_EXTRACT.out.reads
+        ch_for_rm_contaminants = PRESTO_PAIRSEQ_EXTRACT.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_EXTRACT.out.logs
 
     }  else {
@@ -417,9 +419,56 @@ workflow PRESTO_UMI {
             barcode_position
         )
 
-        ch_for_clustersets = PRESTO_PAIRSEQ_UMI.out.reads
+        ch_for_rm_contaminants = PRESTO_PAIRSEQ_UMI.out.reads
         ch_pairseq_logs = PRESTO_PAIRSEQ_UMI.out.logs
 
+    }
+
+    if (remove_contaminants) {
+
+        ch_for_rm_contaminants
+            .map{ it -> [   it[0].id,
+                            it[0] ] }
+            .set{ch_onlymeta}
+
+        ch_for_rm_contaminants
+                .map{ it -> [ it[1], it[2] ] }
+                .collect()
+                .set{ch_all_for_rm_contaminants}
+        ch_all_for_rm_contaminants.dump(tag: "all_for_rm_contaminants")
+
+
+        PRESTO_REMOVECONTAMINANTS (
+            ch_all_for_rm_contaminants
+        )
+        PRESTO_REMOVECONTAMINANTS.out.reads_R1.dump(tag: "all_for_rm_contaminants_R1")
+        PRESTO_REMOVECONTAMINANTS.out.reads_R2.dump(tag: "all_for_rm_contaminants_R2")
+
+        PRESTO_REMOVECONTAMINANTS.out.reads_R1
+                    .flatten()
+                    .map { it -> [ "${it.baseName}".replaceFirst("_R1_pair-pass_contam-pass", ""), it ] }
+                    .set{ch_R1_after_rmcontam_with_sampleid}
+        PRESTO_REMOVECONTAMINANTS.out.reads_R1.dump(tag: "all_for_rm_contaminants_R1_after_processing")
+
+        PRESTO_REMOVECONTAMINANTS.out.reads_R2
+                    .flatten()
+                    .map { it -> [ "${it.baseName}".replaceFirst("_R2_pair-pass_contam-pass", ""), it ] }
+                    .set{ch_R2_after_rmcontam_with_sampleid}
+        PRESTO_REMOVECONTAMINANTS.out.reads_R2.dump(tag: "all_for_rm_contaminants_R2_after_processing")
+
+        // TODO: pass the logs for this process
+
+        ch_repertoire_after_rmcontam_withmeta = ch_onlymeta.join(ch_R1_after_rmcontam_with_sampleid)
+                                                        .join(ch_R2_after_rmcontam_with_sampleid)
+                                                        .map{ it -> [ it[1], it[2], it[3] ]}
+        ch_repertoire_after_rmcontam_withmeta.dump(tag: "repertoire_after_rmcontam_withmeta")
+        
+        ch_for_clustersets = ch_repertoire_after_rmcontam_withmeta
+
+    } else {
+
+        ch_for_clustersets = ch_for_rm_contaminants
+        
     }
 
     if (cluster_sets) {

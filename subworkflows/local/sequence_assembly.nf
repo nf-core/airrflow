@@ -76,6 +76,7 @@ workflow SEQUENCE_ASSEMBLY {
     buildconsensus_maxerror
     buildconsensus_maxgap
     primer_consensus
+    remove_contaminants
 
     main:
 
@@ -287,7 +288,8 @@ workflow SEQUENCE_ASSEMBLY {
             filterseq_q,
             buildconsensus_maxerror,
             buildconsensus_maxgap,
-            primer_consensus
+            primer_consensus,
+            remove_contaminants
         )
         ch_presto_fasta = PRESTO_UMI.out.fasta
         ch_fastp_reads_html = PRESTO_UMI.out.fastp_reads_html

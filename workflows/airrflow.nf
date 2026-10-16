@@ -134,6 +134,7 @@ workflow AIRRFLOW {
         buildconsensus_maxerror
         buildconsensus_maxgap
         primer_consensus
+        remove_contaminants
 
     main:
 
@@ -264,7 +265,8 @@ workflow AIRRFLOW {
                     filterseq_q,
                     buildconsensus_maxerror,
                     buildconsensus_maxgap,
-                    primer_consensus
+                    primer_consensus,
+                    remove_contaminants
                 )
 
                 ch_fasta                                = SEQUENCE_ASSEMBLY.out.fasta

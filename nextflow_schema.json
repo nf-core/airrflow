@@ -349,6 +349,12 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip filter step after alignment that ensures that locus should match the v_call chain, the sequence alignment should have at least 200 informative positions (excluding N or gaps), and maximum 10% N nucleotides in the alignment."
+                },
+                "remove_contaminants": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-broom",
+                    "description": "Enable or disable the removal of contaminants from the dataset."
                 }
             },
             "fa_icon": "fas fa-align-center"
