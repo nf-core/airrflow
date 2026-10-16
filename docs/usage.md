@@ -649,9 +649,10 @@ The two directories must be laid out as the pipeline's own bundles are:
 
 Three things are easy to get wrong:
 
-- **Constant regions are required.** `AssignGenes.py` always passes a C-region database
-  to IgBLAST, so a reference with no `<species>/constant/` fails. If your set has no
-  constant-region alleles of its own, take them from IMGT.
+- **Constant regions.** `AssignGenes.py` always passes a C-region database to IgBLAST.
+  If the reference has no `<species>/constant/` regions for a class (IG or TR), IMGT's are
+  downloaded during validation, with a warning in the task log; this needs network access.
+  Provide your own to avoid it.
 - **Set `--generate_igblast_aux true` for any reference whose allele names are not
   IMGT's.** IgBLAST resolves a V hit's chain type through files that ship as NCBI's IMGT
   mirror; an allele missing from them gets no chain type, and IgBLAST then returns the V
