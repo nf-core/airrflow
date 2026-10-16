@@ -42,6 +42,105 @@ ggplot_theme <- theme_bw(base_family = "ArialMT") +
 theme_set(ggplot_theme)
 knitr::opts_chunk$set(echo = FALSE)
 
+# x-tick info text
+step_help <- list(
+  # Sequence assembly steps
+  "Sequences"           = "Number of read pairs after read quality control and adapter trimming by fastp.",
+  "Filtered_quality"    = "Number of reads with mean Phred quality score above filterseq_q.",
+  "Filtered_quality_R1" = "Number of R1 reads with mean Phred quality score above filterseq_q.",
+  "Filtered_quality_R2" = "Number of R2 reads with mean Phred quality score above filterseq_q.",
+  "Mask_primers_R1"     = "Number of R1 reads with matching primer in the primer file.",
+  "Mask_primers_R2"     = "Number of R2 reads with matching primer in the primer file.",
+  "Paired"              = "Number of R1 and R2 read pairs where both reads passed the primer masking.",
+  "Build_consensus"     = "Number of consensus sequences. Multiple reads sharing the same barcode and exhibiting sufficient sequence similarity are collapsed into a single consensus sequence. When UMI diversity is insufficient, reads can optionally be clustered based on sequence similarity before consensus generation. A drop in the number of sequences is expected at this step.",
+  "Assemble_pairs"      = "Number of successful sequence assemblies.",
+  "Unique"              = "Number of unique assemblies after collapsing exact duplicates. Identical sequences are merged and their read counts summed.",
+  "Representative_2"    = "Number of unique assemblies supported by at least two reads. Assemblies seen only once are discarded.",
+  # V(D)J gene assignment and QC steps
+  "AssignGenes-igblast" = "Number of assemblies for which gene segments are assigned with igblast.",
+  "MakeDB-igblast"      = "Number of assemblies for which igblast returned functionality information, V and J gene assignment, and a junction region.",
+  "FilterQuality"       = "Number of assemblies for which the provided locus matches the V gene assignment and the igblast alignment had a minimum of 200 informative positions and a maximum of 10% N nucleotides.",
+  "ParseDb-split"       = "Number of assemblies identified as functional rearrangements by IgBLAST.",
+  "FilterJunctionMod3"  = "Number of assemblies with a junction length divisible by 3.",
+  "AddMetadata"         = "Number of assemblies with annotated metadata.",
+  "SingleCellQC"        = "Number of single-cell assemblies with one and only one heavy chain.",
+  "RemoveChimeric"      = "Number of assemblies that are not chimeric.",
+  "CollapseDuplicates"  = "Number of assemblies after removing duplicated `sequence_alignment`.",
+  "CreateGermlines"     = "Number of assemblies for which a germline sequence could be reconstructed from the assigned V, D and J genes.",
+  "ClonePass"           = "Number of assemblies assigned to a clonal group."
+)
+
+# add info text to x-ticks
+tick_help_js <- '
+function(el, x, data) {
+
+  // create div
+  var panel = document.createElement("div");
+  panel.className = "airrflow-help-panel";
+  panel.style.display = "none";
+  el.insertAdjacentElement("afterend", panel);
+
+  function hide() {
+    panel.style.display = "none";
+    panel.airrflowTick = null;
+  }
+
+  function helpTicks() {
+    var ticks = [];
+    el.querySelectorAll(".xtick text").forEach(function(node) {
+      var key = (node.textContent || "").trim();
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        node.classList.add("airrflow-help-tick");
+        ticks.push({ node: node, key: key });
+      }
+    });
+    return ticks;
+  }
+
+  helpTicks();
+  new MutationObserver(helpTicks).observe(el, { childList: true, subtree: true });
+
+  el.addEventListener("click", function(ev) {
+    var hit = null;
+    helpTicks().forEach(function(tick) {
+      if (tick.node === ev.target || tick.node.contains(ev.target)) {
+        hit = tick;
+      }
+    });
+
+    if (!hit) { hide(); return; }
+
+    // Create div content
+    panel.innerHTML = "";
+    var title = document.createElement("strong");
+    title.textContent = hit.key;
+    var body = document.createElement("div");
+    body.textContent = data[hit.key];
+    panel.appendChild(title);
+    panel.appendChild(body);
+    panel.airrflowTick = hit.node;
+    panel.style.display = "block";
+  }, true);
+}'
+
+# Show only the samples selected in the metadata table
+sample_filter_js <- '
+function(el, x, col) {
+  var dt = window.jQuery && jQuery("#metadata-table table").DataTable();
+  if (!dt) return;
+  function apply() {
+    var keep = dt.rows({selected: true}).data().toArray().map(function(r) { return r[col]; });
+    Plotly.restyle(el, {visible: el.data.map(function(t) {
+      // subject tabs name traces "<subject_id> (<sample_id>)"
+      return keep.length === 0 || keep.some(function(s) {
+        return t.name === s || t.name.slice(-(s.length + 2)) === "(" + s + ")";
+      });
+    })});
+  }
+  dt.on("select deselect", apply);
+  setTimeout(apply, 0);
+}'
+
 # Setting data table and creating output folders
 outdir <- "repertoire_comparison"
 dir.create(outdir)
@@ -53,17 +152,6 @@ datadir <- "."
 
 ```
 
-# AIRR repertoire results
-
-The repertoires per subject after clonal analysis can be found in the
-subdirectory [clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires](clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires).
-
-Additionally, html reports summarizing the results are provided:
-
-- Report summarizing the clonal threshold found per each specified cloning group [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
-- Report summarizing the repertoire properties for all the samples [clonal_analysis/repertoire_analysis/repertoire_anaysis_report/index.html](clonal_analysis/repertoire_analysis/repertoire_anaysis_report/index.html).
-- Report summarizing the lineage trees for each specified cloning group [clonal_analysis/dowser_lineages/](clonal_analysis/dowser_lineages/).
-
 A full description of the pipeline results can be found on the Output section of the [nf-core/airrflow website](https://nf-co.re/airrflow).
 
 # Metadata
@@ -72,7 +160,11 @@ The table below shows the metadata provided in the input sample sheet for this r
 
 ```{r sample_metadata, echo=FALSE, warning=FALSE}
 samplesheet <- read.table("./samplesheet.valid.tsv", header = TRUE, sep = "\t", check.names = FALSE)
-DT::datatable(samplesheet, rownames = FALSE, options = list(scrollX = TRUE, scrollY = "400px", paging = FALSE, scrollCollapse = TRUE))
+sample_col <<- which(names(samplesheet) == "sample_id") - 1
+DT::datatable(samplesheet, rownames = FALSE, elementId = "metadata-table",
+              extensions = "Select", selection = "none",
+              options = list(select = list(style = "multi"), scrollX = TRUE,
+                              scrollY = "400px", paging = FALSE, scrollCollapse = TRUE))
 ```
 
 ```{r subject_gradient_helper, echo=FALSE, warning=FALSE, include=FALSE}
@@ -138,7 +230,7 @@ if (umi_ok) {
       scale_y_continuous(
         trans=scales::pseudo_log_trans(sigma=1, base=10),
         breaks=c(0,10^seq(1, y_max, length.out=max(3,y_max))))
-  p <- ggplotly(UMI_plot_sample)
+  p <- htmlwidgets::onRender(ggplotly(UMI_plot_sample), sample_filter_js, data = sample_col)
   p
 } else {
   message("No reads per UMI information available.")
@@ -160,7 +252,7 @@ if (umi_ok) {
       scale_x_reverse(breaks=seq(x_range[1], x_range[2], by=ceiling(x_range[2]/10))) +
       scale_y_continuous(trans=scales::pseudo_log_trans(sigma=1, base=10),
                          breaks=c(0,10^seq(1, y_max, length.out=max(3,y_max))))
-  p <- ggplotly(UMI_plot_subject)
+  p <- htmlwidgets::onRender(ggplotly(UMI_plot_subject), sample_filter_js, data = sample_col)
   p
 } else {
   message("No reads per UMI information available.")
@@ -172,8 +264,10 @@ if (umi_ok) {
 
 ## Sequence assembly steps {.tabset .tabset-fade .tabset-pills}
 
-Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
+When provided with raw read data, the pipeline performs read quality control and sequence assembly.
+The plot below shows the number of reads and assemblies for each of the samples after each of the qc and assembly step.
 The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
+Click the plot labels for a more detailed description.
 
 ```{r seq_numbers_data, echo=FALSE, warning=FALSE, include=FALSE}
 # prepare number of sequences table for plotting
@@ -192,21 +286,6 @@ tryCatch( {
 
     y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(plot_table$count)))
     y_max <- max(ceiling(max(log10(plot_table$count))),y_min+2)
-    seqs_plot <- ggplot(data=plot_table,
-                        aes(x=steps, y=count, group=sample_id)) +
-                    geom_line(aes(colour=sample_id)) +
-                    geom_point(aes(colour=sample_id)) +
-                    scale_y_continuous(
-                        trans=scales::pseudo_log_trans(sigma=1,base=10),
-                        breaks=10^seq(y_min, y_max,by=1),
-                        limits=c(min(10^y_min,min(plot_table$count)),10^y_max)
-                        ) +
-                    xlab("") + ylab("Sequence count") +
-                    ggtitle("Number of sequences after each of the sequence assembly steps") +
-                    theme(axis.text.x= element_text(angle = 45))
-
-    p <- ggplotly(seqs_plot)
-    p
   },
   error=function(e){
     seq_numbers_ok <<- FALSE
@@ -232,7 +311,8 @@ if (seq_numbers_ok) {
                 ggtitle("Number of sequences after each of the sequence assembly steps") +
                 theme(axis.text.x= element_text(angle = 45))
 
-  p <- ggplotly(seqs_plot_sample)
+  p <- htmlwidgets::onRender(ggplotly(seqs_plot_sample), tick_help_js, data = step_help)
+  p <- htmlwidgets::onRender(p, sample_filter_js, data = sample_col)
   p
 } else {
   message("No sequence numbers are available if starting with assembled reads.")
@@ -258,7 +338,8 @@ if (seq_numbers_ok) {
                 ggtitle("Number of sequences after each of the sequence assembly steps") +
                 theme(axis.text.x= element_text(angle = 45))
 
-  p <- ggplotly(seqs_plot_subject)
+  p <- htmlwidgets::onRender(ggplotly(seqs_plot_subject), tick_help_js, data = step_help)
+  p <- htmlwidgets::onRender(p, sample_filter_js, data = sample_col)
   p
 } else {
   message("No sequence numbers are available if starting with assembled reads.")
@@ -267,8 +348,10 @@ if (seq_numbers_ok) {
 
 ## V(D)J gene assignment and QC {.tabset .tabset-fade .tabset-pills}
 
-Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
+The pipeline performs V(D)J gene annotation on the assembled sequences, followed by additional quality control of the alignments.
+The plot below displays the number of sequences for each of the samples after gene assignment and further quality control steps.
 The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
+Click the plot labels for a more detailed description.
 
 ```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
 tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
@@ -337,7 +420,8 @@ seqs_plot_assembled_sample <- ggplot(data=tab_seqs_assembled,
               theme(axis.text.x = element_text(angle = 45)
               )
 
-p <- ggplotly(seqs_plot_assembled_sample)
+p <- htmlwidgets::onRender(ggplotly(seqs_plot_assembled_sample), tick_help_js, data = step_help)
+p <- htmlwidgets::onRender(p, sample_filter_js, data = sample_col)
 p
 ```
 
@@ -361,9 +445,27 @@ seqs_plot_assembled_subject <- ggplot(data=subj_grad_assembled$data,
               theme(axis.text.x = element_text(angle = 45)
               )
 
-p <- ggplotly(seqs_plot_assembled_subject)
+p <- htmlwidgets::onRender(ggplotly(seqs_plot_assembled_subject), tick_help_js, data = step_help)
+p <- htmlwidgets::onRender(p, sample_filter_js, data = sample_col)
 p
 ```
+
+# Clonal analysis
+
+The pipeline performs clonal assignment using hierarchical clustering.
+
+## Clustering threshold identification
+When `--clonal_threshold` is set to 'auto', a hamming distance threshold is estimated for trimming the hierarchical clustering into B cell clones.
+A report showing the estimated thresholds and nearest-neighbor distributions of all subjects can be found at [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
+
+## Clonal assignment
+Reports summarizing the clonal assignment for all subjects can be found at [clonal_analysis/clonal_assignment/\<subjectID\>_clone_report/index.html](clonal_analysis/clonal_assignment/).
+
+## AIRR repertoire_analysis
+A report summarizing the repertoire properties for all the samples can be found at [clonal_analysis/repertoire_analysis/repertoire_analysis_report/index.html](clonal_analysis/repertoire_analysis/repertoire_analysis_report/index.html).
+
+## Clone lineage trees
+Reports summarizing the lineages trees of each of the specified clonal groups can be found at [clonal_analysis/dowser_lineages/\<sampleID\>_dowser_report/index.html](clonal_analysis/dowser_lineages/).
 
 
 

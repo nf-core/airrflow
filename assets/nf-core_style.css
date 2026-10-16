@@ -69,3 +69,30 @@ a {
   color: #24b064;
   text-decoration: none;
 }
+
+.airrflow-help-tick {
+  fill: #24b064;
+  font-weight: bold;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.airrflow-help-tick:hover {
+  text-decoration: underline;
+}
+
+.airrflow-help-panel {
+  margin: 0.5em 0 1.5em 0;
+  padding: 0.75em 1em;
+  border: 1px solid #24b064;
+  border-left: 4px solid #24b064;
+  border-radius: 4px;
+  background-color: rgba(36, 176, 100, 0.08);
+  font-size: 95%;
+}
+
+.airrflow-help-panel strong {
+  display: block;
+  margin-bottom: 0.25em;
+  color: #24b064;
+}
