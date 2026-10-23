@@ -102,6 +102,11 @@ workflow RNASEQ_INPUT {
     ch_versions = ch_versions.mix(TRUST4.out.versions)
     ch_trust4_out = TRUST4.out.outs
 
+    ch_fasta_barcode_umi = TRUST4.out.fasta
+        .map { meta, fastas ->
+            fastas.findAll { it -> it.name.endsWith('_assembled_reads.fa')}
+    }.collect()
+
     // check whether input is sc or bulk and extract respective airr file for downstream processing
     ch_trust4_out
         .branch {
@@ -139,6 +144,7 @@ workflow RNASEQ_INPUT {
     airr = ch_trust4_airr
     // trust4 output converted to FASTA format
     fasta = ch_fasta
+    fasta_barcode_umi = ch_fasta_barcode_umi
     samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
     versions = ch_versions
 
