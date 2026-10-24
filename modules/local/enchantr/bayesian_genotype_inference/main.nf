@@ -11,8 +11,9 @@ process BAYESIAN_GENOTYPE_INFERENCE {
 
     label 'process_long_parallelized'
     label 'immcantation'
+    label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.0dev"
+    container "docker.io/immcantation/airrflow:5.2.1dev"
 
     input:
     tuple val(meta), path(tabs), path(reference_fasta) // meta, compressed sequence tsv in AIRR format

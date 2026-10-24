@@ -3,7 +3,7 @@ process AIRRFLOW_REPORT {
     label 'process_high'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.0dev"
+    container "docker.io/immcantation/airrflow:5.2.1dev"
 
     input:
     path("Table_sequences.tsv")

@@ -4,7 +4,7 @@ process ADD_META_TO_TAB {
     label 'process_single'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.0dev"
+    container "docker.io/immcantation/airrflow:5.2.1dev"
 
     cache 'deep' // Without 'deep' this process would run when using -resume
 
