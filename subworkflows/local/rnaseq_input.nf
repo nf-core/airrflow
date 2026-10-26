@@ -1,6 +1,5 @@
 include { PREPARE_TRUST4_REFERENCE                                      } from '../../modules/local/prepare_trust4_reference'
 include { TRUST4                                                        } from '../../modules/nf-core/trust4/main'
-include { FASTQ_INPUT_CHECK                                             } from '../../subworkflows/local/fastq_input_check'
 include { CHANGEO_PARSEDB_SELECT_LOCUS                                  } from '../../modules/local/changeo/changeo_parsedb_select_locus'
 include { CHANGEO_CONVERTDB_FASTA as CHANGEO_CONVERTDB_FASTA_FROM_AIRR  } from '../../modules/local/changeo/changeo_convertdb_fasta'
 include { FASTP                                                         } from '../../modules/nf-core/fastp/main'
@@ -11,7 +10,7 @@ include { RENAME_FASTQ as RENAME_FASTQ_TRUST4                           } from '
 workflow RNASEQ_INPUT {
 
     take:
-    ch_input
+    ch_reads // channel: [ val(meta), [ reads ] ], validated by FASTQ_INPUT_CHECK
     ch_igblast_reference
     vprimers
     race_linker
@@ -22,30 +21,11 @@ workflow RNASEQ_INPUT {
     trust4_cell_barcode_read
     trust4_umi_read
     trust4_read_format
-    library_generation_method
-    collapseby
-    cloneby
-    index_file
 
     main:
 
     ch_versions = channel.empty()
     ch_logs = channel.empty()
-
-    //
-    // read in samplesheet, validate and stage input fies
-    //
-    FASTQ_INPUT_CHECK(
-        ch_input,
-        library_generation_method,
-        collapseby,
-        cloneby,
-        index_file
-    )
-    ch_versions = ch_versions.mix(FASTQ_INPUT_CHECK.out.versions)
-
-    ch_reads = FASTQ_INPUT_CHECK.out.reads
-
 
     // validate library generation method parameters
     if (vprimers) {
@@ -145,7 +125,6 @@ workflow RNASEQ_INPUT {
     // trust4 output converted to FASTA format
     fasta = ch_fasta
     fasta_barcode_umi = ch_fasta_barcode_umi
-    samplesheet = FASTQ_INPUT_CHECK.out.samplesheet
     versions = ch_versions
 
 }
