@@ -4,10 +4,10 @@ process CHANGEO_PARSEDB_SPLIT {
     label 'immcantation'
 
 
-    conda "bioconda::changeo=1.3.4 bioconda::igblast=1.22.0 conda-forge::wget=1.25.0"
+    conda "bioconda::changeo=1.3.5 bioconda::igblast=1.22.0 conda-forge::wget=1.25.0 bioconda::airr=2.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/96/9632e731611070a8bc090d51443514959a3179ad6a32be77f0dea1b64f0c12c5/data' :
-        'community.wave.seqera.io/library/changeo_igblast_wget:192e77f3b68daa50' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c8/c8d583137003a25ebc5fdd51c08fccacc3f3673c9fc162c92b006335a2cd6df0/data' :
+        'community.wave.seqera.io/library/airr_changeo_igblast_wget:7303fb2eff967b2e' }"
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format

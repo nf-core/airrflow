@@ -22,8 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | ---------- | ----------- | ----------- |
 | enchantr   | 0.1.25      | 0.1.26.999  |
 | airr       | 1.6.1       | 2.0.0       |
-| alakazam   | 1.4.3       | 1.4.3.999   |
-| tigger     | 1.1.3       | 1.1.3.999   |
+| alakazam   | 1.4.3       | 1.5.0       |
+| tigger     | 1.1.3       | 1.2.0       |
+| changeo    | 1.3.4       | 1.3.5       |
+| scoper     | 1.5.0       | 1.6.0       |
+
 
 ### `Deprecations and changes`
 
