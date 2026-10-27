@@ -558,6 +558,7 @@ nextflow run nf-core/airrflow -r dev \
 ## Supported untargeted RNA-seq based methods
 
 nf-core/airrflow supports untargeted bulk or single-cell RNA-seq fastq files as input. [TRUST4](https://github.com/liulab-dfci/TRUST4) is used to extract TCR/BCR sequences from these files. The resulting AIRR tables are then fed into airrflow's Immcantation based workflow.
+
 To use untargeted RNA-seq based input, specify `--library_generation_method trust4`.
 
 ### Bulk RNA-seq
@@ -583,14 +584,14 @@ nextflow run nf-core/airrflow \
 --mode fastq \
 --input input_samplesheet.tsv \
 --library_generation_method trust4 \
---umi_read R1 \
---cell_barcode_read R1 \
---read_format bc:0:15,um:16:27 \
+--trust4_umi_read R1 \
+--trust4_cell_barcode_read R1 \
+--trust4_read_format bc:0:15,um:16:27 \
 --outdir results
 ```
 
-- If UMI's are present, the read containing them must be specified using the `--umi_read` parameter.
-- The `--read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNA-seq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--umi_read` and `--cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
+- If UMI's are present, the read containing them must be specified using the `--trust4_umi_read` parameter.
+- The `--trust4_read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNA-seq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--trust4_umi_read` and `--trust4_cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--trust4_read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
 
 ## Important considerations for novel allele detection and genotyping
 
