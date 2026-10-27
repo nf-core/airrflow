@@ -11,11 +11,11 @@
                 "AIRRFLOW_REPORT": {
                     "DT": "0.34.0",
                     "R": "4.6.1",
-                    "alakazam": "1.4.3.999",
+                    "alakazam": "1.5.0",
                     "dplyr": "1.2.1",
                     "knitr": "1.52",
                     "scales": "1.4.0",
-                    "shazam": "1.3.2",
+                    "shazam": "1.4.0",
                     "stringr": "1.6.0"
                 },
                 "CHANGEO_ASSIGNGENES": {
@@ -31,7 +31,7 @@
                 },
                 "CLONAL_ASSIGNMENT": {
                     "enchantr": "0.1.26.999",
-                    "scoper": "1.5.0"
+                    "scoper": "1.6.0"
                 },
                 "COLLAPSE_DUPLICATES": {
                     "enchantr": "0.1.26.999"
@@ -42,14 +42,14 @@
                 "FILTER_JUNCTION_MOD3": {
                     "R": "4.6.1",
                     "airr": "2.0.0",
-                    "alakazam": "1.4.3.999",
+                    "alakazam": "1.5.0",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
                     "R": "4.6.1",
                     "airr": "2.0.0",
-                    "alakazam": "1.4.3.999",
+                    "alakazam": "1.5.0",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
@@ -232,7 +232,6 @@
                 "multiqc/multiqc_data/fastp-seq-quality-plot_Read_2_Before_filtering.txt",
                 "multiqc/multiqc_data/fastp_filtered_reads_plot.txt",
                 "multiqc/multiqc_data/fastqc-1-status-check-heatmap.txt",
-                "multiqc/multiqc_data/fastqc-1_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_overrepresented_sequences_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_per_base_n_content_plot.txt",
                 "multiqc/multiqc_data/fastqc-1_per_base_sequence_quality_plot.txt",
@@ -271,7 +270,6 @@
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc-1_adapter_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_overrepresented_sequences_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_sequence_quality_plot.pdf",
@@ -300,7 +298,6 @@
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc-1-status-check-heatmap.png",
-                "multiqc/multiqc_plots/png/fastqc-1_adapter_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_overrepresented_sequences_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_sequence_quality_plot.png",
@@ -329,7 +326,6 @@
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
-                "multiqc/multiqc_plots/svg/fastqc-1_adapter_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_overrepresented_sequences_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_sequence_quality_plot.svg",
@@ -540,25 +536,25 @@
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_threshold_command_log.txt:md5,055f2853529d4376bf7339fcd199c352",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,ac510d474fe1b63bf7a231f3d7181846",
-                "multiqc_fastqc_fastqc-1.txt:md5,0b2607959dc44747815b0381c36ddb3b",
-                "multiqc_general_stats.txt:md5,b1831b09fe16804f558ff79730ba69ec",
+                "multiqc_fastp.txt:md5,28c34e6b9565b940d10e5afe549bd425",
+                "multiqc_fastqc_fastqc-1.txt:md5,60cde1beac3b5cee601b9887f7685b4f",
+                "multiqc_general_stats.txt:md5,ed8c37b6a9bfef0c1f2ab8214e5a9e79",
                 "Sample1_collapse_command_log.txt:md5,6bf37a75466052705ce3e45bbfd52f5f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample2_collapse_command_log.txt:md5,cc006122b9bf572e6d33d0a8321a324a",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample1_fq_command_log.txt:md5,092d5205b71bc2366921e90c1650766c",
-                "Sample2_fq_command_log.txt:md5,a109da50d9d30fd06a9311b95b5c25e8",
+                "Sample1_fq_command_log.txt:md5,9c20324dbc2f8742db1bbe0d630e2ab0",
+                "Sample2_fq_command_log.txt:md5,f2acbbf51d02a65b84a4d34bc76db8e6",
                 "Sample1_jmod3_command_log.txt:md5,7eb717008f13682900f0e5b959a73bef",
                 "Sample2_jmod3_command_log.txt:md5,5d4aa0789bb6add1edb86aaf645df16c",
                 "Sample1_add-meta_command_log.txt:md5,dd8f7f63b6264b1002ba044cf0ffbda7",
                 "Sample2_add-meta_command_log.txt:md5,eba21567ffc584dd454402ec524fbe2f"
             ],
-            "Table_sequences_assembled.tsv:md5,3fa49351514136395229045189e25bc2",
-            "Table_sequences_assembly.tsv:md5,0b9420b78c3737bf95183b8af80d67bb"
+            "Table_sequences_assembled.tsv:md5,b772b1d8da1ab5ca4f3991705a43bb57",
+            "Table_sequences_assembly.tsv:md5,f6e4d87dcfc9ae96b300a5ba31b91975"
         ],
-        "timestamp": "2026-10-16T16:03:26.133138838",
+        "timestamp": "2026-10-27T17:04:43.966273102",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
