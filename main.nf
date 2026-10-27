@@ -87,6 +87,9 @@ params {
     primer_r2_extract_len: Integer = 0
     primer_maxlen: Integer = 50
 
+    // Remove contaminants
+    remove_contaminants: Boolean = true
+
     // Build consensus
     primer_consensus: Float = 0.6
     buildconsensus_maxerror: Float = 0.1
@@ -327,7 +330,8 @@ workflow NFCORE_AIRRFLOW {
         params.filterseq_q,
         params.buildconsensus_maxerror,
         params.buildconsensus_maxgap,
-        params.primer_consensus
+        params.primer_consensus,
+        params.remove_contaminants
     )
     emit:
     multiqc_report = AIRRFLOW.out.multiqc_report // channel: /path/to/multiqc_report.html
