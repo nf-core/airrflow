@@ -212,9 +212,9 @@
                 "sc5p_v2_hs_PBMC_10s_5fb_jmod3_command_log.txt:md5,00a78b5733068a68479851c68ed85587",
                 "sc5p_v2_hs_PBMC_10s_5fb_add-meta_command_log.txt:md5,20531fe81652d75eb74532db1621fd74"
             ],
-            "Table_sequences_assembled.tsv:md5,022a5b76375dbf368512c2697b1225f3"
+            "Table_sequences_assembled.tsv:md5,92960ccb0a58e63be4797400537e822c"
         ],
-        "timestamp": "2026-09-21T12:02:04.536157231",
+        "timestamp": "2026-10-27T11:23:12.400208233",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

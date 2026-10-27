@@ -337,9 +337,9 @@
                 "Sample01_jmod3_command_log.txt:md5,107af13dffdb34d8753a77a40d60e90f",
                 "Sample01_add-meta_command_log.txt:md5,7a2773fc319047679e67592e4e8bcfac"
             ],
-            "Table_sequences_assembled.tsv:md5,ed13c90a4a6508a01e46de1592b5be6a"
+            "Table_sequences_assembled.tsv:md5,025f970900bca7a66881543d46a02e2e"
         ],
-        "timestamp": "2026-10-16T15:52:00.505858356",
+        "timestamp": "2026-10-27T12:21:53.42624448",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

@@ -552,9 +552,9 @@
                 "sample_B_add-meta_command_log.txt:md5,5ac8fcd6fac3bb4901d9ca3c3991fdf7",
                 "sample_C_add-meta_command_log.txt:md5,fab8a6e0ae5a517b47325df5161e8e55"
             ],
-            "Table_sequences_assembled.tsv:md5,a0c2c47aac2e3cdde4e9b9f31dac761b"
+            "Table_sequences_assembled.tsv:md5,b9d360d0d4ba37b485e4542ff6281fcd"
         ],
-        "timestamp": "2026-10-07T16:52:39.717812991",
+        "timestamp": "2026-10-27T11:54:01.060976382",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

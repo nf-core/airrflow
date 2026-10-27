@@ -454,10 +454,10 @@
                 "SRR4026043_jmod3_command_log.txt:md5,e63a7575265f9b8d9a309327fe620ced",
                 "SRR4026043_add-meta_command_log.txt:md5,c6313218dc1b03190a32c82dca06bc49"
             ],
-            "Table_sequences_assembled.tsv:md5,e33dcc6a71d0d76901a71b448fecadd8",
+            "Table_sequences_assembled.tsv:md5,d787748a5612a93c46b92a41bdaf0600",
             "Table_sequences_assembly.tsv:md5,fc7ddd00b6fa07bfe3498874974d34d5"
         ],
-        "timestamp": "2026-10-16T15:38:08.943454426",
+        "timestamp": "2026-10-27T12:07:39.681821834",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

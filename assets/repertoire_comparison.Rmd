@@ -368,19 +368,6 @@ tab_seqs_assembled$sample_id[fill] <- vapply(tab_seqs_assembled$input[fill], fun
 
 tab_seqs_assembled <- dplyr::left_join(tab_seqs_assembled, sample_subject_map, by="sample_id")
 
-dat <- tab_seqs_assembled %>%
-        filter( !grepl("-fail.tsv", output) ) %>%
-        filter( !grepl("productive-F.tsv", output) ) %>%
-        tidyr::pivot_wider(id_cols=sample_id,
-                            names_from=task,
-                            values_from=output_size)
-dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
-                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
-                                "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
-
-dat <- apply(dat,2,as.character)
-write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
-
 tab_seqs_assembled <- tab_seqs_assembled %>%
         filter( !grepl("-fail.tsv", output) ) %>%
         filter( !grepl("productive-F.tsv", output) ) %>%
@@ -393,13 +380,25 @@ tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes
                                                         "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
                                                         "ClonePass"))
 
+dat <- tab_seqs_assembled %>%
+  tidyr::pivot_wider(id_cols=sample_id,
+                     names_from=task,
+                     values_from=output_size,
+                     names_sort = TRUE) %>%
+  dplyr::arrange(sample_id)
+
+dat[] <- lapply(dat, as.character)
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
+
+
+
 tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)
 # Remove rows with NA or zero output_size
 tab_seqs_assembled <- tab_seqs_assembled %>%
   filter(!is.na(output_size))
 
 y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(tab_seqs_assembled$output_size)))
-y_max <- max(ceiling(max(log10(tab_seqs_assembled$output_size))),y_min+2)
+y_max <- max(ceiling(max(log10(tab_seqs_assembled$output_size))),y_min+1)
 ```
 
 ### Sample ID
