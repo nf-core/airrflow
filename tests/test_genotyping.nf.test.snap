@@ -519,12 +519,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "subject_A_novel_allele_inference_command_log.txt:md5,3663fd69136c4bacefa68ad2f13e1e04",
-                "tigger-novel_novel_allele_evidence.rda:md5,908ee36c1db7d04cae70d18a2a2554a0",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "subject_A_reassign_alleles_command_log.txt:md5,49b25fb14ae5d2eff95decc5c328c97f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "subject_B_novel_allele_inference_command_log.txt:md5,ab887a2412b37504bad0034725b28222",
-                "tigger-novel_novel_allele_evidence.rda:md5,3c793aa965bda4bdc4c9d689518f28c0",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "subject_B_reassign_alleles_command_log.txt:md5,6b704a7431b7a23ccee2b22d57f1ac8b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -554,7 +552,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,b9d360d0d4ba37b485e4542ff6281fcd"
         ],
-        "timestamp": "2026-10-27T16:25:41.919446397",
+        "timestamp": "2026-10-28T10:00:54.416804481",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
