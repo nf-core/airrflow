@@ -13,19 +13,19 @@ process CHANGEO_PARSEDB_SELECT_LOCUS {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*parse-select.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*parse-select.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     tuple val("${task.process}"), val('changeo'), eval('ParseDb.py --version | grep -o "[0-9][0-9.]*" | head -n 1'), emit: versions_changeo, topic: versions
 
     script:
     if (meta.locus.toUpperCase() == 'IG'){
         """
-        ParseDb.py select -d $tab -f locus -u "IG[HKL]" --regex --outname ${meta.id} > ${meta.id}_select_command_log.txt
+        ParseDb.py select -d $tab -f locus -u "IG[HKL]" --regex --outname ${meta.id} --gzip-output > ${meta.id}_select_command_log.txt
 
         """
     } else if (meta.locus.toUpperCase() == 'TR'){
         """
-        ParseDb.py select -d $tab -f locus -u "TR[ABDG]" --regex --outname ${meta.id} > "${meta.id}_command_log.txt"
+        ParseDb.py select -d $tab -f locus -u "TR[ABDG]" --regex --outname ${meta.id} --gzip-output > "${meta.id}_command_log.txt"
 
         """
     }

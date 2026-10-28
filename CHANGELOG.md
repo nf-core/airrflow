@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
-- [#507](https://github.com/nf-core/airrflow/issues/507) Fixed the issue that parameters for fastp were not passed correctly. Change the default value of parameter `trim_fastq` to be false.
+- [#507](https://github.com/nf-core/airrflow/issues/507) Fixed the issue that parameters for fastp were not passed correctly.
 
 ### `Dependencies`
 
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | tigger     | 1.1.3       | 1.2.0       |
 | changeo    | 1.3.4       | 1.3.5       |
 | scoper     | 1.5.0       | 1.6.0       |
-
+| dowser     | 2.4.1       | 2.5.2       |
 
 ### `Deprecations and changes`
 

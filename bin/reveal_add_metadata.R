@@ -97,9 +97,9 @@ db <- read_rearrangement(opt$REPERTOIRE)
 db <- cbind(db, metadata)
 
 if (!is.null(opt$OUTNAME)) {
-    output_fn <- paste0(opt$OUTNAME, "_meta-pass.tsv")
+    output_fn <- paste0(opt$OUTNAME, "_meta-pass.tsv.gz")
 } else {
-    output_fn <- sub(".tsv$", "_meta-pass.tsv", basename(opt$REPERTOIRE))
+    output_fn <- sub(".tsv.gz$", "_meta-pass.tsv.gz", basename(opt$REPERTOIRE))
 }
 
 write_rearrangement(db, file = output_fn)

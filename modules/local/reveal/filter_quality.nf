@@ -10,7 +10,7 @@ process FILTER_QUALITY {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*quality-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*quality-pass.tsv.gz"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     tuple val("${task.process}"), val('alakazam'), eval('Rscript -e "library(alakazam); cat(paste(packageVersion(\'alakazam\'), collapse=\'.\'))"'), emit: versions_alakazam, topic: versions
     tuple val("${task.process}"), val('optparse'), eval('Rscript -e "library(optparse); cat(paste(packageVersion(\'optparse\'), collapse=\'.\'))"'), emit: versions_optparse, topic: versions

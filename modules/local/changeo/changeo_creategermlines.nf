@@ -14,7 +14,7 @@ process CHANGEO_CREATEGERMLINES {
     path(reference_fasta) // reference fasta
 
     output:
-    tuple val(meta), path("*germ-pass.tsv"), emit: tab
+    tuple val(meta), path("*germ-pass.tsv.gz"), emit: tab
     path("*_command_log.txt"), emit: logs
     tuple val("${task.process}"), val('igblastn'), eval('igblastn -version | grep -o "igblast[0-9\\. ]\\+" | grep -o "[0-9\\. ]\\+"'), emit: versions_igblastn, topic: versions
     tuple val("${task.process}"), val('changeo'), eval('CreateGermlines.py --version | grep -o "[0-9][0-9.]*" | head -n 1'), emit: versions_changeo, topic: versions
@@ -24,7 +24,7 @@ process CHANGEO_CREATEGERMLINES {
     """
     CreateGermlines.py -d ${tab} \\
     -r ${reference_fasta}/${meta.species}/vdj/ \\
-    -g dmask --format airr \\
+    -g dmask --format airr --gzip-output \\
     --log ${meta.id}.log --outname ${meta.id} $args > ${meta.id}_create-germlines_command_log.txt
     ParseLog.py -l ${meta.id}.log -f ID V_CALL D_CALL J_CALL
 

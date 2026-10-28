@@ -26,7 +26,7 @@ process CHANGEO_MAKEDB {
     """
     MakeDb.py igblast -i $igblast -s $reads -r \\
     ${reference_fasta}/${meta.species.toLowerCase()}/vdj/ \\
-    --nproc ${task.cpus} \\
+    --nproc ${task.cpus} --gzip-output \\
     $args $partial \\
     --outname ${meta.id} > ${meta.id}_makedb_command_log.txt
 

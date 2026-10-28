@@ -13,14 +13,14 @@ process CHANGEO_PARSEDB_SPLIT {
     tuple val(meta), path(tab) // sequence tsv in AIRR format
 
     output:
-    tuple val(meta), path("*productive-T.tsv"), emit: tab //sequence tsv in AIRR format
-    tuple val(meta), path("*productive-F.tsv"), emit: unproductive, optional: true //optional non-productive sequences
+    tuple val(meta), path("*productive-T.tsv.gz"), emit: tab //compressed sequence tsv in AIRR format
+    tuple val(meta), path("*productive-F.tsv.gz"), emit: unproductive, optional: true //optional non-productive sequences
     path("*_command_log.txt"), emit: logs //process logs
     tuple val("${task.process}"), val('changeo'), eval('ParseDb.py --version | grep -o "[0-9][0-9.]*" | head -n 1'), emit: versions_changeo, topic: versions
 
     script:
     """
-    ParseDb.py split -d $tab -f productive --outname ${meta.id} > ${meta.id}_split_command_log.txt
+    ParseDb.py split -d $tab -f productive --outname ${meta.id} --gzip-output > ${meta.id}_split_command_log.txt
 
     """
 }
