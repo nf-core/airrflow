@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
+- [#507](https://github.com/nf-core/airrflow/issues/507) Fixed the issue that parameters for fastp were not passed correctly since 5.1.0 release.
 - [#522](https://github.com/nf-core/airrflow/pull/522) Add closures in modules.config.
 
 ### `Dependencies`
