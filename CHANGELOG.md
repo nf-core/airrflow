@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
+- [#522](https://github.com/nf-core/airrflow/pull/522) Add closures in modules.config.
 
 ### `Dependencies`
 
