@@ -60,7 +60,7 @@ params {
     umi_start: Integer = 0
 
     // trimming options
-    trim_fastq: Boolean = false
+    trim_fastq: Boolean = true
     adapter_fasta: String? = null
     clip_r1: Integer = 0
     clip_r2: Integer = 0
