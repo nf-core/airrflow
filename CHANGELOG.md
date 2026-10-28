@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- [#516](https://github.com/nf-core/airrflow/pull/516) Added the `--generate_igblast_aux` parameter (default `false`), which regenerates the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference in use with `receptor_utils`, replacing the ones shipped with IgBLAST.
 - [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
@@ -24,9 +25,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | airr       | 1.6.1       | 2.0.0       |
 | alakazam   | 1.4.3       | 1.4.3.999   |
 | tigger     | 1.1.3       | 1.1.3.999   |
+| immvoke    |             | 0.1.0       |
 
 ### `Deprecations and changes`
 
+- [#516](https://github.com/nf-core/airrflow/pull/516) Germline references are fetched and built into IgBLAST databases with immvoke, which replaces `fetch_references.sh`, `fetch_igblastdb.sh` and `fetch_ogrdb_release_meta.py`. The fetched reference no longer includes spliced leader sequences.
 - [#473](https://github.com/nf-core/airrflow/issues/473) Changed to read and write repertoire files in gzip-compressed format.
 - Changed the mutation frequency calculation region from the whole sequences to by default V region.
 - Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.

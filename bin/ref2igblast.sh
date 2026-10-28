@@ -61,6 +61,14 @@ concat_to_file() {
             files+=("$file")
         done
     done
+    if [ ${#files[@]} -eq 0 ]; then
+        # A user-supplied reference carries its own source prefix, not imgt_ or
+        # airrc_. The patterns differ only by prefix, so widening the first covers
+        # them all.
+        for file in ${1/\/imgt_/\/*_}; do
+            files+=("$file")
+        done
+    fi
     shopt -u nullglob
     if [ ${#files[@]} -gt 0 ]; then
         cat "${files[@]}" > "$dest"
