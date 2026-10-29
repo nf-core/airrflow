@@ -39,7 +39,7 @@ process NOVEL_ALLELE_INFERENCE {
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_novel_allele_inference_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_novel_allele_inference_report && rm -rf enchantr
+    mv enchantr ${meta.id}_novel_allele_inference_report
 
     """
 }

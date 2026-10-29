@@ -31,7 +31,7 @@ process REMOVE_CHIMERIC {
         'outname'='${meta.id}', \\
         'log'='${meta.id}_chimeric_command_log'))"
 
-    cp -r enchantr ${meta.id}_chimera_report && rm -rf enchantr
+    mv enchantr ${meta.id}_chimera_report
 
     """
 }

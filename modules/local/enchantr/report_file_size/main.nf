@@ -29,7 +29,7 @@ process REPORT_FILE_SIZE {
         report_params=list('input'='${logs_tabs}', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
 
-    cp -r enchantr file_size_report && rm -rf enchantr
+    mv enchantr file_size_report
 
 
     """

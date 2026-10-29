@@ -41,7 +41,6 @@ process COLLAPSE_DUPLICATES {
         'outname'='${meta.id}',\\
         'log'='${meta.id}_collapse_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_collapse_report && rm -r enchantr
-
+    mv enchantr ${meta.id}_collapse_report
     """
 }

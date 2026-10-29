@@ -36,7 +36,7 @@ process SINGLE_CELL_QC {
         'outdir'=getwd(), \\
         'log'='all_reps_scqc_command_log'  ${args} ))"
 
-    cp -r enchantr all_reps_scqc_report && rm -rf enchantr
+    mv enchantr all_reps_scqc_report
 
     """
 }

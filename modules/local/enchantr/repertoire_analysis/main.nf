@@ -48,7 +48,7 @@ process REPERTOIRE_ANALYSIS {
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
-    cp -r enchantr repertoire_analysis_report && rm -rf enchantr
+    mv enchantr repertoire_analysis_report
 
     """
 }

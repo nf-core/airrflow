@@ -43,7 +43,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_bayesian_genotype_inference_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_bayesian_genotype_inference_report && rm -rf enchantr
+    mv enchantr ${meta.id}_bayesian_genotype_inference_report
 
     """
 }

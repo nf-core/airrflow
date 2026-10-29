@@ -38,7 +38,7 @@ process DETECT_CONTAMINATION {
         'outname'='cont-flag', \\
         'log'='all_reps_contamination_command_log' ${args}))"
 
-    cp -r enchantr all_reps_cont_report && rm -rf enchantr
+    mv enchantr all_reps_cont_report
 
     """
 }

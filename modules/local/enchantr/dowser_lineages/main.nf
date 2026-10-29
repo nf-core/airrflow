@@ -43,7 +43,6 @@ process DOWSER_LINEAGES {
                                         'nproc'=${task.cpus},\\
                                         'log'='${id_name}_dowser_command_log' ${args}))"
 
-    cp -r enchantr ${id_name}_dowser_report && rm -rf enchantr
-
+    mv enchantr ${id_name}_dowser_report
     """
 }

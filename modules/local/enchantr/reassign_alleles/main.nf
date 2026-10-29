@@ -45,7 +45,6 @@ process REASSIGN_ALLELES {
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_reassign_alleles_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_reassign_alleles_report && rm -rf enchantr
-
+    mv enchantr ${meta.id}_reassign_alleles_report
     """
 }

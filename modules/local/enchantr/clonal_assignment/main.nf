@@ -57,7 +57,7 @@ process CLONAL_ASSIGNMENT {
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr
+    mv enchantr ${meta.id}_clone_report
 
     """
 }
