@@ -93,6 +93,7 @@
                 "cellranger/Sample1",
                 "cellranger/Sample1/outs",
                 "cellranger/Sample1/outs/airr_rearrangement.tsv",
+                "cellranger/Sample1/outs/web_summary.html",
                 "clonal_analysis",
                 "clonal_analysis/clonal_assignment",
                 "clonal_analysis/clonal_assignment/Patient1_clone_report",
@@ -249,7 +250,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,389b8fbadf0e1a5718e8a18d40f3781e"
         ],
-        "timestamp": "2026-10-28T11:46:56.220730802",
+        "timestamp": "2026-10-30T10:40:56.383949746",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
