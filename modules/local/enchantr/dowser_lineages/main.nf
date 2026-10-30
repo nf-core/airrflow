@@ -22,7 +22,7 @@ process DOWSER_LINEAGES {
 
     output:
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
     tuple val("${task.process}"), val('dowser'), eval("Rscript -e \"library(dowser); cat(as.character(packageVersion('dowser')))\""), emit: versions_dowser, topic: versions
 

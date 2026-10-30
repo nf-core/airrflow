@@ -15,7 +15,7 @@ process REMOVE_CHIMERIC {
     output:
     tuple val(meta), path("*chimera-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report" //, emit: chimera_report
+    path "*_report/*" //, emit: chimera_report
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
 
     script:
