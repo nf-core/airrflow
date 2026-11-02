@@ -55,10 +55,10 @@
                     "description": "Whether to save repertoires in each intermediate step",
                     "fa_icon": "far fa-save"
                 },
-                "simple_cellranger_output": {
+                "save_cellranger_full_output": {
                     "type": "boolean",
-                    "default": true,
-                    "description": "Keep only repertoire file and summary report by default. If set the value to be false, all cellranger results including bam, fasta and fastq files will be included in the output folder.",
+                    "default": false,
+                    "description": "Save only repertoire file and summary report by default. If set the value to be true, full cellranger results including bam, fasta and fastq files will be saved the output folder.",
                     "fa_icon": "far fa-save"
                 }
             }
