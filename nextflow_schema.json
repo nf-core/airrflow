@@ -175,7 +175,7 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to trim adapters in fastq reads with fastp.",
-                    "help_text": "By default adapters will be auto-detected, but adapter sequences can also be provided in a `fasta` file with the `--adapter_fasta` option.",
+                    "help_text": "By default, adapter sequences are automatically detected and trimmed. Alternatively, adapter sequences can be provided in a FASTA file using the `--adapter_fasta` option, in which case the specified adapters will be trimmed.",
                     "fa_icon": "fas fa-cut"
                 },
                 "adapter_fasta": {
