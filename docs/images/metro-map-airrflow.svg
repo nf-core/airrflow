@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg5" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2954.5 972.4">
+  <!-- Generator: Adobe Illustrator 29.8.7, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        font-size: 41.5px;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10, .st11 {
+        isolation: isolate;
+      }
+
+      .st0, .st3, .st7 {
+        font-family: MavenPro-Bold, 'Maven Pro';
+        font-weight: 700;
+      }
+
+      .st1 {
+        font-size: 20px;
+      }
+
+      .st12 {
+        fill: #bfa679;
+        stroke-width: 7px;
+      }
+
+      .st12, .st13, .st14, .st15, .st16, .st17, .st18, .st19, .st20, .st21, .st22, .st23 {
+        stroke-miterlimit: 11.3;
+      }
+
+      .st12, .st18 {
+        stroke: #bfa679;
+      }
+
+      .st24, .st25, .st26, .st27, .st28, .st29, .st30, .st31, .st32, .st33, .st34, .st35, .st36, .st37, .st38 {
+        stroke-miterlimit: 11.3;
+      }
+
+      .st24, .st25, .st26, .st27, .st28, .st30, .st32, .st33, .st34, .st36, .st38 {
+        stroke-width: 7.5px;
+      }
+
+      .st24, .st19 {
+        fill: #7eb2dd;
+      }
+
+      .st24, .st19, .st21 {
+        stroke: #7eb2dd;
+      }
+
+      .st25 {
+        stroke-opacity: .9;
+      }
+
+      .st25, .st39, .st13, .st14, .st28, .st40, .st41, .st29, .st42, .st31, .st16, .st17, .st33, .st18, .st35, .st21, .st36, .st23, .st37, .st38 {
+        fill: none;
+      }
+
+      .st25, .st27, .st13, .st43, .st29, .st42, .st15, .st35, .st20, .st23, .st37 {
+        stroke: #000;
+      }
+
+      .st2 {
+        font-size: 23.8px;
+      }
+
+      .st39 {
+        stroke-width: 8.5px;
+      }
+
+      .st39, .st41 {
+        stroke: #ebdd86;
+        stroke-miterlimit: 42.5;
+      }
+
+      .st26, .st16, .st22 {
+        stroke: #d44715;
+      }
+
+      .st26, .st22 {
+        fill: #d44715;
+      }
+
+      .st3 {
+        font-size: 38.5px;
+      }
+
+      .st27, .st44, .st43, .st45, .st15, .st46, .st47 {
+        fill: #fff;
+      }
+
+      .st27, .st15 {
+        stroke-linecap: round;
+      }
+
+      .st13, .st14, .st15, .st16, .st17, .st18, .st20, .st21 {
+        stroke-width: 7.5px;
+      }
+
+      .st4 {
+        letter-spacing: 0em;
+      }
+
+      .st4, .st5, .st11 {
+        font-size: 24px;
+      }
+
+      .st14 {
+        stroke: #d44700;
+      }
+
+      .st48 {
+        fill: #ebde86;
+      }
+
+      .st49 {
+        fill: #24af63;
+        opacity: .5;
+        stroke: #24af63;
+        stroke-linecap: square;
+        stroke-linejoin: bevel;
+        stroke-width: .9px;
+      }
+
+      .st28, .st31, .st32 {
+        stroke: #ff9914;
+      }
+
+      .st43, .st42 {
+        stroke-miterlimit: 10;
+      }
+
+      .st41 {
+        stroke-width: 8.5px;
+      }
+
+      .st29, .st31 {
+        stroke-width: 7.5px;
+      }
+
+      .st42 {
+        stroke-width: 7.5px;
+      }
+
+      .st30 {
+        fill: #cbdb2a;
+      }
+
+      .st30, .st36 {
+        stroke: #cbdb2a;
+      }
+
+      .st50 {
+        clip-path: url(#clippath-1);
+      }
+
+      .st45 {
+        font-size: 16.8px;
+      }
+
+      .st51 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 21px;
+      }
+
+      .st7 {
+        font-size: 38.5px;
+      }
+
+      .st46 {
+        font-size: 14.5px;
+      }
+
+      .st8 {
+        font-size: 28px;
+      }
+
+      .st32 {
+        fill: #ff9914;
+      }
+
+      .st17 {
+        stroke: #b3b5b2;
+      }
+
+      .st33 {
+        stroke-opacity: 1;
+      }
+
+      .st33, .st34, .st38 {
+        stroke: #f9f;
+      }
+
+      .st9 {
+        font-size: 19.8px;
+      }
+
+      .st10 {
+        font-size: 18px;
+      }
+
+      .st19 {
+        stroke-width: 1.4px;
+      }
+
+      .st34 {
+        fill: #f9f;
+      }
+
+      .st35 {
+        stroke-opacity: 1;
+      }
+
+      .st35, .st37 {
+        stroke-width: 7.5px;
+      }
+
+      .st47 {
+        font-size: 17.2px;
+      }
+
+      .st22 {
+        stroke-width: 1.4px;
+      }
+
+      .st23 {
+        stroke-width: 7.5px;
+      }
+
+      .st52 {
+        clip-path: url(#clippath);
+      }
+
+      .st11 {
+        letter-spacing: 0em;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st40" x="380.3" y="799" width="453.5" height="130.3"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="st40" x="380.3" y="799" width="453.5" height="130.3"/>
+    </clipPath>
+  </defs>
+  <path id="path2500-5-2-3-0-17-7-5-5" class="st13" d="M2877.5,409.1h-453.5" sodipodi:nodetypes="cc"/>
+  <path class="st13" d="M2472.3,409.1h14.4c6.9,0,12.5-5.6,12.5-12.5v-20.6c0-6.9,5.6-12.5,12.5-12.5h85.8c6.9,0,12.5,5.6,12.5,12.5v20.6c0,6.9,5.6,12.5,12.5,12.5h14.4"/>
+  <g id="g59524-4-4-02">
+    <path id="path1232-7-2-9-0-4-9" class="st21" d="M1914.3,705v22.5c0,11.2-7.1,22.1-15,30l-7.5,7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path1232-7-2-7-3-0-4-4" class="st16" d="M1869.3,705v22.5c0,11.2,7.1,22.1,15,30l7.5,7.5" sodipodi:nodetypes="cssc"/>
+    <rect id="rect43044-7" class="st19" x="1892.5" y="760.5" width="2.3" height="5.4"/>
+  </g>
+  <path class="st13" d="M1891.2,234.5v-21.4c0-18.8,15.2-34,34-34h92.1c18.8,0,34,15.2,34,34v476.8c0,18.8,15.3,34.1,34.1,34l271.7-1"/>
+  <path class="st13" d="M2019.1,178.8h46.7c10.7.6,18.5,7.2,18.5,16.5v115.8c0,9.3,7.5,16.8,16.8,16.8h291.1c9.3,0,16.8,7.5,16.8,16.8v65-.9"/>
+  <path id="path1232-7-7-0" class="st18" d="M1326.9,557.3h78.3s49-8,72.8-64.7c10.9-26,14.7-26.6,19.3-77" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-7-01" data-name="path1232-7-7-0" class="st21" d="M122.8,467.6h1273.3s57.3-7.1,80.4-36.5,8.5-6.5,22.3-31.5" sodipodi:nodetypes="cssc"/>
+  <sodipodi:namedview id="namedview7" bordercolor="#666666" borderopacity="1.0" fit-margin-bottom="0" fit-margin-left="0" fit-margin-right="0" fit-margin-top="0" inkscape:bbox-nodes="true" inkscape:current-layer="layer7" inkscape:cx="676.94518" inkscape:cy="470.48683" inkscape:document-units="mm" inkscape:lockguides="false" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:snap-bbox="true" inkscape:snap-bbox-midpoints="true" inkscape:window-height="1013" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="0" inkscape:window-y="0" inkscape:zoom="0.50373355" pagecolor="#ffffff" showgrid="false" showguides="false">
+    <inkscape:grid id="grid824" originx="48.621211" originy="-0.64738669" type="xygrid"/>
+  </sodipodi:namedview>
+  <g id="text10160-8-6-8-2-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1339.9 158.1)"><tspan x="0" y="0">Samplesheet</tspan></text>
+  </g>
+  <path id="path2500-5-22-8-2-2-8-1-3-4" class="st23" d="M1506.9,421.5v36" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <path id="path2500-5-22-8-2-2-8-1-3-6-0" class="st23" d="M1506.9,475.4v36" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <g id="text10160-8-6-7-9-0" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1530.2 474)"><tspan x="0" y="0">MakeDb</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-2-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1529.3 527)"><tspan x="0" y="0">Filter quality</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-2-9-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1551.2 591.8)"><tspan x="0" y="0">Select</tspan><tspan x="0" y="24">Productive</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-9-4-2-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1541.1 376.8)"><tspan x="0" y="0">Fetch germlines</tspan></text>
+  </g>
+  <g id="text10160-8-6-8-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1395 285.4)"><tspan x="0" y="0">Convert to fasta</tspan></text>
+  </g>
+  <circle id="path3447-6-2-4-8-1-7-1" class="st15" cx="1506.9" cy="467.2" r="7.5"/>
+  <path id="rect918-85-5" class="st15" d="M1506.4,385.6h0c6.1,0,11.1,3.4,11.1,7.5v22.5c0,4.1-5,7.5-11.1,7.5h0c-6.1,0-11.1-3.4-11.1-7.5v-22.5c0-4.1,5-7.5,11.1-7.5Z"/>
+  <g id="g59524-4-9">
+    <path id="path1232-7-2-9-0-91" class="st13" d="M1484.4,609.5v-22.5c0-11.2,7.1-22.1,15-30l7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path1232-7-2-7-3-0-49" class="st13" d="M1529.4,609.5v-22.5c0-11.2-7.1-22.1-15-30l-7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path2500-5-60-6-1" class="st20" d="M1506.9,511.3v38.2" sodipodi:nodetypes="cc"/>
+  </g>
+  <g id="g59524-4-6-5">
+    <path id="path1232-7-2-9-0-9-8" class="st13" d="M1484.4,586.2v14.1c0,15,6,29.4,16.6,40h0c3.8,3.8,5.9,9,5.9,14.4v129.3c0,11.2,9.1,20.3,20.3,20.3h344.4c11.3,0,20.4-9.2,20.3-20.5l-.2-19.1" sodipodi:nodetypes="cssc"/>
+    <path id="path1232-7-2-7-3-0-8-7" class="st13" d="M1529.4,586.2v22.5c0,11.2-7.1,22.1-15,30l-7.5,7.5" sodipodi:nodetypes="cssc"/>
+  </g>
+  <path id="path1232-7-7-02" data-name="path1232-7-7-0" class="st13" d="M1305.7,306.5h155.1c11.2,0,22.1,7.1,30,15l14.5,26" sodipodi:nodetypes="cssc"/>
+  <circle id="path3447-0-7-2-6-6-8-2" class="st15" cx="1506.9" cy="670.1" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path2500-5-2-3-0-3-4-5-4-8" class="st16" d="M1869.3,423.3v-134.7" sodipodi:nodetypes="cc"/>
+  <path id="path2500-5-2-3-2-5-3" class="st21" d="M1914.4,717.4v-430.7" sodipodi:nodetypes="cc"/>
+  <g id="g59524-4-4-0-8">
+    <path id="path1232-7-2-9-0-4-3-0" class="st21" d="M1914.3,290.1v-22.5c0-11.2-7.1-22.1-15-30l-7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path1232-7-2-7-3-0-4-0-4" class="st16" d="M1869.3,290.1v-22.5c0-11.2,7.1-22.1,15-30l7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path2500-5-60-6-4-9-0" class="st20" d="M1891.8,228.6" sodipodi:nodetypes="cc"/>
+    <path id="path2500-5-60-6-4-9-01" data-name="path2500-5-60-6-4-9-0" class="st20" d="M1891.8,192" sodipodi:nodetypes="cc"/>
+    <rect id="rect43044-4-9" class="st19" x="1892.5" y="229.3" width="2.3" height="5.4"/>
+    <rect id="rect43044-3-0-6" class="st22" x="1888.8" y="229.3" width="2.3" height="5.4"/>
+  </g>
+  <g id="text10160-8-6-7-2-3-5-4-1-2" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1747.9 605.7)"><tspan x="0" y="0">Create</tspan></text>
+    <text class="st1" transform="translate(1734.9 628.2)"><tspan x="0" y="0">germlines</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-3-5-4-4-9-4" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1934.5 438.5)"><tspan x="0" y="0">Single cell </tspan><tspan x="0" y="24">QC</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-3-3-6-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1733 493.4)"><tspan x="0" y="0">Remove</tspan></text>
+    <text class="st1" transform="translate(1731.5 515.9)"><tspan x="0" y="0">chimeric</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-3-3-7-8-3" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1764.4 359.6)"><tspan x="0" y="0">Detect</tspan></text>
+    <text class="st1" transform="translate(1770.4 382.1)"><tspan x="0" y="0">cross</tspan></text>
+    <text class="st1" transform="translate(1732.4 404.6)"><tspan x="0" y="0">contamination</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-3-3-7-0-6-0" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1761 294.3)"><tspan x="0" y="0">Collapse</tspan></text>
+    <text class="st1" transform="translate(1753.6 316.8)"><tspan x="0" y="0">duplicates</tspan></text>
+  </g>
+  <circle id="path3447-0-7-2-6-3-0-0-5-8-3-3" class="st15" cx="1914.3" cy="443.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="g61543-1">
+    <path id="path1232-7-6-6-4" class="st16" d="M1869.3,705v-22.5c0-11.2-7.1-22.1-15-30l-7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path2500-5-2-3-2-6" class="st16" d="M1869.3,705v-60" sodipodi:nodetypes="cc"/>
+    <path id="path2500-5-2-3-0-17-9" class="st16" d="M1869.3,645v-60" sodipodi:nodetypes="cc"/>
+    <path id="path2500-5-2-3-0-3-8-4" class="st16" d="M1869.3,585v-112.8" sodipodi:nodetypes="cc"/>
+    <path id="path2500-5-2-3-0-3-4-5-2" class="st16" d="M1824.3,585v-84.4" sodipodi:nodetypes="cc"/>
+    <path id="path1232-7-2-7-6-7-2" class="st16" d="M1824.3,585v22.5c0,11.2,7.1,22.1,15,30l7.5,7.5" sodipodi:nodetypes="cssc"/>
+    <g id="g75683-6">
+      <path id="path1232-7-6-6-9-4" class="st16" d="M1869.3,384v22.5c0,11.2-7.1,22.1-15,30l-7.5,7.5" sodipodi:nodetypes="cssc"/>
+      <path id="path2500-5-2-3-2-7-1" class="st16" d="M1869.3,358.9v85.1" sodipodi:nodetypes="cc"/>
+      <path id="path2500-5-2-3-0-17-7-2" class="st14" d="M1869.3,444v60" sodipodi:nodetypes="cc"/>
+      <path id="path1232-7-2-7-6-7-6-8" class="st16" d="M1824.3,504v-22.5c0-11.2,7.1-22.1,15-30l7.5-7.5" sodipodi:nodetypes="cssc"/>
+    </g>
+  </g>
+  <circle id="path3447-0-7-2-6-3-0-0-5-88-2" class="st15" cx="1824.3" cy="598" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-0-7-2-6-3-0-4-48-8" class="st15" cx="1824.3" cy="496" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-0-7-2-6-3-0-4-4-7-8" class="st15" cx="1869.3" cy="360.3" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-0-7-2-6-3-0-4-48-3-6" class="st15" cx="1869.3" cy="298.9" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-2-3-3-7-0-7-1-4-0" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2787.4 390.1) rotate(-45)"><tspan x="0" y="0">Build lineage trees</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-4-2-8-3" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2562.8 348.5) rotate(-45)"><tspan x="0" y="0">Find threshold</tspan></text>
+  </g>
+  <circle id="path3447-0-7-2-6-3-0-4-4-8-2-2-1-9" class="st15" cx="2557.3" cy="362.7" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="g5565">
+    <path id="path1232-7-6-6-4-6" class="st17" d="M1518.2,343.4h22.5c11.2,0,22.1-7.1,30-15l7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path2500-5-2-3-2-6-3" class="st13" d="M1518.2,343.4h124" sodipodi:nodetypes="cc"/>
+    <path id="path1232-7-2-7-6-7-2-9" class="st17" d="M1642.2,298.4h-26.5c-11.2,0-22.1,7.1-30,15l-7.5,7.5" sodipodi:nodetypes="cssc"/>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-6" class="st15" cx="1581" cy="343.4" r="7.5"/>
+  <g id="text10160-8-6-8-2-3-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st10" transform="translate(364.4 222.6) rotate(.3)"><tspan x="0" y="0">cprimers</tspan></text>
+  </g>
+  <g id="text10160-8-6-8-2-3-6-4" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st10" transform="translate(450.6 223.8) rotate(.3)"><tspan x="0" y="0">vprimers</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(164.5 288.4) rotate(-44.7)"><tspan x="0" y="0">Fastp</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(225.1 430.1) rotate(-44.7)"><tspan x="0" y="0">Assemble</tspan></text>
+    <text class="st1" transform="translate(254.6 432.6) rotate(-44.7)"><tspan x="0" y="0">pairs</tspan></text>
+  </g>
+  <path id="path2500-5-22-8-2-2-8-1-3-6-5-3" class="st29" d="M399.5,303.6l36,.2" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <g id="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(360.5 419.5) rotate(-44.7)"><tspan x="0" y="0">Mask primers</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-8-9-5-3" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(569.1 239.2) rotate(-44.7)"><tspan x="0" y="0">Pair sequences</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-8-9-5-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1090.7 427.3) rotate(-44.7)"><tspan x="0" y="0">Annot. primers</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-8-9-5-8-7" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1170.2 419.5) rotate(-44.7)"><tspan x="0" y="0">Collapse dupl.</tspan></text>
+  </g>
+  <path id="path2500-5-22-8-2-2-8-1-3-6-5-3-8-0" class="st29" d="M1193.7,307.2l119.4.6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-4-3" class="st27" cx="1218.9" cy="307.3" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(963.8 373.4) rotate(-44.7)"><tspan x="0" y="0">FastQC </tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-8-9-59" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(294.5 429.3) rotate(-44.7)"><tspan x="0" y="0">Filter by quality</tspan></text>
+  </g>
+  <path id="path1232-7-6-6-1" class="st36" d="M167.1,302.4h22.5c11.2.2,22.1,7.3,29.9,15.3l7.5,7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path2500-5-2-3-2-8" class="st35" d="M128.4,301.9l99.4.8" sodipodi:nodetypes="cc"/>
+  <path id="path1232-7-6-6-1-5" class="st36" d="M384.7,303.5h-22.5c-11.2-.2-22.1,6.9-30.1,14.7l-7.5,7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path2500-5-2-3-2-8-3" class="st25" d="M384.6,303.5l-60-.3" sodipodi:nodetypes="cc"/>
+  <path id="path1232-7-2-7-6-7-9" class="st36" d="M286.9,348h-22.5c-11.2-.2-22.1-7.3-29.9-15.3l-7.5-7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-2-7-6-7-9-7" class="st36" d="M264.5,347.9h22.5c11.2.2,22.1-6.9,30.1-14.7l7.5-7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path2500-5-2-3-0-17-5" class="st28" d="M191.1,302.5l169.4.9" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3" class="st27" cx="277" cy="348.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" transform="translate(-72.8 623.8) rotate(-89.7)"/>
+  <path id="path2500-5-2-3-2-8-38" class="st30" d="M455.8,303.8l523.1,2.2" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0" class="st27" cx="390.7" cy="303.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" transform="translate(85.2 692.7) rotate(-89.7)"/>
+  <g id="g67033-8" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <path id="path1232-7-6-6-1-8" class="st28" d="M455.8,303.8h32.5c11.2.2,22.1-6.9,30.1-14.7l7.5-7.5" sodipodi:nodetypes="cssc"/>
+    <path id="path1232-7-2-7-6-7-9-6" class="st28" d="M586,259.4h-22.5c-11.2-.2-22.1,6.9-30.1,14.7l-7.5,7.5" sodipodi:nodetypes="cssc"/>
+  </g>
+  <path id="path2500-5-2-3-2-8-38-2" class="st28" d="M576,259.7l223.7.8" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <path id="path1232-7-6-6-1-8-4" class="st38" d="M576,259.4h22.5c11.2.2,22.1-6.9,30.1-14.7l7.5-7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-2-7-6-7-9-6-0" class="st38" d="M696.2,215h-3.8s-18.7-.1-18.7-.1c-11.2,0-22.1,7-30.1,14.9l-7.5,7.5" sodipodi:nodetypes="ccssc"/>
+  <path id="path1232-7-6-6-1-8-4-1" class="st33" d="M807.2,260.8h-18.7c-9.3-.1-18.3-7.3-24.9-15.3l-6.2-7.6" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-2-7-6-7-9-6-0-2" class="st38" d="M694.1,215h25.9c11.2.2,22.1,7.3,29.9,15.3l7.5,7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-6-6-1-8-4-1-4" class="st28" d="M993,306.5h-10.2c-11.2-.1-22.1-7.3-29.9-15.2l-7.5-7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-2-7-6-7-9-6-0-2-6" class="st28" d="M862.1,261h45.9c11.2.2,22.1,7.3,29.9,15.3l7.5,7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path2500-5-2-3-2-8-38-2-2" class="st30" d="M1001.5,306.2l178.4.7" sodipodi:nodetypes="cc"/>
+  <path id="path1232-7-6-6-1-8-4-8" class="st28" d="M993,306.1h22.5c11.2.2,22.1-6.9,30.1-14.7l7.5-7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-2-7-6-7-9-6-0-4" class="st28" d="M1100.7,261.7h-17.6s7.5,0,7.5,0c-11.2,0-22.1,7-30.1,14.9l-7.5,7.5" sodipodi:nodetypes="ccssc"/>
+  <path id="path1232-7-6-6-1-8-4-8-1" class="st28" d="M1193.7,307.2h-22.5c-11.2-.2-22.1-7.3-29.9-15.3l-7.5-7.5" sodipodi:nodetypes="cssc"/>
+  <path id="path1232-7-2-7-6-7-9-6-0-4-3" class="st28" d="M1090.7,261.6h5.7c11.2.2,22.1,7.3,29.9,15.3l7.5,7.5" sodipodi:nodetypes="ccssc"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <g class="st6">
+      <path d="M671.7,184c-.5.5-.9.8-1.3,1.1-.4.3-.8.5-1.2.6-.4.1-.8.3-1.3.4l-1.1-1.1c.6,0,1.2-.2,1.9-.5s1.4-.8,2.1-1.5c.7-.7,1.1-1.4,1.1-2,0-.6-.2-1.2-.7-1.7-.4-.4-.8-.6-1.3-.6-.5,0-.9,0-1.4.2-.5.2-1,.4-1.5.6-.4.2-.9.4-1.3.6-.4.2-.9.3-1.3.4-.4,0-.9,0-1.4-.1-.5-.2-.9-.5-1.4-.9-.3-.3-.5-.6-.7-1-.2-.4-.3-.8-.3-1.3,0-.5,0-1,.3-1.5.2-.5.6-1.1,1.1-1.6.4-.4.7-.7,1-.9.3-.2.6-.4,1-.5.3-.1.7-.3,1.2-.4l1,1.1c-.4.1-.8.2-1.1.3-.3.1-.7.3-1,.4-.3.2-.7.5-1.1.9-.5.5-.8.9-.9,1.3-.1.4-.2.8,0,1.1,0,.3.3.6.5.9.4.4.8.6,1.2.7.4,0,.8,0,1.3-.2s1-.4,1.5-.7c.4-.2.9-.4,1.4-.6.5-.2.9-.3,1.4-.4.5,0,.9,0,1.4.1s.9.4,1.4.9c.4.4.7.9,1,1.5.2.6.2,1.3,0,2-.2.7-.7,1.5-1.5,2.3Z"/>
+      <path d="M668.4,170.5l-1.1-1.1,1.1-1.1,1.1,1.1-1.1,1.1ZM676.8,178.8l-7-7.1,1-1,7,7.1-1,1Z"/>
+      <path d="M681.4,165.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3s-.6,0-1,.1c-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,2-1.3s1.2-.2,1.8,0c.6.2,1.1.6,1.7,1.1ZM678.4,164.8c0-.5.2-1.1.4-1.5.2-.5.4-.9.7-1.3.3-.4.6-.8.9-1.1.7-.7,1.3-1.1,2-1.3s1.2-.2,1.8,0c.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.2.4-.4.9-.5,1.4l-1.5.5Z"/>
+      <path d="M684.4,154.7l-1.1-1.1,1.1-1.1,1.1,1.1-1.1,1.1ZM692.7,163l-7-7.1,1-1,7,7.1-1,1Z"/>
+      <path d="M697.1,158.6l-1,1-9.7-9.8,1-1,9.7,9.8Z"/>
+      <path d="M702,154.2c-.3.3-.7.6-1,.8-.4.2-.8.4-1.2.5-.4.1-.9.1-1.3,0-.4-.1-.9-.4-1.3-.8-.6-.6-.9-1.2-1.1-1.7-.1-.6,0-1.1.2-1.7.2-.5.6-1.1,1.1-1.6.4-.4.7-.7,1.1-.9.3-.2.7-.4,1-.5.3-.1.6-.2.9-.3l1.1.7c-.4,0-.8.2-1.4.5-.5.3-1,.7-1.5,1.2-.6.6-.9,1.2-1,1.7,0,.5,0,1,.5,1.5.3.4.7.5,1.1.5.4,0,.8,0,1.2-.3.4-.2.7-.5,1-.8.6-.6,1-1.1,1.3-1.5s.2-.8-.1-1.1l-3.2-3.3c-.5-.5-1.1-.8-1.7-.7-.6,0-1.2.4-1.8,1-.4.4-.7.8-1,1.4-.3.5-.5,1.1-.6,1.6l-1-1c.1-.5.4-1,.8-1.6.4-.6.8-1.1,1.3-1.6.3-.3.6-.6,1-.8.3-.2.7-.3,1-.4.3,0,.7-.1,1,0,.3,0,.7.1,1,.3s.6.4.9.7l3.4,3.4c.5.5.7,1,.7,1.6,0,.5-.3,1.1-.7,1.6-.4.5-.9,1.1-1.4,1.6Z"/>
+      <path d="M707.3,148.6l-6.5-6.5c0-.2.2-.5.4-.9.2-.4.5-.9.9-1.5.4-.5.8-1.1,1.3-1.6,0,0,.2-.1.3-.2,0,0,.2-.1.3-.2l.9.9c-.3.2-.5.4-.8.7-.2.2-.4.5-.6.7-.2.2-.4.5-.6.7-.2.3-.4.5-.5.8l6,6-1,1Z"/>
+      <path d="M704.3,134.9l-1.1-1.1,1.1-1.1,1.1,1.1-1.1,1.1ZM712.7,143.2l-7-7.1,1-1,7,7.1-1,1Z"/>
+      <path d="M718.4,137.8c-.5.5-1.1.8-1.7.8-.6,0-1.3-.3-1.9-.9l-4.4-4.4-1.2,1.2-.9-.9,1.2-1.2-2-2,1-1,2,2,1.8-1.8.9.9-1.8,1.8,4.1,4.1c.4.4.8.6,1.1.7.3,0,.7,0,1-.4.2-.2.3-.3.4-.5.1-.2.2-.4.3-.5l1,1c0,.2-.2.4-.4.6-.2.2-.3.4-.5.6Z"/>
+      <path d="M724.7,136.8c-.1.1-.3.3-.4.3-.1,0-.3.1-.4.2l-.9-.9c0,0,.2,0,.3-.2.1,0,.3-.2.4-.3.3-.3.5-.7.5-1,0-.4,0-.8-.2-1.2-.2-.4-.4-.9-.6-1.4l.4.4-10.2-4.3,1.2-1.2,8.4,3.7-.2.2-3.7-8.4,1-1,4.7,10.8c.3.8.5,1.4.5,2,0,.6,0,1-.2,1.4-.2.4-.3.7-.6.9Z"/>
+      <path d="M688.8,200.9c-.4.4-.8.7-1.3,1-.5.3-1,.5-1.6.5s-1.2,0-1.9-.3c-.7-.3-1.4-.8-2.1-1.6-.8-.8-1.3-1.5-1.5-2.1-.3-.7-.4-1.3-.3-1.9,0-.6.2-1.1.5-1.6.3-.5.6-.9,1-1.3.4-.4.8-.7,1.2-1,.4-.3.9-.5,1.3-.7l1,1c-.4.2-.9.4-1.3.7-.4.3-.8.6-1.1.9-.8.8-1.2,1.7-1.2,2.5,0,.8.5,1.7,1.5,2.6.9.9,1.8,1.4,2.6,1.5.8,0,1.6-.4,2.5-1.2.4-.3.7-.7.9-1.1.3-.4.5-.8.7-1.3l1,1c-.2.5-.5.9-.8,1.3-.3.4-.6.8-1,1.2Z"/>
+      <path d="M693.7,195.7l-1,1-9.7-9.8,1-1,9.7,9.8Z"/>
+      <path d="M699.2,190.8c-.6.6-1.3,1-1.9,1.3-.7.2-1.3.2-2,0-.6-.2-1.3-.6-1.9-1.2l-4.4-4.5,1-1,4.2,4.3c.7.7,1.4,1.1,2,1.1.7,0,1.3-.3,2-1,.7-.7,1-1.3,1-2,0-.7-.4-1.3-1.1-2.1l-4.2-4.3,1-1,4.4,4.5c.9.9,1.3,1.9,1.3,2.8,0,1-.5,2-1.5,2.9Z"/>
+      <path d="M706.4,183.6c-.5.5-1,.9-1.4,1.1-.4.2-1,.4-1.5.6l-1.1-1.1c.5-.1.9-.3,1.2-.4.3-.1.7-.3.9-.4.3-.2.6-.4.9-.7.5-.5.8-1,.8-1.5,0-.5,0-.9-.4-1.3-.3-.3-.5-.4-.8-.4-.3,0-.6,0-.9.2-.3.1-.7.3-1,.4-.4.2-.7.4-1.1.6-.4.2-.7.3-1.1.4-.4,0-.8,0-1.1,0s-.7-.3-1.1-.7c-.4-.4-.6-.7-.7-1.1-.1-.4-.1-.8,0-1.2,0-.4.2-.8.4-1.2s.5-.7.8-1c.4-.4.8-.7,1.3-.9.4-.2.9-.4,1.3-.5l1,1c-.5.2-1,.3-1.4.5-.4.2-.8.4-1.2.8-.4.4-.7.8-.8,1.3-.2.5,0,.9.2,1.2.3.3.5.4.9.4.3,0,.6,0,1-.2.3-.2.7-.3,1.1-.6.3-.2.6-.3,1-.5.3-.2.7-.3,1.1-.3.4,0,.7,0,1.1,0,.4.1.7.3,1.1.7.5.5.8,1,.8,1.6,0,.6,0,1.1-.3,1.7-.2.5-.6,1-1,1.4Z"/>
+      <path d="M713,176.9c-.5.5-1.1.8-1.7.8-.6,0-1.3-.3-1.9-.9l-4.4-4.4-1.2,1.2-.9-.9,1.2-1.2-2-2,1-1,2,2,1.8-1.8.9.9-1.8,1.8,4.1,4.1c.4.4.8.6,1.1.7.3,0,.7,0,1-.4.2-.2.3-.3.4-.5.1-.2.2-.4.3-.5l1,1c0,.2-.2.4-.4.6-.2.2-.3.4-.5.6Z"/>
+      <path d="M719,171.2c-.7.7-1.4,1.1-2.2,1.3s-1.6.2-2.4-.1c-.8-.3-1.6-.9-2.5-1.7-1.2-1.2-1.8-2.4-1.9-3.6,0-1.2.4-2.2,1.4-3.2.8-.8,1.5-1.2,2.3-1.3s1.6,0,2.4.4c.8.4,1.5.9,2.2,1.7l-5.7,5.6-.9-1,5-4.9-.3.5c-.7-.7-1.4-1-2.1-1.1-.7,0-1.3.3-2,1-.5.5-.8.9-.9,1.4-.1.5,0,1,.2,1.6.3.6.8,1.2,1.5,2,.9.9,1.7,1.3,2.6,1.4.8,0,1.6-.3,2.4-1,.3-.3.6-.7.9-1,.2-.3.4-.7.6-1,.2-.3.3-.7.3-1l1,1.1c-.2.5-.4,1-.8,1.5-.3.5-.7,1-1.2,1.5Z"/>
+      <path d="M723.6,166.1l-6.5-6.5c0-.2.2-.5.4-.9.2-.4.5-.9.9-1.5.4-.5.8-1.1,1.3-1.6,0,0,.2-.1.3-.2,0,0,.2-.1.3-.2l.9.9c-.3.2-.5.4-.8.7-.2.2-.4.5-.6.7-.2.2-.4.5-.6.7-.2.3-.4.5-.5.8l6,6-1,1Z"/>
+      <path d="M720.7,152.5l-1.1-1.1,1.1-1.1,1.1,1.1-1.1,1.1ZM729,160.8l-7-7.1,1-1,7,7.1-1,1Z"/>
+      <path d="M725.9,150.9c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,2-1.3.6-.2,1.2-.2,1.8,0,.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5Z"/>
+      <path d="M743.6,146.8c-.7.7-1.5,1.2-2.2,1.4-.8.2-1.5.1-2.3-.2-.8-.3-1.5-.8-2.2-1.5-.8-.8-1.4-1.6-1.6-2.3s-.4-1.4-.3-2c0-.6.3-1.2.6-1.7.3-.5.7-1,1.1-1.3.4-.4.9-.8,1.4-1.1.5-.3,1-.4,1.6-.4.5,0,1,.2,1.4.6l5.7,5.7c.3.3.5.6.7,1,.2.4.3.8.3,1.3,0,.5,0,1-.3,1.5-.3.6-.7,1.1-1.3,1.8-.4.4-.8.7-1.2,1-.4.3-.8.5-1.1.7l-1-1c.2-.1.4-.2.7-.4.2-.1.5-.3.8-.5.3-.2.5-.4.8-.7.6-.6,1-1.2,1.2-1.6.2-.5.2-.9,0-1.2-.1-.3-.3-.6-.6-.8l-1-1h.7c0,.3-.2.6-.4.9-.2.4-.4.7-.6,1-.2.3-.4.6-.7.8ZM742.7,145.9c.3-.3.6-.7.8-1.1.3-.4.4-.9.6-1.3l-4-4.1c-.3-.3-.5-.4-.8-.4-.3,0-.6.1-.9.3-.3.2-.6.4-.9.7-.7.7-1.1,1.3-1.2,2,0,.6,0,1.2.4,1.8s.7,1.1,1.2,1.6c.8.8,1.6,1.2,2.4,1.4.8.2,1.6-.1,2.4-.9Z"/>
+    </g>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-4-4-2" class="st27" cx="723.5" cy="215.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" transform="translate(504.5 937.9) rotate(-89.7)"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-8-5" class="st27" cx="675.2" cy="215.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" transform="translate(456.6 889.3) rotate(-89.7)"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-8-0-4" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <g class="st6">
+      <path d="M731.8,197.8l-5.6-13.2,1-1,13.2,5.8-1.1,1.1-11.7-5.3.2-.2,5.2,11.8-1.1,1.1ZM730.5,193.2l-.5-1.4,4.6-4.6,1,.9-5.2,5.1Z"/>
+      <path d="M735.3,181.4c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,2-1.3.6-.2,1.2-.2,1.8,0,.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5Z"/>
+      <path d="M743.4,173.4c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,2-1.3.6-.2,1.2-.2,1.8,0,.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5Z"/>
+      <path d="M761.1,169.3c-1.1,1.1-2.3,1.6-3.4,1.5-1.2-.1-2.4-.8-3.5-2-1.2-1.2-1.9-2.4-1.9-3.6,0-1.2.4-2.3,1.5-3.3.8-.8,1.5-1.2,2.3-1.4.8-.2,1.6,0,2.3.2.8.3,1.5.9,2.3,1.6,1.2,1.2,1.8,2.4,1.9,3.6,0,1.2-.4,2.3-1.4,3.4ZM760.1,168.3c.6-.6.9-1.1,1-1.7,0-.6,0-1.1-.3-1.7-.3-.6-.7-1.1-1.2-1.6-.6-.6-1.1-1-1.7-1.2-.6-.3-1.1-.4-1.7-.3-.6,0-1.1.4-1.7,1-.6.6-.9,1.1-1,1.7,0,.6,0,1.1.3,1.7.3.5.7,1.1,1.2,1.6.8.8,1.7,1.3,2.5,1.5.8.2,1.7-.1,2.5-.9Z"/>
+      <path d="M768.4,161.8c-.5.5-1.1.8-1.7.8-.6,0-1.3-.3-1.9-.9l-4.4-4.4-1.2,1.2-.9-.9,1.2-1.2-2-2,1-1,2,2,1.8-1.8.9.9-1.8,1.8,4.1,4.1c.4.4.8.6,1.1.7.3,0,.7,0,1-.4.2-.2.3-.3.4-.5.1-.2.2-.4.3-.5l1,1c0,.2-.2.4-.4.6-.2.2-.3.4-.5.6Z"/>
+      <path d="M773.8,156.6c-.3.3-.7.6-1,.8-.4.2-.8.4-1.2.5-.4.1-.9.1-1.3,0-.4-.1-.9-.4-1.3-.8-.6-.6-.9-1.2-1.1-1.7-.1-.6,0-1.1.2-1.7.2-.5.6-1.1,1.1-1.6.4-.4.7-.7,1.1-.9.3-.2.7-.4,1-.5.3-.1.6-.2.9-.3l1.1.7c-.4,0-.8.2-1.4.5-.5.3-1,.7-1.5,1.2-.6.6-.9,1.2-1,1.7,0,.5,0,1,.5,1.5.3.4.7.5,1.1.5.4,0,.8,0,1.2-.3s.7-.5,1-.8c.6-.6,1-1.1,1.3-1.5.2-.4.2-.8-.1-1.1l-3.2-3.3c-.5-.5-1.1-.8-1.7-.7-.6,0-1.2.4-1.8,1-.4.4-.7.8-1,1.4-.3.5-.5,1.1-.6,1.6l-1-1c.1-.5.4-1,.8-1.6.4-.6.8-1.1,1.3-1.6.3-.3.6-.6,1-.8.3-.2.7-.3,1-.4.3,0,.7-.1,1,0,.3,0,.7.1,1,.3.3.2.6.4.9.7l3.4,3.4c.5.5.7,1,.7,1.6,0,.5-.3,1.1-.7,1.6-.4.5-.9,1.1-1.4,1.6Z"/>
+      <path d="M781.4,148.9c-.5.5-1.1.8-1.7.8-.6,0-1.3-.3-1.9-.9l-4.4-4.4-1.2,1.2-.9-.9,1.2-1.2-2-2,1-1,2,2,1.8-1.8.9.9-1.8,1.8,4.1,4.1c.4.4.8.6,1.1.7.3,0,.7,0,1-.4.2-.2.3-.3.4-.5.1-.2.2-.4.3-.5l1,1c0,.2-.2.4-.4.6-.2.2-.3.4-.5.6Z"/>
+      <path d="M787.3,143.2c-.7.7-1.4,1.1-2.2,1.3s-1.6.2-2.4-.1c-.8-.3-1.6-.9-2.5-1.7-1.2-1.2-1.8-2.4-1.9-3.6,0-1.2.4-2.2,1.4-3.2.8-.8,1.5-1.2,2.3-1.3.8-.1,1.6,0,2.4.4.8.4,1.5.9,2.2,1.7l-5.7,5.6-.9-1,5-4.9-.3.5c-.7-.7-1.4-1-2.1-1.1-.7,0-1.3.3-2,1-.5.5-.8.9-.9,1.4-.1.5,0,1,.2,1.6.3.6.8,1.2,1.5,2,.9.9,1.7,1.3,2.6,1.4.8,0,1.6-.3,2.4-1,.4-.3.6-.7.9-1,.2-.3.4-.7.6-1,.2-.3.3-.7.3-1l1,1.1c-.2.5-.4,1-.8,1.5-.3.5-.7,1-1.2,1.5Z"/>
+      <path d="M752.6,211.2c-.4.4-.8.7-1.3,1-.5.3-1,.5-1.6.5-.6,0-1.2,0-1.9-.3-.7-.3-1.4-.8-2.1-1.6-.8-.8-1.3-1.5-1.5-2.2-.3-.7-.4-1.3-.3-1.9,0-.6.2-1.1.5-1.6.3-.5.6-.9,1-1.3.4-.4.8-.7,1.2-1,.4-.3.9-.5,1.3-.7l1,1c-.4.2-.9.4-1.3.7-.4.3-.8.6-1.1.9-.8.8-1.2,1.7-1.2,2.5s.5,1.7,1.5,2.6c.9.9,1.8,1.4,2.6,1.5.8,0,1.6-.4,2.5-1.2.4-.3.7-.7.9-1.1.3-.4.5-.8.7-1.3l1,1c-.2.5-.5.9-.7,1.3-.3.4-.6.8-1,1.2Z"/>
+      <path d="M757.5,206.1l-1,1-9.7-9.8,1-1,9.7,9.8Z"/>
+      <path d="M763,201.1c-.6.6-1.3,1-1.9,1.3-.7.2-1.3.2-2,0-.6-.2-1.3-.6-1.9-1.2l-4.4-4.5,1-1,4.2,4.3c.7.7,1.4,1.1,2,1.1.7,0,1.3-.3,2-1,.7-.7,1-1.3,1-2,0-.7-.4-1.3-1.1-2.1l-4.2-4.3,1-1,4.4,4.5c.9.9,1.3,1.8,1.3,2.8,0,1-.5,2-1.5,2.9Z"/>
+      <path d="M770.2,194c-.5.5-1,.9-1.4,1.1-.4.2-1,.4-1.5.6l-1.1-1.1c.5-.1.8-.3,1.2-.4.3-.1.7-.3.9-.4.3-.2.6-.4.9-.7.5-.5.8-1,.8-1.5,0-.5,0-.9-.4-1.3-.3-.3-.5-.4-.8-.4s-.6,0-.9.2c-.3.1-.7.3-1,.4-.4.2-.7.4-1.1.6-.4.2-.7.3-1.1.4-.4,0-.8,0-1.1,0-.4,0-.7-.3-1.1-.7-.4-.4-.6-.7-.7-1.1-.1-.4-.1-.8,0-1.2,0-.4.2-.8.4-1.1.2-.4.5-.7.8-1,.4-.4.8-.7,1.3-.9.4-.2.9-.4,1.3-.5l1,1c-.5.2-1,.3-1.4.5-.4.2-.8.4-1.2.8-.4.4-.7.8-.8,1.3-.2.5,0,.9.2,1.2.3.3.6.4.9.4s.6,0,1-.2c.3-.2.7-.3,1.1-.6.3-.2.6-.3,1-.5.3-.2.7-.3,1.1-.3.4,0,.7,0,1.1,0,.4.1.7.3,1.1.7.5.5.8,1,.8,1.6,0,.6,0,1.1-.3,1.7-.2.5-.6,1-1,1.4Z"/>
+      <path d="M776.8,187.2c-.5.5-1.1.8-1.7.8-.6,0-1.3-.3-1.9-.9l-4.4-4.4-1.2,1.2-.9-.9,1.2-1.2-2-2,1-1,2,2,1.8-1.8.9.9-1.8,1.8,4.1,4.1c.4.4.8.6,1.1.7.3,0,.7,0,1-.4.2-.2.3-.3.4-.5.1-.2.2-.4.3-.5l1,1c0,.2-.2.4-.4.6-.2.2-.3.4-.5.6Z"/>
+      <path d="M782.8,181.5c-.7.7-1.4,1.1-2.2,1.3-.8.2-1.6.2-2.4-.1-.8-.3-1.6-.9-2.5-1.7-1.2-1.2-1.8-2.4-1.9-3.6,0-1.2.4-2.2,1.4-3.2.8-.8,1.5-1.2,2.3-1.3.8-.1,1.6,0,2.4.4.8.4,1.5.9,2.2,1.7l-5.7,5.6-.9-1,5-4.9-.3.5c-.7-.7-1.4-1-2.1-1.1-.7,0-1.3.3-2,1-.5.5-.8.9-.9,1.4-.1.5,0,1,.2,1.6s.8,1.2,1.5,2c.9.9,1.7,1.3,2.6,1.4.8,0,1.6-.3,2.4-1,.4-.3.6-.7.9-1,.2-.3.4-.7.6-1,.2-.3.3-.7.3-1l1,1.1c-.2.5-.4,1-.8,1.5-.3.5-.7,1-1.2,1.5Z"/>
+      <path d="M787.4,176.5l-6.5-6.5c0-.2.2-.5.4-.9.2-.4.5-.9.9-1.5.4-.5.8-1.1,1.3-1.6,0,0,.2-.1.3-.2,0,0,.2-.1.3-.2l.9.9c-.3.2-.5.4-.8.7-.2.2-.4.5-.6.7-.2.2-.4.5-.6.7-.2.3-.4.5-.5.8l6,6-1,1Z"/>
+    </g>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="1009.3" cy="306.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(800.4 241.1) rotate(-44.7)"><tspan x="0" y="0">Build consensus</tspan></text>
+  </g>
+  <path id="path2500-5-22-8-2-2-8-1-3-6-5-3-6" class="st31" d="M799.7,260.6l54.9.4" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(842.1 241.1) rotate(-44.7)"><tspan x="0" y="0">Pair sequences</tspan></text>
+  </g>
+  <path id="path2500-5-22-8-2-2-8-1-3-6-5-3-6-8" class="st31" d="M844.6,260.9l73.5.3" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-8-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(925.8 240.6) rotate(-44.7)"><tspan x="0" y="0">Assemble pairs</tspan></text>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-8-2-6" class="st27" cx="918.1" cy="261.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-4-7" class="st27" cx="1093.4" cy="260.6" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text103119" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <g class="st6">
+      <path d="M1094.1,229.2c-1.5,1.4-3,2.1-4.5,2-1.5,0-3.1-.9-4.7-2.5-1.6-1.6-2.4-3.2-2.5-4.7,0-1.5.6-3,2.1-4.5.5-.5,1.1-.9,1.7-1.3.6-.4,1.2-.6,1.9-.9l1,1c-.7.2-1.3.5-1.9.8-.6.3-1.1.8-1.6,1.2-.8.8-1.3,1.6-1.5,2.3-.2.8-.2,1.6.1,2.4.3.8.9,1.7,1.8,2.6.9.9,1.7,1.5,2.6,1.9.8.3,1.6.4,2.4.2.8-.2,1.6-.7,2.4-1.5.5-.5.9-1,1.3-1.6.4-.6.6-1.2.8-1.9l1,1c-.2.4-.4.9-.6,1.3-.2.4-.5.8-.7,1.2s-.6.7-.9,1.1Z"/>
+      <path d="M1101.9,221.7c-1.1,1.1-2.3,1.6-3.4,1.5s-2.4-.8-3.5-2c-1.2-1.2-1.9-2.4-1.9-3.6,0-1.2.4-2.3,1.5-3.3.8-.8,1.5-1.2,2.3-1.4.8-.2,1.6,0,2.3.2.8.3,1.5.9,2.3,1.6,1.2,1.2,1.8,2.4,1.9,3.6,0,1.2-.4,2.3-1.4,3.4ZM1101,220.8c.6-.6.9-1.1,1-1.7,0-.6,0-1.1-.3-1.7-.3-.6-.7-1.1-1.2-1.6-.6-.6-1.1-1-1.7-1.2-.5-.3-1.1-.4-1.7-.3-.6,0-1.1.4-1.7,1-.6.6-.9,1.1-1,1.7,0,.6,0,1.1.3,1.7.3.5.7,1.1,1.2,1.6.8.8,1.7,1.3,2.5,1.5.8.2,1.7-.1,2.5-.9Z"/>
+      <path d="M1107.9,215.3l-1,1-9.7-9.8,1-1,9.7,9.8Z"/>
+      <path d="M1111.2,212.1l-1,1-9.7-9.8,1-1,9.7,9.8Z"/>
+      <path d="M1116.2,207.6c-.3.3-.7.6-1,.8-.4.2-.8.4-1.2.5-.4.1-.9.1-1.3,0s-.9-.4-1.3-.8c-.6-.6-.9-1.2-1.1-1.7-.1-.6,0-1.1.2-1.7.2-.5.6-1.1,1.1-1.6.4-.4.7-.7,1.1-.9.3-.2.7-.4,1-.5.3-.1.6-.2.9-.3l1.1.7c-.4,0-.8.2-1.4.5s-1,.7-1.5,1.2c-.6.6-.9,1.2-1,1.7,0,.5,0,1,.5,1.5.3.4.7.5,1.1.5.4,0,.8,0,1.2-.3s.7-.5,1-.8c.6-.6,1-1.1,1.3-1.5.2-.4.2-.8-.1-1.1l-3.2-3.3c-.5-.5-1.1-.8-1.7-.7-.6,0-1.2.4-1.8,1-.4.4-.7.8-1,1.4-.3.5-.5,1.1-.6,1.6l-1-1c.1-.5.4-1,.8-1.6.4-.6.8-1.1,1.3-1.6.3-.3.6-.6,1-.8.3-.2.7-.3,1-.4.3,0,.7-.1,1,0,.3,0,.7.1,1,.3.3.2.6.4.9.7l3.4,3.4c.5.5.7,1,.7,1.6,0,.5-.3,1.1-.7,1.6-.4.5-.9,1.1-1.4,1.6Z"/>
+      <path d="M1124.4,199.5c-.2.2-.5.4-.8.6-.3.2-.6.4-1,.5s-.6.3-.9.4v-.7s3.8,3.8,3.8,3.8l-1,1-8.8-8.9c-.3-.3-.4-.6-.4-1s.1-.7.3-1.1c.2-.4.4-.8.7-1.1.3-.4.6-.7.9-1,.6-.6,1.2-1,2-1.2.7-.3,1.5-.3,2.4,0,.9.3,1.8.9,2.7,1.8.7.7,1.2,1.5,1.5,2.3.3.8.3,1.6,0,2.4-.2.8-.7,1.5-1.4,2.3ZM1123.4,198.5c.5-.5.8-1.1,1-1.6.1-.6,0-1.1-.2-1.7-.2-.6-.6-1.1-1.1-1.6-.5-.5-1-.9-1.6-1.3-.6-.3-1.1-.5-1.7-.4-.6,0-1.2.4-1.8,1-.5.5-.9,1-1.1,1.4-.3.5-.3.8,0,1l4.3,4.4c.5-.1.9-.3,1.3-.5.4-.2.7-.5,1-.8Z"/>
+      <path d="M1131.7,192.2c-.5.5-1,.9-1.4,1.1-.4.2-1,.4-1.5.6l-1.1-1.1c.5-.1.8-.3,1.2-.4.3-.1.7-.3.9-.4.3-.2.6-.4.9-.7.5-.5.8-1,.8-1.5,0-.5,0-.9-.4-1.3-.3-.3-.5-.4-.8-.4s-.6,0-.9.2c-.3.1-.7.3-1,.4-.4.2-.7.4-1.1.6-.4.2-.7.3-1.1.4-.4,0-.8,0-1.1,0-.4,0-.7-.3-1.1-.7-.4-.4-.6-.7-.7-1.1-.1-.4-.1-.8,0-1.2,0-.4.2-.8.4-1.1.2-.4.5-.7.8-1,.4-.4.8-.7,1.3-.9s.9-.4,1.3-.5l1,1c-.5.2-1,.3-1.4.5s-.8.4-1.2.8c-.4.4-.7.8-.8,1.3-.2.5,0,.9.2,1.2.3.3.6.4.9.4.3,0,.6,0,1-.2.3-.2.7-.3,1.1-.6.3-.2.6-.3,1-.5.3-.2.7-.3,1.1-.3.4,0,.7,0,1.1,0,.4.1.7.3,1.1.7.5.5.8,1,.8,1.6,0,.6,0,1.1-.3,1.7-.2.5-.6,1-1,1.4Z"/>
+      <path d="M1139.1,184.9c-.7.7-1.4,1.1-2.2,1.3-.8.2-1.6.2-2.4-.1-.8-.3-1.6-.9-2.5-1.7-1.2-1.2-1.8-2.4-1.9-3.6,0-1.2.4-2.2,1.4-3.2.8-.8,1.5-1.2,2.3-1.3.8-.1,1.6,0,2.4.4.8.4,1.5.9,2.2,1.7l-5.7,5.6-.9-1,5-4.9-.3.5c-.7-.7-1.4-1-2.1-1.1-.7,0-1.3.3-2,1-.5.5-.8.9-.9,1.4-.1.5,0,1,.2,1.6.3.6.8,1.2,1.5,2,.9.9,1.7,1.3,2.6,1.4.8,0,1.6-.3,2.4-1,.4-.3.6-.7.9-1,.2-.3.4-.7.6-1,.2-.3.3-.7.3-1l1,1.1c-.2.5-.4,1-.8,1.5-.3.5-.7,1-1.2,1.5Z"/>
+      <path d="M1109.9,247.3c-.4.4-.8.7-1.3,1-.5.3-1,.5-1.6.5-.6,0-1.2,0-1.9-.3-.7-.3-1.4-.8-2.1-1.6-.8-.8-1.3-1.5-1.5-2.2-.3-.7-.4-1.3-.3-1.9s.2-1.1.5-1.6c.3-.5.6-.9,1-1.3.4-.4.8-.7,1.2-1,.4-.3.9-.5,1.3-.7l1,1c-.4.2-.9.4-1.3.7-.4.3-.8.6-1.1.9-.8.8-1.2,1.7-1.2,2.5,0,.8.5,1.7,1.5,2.6.9.9,1.8,1.4,2.6,1.5.8,0,1.6-.4,2.5-1.2.4-.3.7-.7.9-1.1.3-.4.5-.8.7-1.3l1,1c-.2.5-.5.9-.7,1.3-.3.4-.6.8-1,1.2Z"/>
+      <path d="M1117,240.6c-1.1,1.1-2.3,1.6-3.4,1.5-1.2-.1-2.4-.8-3.5-2-1.2-1.2-1.9-2.4-1.9-3.6,0-1.2.4-2.3,1.5-3.3.8-.8,1.5-1.2,2.3-1.4.8-.2,1.6,0,2.3.2.8.3,1.5.9,2.3,1.6,1.2,1.2,1.8,2.4,1.9,3.6,0,1.2-.4,2.3-1.4,3.4ZM1116,239.6c.6-.6.9-1.1,1-1.7,0-.6,0-1.1-.3-1.7-.3-.6-.7-1.1-1.2-1.6-.6-.6-1.1-1-1.7-1.2-.5-.3-1.1-.4-1.7-.3-.6,0-1.1.4-1.7,1-.6.6-.9,1.1-1,1.7,0,.6,0,1.1.3,1.7.3.5.7,1.1,1.2,1.6.8.8,1.7,1.3,2.5,1.5s1.7-.1,2.5-.9Z"/>
+      <path d="M1115.5,228.7c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,2-1.3.6-.2,1.2-.2,1.8,0,.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5Z"/>
+      <path d="M1132.2,225.4c-.5.5-1,.9-1.4,1.1-.4.2-1,.4-1.5.6l-1.1-1.1c.5-.1.8-.3,1.2-.4.3-.1.7-.3.9-.4.3-.2.6-.4.9-.7.5-.5.8-1,.8-1.5,0-.5,0-.9-.4-1.3-.3-.3-.5-.4-.8-.4-.3,0-.6,0-.9.2-.3.1-.7.3-1,.4-.3.2-.7.4-1.1.6-.4.2-.7.3-1.1.4-.4,0-.8,0-1.1,0-.4,0-.7-.3-1.1-.7-.4-.4-.6-.7-.7-1.1-.1-.4-.1-.8,0-1.2,0-.4.2-.8.4-1.2s.5-.7.8-1c.4-.4.8-.7,1.3-.9.4-.2.9-.4,1.3-.5l1,1c-.5.2-1,.3-1.4.5-.4.2-.8.4-1.2.8-.4.4-.7.8-.8,1.3-.2.5,0,.9.2,1.2.3.3.5.4.9.4.3,0,.6,0,1-.2.3-.2.7-.3,1.1-.6.3-.2.6-.3,1-.5.3-.2.7-.3,1.1-.3.4,0,.7,0,1.1,0,.4.1.7.3,1.1.7.5.5.8,1,.8,1.6,0,.6,0,1.1-.3,1.7-.2.5-.6,1-1,1.4Z"/>
+      <path d="M1139.6,218.1c-.7.7-1.4,1.1-2.2,1.3s-1.6.2-2.4-.1c-.8-.3-1.6-.9-2.5-1.7-1.2-1.2-1.8-2.4-1.9-3.6,0-1.2.4-2.2,1.4-3.2.8-.8,1.5-1.2,2.3-1.3.8-.1,1.6,0,2.4.4.8.4,1.5.9,2.2,1.7l-5.7,5.6-.9-1,5-4.9-.3.5c-.7-.7-1.4-1-2.1-1.1s-1.3.3-2,1c-.5.5-.8.9-.9,1.4-.1.5,0,1,.2,1.6.3.6.8,1.2,1.5,2,.9.9,1.7,1.3,2.6,1.4.8,0,1.6-.3,2.4-1,.4-.3.6-.7.9-1,.2-.3.4-.7.6-1,.2-.3.3-.7.3-1l1,1.1c-.2.5-.4,1-.8,1.5-.3.5-.7,1-1.2,1.5Z"/>
+      <path d="M1137.8,206.6c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,2-1.3.6-.2,1.2-.2,1.8,0,.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5-.2-.1-.5-.2-.8-.3-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5Z"/>
+      <path d="M1154.6,203.3c-.5.5-1,.9-1.4,1.1s-1,.4-1.5.6l-1.1-1.1c.5-.1.8-.3,1.2-.4.3-.1.7-.3.9-.4.3-.2.6-.4.9-.7.5-.5.8-1,.8-1.5,0-.5,0-.9-.4-1.3-.3-.3-.5-.4-.8-.4-.3,0-.6,0-.9.2-.3.1-.7.3-1,.4-.4.2-.7.4-1.1.6s-.7.3-1.1.4c-.4,0-.8,0-1.1,0-.4,0-.7-.3-1.1-.7-.4-.4-.6-.7-.7-1.1-.1-.4-.1-.8,0-1.2,0-.4.2-.8.4-1.2.2-.4.5-.7.8-1,.4-.4.8-.7,1.3-.9.4-.2.9-.4,1.3-.5l1,1c-.5.2-1,.3-1.4.5-.4.2-.8.4-1.2.8-.4.4-.7.8-.8,1.3-.2.5,0,.9.2,1.2.3.3.6.4.9.4.3,0,.6,0,1-.2.3-.2.7-.3,1.1-.6.3-.2.6-.3,1-.5.3-.2.7-.3,1.1-.3.4,0,.7,0,1.1,0,.4.1.7.3,1.1.7.5.5.8,1,.8,1.6,0,.6,0,1.1-.3,1.7-.2.5-.6,1-1,1.4Z"/>
+      <path d="M1162,196c-.6.6-1.3,1-1.9,1.3-.7.2-1.3.2-2,0-.6-.2-1.3-.6-1.9-1.2l-4.4-4.5,1-1,4.2,4.3c.7.7,1.4,1.1,2,1.1.6,0,1.3-.3,2-1,.7-.7,1-1.3,1-2,0-.7-.4-1.3-1.1-2.1l-4.2-4.3,1-1,4.4,4.5c.9.9,1.3,1.9,1.3,2.8,0,1-.5,2-1.5,2.9Z"/>
+      <path d="M1169.3,188.8c-.5.5-1,.9-1.4,1.1-.4.2-1,.4-1.5.6l-1.1-1.1c.5-.1.8-.3,1.2-.4.3-.1.7-.3.9-.4.3-.2.6-.4.9-.7.5-.5.8-1,.8-1.5,0-.5,0-.9-.4-1.3-.3-.3-.5-.4-.8-.4-.3,0-.6,0-.9.2-.3.1-.7.3-1,.4-.4.2-.7.4-1.1.6-.4.2-.7.3-1.1.4-.4,0-.8,0-1.1,0-.4,0-.7-.3-1.1-.7-.4-.4-.6-.7-.7-1.1-.1-.4-.1-.8,0-1.2,0-.4.2-.8.4-1.2.2-.4.5-.7.8-1,.4-.4.8-.7,1.3-.9s.9-.4,1.3-.5l1,1c-.5.2-1,.3-1.4.5-.4.2-.8.4-1.2.8-.4.4-.7.8-.8,1.3-.2.5,0,.9.2,1.2.3.3.5.4.9.4.3,0,.6,0,1-.2.3-.2.7-.3,1.1-.6.3-.2.6-.3,1-.5.3-.2.7-.3,1.1-.3.4,0,.7,0,1.1,0,.4.1.7.3,1.1.7.5.5.8,1,.8,1.6,0,.6,0,1.1-.3,1.7-.2.5-.6,1-1,1.4Z"/>
+      <path d="M1180.7,177.2c-.4.4-.8.7-1.3,1-.5.3-1,.5-1.6.5-.6,0-1.2,0-1.9-.3-.7-.3-1.4-.8-2.1-1.6-.8-.8-1.3-1.5-1.5-2.2-.3-.7-.4-1.3-.3-1.9s.2-1.1.5-1.6c.3-.5.6-.9,1-1.3.4-.4.8-.7,1.2-1,.4-.3.9-.5,1.3-.7l1,1c-.4.2-.9.4-1.3.7-.4.3-.8.6-1.1.9-.8.8-1.2,1.7-1.2,2.5,0,.8.5,1.7,1.5,2.6.9.9,1.8,1.4,2.6,1.5.8,0,1.6-.4,2.5-1.2.4-.3.7-.7.9-1.1.3-.4.5-.8.7-1.3l1,1c-.2.5-.5.9-.8,1.3-.3.4-.6.8-1,1.2Z"/>
+      <path d="M1187.8,170.5c-1.1,1.1-2.3,1.6-3.4,1.5-1.2-.1-2.4-.8-3.5-2-1.2-1.2-1.9-2.4-1.9-3.6,0-1.2.4-2.3,1.5-3.3.8-.8,1.5-1.2,2.3-1.4.8-.2,1.6,0,2.3.2.8.3,1.5.9,2.3,1.6,1.2,1.2,1.8,2.4,1.9,3.6,0,1.2-.4,2.3-1.4,3.4ZM1186.8,169.5c.6-.6.9-1.1,1-1.7,0-.6,0-1.1-.3-1.7-.3-.6-.7-1.1-1.2-1.6-.6-.6-1.1-1-1.7-1.2-.6-.3-1.1-.4-1.7-.3-.6,0-1.1.4-1.7,1-.6.6-.9,1.1-1,1.7,0,.6,0,1.1.3,1.7.3.5.7,1.1,1.2,1.6.8.8,1.7,1.3,2.5,1.5s1.7-.1,2.5-.9Z"/>
+      <path d="M1195.9,162.4c-.6.6-1.3,1-1.9,1.3-.7.2-1.3.2-2,0-.6-.2-1.3-.6-1.9-1.2l-4.4-4.5,1-1,4.2,4.3c.7.7,1.4,1.1,2,1.1.7,0,1.3-.3,2-1,.7-.7,1-1.3,1-2,0-.7-.4-1.3-1.1-2.1l-4.2-4.3,1-1,4.4,4.5c.9.9,1.3,1.8,1.3,2.8,0,1-.5,2-1.5,2.9Z"/>
+      <path d="M1194.5,150.5c.1-.3.2-.7.4-1,.2-.3.3-.6.5-1,.2-.3.4-.6.6-.9.2-.3.5-.6.7-.8.7-.7,1.3-1.1,1.9-1.3.6-.2,1.2-.2,1.8,0,.6.2,1.1.6,1.7,1.1l4.6,4.6-1,1-4.6-4.6c-.2-.2-.4-.3-.6-.5s-.5-.2-.8-.3c-.3,0-.6,0-1,.1-.4.1-.8.4-1.2.8-.3.3-.6.6-.8,1-.3.4-.5.7-.7,1.2l6,6-1,1-6.5-6.5Z"/>
+      <path d="M1211.4,146.9c-.5.5-1.1.8-1.7.8-.6,0-1.3-.3-1.9-.9l-4.4-4.4-1.2,1.2-.9-.9,1.2-1.2-2-2,1-1,2,2,1.8-1.8.9.9-1.8,1.8,4.1,4.1c.4.4.8.6,1.1.7.3,0,.7,0,1-.4.2-.2.3-.3.4-.5.1-.2.2-.4.3-.5l1,1c0,.2-.2.4-.4.6-.2.2-.3.4-.5.6Z"/>
+    </g>
+  </g>
+  <g id="text166343" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1113.9 440) rotate(-44.7)"><tspan x="0" y="0">Annot. metadata</tspan></text>
+  </g>
+  <circle id="circle166347" class="st27" cx="1288.9" cy="307.7" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text166353" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1184 440) rotate(-44.7)"><tspan x="0" y="0">Filter dupl. count</tspan></text>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-4" class="st27" cx="1184" cy="307.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-4-4" class="st27" cx="1253.9" cy="307.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-8" class="st27" cx="567" cy="259.4" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" transform="translate(304.8 825.1) rotate(-89.7)"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-8-2" class="st27" cx="838.6" cy="261" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-4-4-8" class="st27" cx="799.7" cy="260.7" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="g59524-4-1" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <path id="path1232-7-2-9-0-96" class="st17" d="M430.8,232.9l.2,15.5c0,7,4.5,13.7,9.4,18.6l4.7,4.6" sodipodi:nodetypes="cssc"/>
+    <path id="path1232-7-2-7-3-0-9" class="st17" d="M458.8,232.9l.2,15.3c0,7-4.3,13.8-9.2,18.7l-4.6,4.7" sodipodi:nodetypes="cssc"/>
+    <path id="path2500-5-60-6-3" class="st17" d="M445.3,295.3v-23.7" sodipodi:nodetypes="cc"/>
+  </g>
+  <path id="path3447-6-2-4-8-1-3-7" class="st27" d="M152.4,304.7c-1-5.3,3.6-9.8,8.9-8.8s5.3,3,5.9,5.9c1,5.3-3.6,9.8-8.9,8.8s-5.3-3-5.9-5.9Z" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path2500-5-2-3-2-81" data-name="path2500-5-2-3-2-8" class="st35" d="M125.4,288.4v27.6" sodipodi:nodetypes="cc"/>
+  <g>
+    <g id="g2123-3-6-7-8-0" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-3-1-9">
+        <g id="g22904">
+          <g id="g6795">
+            <g id="g10541">
+              <path id="path10543" d="M1451.5,190.9h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM1411.1,172.5h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1447.8,224.7l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path10553" class="st44" d="M1411.1,172.5h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1447.8,224.7l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+            <g id="g6322-2">
+              <path id="path5862-6" d="M1445.4,197h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM1405,178.6h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1441.6,230.8l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path6276-4-8" class="st44" d="M1405,178.6h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1441.6,230.7l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <text class="st47" transform="translate(1400.5 213.5)"><tspan x="0" y="0">fasta</tspan></text>
+  </g>
+  <polyline class="st13" points="1318.1 801.6 1318.1 801.6 1318.1 801.6"/>
+  <path class="st13" d="M1400.7,306.6c-3.9-.6-10.2-2.2-16.1-6.8-14.6-11.2-14.3-44.9-14.3-47.3"/>
+  <path id="path2500-5-2-3-2-82" data-name="path2500-5-2-3-2-8" class="st35" d="M1383.7,250.8h-27.6" sodipodi:nodetypes="cc"/>
+  <g>
+    <g id="g2123-3-6-7-8-01" data-name="g2123-3-6-7-8-0" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-3-1-91" data-name="g196-6-3-3-1-9">
+        <g id="g229041" data-name="g22904">
+          <g id="g67951" data-name="g6795">
+            <g id="g105411" data-name="g10541">
+              <path id="path105431" data-name="path10543" d="M95.7,228h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM55.3,209.6h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM91.9,261.8l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path105531" data-name="path10553" class="st44" d="M55.3,209.6h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM91.9,261.8l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+            <g id="g6322-21" data-name="g6322-2">
+              <path id="path5862-61" data-name="path5862-6" d="M89.6,234.1h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM49.2,215.7h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM85.8,267.9l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path6276-4-81" data-name="path6276-4-8" class="st44" d="M49.2,215.7h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM85.8,267.8l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <text class="st47" transform="translate(44.7 250.6)"><tspan x="0" y="0">fastq</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-4">
+        <path id="path184-7-94-62" d="M89.7,298.6h-1.4v-6.6s0,0,0-.1c0-.3,0-.5-.3-.7l-11-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27.1c-1.2,0-2.2,1-2.2,2.2v18.2h-1.4c-1.8,0-3.2,1.4-3.2,3.2v16.7c0,1.8,1.4,3.2,3.2,3.2h1.4v11.4c0,1.2,1,2.2,2.2,2.2h37.1c1.2,0,2.2-1,2.2-2.2v-11.4h1.4c1.8,0,3.2-1.4,3.2-3.2v-16.7c0-1.8-1.4-3.2-3.2-3.2h0ZM49,280.3h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM86.1,332.5h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-7" class="st44" d="M49,280.3h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM86.1,332.5h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st46" transform="translate(54.7 314.9)"><tspan x="0" y="0">tsv</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-061" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-41" data-name="g196-6-3-4">
+        <path id="path184-7-94-621" data-name="path184-7-94-62" d="M429.4,155.7h-1.6v-7.7s0,0,0-.1c0-.3,0-.6-.3-.8l-12.8-14.6s0,0,0,0c0,0-.2-.2-.3-.2,0,0,0,0,0,0,0,0-.2,0-.3-.1,0,0,0,0,0,0,0,0-.2,0-.3,0h-31.4c-1.4,0-2.6,1.2-2.6,2.6v21.1h-1.6c-2,0-3.7,1.7-3.7,3.7v19.3c0,2,1.7,3.7,3.7,3.7h1.6v13.2c0,1.4,1.2,2.6,2.6,2.6h42.8c1.4,0,2.6-1.2,2.6-2.6v-13.2h1.6c2,0,3.7-1.7,3.7-3.7v-19.3c0-2.1-1.7-3.7-3.7-3.7h0ZM382.4,134.6h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM425.2,194.9h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-71" data-name="path194-2-3-7" class="st44" d="M382.4,134.6h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM425.2,194.9h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st45" transform="translate(383.9 174.5)"><tspan x="0" y="0">fasta</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-062" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-42" data-name="g196-6-3-4">
+        <path id="path184-7-94-622" data-name="path184-7-94-62" d="M502.9,155.7h-1.6v-7.7s0,0,0-.1c0-.3,0-.6-.3-.8l-12.8-14.6s0,0,0,0c0,0-.2-.2-.3-.2,0,0,0,0,0,0,0,0-.2,0-.3-.1,0,0,0,0,0,0,0,0-.2,0-.3,0h-31.4c-1.4,0-2.6,1.2-2.6,2.6v21.1h-1.6c-2,0-3.7,1.7-3.7,3.7v19.3c0,2,1.7,3.7,3.7,3.7h1.6v13.2c0,1.4,1.2,2.6,2.6,2.6h42.8c1.4,0,2.6-1.2,2.6-2.6v-13.2h1.6c2,0,3.7-1.7,3.7-3.7v-19.3c0-2.1-1.7-3.7-3.7-3.7h0ZM455.9,134.6h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM498.7,194.9h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-72" data-name="path194-2-3-7" class="st44" d="M455.9,134.6h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM498.7,194.9h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st45" transform="translate(457.4 174.5)"><tspan x="0" y="0">fasta</tspan></text>
+  </g>
+  <text class="st8" transform="translate(126.1 77.8) rotate(.3)"><tspan x="0" y="0">QC and sequence assembly</tspan></text>
+  <g class="st6">
+    <path d="M1412.5,77.8l-6.9-18.7h5.2s5.2,15.9,5.2,15.9h-1.5s5.3-15.8,5.3-15.8h4.8s-7.4,18.6-7.4,18.6h-4.8Z"/>
+    <path d="M1430.6,81c-.6-.7-1.3-1.7-1.9-2.9-.6-1.2-1.2-2.5-1.6-4-.4-1.5-.6-3.1-.6-4.9s.2-3.4.7-4.9,1-2.8,1.6-4c.6-1.2,1.3-2.1,1.9-2.8h3.5c-.2.5-.5,1.1-.9,1.9-.3.8-.7,1.7-1,2.7-.3,1-.6,2.1-.8,3.3-.2,1.2-.3,2.5-.3,3.8s0,2.6.3,3.8.5,2.3.8,3.3c.3,1,.6,1.9,1,2.7s.6,1.4.9,1.9h-3.5Z"/>
+    <path d="M1436.9,77.9v-18.7c0,0,7.6,0,7.6,0,3.2,0,5.5.8,7,2.4,1.5,1.6,2.2,3.9,2.2,7,0,3.1-.8,5.4-2.3,6.9-1.5,1.6-3.8,2.3-7,2.3h-7.5ZM1441.4,74.4h2.4c1.7,0,3-.4,3.8-1.4.9-.9,1.3-2.4,1.3-4.4,0-2.1-.4-3.5-1.3-4.5s-2.1-1.4-3.8-1.4h-2.4s0,11.7,0,11.7Z"/>
+    <path d="M1455.6,81.2c.2-.5.5-1.1.9-1.9.3-.8.7-1.7,1-2.7.3-1,.6-2.1.8-3.3.2-1.2.3-2.5.3-3.8,0-1.3,0-2.6-.3-3.8-.2-1.2-.5-2.3-.8-3.3-.3-1-.6-1.9-1-2.7-.3-.8-.6-1.4-.9-1.9h3.5c.6.7,1.3,1.7,1.9,2.9.6,1.2,1.1,2.5,1.6,4s.6,3.1.6,4.9c0,1.7-.2,3.4-.7,4.9-.4,1.5-1,2.8-1.6,4-.6,1.2-1.3,2.1-1.9,2.8h-3.5Z"/>
+    <path d="M1470.1,78.4c-.8,0-1.6-.1-2.4-.3-.7-.2-1.4-.5-2.1-.8v-4.1c.7.4,1.2.8,1.8,1.1.5.3,1.1.5,1.6.5.8,0,1.4-.2,1.9-.6.5-.4.7-1.1.7-2v-12.8c0,0,4.6,0,4.6,0v13c0,1.2-.3,2.2-.6,2.9-.4.8-.8,1.4-1.4,1.8-.6.5-1.2.8-1.9,1-.7.2-1.4.3-2.2.3Z"/>
+    <path d="M1493.1,78.6c-.9,0-1.7,0-2.4-.2-.8-.2-1.4-.4-2-.8-.6-.4-1-.9-1.3-1.5-.3-.6-.5-1.4-.5-2.3,0-.9.2-1.6.6-2.3.4-.7.9-1.2,1.7-1.5.7-.4,1.7-.5,2.8-.5.6,0,1.2,0,1.8.2.6.1,1.1.3,1.6.5.5.2.9.5,1.1.7l.2,2c-.4-.2-.8-.4-1.3-.5-.5-.1-1.1-.2-1.7-.2-.9,0-1.6.1-2,.4-.4.3-.6.7-.6,1.3,0,.4,0,.7.3,1,.2.3.5.5.8.6.3.2.7.2,1.1.2,1,0,1.6,0,2-.2.4-.1.6-.4.6-.8v-5.2c0-.9-.2-1.5-.8-1.9-.5-.4-1.3-.6-2.3-.6-.8,0-1.6.1-2.5.4-.8.3-1.5.6-2,1v-3.7c.5-.3,1.3-.6,2.3-.8,1-.3,2.2-.4,3.4-.4.4,0,.9,0,1.5.1.5,0,1.1.2,1.6.4.5.2,1,.5,1.5.9.5.4.8.9,1.1,1.4.3.6.4,1.3.4,2.2v6.7c0,.8-.3,1.5-.9,1.9-.5.5-1.3.8-2.3,1.1-1,.2-2.2.3-3.7.3Z"/>
+    <path d="M1503.7,65.3c.4-.2.8-.4,1.4-.6.6-.2,1.2-.4,1.9-.5.7-.1,1.4-.3,2.1-.4.7,0,1.3-.1,1.9-.1,1.3,0,2.4.2,3.2.5s1.6.9,2.1,1.6c.5.7.7,1.7.7,3v9.5s-4.2,0-4.2,0v-8.7c0-.4,0-.7-.1-1-.1-.3-.3-.6-.5-.8-.2-.2-.5-.4-.8-.5-.4-.1-.8-.2-1.3-.2-.4,0-.9,0-1.3.1-.4.1-.8.2-1,.3v10.6c0,0-4.2,0-4.2,0v-13Z"/>
+    <path d="M1520.8,65.4c.4-.2.8-.4,1.4-.6.6-.2,1.2-.4,1.9-.5.7-.1,1.4-.3,2.1-.4.7,0,1.3-.1,1.9-.1,1.3,0,2.4.2,3.2.5s1.6.9,2.1,1.6c.5.7.7,1.7.7,3v9.5s-4.2,0-4.2,0v-8.7c0-.4,0-.7-.1-1-.1-.3-.3-.6-.5-.8-.2-.2-.5-.4-.8-.5-.4-.1-.8-.2-1.3-.2-.4,0-.9,0-1.3.1-.4.1-.8.2-1,.3v10.6c0,0-4.2,0-4.2,0v-13Z"/>
+    <path d="M1544.2,78.9c-2.4,0-4.2-.7-5.4-1.9-1.2-1.3-1.8-3.2-1.8-5.7,0-2.7.6-4.6,1.9-5.7,1.2-1.2,3-1.7,5.4-1.7,1.6,0,2.9.3,4,.8,1.1.5,1.9,1.4,2.4,2.5.5,1.1.8,2.5.8,4.3,0,2.5-.6,4.4-1.9,5.6-1.3,1.3-3.1,1.9-5.4,1.9ZM1544.2,75.5c.7,0,1.3-.2,1.7-.5.5-.3.8-.8,1-1.4s.4-1.4.4-2.3c0-1-.1-1.9-.3-2.5-.2-.6-.6-1-1-1.3-.5-.3-1-.4-1.7-.4-.7,0-1.3.1-1.7.4-.4.3-.8.7-1,1.3-.2.6-.3,1.4-.3,2.4,0,1.4.2,2.5.7,3.2.5.7,1.3,1.1,2.3,1.1Z"/>
+    <path d="M1560.1,79.1c-1.6,0-2.9-.4-3.7-1.2s-1.2-1.9-1.2-3.3v-7.1s-2,0-2,0v-3.2s2.1,0,2.1,0v-3.9s4.4,0,4.4,0v3.9s3.1,0,3.1,0v3.2s-3.1,0-3.1,0v6.6c0,.5,0,.8.3,1.1.2.2.5.4,1,.4.3,0,.6,0,.9-.2.3-.1.6-.2.8-.4v3.6c-.4.2-.8.3-1.3.4-.5,0-.9.1-1.3.1Z"/>
+    <path d="M1571.3,79c-.9,0-1.7,0-2.4-.2-.8-.2-1.4-.4-2-.8-.6-.4-1-.9-1.3-1.5-.3-.6-.5-1.4-.5-2.3,0-.9.2-1.6.6-2.3.4-.7.9-1.2,1.7-1.5.7-.4,1.7-.5,2.8-.5.6,0,1.3,0,1.8.2.6.1,1.1.3,1.6.5.5.2.9.5,1.1.7l.2,2c-.4-.2-.8-.4-1.3-.5-.5-.1-1.1-.2-1.7-.2-.9,0-1.6.1-2,.4s-.6.7-.6,1.3c0,.4,0,.7.3,1,.2.3.5.5.8.6.3.2.7.2,1.1.2,1,0,1.6,0,2-.2.4-.1.6-.4.6-.8v-5.2c0-.9-.2-1.5-.8-1.9-.5-.4-1.3-.6-2.3-.6-.8,0-1.6.1-2.5.4-.8.3-1.5.6-2,1v-3.7c.5-.3,1.3-.6,2.3-.8,1-.3,2.2-.4,3.4-.4.4,0,.9,0,1.5.1s1.1.2,1.6.4c.5.2,1,.5,1.5.9.5.4.8.9,1.1,1.4.3.6.4,1.3.4,2.2v6.7c0,.8-.3,1.5-.9,1.9-.5.5-1.3.8-2.3,1.1-1,.2-2.2.3-3.7.3Z"/>
+    <path d="M1587.7,79.2c-1.6,0-2.9-.4-3.7-1.2s-1.2-1.9-1.2-3.3v-7.1s-2,0-2,0v-3.2s2.1,0,2.1,0v-3.9s4.4,0,4.4,0v3.9s3.1,0,3.1,0v3.2s-3.1,0-3.1,0v6.6c0,.5,0,.8.3,1.1.2.2.5.4,1,.4.3,0,.6,0,.9-.2.3-.1.6-.2.8-.4v3.6c-.4.2-.8.3-1.3.4s-.9.1-1.3.1Z"/>
+    <path d="M1593.5,62.6v-3.2s4.3,0,4.3,0v3.2s-4.3,0-4.3,0ZM1593.5,78.7v-14c0,0,4.2,0,4.2,0v14s-4.2,0-4.2,0Z"/>
+    <path d="M1607.8,79.2c-2.4,0-4.2-.7-5.4-1.9-1.2-1.3-1.8-3.2-1.8-5.7,0-2.7.6-4.6,1.9-5.7,1.2-1.2,3-1.7,5.4-1.7,1.6,0,2.9.3,4,.8,1.1.5,1.9,1.4,2.4,2.5.5,1.1.8,2.5.8,4.3,0,2.5-.6,4.4-1.9,5.6-1.3,1.3-3.1,1.9-5.4,1.9ZM1607.8,75.8c.7,0,1.3-.2,1.7-.5.5-.3.8-.8,1-1.4.2-.6.4-1.4.4-2.3,0-1-.1-1.9-.3-2.5-.2-.6-.6-1-1-1.3-.5-.3-1-.4-1.7-.4-.7,0-1.3.1-1.7.4-.4.3-.8.7-1,1.3-.2.6-.3,1.4-.3,2.4,0,1.4.2,2.5.7,3.2.5.7,1.3,1.1,2.3,1.1Z"/>
+    <path d="M1618,65.8c.4-.2.8-.4,1.4-.6.6-.2,1.2-.4,1.9-.5.7-.1,1.4-.3,2.1-.4.7,0,1.3-.1,1.9-.1,1.3,0,2.4.2,3.2.5.9.3,1.6.9,2.1,1.6s.7,1.7.7,3v9.5s-4.2,0-4.2,0v-8.7c0-.4,0-.7-.1-1-.1-.3-.3-.6-.5-.8-.2-.2-.5-.4-.8-.5-.4-.1-.8-.2-1.3-.2-.4,0-.9,0-1.3.1-.4.1-.8.2-1,.3v10.6c0,0-4.2,0-4.2,0v-13Z"/>
+    <path d="M1447.4,112c-.9,0-1.7,0-2.4-.2-.8-.2-1.4-.4-2-.8-.6-.4-1-.9-1.3-1.5s-.5-1.4-.5-2.3c0-.9.2-1.6.6-2.3.4-.7.9-1.2,1.7-1.5.7-.4,1.7-.5,2.8-.5.6,0,1.2,0,1.8.2.6.1,1.1.3,1.6.5.5.2.9.5,1.1.7l.2,2c-.4-.2-.8-.4-1.3-.5-.5-.1-1.1-.2-1.7-.2-.9,0-1.6.1-2,.4-.4.3-.6.7-.6,1.3,0,.4,0,.7.3,1,.2.3.5.5.8.6.3.2.7.2,1.1.2,1,0,1.6,0,2-.2.4-.1.6-.4.6-.8v-5.2c0-.9-.2-1.5-.8-1.9-.5-.4-1.3-.6-2.3-.6-.8,0-1.6.1-2.5.4-.8.3-1.5.6-2,1v-3.7c.5-.3,1.3-.6,2.3-.8,1-.3,2.2-.4,3.4-.4.4,0,.9,0,1.5.1.5,0,1.1.2,1.6.4.5.2,1,.5,1.5.9.5.4.8.9,1.1,1.4.3.6.4,1.3.4,2.2v6.7c0,.8-.3,1.5-.9,1.9-.5.5-1.3.8-2.3,1.1-1,.2-2.2.3-3.7.3Z"/>
+    <path d="M1458,98.7c.4-.2.8-.4,1.4-.6.6-.2,1.2-.4,1.9-.5.7-.1,1.4-.3,2.1-.4.7,0,1.3-.1,1.9-.1,1.3,0,2.4.2,3.2.5.9.3,1.6.9,2.1,1.6.5.7.7,1.7.7,3v9.5s-4.2,0-4.2,0v-8.7c0-.4,0-.7-.1-1-.1-.3-.3-.6-.5-.8-.2-.2-.5-.4-.8-.5-.4-.1-.8-.2-1.3-.2-.4,0-.9,0-1.3.1-.4.1-.8.2-1,.3v10.6c0,0-4.2,0-4.2,0v-13Z"/>
+    <path d="M1481.8,112.2c-1.1,0-2.1-.1-3-.4-.9-.2-1.7-.7-2.4-1.2-.7-.6-1.2-1.4-1.6-2.3-.4-1-.6-2.2-.6-3.7,0-2.3.6-4.1,1.7-5.4s2.8-2,5.1-2c.3,0,.7,0,1.2,0,.5,0,1,.2,1.5.4.5.2,1,.5,1.4,1l-.8,1.3v-8s4.2,0,4.2,0v16.3c0,.7-.3,1.3-.6,1.8-.4.5-.9.9-1.5,1.3-.6.3-1.3.6-2.1.8-.8.2-1.6.3-2.4.3ZM1482,108.7c.7,0,1.2,0,1.6-.3.4-.2.6-.4.6-.8v-6.5c-.3-.2-.7-.3-1-.4-.4-.1-.8-.2-1.1-.2-.8,0-1.4.1-2,.4-.5.3-1,.7-1.2,1.3-.3.6-.4,1.4-.4,2.5,0,.8.1,1.5.3,2.1s.6,1,1.1,1.4c.5.3,1.2.5,2.1.5Z"/>
+    <path d="M1500.8,111.8v-11c0,0-2,0-2,0v-3.2s2.1,0,2.1,0v-.3c0-.9.1-1.7.3-2.4.2-.7.5-1.2.8-1.6.3-.4.7-.8,1.2-1,.4-.2.9-.4,1.5-.5.5,0,1.1-.1,1.7-.1.3,0,.6,0,1,0,.4,0,.6.1.9.2v3.7c-.2-.2-.4-.4-.6-.5-.2-.1-.5-.2-.8-.2-.2,0-.5,0-.7,0s-.4.1-.5.3c-.1.1-.3.3-.4.6,0,.2-.1.6-.1.9v.8s3.1,0,3.1,0v3.2s-3.1,0-3.1,0v11c0,0-4.2,0-4.2,0ZM1510.7,95.8v-3.2s4.3,0,4.3,0v3.2s-4.3,0-4.3,0ZM1510.7,111.9v-14c0,0,4.2,0,4.2,0v14s-4.2,0-4.2,0Z"/>
+    <path d="M1522.8,111.9h-4.1s0-19.5,0-19.5h4.1s0,19.5,0,19.5Z"/>
+    <path d="M1532.3,112.5c-1.6,0-2.9-.4-3.7-1.2-.8-.8-1.2-1.9-1.2-3.3v-7.1s-2,0-2,0v-3.2s2.1,0,2.1,0v-3.9s4.4,0,4.4,0v3.9s3.1,0,3.1,0v3.2s-3.1,0-3.1,0v6.6c0,.5,0,.8.3,1.1.2.2.5.4,1,.4.3,0,.6,0,.9-.2.3-.1.6-.2.8-.4v3.6c-.4.2-.8.3-1.3.4-.5,0-.9.1-1.3.1Z"/>
+    <path d="M1544.5,112.5c-1.4,0-2.7-.3-3.8-.9s-1.9-1.4-2.5-2.5c-.6-1.1-.9-2.4-.9-3.9,0-2.5.6-4.4,1.9-5.7,1.2-1.3,3-2,5.3-2,1.6,0,2.8.4,3.8,1,1,.7,1.7,1.7,2.1,3,.4,1.3.6,2.9.6,4.7h-10.8c0,0-.4-2.7-.4-2.7h7.8s-.6,1.4-.6,1.4c0-1.5-.2-2.6-.6-3.2-.4-.6-1.1-.9-2-.9-.5,0-1,.1-1.4.4-.4.3-.8.7-1,1.3s-.4,1.4-.4,2.5c0,1.3.3,2.4,1,3.1.6.7,1.7,1.1,3.1,1.1.5,0,1,0,1.6-.2.5-.1,1-.3,1.4-.4.4-.2.8-.3,1.2-.4v3.6c-.7.3-1.4.5-2.3.7-.8.2-1.8.3-2.9.3Z"/>
+    <path d="M1553.8,112.1v-12.7c.3-.2.8-.5,1.5-.8.7-.3,1.4-.5,2.3-.8.9-.2,1.7-.3,2.6-.3s1.6,0,2.1.2c.5.1.9.3,1.1.5v3.1c-.3,0-.7-.1-1.2-.2-.5,0-1,0-1.5,0-.5,0-1,0-1.5,0-.5,0-.9,0-1.2.1v10.9c0,0-4.2,0-4.2,0Z"/>
+    <path d="M1565.9,96v-3.2s4.3,0,4.3,0v3.2s-4.3,0-4.3,0ZM1565.9,112.2v-14c0,0,4.2,0,4.2,0v14s-4.2,0-4.2,0Z"/>
+    <path d="M1573.9,99.2c.4-.2.8-.4,1.4-.6.6-.2,1.2-.4,1.9-.5.7-.1,1.4-.3,2.1-.4.7,0,1.3-.1,1.9-.1,1.3,0,2.4.2,3.2.5s1.6.9,2.1,1.6c.5.7.7,1.7.7,3v9.5s-4.2,0-4.2,0v-8.7c0-.4,0-.7-.1-1,0-.3-.3-.6-.5-.8-.2-.2-.5-.4-.8-.5-.4-.1-.8-.2-1.3-.2-.4,0-.9,0-1.3.1-.4.1-.8.2-1,.3v10.6c0,0-4.2,0-4.2,0v-13Z"/>
+    <path d="M1596.3,112.7c-1.3,0-2.4-.4-3.3-.9-.9-.5-1.6-1.3-2.1-2.3-.5-1-.8-2.3-.8-3.9,0-1.6.2-2.9.6-3.9s.9-1.8,1.6-2.4,1.5-1,2.5-1.2c1-.2,2.1-.4,3.3-.3,1.2,0,2.2.2,3.1.5.9.3,1.6.7,2,1.3.5.6.7,1.3.7,2.1v10.9c0,1-.2,1.9-.5,2.6-.3.8-.8,1.4-1.4,1.9s-1.4.9-2.3,1.2c-.9.3-1.9.4-3.1.4-1.2,0-2.3-.1-3.2-.3-.9-.2-1.6-.4-2-.7v-3.7c.3.1.7.3,1.2.5.5.2,1.1.3,1.8.5.7.1,1.3.2,2,.2.9,0,1.6-.1,2-.4.5-.2.8-.6,1-1s.3-.9.3-1.4v-2.3s.8.6.8.6c-.3.4-.7.8-1.1,1.1-.4.3-.9.6-1.4.7-.6.2-1.2.3-1.9.3ZM1597.3,109.6c.5,0,.9,0,1.3-.1.4-.1.8-.3,1.2-.5v-6.5c0-.4,0-.7-.3-.9-.2-.2-.5-.3-.8-.4-.3,0-.7-.1-1.1-.1-.9,0-1.5.2-2,.6s-.9.9-1.1,1.5c-.2.7-.3,1.4-.3,2.3,0,1.3.3,2.3.9,3.1.6.7,1.3,1.1,2.3,1.1Z"/>
+  </g>
+  <g>
+    <g id="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-0" class="st49" d="M623.7,62.3h104.1c4.9,0,8.9,8.9,8.9,19.9h0c0,11-4,19.9-8.9,19.9h-104.1c-4.9,0-8.9-8.9-8.9-19.9h0c0-11,4-19.9,8.9-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(646.6 88.2) rotate(.3)"><tspan x="0" y="0">fastp</tspan></text>
+  </g>
+  <g>
+    <g id="g48221" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-01" data-name="rect4770-6-1-8-0" class="st49" d="M767.6,62.3h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(787.4 89.6) rotate(.3)"><tspan x="0" y="0">pRESTO</tspan></text>
+  </g>
+  <g>
+    <g id="g48222" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-02" data-name="rect4770-6-1-8-0" class="st49" d="M1356.6,883.5h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(1366.3 910.8) rotate(.3)"><tspan x="0" y="0">Change-O</tspan></text>
+  </g>
+  <g>
+    <g id="g48223" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-03" data-name="rect4770-6-1-8-0" class="st49" d="M1536.5,883.5h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(1554.2 910.8) rotate(.3)"><tspan x="0" y="0">IgBLAST</tspan></text>
+  </g>
+  <text class="st8" transform="translate(1830.2 77.8) rotate(.3)"><tspan x="0" y="0">QC filtering</tspan></text>
+  <g>
+    <g id="g48224" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-04" data-name="rect4770-6-1-8-0" class="st49" d="M1846,118h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(1860.2 144.7) rotate(.3)"><tspan x="0" y="0">Change-O</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-063" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-43" data-name="g196-6-3-4">
+        <path id="path184-7-94-623" data-name="path184-7-94-62" d="M1700.6,282.8h-1.6v-7.7s0,0,0-.1c0-.3,0-.6-.3-.8l-12.8-14.6s0,0,0,0c0,0-.2-.2-.3-.2,0,0,0,0,0,0,0,0-.2,0-.3-.1,0,0,0,0,0,0,0,0-.2,0-.3,0h-31.4c-1.4,0-2.6,1.2-2.6,2.6v21.1h-1.6c-2,0-3.7,1.7-3.7,3.7v19.3c0,2,1.7,3.7,3.7,3.7h1.6v13.2c0,1.4,1.2,2.6,2.6,2.6h42.8c1.4,0,2.6-1.2,2.6-2.6v-13.2h1.6c2,0,3.7-1.7,3.7-3.7v-19.3c0-2.1-1.7-3.7-3.7-3.7h0ZM1653.6,261.7h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM1696.4,322h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-73" data-name="path194-2-3-7" class="st44" d="M1653.6,261.7h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM1696.4,322h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st45" transform="translate(1664.1 301.6)"><tspan x="0" y="0">DB</tspan></text>
+  </g>
+  <path id="path2500-5-2-3-2-83" data-name="path2500-5-2-3-2-8" class="st35" d="M1643.2,356.7v-27.6" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8" class="st27" cx="445.3" cy="303.8" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" transform="translate(139.3 747.5) rotate(-89.7)"/>
+  <g>
+    <rect class="st26" x="1788.5" y="892.4" width="19.8" height="20.5"/>
+    <text class="st11" transform="translate(1828.8 909.8) rotate(.3)"><tspan x="0" y="0">Bulk</tspan></text>
+  </g>
+  <g>
+    <text class="st11" transform="translate(1943.9 909.6) rotate(.3)"><tspan x="0" y="0">Single-cell</tspan></text>
+    <rect class="st24" x="1904.6" y="893.7" width="19.8" height="20.5"/>
+  </g>
+  <path id="path2500-5-22-8-2-2-8-1-1-6-5-3-6-6-1-9-7" class="st23" d="M2793.2,771.7v-349.3c0-7.4-6-13.3-13.3-13.3h-10.9" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-0-7-2-6-3-0-4-4-8-2-6-5-8" class="st15" cx="2793.2" cy="628.1" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path2500-5-2-3-2-84" data-name="path2500-5-2-3-2-8" class="st35" d="M2878.7,394.5v27.6" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-0-7-2-6-3-0-4-4-8-2-6-5-81" data-name="path3447-0-7-2-6-3-0-4-4-8-2-6-5-8" class="st15" cx="2793.1" cy="723.6" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path2500-5-2-3-2-85" data-name="path2500-5-2-3-2-8" class="st35" d="M2779.7,771.7h27.6" sodipodi:nodetypes="cc"/>
+  <text class="st8" transform="translate(2571.2 77.8) rotate(.3)"><tspan x="0" y="0">Clonal analysis</tspan></text>
+  <g>
+    <g>
+      <text class="st11" transform="translate(640.9 717.3) rotate(.3)"><tspan x="0" y="0">Sans-umi</tspan></text>
+      <rect class="st30" x="601.6" y="701.7" width="19.8" height="20.5"/>
+    </g>
+    <g>
+      <text class="st4" transform="translate(822.1 717.3) rotate(.3)"><tspan x="0" y="0">UMI-based</tspan></text>
+      <rect class="st32" x="782.8" y="701.7" width="19.8" height="20.5"/>
+    </g>
+    <g>
+      <text class="st11" transform="translate(1017.1 717.3) rotate(.3)"><tspan x="0" y="0">Similarity clustering</tspan></text>
+      <rect class="st34" x="977.8" y="701.7" width="19.8" height="20.5"/>
+    </g>
+  </g>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-91" data-name="text10160-8-6-7-9-6-8-9-5-3-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2668.6 729.7) rotate(.3)"><tspan x="0" y="0">QC reports</tspan></text>
+  </g>
+  <text class="st8" transform="translate(2639.4 935.3) rotate(.3)"><tspan x="0" y="0">Reporting</tspan></text>
+  <g>
+    <g id="g48225" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-05" data-name="rect4770-6-1-8-0" class="st49" d="M2543.4,855.5h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(2567.7 882.3) rotate(.3)"><tspan x="0" y="0">MultiQC</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-064" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-44" data-name="g196-6-3-4">
+        <path id="path184-7-94-624" data-name="path184-7-94-62" d="M2822.1,802.6h0c-.9,0-1.6-.7-1.6-1.6v-6.1s0,0,0-.1c0-.3,0-.6-.3-.8l-12.8-14.6s0,0,0,0c0,0-.2-.2-.3-.2,0,0,0,0,0,0,0,0-.2,0-.3-.1,0,0,0,0,0,0,0,0-.2,0-.3,0h-32.4c-.9,0-1.6.7-1.6,1.6v20.5c0,.9-.7,1.6-1.6,1.6h-1c-1.5,0-2.7,1.2-2.7,2.7v21.3c0,1.5,1.2,2.7,2.7,2.7h1c.9,0,1.6.7,1.6,1.6v12.6c0,.9.7,1.6,1.6,1.6h44.9c.9,0,1.6-.7,1.6-1.6v-12.6c0-.9.7-1.6,1.6-1.6h1c1.5,0,2.7-1.2,2.7-2.7v-20.3c0-2.1-1.7-3.7-3.7-3.7h0ZM2776.7,781.5h26.9c.9,0,1.6.7,1.6,1.6v11.4c0,.9.7,1.6,1.6,1.6h9.6c.9,0,1.6.7,1.6,1.6v3.3c0,.9-.7,1.6-1.6,1.6h-39.7c-.9,0-1.6-.7-1.6-1.6v-17.9c0-.9.7-1.6,1.6-1.6ZM2818,841.8h-41.3c-.9,0-1.6-.7-1.6-1.6v-9.3c0-.9.7-1.6,1.6-1.6h39.7c.9,0,1.6.7,1.6,1.6v10.9h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-74" data-name="path194-2-3-7" class="st44" d="M2776.7,781.5h26.9c.9,0,1.6.7,1.6,1.6v11.4c0,.9.7,1.6,1.6,1.6h9.6c.9,0,1.6.7,1.6,1.6v3.3c0,.9-.7,1.6-1.6,1.6h-39.7c-.9,0-1.6-.7-1.6-1.6v-17.9c0-.9.7-1.6,1.6-1.6ZM2818,841.8h-41.3c-.9,0-1.6-.7-1.6-1.6v-9.3c0-.9.7-1.6,1.6-1.6h39.7c.9,0,1.6.7,1.6,1.6v10.9h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st45" transform="translate(2778.7 821.4)"><tspan x="0" y="0">html</tspan></text>
+  </g>
+  <circle id="path3447-6-2-4-8-1-4" class="st15" cx="1374.4" cy="282.2" r="7.5"/>
+  <g>
+    <g id="g2123-3-6-7-8-02" data-name="g2123-3-6-7-8-0" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-3-1-92" data-name="g196-6-3-3-1-9">
+        <g id="g229042" data-name="g22904">
+          <g id="g67952" data-name="g6795">
+            <g id="g105412" data-name="g10541">
+              <path id="path105432" data-name="path10543" d="M1542.1,190.2h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM1501.6,171.9h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1538.3,224l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path105532" data-name="path10553" class="st44" d="M1501.6,171.8h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1538.3,224l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+            <g id="g6322-22" data-name="g6322-2">
+              <path id="path5862-62" data-name="path5862-6" d="M1535.9,196.3h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM1495.5,177.9h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1532.2,230.1l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path6276-4-82" data-name="path6276-4-8" class="st44" d="M1495.5,177.9h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM1532.2,230.1l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <text class="st47" transform="translate(1492.1 212.8)"><tspan x="0" y="0">AIRR</tspan></text>
+  </g>
+  <g id="text10160-8-6-8-61" data-name="text10160-8-6-8-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1461.3 213.7)"><tspan x="0" y="0">or</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-01" data-name="text10160-8-6-7-9-0" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1531.8 410.6)"><tspan x="0" y="0">Assign genes</tspan></text>
+  </g>
+  <g>
+    <g id="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st1" transform="translate(2642.2 390.1) rotate(-45)"><tspan x="0" y="0">Define clones</tspan></text>
+    </g>
+    <g id="text10160-8-6-7-2-4-2-8-0-61" data-name="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st1" transform="translate(2666.1 390.1) rotate(-45)"><tspan x="0" y="0">Create clonal germlines</tspan></text>
+    </g>
+  </g>
+  <rect class="st39" x="1725.5" y="43.1" width="376.2" height="917.6" rx="68" ry="68"/>
+  <rect class="st39" x="2476.8" y="44.3" width="432.9" height="532.1" rx="68" ry="68"/>
+  <g>
+    <circle id="path10372-3" class="st48" cx="2877.8" cy="70.5" r="35.4"/>
+    <g id="text10160-8-6-5-0-2-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st3" transform="translate(2867.9 81.8)"><tspan x="0" y="0">5</tspan></text>
+    </g>
+  </g>
+  <g>
+    <g id="g48226" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-06" data-name="rect4770-6-1-8-0" class="st49" d="M2691.1,98.9h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(2716.4 125.6) rotate(.3)"><tspan x="0" y="0">SHazaM</tspan></text>
+  </g>
+  <g>
+    <path id="rect4770-6-1-8-07" data-name="rect4770-6-1-8-0" class="st49" d="M2523.4,98.9h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    <text class="st5" transform="translate(2550.6 125.6) rotate(.3)"><tspan x="0" y="0">Dowser</tspan></text>
+  </g>
+  <g>
+    <g id="g48227" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-08" data-name="rect4770-6-1-8-0" class="st49" d="M2690.6,145.8h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(2707.7 172.5) rotate(.3)"><tspan x="0" y="0">Alakazam</tspan></text>
+  </g>
+  <g>
+    <path id="rect4770-6-1-8-09" data-name="rect4770-6-1-8-0" class="st49" d="M2523.4,147.5h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    <text class="st5" transform="translate(2551.3 174.3) rotate(.3)"><tspan x="0" y="0">SCOPer</tspan></text>
+  </g>
+  <rect class="st39" x="2476.8" y="591.4" width="432.9" height="364.8" rx="68" ry="68"/>
+  <g>
+    <circle id="path10372-31" data-name="path10372-3" class="st48" cx="2504.1" cy="928.3" r="35.4"/>
+    <g id="text10160-8-6-5-0-2-61" data-name="text10160-8-6-5-0-2-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st3" transform="translate(2494.2 939.6)"><tspan x="0" y="0">6</tspan></text>
+    </g>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-8-21" data-name="path3447-6-2-4-8-1-3-7-3-0-8-8-2" class="st27" cx="877.3" cy="260.6" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-81" data-name="text10160-8-6-7-9-6-8-9-5-3-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(885.6 239.6) rotate(-44.7)"><tspan x="0" y="0">(Align C-region)</tspan></text>
+  </g>
+  <text class="st11" transform="translate(403.8 717.3) rotate(.3)"><tspan x="0" y="0">Bulk AIRRseq:</tspan></text>
+  <path id="path2500-5-2-3-2-86" data-name="path2500-5-2-3-2-8" class="st21" d="M125.5,453.8v27.6" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-11" data-name="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="433.5" cy="469.5" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g>
+    <g id="g2123-3-6-7-8-03" data-name="g2123-3-6-7-8-0" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-3-1-93" data-name="g196-6-3-3-1-9">
+        <g id="g229043" data-name="g22904">
+          <g id="g67953" data-name="g6795">
+            <g id="g105413" data-name="g10541">
+              <path id="path105433" data-name="path10543" d="M98.9,464.6h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM58.4,446.2h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM95.1,498.4l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path105533" data-name="path10553" class="st44" d="M58.4,446.2h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM95.1,498.3l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+            <g id="g6322-23" data-name="g6322-2">
+              <path id="path5862-63" data-name="path5862-6" d="M92.7,470.6h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM52.3,452.3h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM89,504.4l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path6276-4-83" data-name="path6276-4-8" class="st44" d="M52.3,452.3h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM89,504.4l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <text class="st47" transform="translate(47.9 487.2)"><tspan x="0" y="0">fastq</tspan></text>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-12" data-name="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="831.6" cy="468.1" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-51" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(441 452.3) rotate(-44.7)"><tspan x="0" y="0">Fastp</tspan></text>
+  </g>
+  <text class="st5" transform="translate(34.8 196) rotate(.3)"><tspan x="0" y="0">Bulk AIRRseq</tspan></text>
+  <g class="st6">
+    <path d="M40.5,402.8c-.8,0-1.6,0-2.2-.1-.7,0-1.3-.2-1.8-.4-.6-.2-1.1-.4-1.6-.6v-3.7c.8.6,1.6,1,2.5,1.4.9.3,1.8.5,2.6.5.7,0,1.3-.1,1.7-.4.4-.3.6-.7.6-1.3,0-.4-.2-.8-.5-1-.4-.3-.8-.5-1.4-.7s-1.3-.4-2-.7c-.5-.1-.9-.3-1.4-.6-.4-.2-.8-.5-1.2-.9-.4-.3-.6-.8-.8-1.3-.2-.5-.3-1.1-.3-1.8,0-.7.1-1.3.4-1.9.2-.6.6-1.1,1.1-1.6.5-.5,1.2-.9,1.9-1.1.8-.3,1.7-.4,2.8-.4.7,0,1.2,0,1.7.1.5,0,1,.2,1.5.4.5.2.9.4,1.4.6v3.7c-.4-.3-.8-.6-1.3-.9-.5-.3-.9-.5-1.4-.7-.5-.2-1-.3-1.6-.3-.5,0-.9,0-1.3.1-.4.1-.7.3-.9.5-.2.2-.3.6-.3.9,0,.4.1.8.4,1.1.3.3.6.5,1.1.6s1,.4,1.6.5c.7.2,1.3.4,1.8.6.6.2,1,.5,1.4.9.4.4.7.8,1,1.3.2.5.3,1.1.3,1.8,0,1-.2,1.8-.7,2.6s-1.1,1.4-2,1.9c-.9.5-1.9.7-3.1.7Z"/>
+    <path d="M49,388.7v-2.8s3.7,0,3.7,0v2.8s-3.7,0-3.7,0ZM49,402.5v-12c0,0,3.6,0,3.6,0v12s-3.6,0-3.6,0Z"/>
+    <path d="M55.8,391.4c.3-.2.7-.3,1.2-.5.5-.2,1-.3,1.6-.4.6-.1,1.2-.2,1.8-.3.6,0,1.2-.1,1.7-.1,1.1,0,2,.2,2.8.4.8.3,1.4.7,1.8,1.4.4.6.6,1.5.6,2.5v8.2s-3.6,0-3.6,0v-7.4c0-.3,0-.6,0-.8,0-.3-.2-.5-.4-.7-.2-.2-.4-.3-.7-.4-.3-.1-.7-.2-1.1-.2-.4,0-.7,0-1.1.1-.4,0-.6.2-.8.3v9.1s-3.6,0-3.6,0v-11.1Z"/>
+    <path d="M75,403c-1.1,0-2-.3-2.8-.8-.8-.5-1.4-1.1-1.8-2-.4-.9-.7-2-.6-3.3,0-1.3.2-2.5.5-3.3.3-.9.8-1.6,1.4-2.1.6-.5,1.3-.8,2.2-1s1.8-.3,2.8-.3c1,0,1.9.1,2.6.4.7.3,1.3.6,1.7,1.1.4.5.6,1.1.6,1.8v9.4c0,.8-.2,1.6-.5,2.2-.3.6-.7,1.2-1.2,1.6-.5.4-1.2.8-1.9,1-.8.2-1.6.3-2.6.3-1.1,0-2,0-2.7-.2-.8-.2-1.3-.3-1.7-.6v-3.1c.3,0,.6.2,1.1.4.5.2,1,.3,1.6.4s1.2.2,1.7.2c.8,0,1.3,0,1.7-.3.4-.2.7-.5.9-.8.2-.4.2-.8.2-1.2v-2s.7.5.7.5c-.3.4-.6.7-.9,1s-.8.5-1.2.6c-.5.1-1,.2-1.6.2ZM76,400.3c.4,0,.8,0,1.2-.1.4,0,.7-.2,1-.4v-5.6c0-.3,0-.6-.3-.8-.2-.2-.4-.3-.7-.4s-.6,0-.9-.1c-.7,0-1.3.2-1.7.5-.4.3-.7.8-.9,1.3-.2.6-.3,1.2-.3,1.9,0,1.1.2,2,.7,2.6.5.6,1.1,1,1.9,1Z"/>
+    <path d="M88.2,402.7h-3.6s0-16.7,0-16.7h3.6s0,16.7,0,16.7Z"/>
+    <path d="M96.8,403.1c-1.2,0-2.3-.3-3.2-.8-.9-.5-1.7-1.2-2.2-2.2-.5-.9-.8-2.1-.8-3.4,0-2.1.5-3.7,1.6-4.9,1.1-1.2,2.6-1.7,4.5-1.7,1.3,0,2.4.3,3.2.9s1.4,1.4,1.8,2.5c.4,1.1.6,2.5.5,4h-9.2s-.4-2.3-.4-2.3h6.7s-.5,1.2-.5,1.2c0-1.3-.2-2.2-.5-2.7-.3-.5-.9-.8-1.7-.8-.4,0-.9.1-1.2.3-.4.2-.6.6-.8,1.1-.2.5-.3,1.2-.3,2.1,0,1.2.3,2,.8,2.7s1.4.9,2.6.9c.4,0,.9,0,1.3-.1.4-.1.9-.2,1.2-.4.4-.1.7-.3,1-.4v3.1c-.6.2-1.2.4-2,.6-.7.1-1.5.2-2.5.2Z"/>
+    <path d="M105.2,396.6v-2.5s7.3,0,7.3,0v2.5s-7.3,0-7.3,0Z"/>
+    <path d="M121.6,403.1c-.9,0-1.7-.1-2.4-.4s-1.4-.6-2-1.2c-.6-.5-1.1-1.2-1.4-2s-.5-1.7-.5-2.7c0-1.1.2-2.1.5-2.9.3-.8.8-1.5,1.3-2,.6-.5,1.2-.9,2-1.2s1.6-.4,2.5-.4c.7,0,1.3,0,2,.2.7.1,1.3.3,1.8.6v3.1c-.6-.3-1.1-.5-1.7-.6s-1.1-.3-1.6-.3c-1,0-1.8.2-2.4.7-.6.5-.9,1.3-.9,2.5,0,1.2.3,2.1.8,2.7.5.6,1.4.9,2.7.9.6,0,1.2,0,1.7-.3.6-.2,1-.4,1.4-.6v3c-.6.3-1.2.5-1.8.7-.6.2-1.3.2-2.1.2Z"/>
+    <path d="M133.5,403.3c-1.2,0-2.3-.3-3.2-.8-.9-.5-1.7-1.2-2.2-2.2-.5-.9-.8-2.1-.8-3.4,0-2.1.5-3.7,1.6-4.9,1.1-1.2,2.6-1.7,4.5-1.7,1.3,0,2.4.3,3.2.9.8.6,1.4,1.4,1.8,2.5.4,1.1.6,2.5.5,4h-9.2s-.4-2.3-.4-2.3h6.7s-.5,1.2-.5,1.2c0-1.3-.2-2.2-.5-2.7-.3-.5-.9-.8-1.7-.8-.4,0-.9.1-1.2.3-.4.2-.6.6-.8,1.1-.2.5-.3,1.2-.3,2.1,0,1.2.3,2,.8,2.7.5.6,1.4.9,2.6.9.4,0,.9,0,1.3-.1.4-.1.9-.2,1.2-.4.4-.1.7-.3,1-.4v3.1c-.6.2-1.2.4-2,.6-.7.1-1.5.2-2.5.2Z"/>
+    <path d="M145,403h-3.6s0-16.7,0-16.7h3.6s0,16.7,0,16.7Z"/>
+    <path d="M151.8,403h-3.6s0-16.7,0-16.7h3.6s0,16.7,0,16.7Z"/>
+    <path d="M33.6,431.2l6.1-16h4.2s5.6,16.1,5.6,16.1h-4s-5-15.1-5-15.1l1.9-.2-5.2,15.2h-3.7ZM37.1,427.8l.8-2.9h7.3s.3,2.9.3,2.9h-8.4Z"/>
+    <path d="M51.6,431.3v-16c0,0,4,0,4,0v16c0,0-4,0-4,0Z"/>
+    <path d="M58.9,431.3v-16c0,0,7.9,0,7.9,0,1.8,0,3.2.4,4.2,1.3,1,.8,1.5,2.1,1.5,3.8,0,.7-.2,1.4-.4,2.1-.3.7-.7,1.3-1.3,1.7-.6.5-1.3.8-2.1.9l-.2-1.3,4.8,7.5h-4.9s-4-7-4-7l1.7,1.5h-3.3s0,5.5,0,5.5h-3.9ZM62.8,423h3.3c.7,0,1.2-.2,1.6-.5.4-.4.6-1,.6-1.8,0-.7-.2-1.3-.5-1.7-.4-.4-.9-.6-1.5-.6h-3.4s0,4.6,0,4.6Z"/>
+    <path d="M75.9,431.4v-16c0,0,7.9,0,7.9,0,1.8,0,3.2.4,4.2,1.3,1,.8,1.5,2.1,1.5,3.8,0,.7-.2,1.4-.4,2.1-.3.7-.7,1.3-1.3,1.7-.6.5-1.3.8-2.1.9l-.2-1.3,4.8,7.5h-4.9s-4-7-4-7l1.7,1.5h-3.3s0,5.5,0,5.5h-3.9ZM79.9,423.1h3.3c.7,0,1.2-.2,1.6-.5.4-.4.6-1,.6-1.8,0-.7-.2-1.3-.5-1.7-.4-.4-.9-.6-1.5-.6h-3.4s0,4.6,0,4.6Z"/>
+    <path d="M96.4,431.9c-.9,0-1.6-.1-2.2-.3s-1.2-.4-1.7-.6v-3.1c.4.2.7.5,1.1.7.4.2.9.4,1.4.6.5.1,1,.2,1.6.2.6,0,1,0,1.2-.3.2-.2.4-.4.4-.7,0-.3-.1-.5-.4-.7-.2-.2-.6-.3-.9-.4-.4-.1-.8-.2-1.2-.3-.4,0-.8-.2-1.2-.4-.4-.2-.7-.4-1-.7s-.5-.6-.7-1.1c-.2-.4-.3-.9-.3-1.5,0-.8.2-1.4.5-2,.3-.5.7-.9,1.2-1.3.5-.3,1-.5,1.6-.7.6-.1,1.1-.2,1.7-.2,1,0,1.8.1,2.4.3.6.2,1.1.4,1.6.7v2.8c-.6-.3-1.1-.6-1.6-.9-.5-.3-1.1-.4-1.8-.4-.6,0-1.1,0-1.3.3-.3.2-.4.4-.4.8,0,.3,0,.5.3.7.2.2.4.3.7.4.3.1.6.2,1,.3.4,0,.8.2,1.2.4.4.1.8.3,1.2.6s.7.6.9,1c.2.4.3,1,.3,1.7,0,1-.3,1.8-.8,2.3-.5.6-1.2,1-2,1.2-.8.2-1.7.4-2.6.4Z"/>
+    <path d="M109.9,431.9c-1.2,0-2.3-.3-3.2-.8-.9-.5-1.7-1.2-2.2-2.2-.5-.9-.8-2.1-.8-3.4,0-2.1.5-3.7,1.6-4.9,1.1-1.2,2.6-1.7,4.5-1.7,1.3,0,2.4.3,3.2.9.8.6,1.4,1.4,1.8,2.5.4,1.1.6,2.5.5,4h-9.2s-.4-2.3-.4-2.3h6.7s-.5,1.2-.5,1.2c0-1.3-.2-2.2-.5-2.7-.4-.5-.9-.8-1.7-.8-.4,0-.9.1-1.2.3-.4.2-.6.6-.8,1.1-.2.5-.3,1.2-.3,2.1,0,1.2.3,2,.8,2.7s1.4.9,2.6.9c.4,0,.9,0,1.3-.1.4-.1.9-.2,1.2-.4s.7-.3,1-.4v3.1c-.6.2-1.2.4-2,.6-.7.1-1.5.2-2.5.2Z"/>
+    <path d="M123.7,419.2c1,0,1.9.1,2.7.3.8.2,1.5.6,2,1.1.5.5.7,1.2.7,2.1v13.8c0,0-3.6,0-3.6,0v-6.8s.7,1.1.7,1.1c-.3.4-.7.7-1.2.9-.5.2-.9.3-1.3.4-.4,0-.8,0-1,0-1.8,0-3.1-.6-4.1-1.6-1-1.1-1.4-2.6-1.4-4.6,0-1.3.2-2.3.5-3.2.3-.9.8-1.5,1.4-2,.6-.5,1.3-.9,2.1-1.1.8-.2,1.7-.3,2.6-.3ZM123.7,422.1c-.7,0-1.3.1-1.7.4-.4.3-.7.7-.9,1.2-.2.5-.3,1.1-.3,1.8,0,.8.1,1.5.4,2.1s.6.9,1,1.1c.4.2.9.4,1.5.4.3,0,.7,0,1-.1.4,0,.7-.2,1-.4v-5.4c0-.3,0-.5-.2-.6-.2-.2-.4-.3-.7-.4s-.6-.1-1-.1Z"/>
+  </g>
+  <g id="text10160-8-6-7-9-6-81" data-name="text10160-8-6-7-9-6-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(38.6 589.8) rotate(.3)"><tspan x="0" y="0">Samplesheet</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-82" data-name="text10160-8-6-7-9-6-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(33.4 353.1) rotate(.3)"><tspan x="0" y="0">Samplesheet</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-065" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-45" data-name="g196-6-3-4">
+        <path id="path184-7-94-625" data-name="path184-7-94-62" d="M92.7,536.8h-1.4v-6.6s0,0,0-.1c0-.3,0-.5-.3-.7l-11-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27.1c-1.2,0-2.2,1-2.2,2.2v18.2h-1.4c-1.8,0-3.2,1.4-3.2,3.2v16.7c0,1.8,1.4,3.2,3.2,3.2h1.4v11.4c0,1.2,1,2.2,2.2,2.2h37.1c1.2,0,2.2-1,2.2-2.2v-11.4h1.4c1.8,0,3.2-1.4,3.2-3.2v-16.7c0-1.8-1.4-3.2-3.2-3.2h0ZM52,518.5h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM89.1,570.7h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-75" data-name="path194-2-3-7" class="st44" d="M52,518.5h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM89.1,570.7h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st46" transform="translate(57.7 553.1)"><tspan x="0" y="0">tsv</tspan></text>
+  </g>
+  <g>
+    <g id="text10160-8-6-7-9-6-8-9-52" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st1" transform="translate(819 450) rotate(-44.7)"><tspan x="0" y="0">Cellranger</tspan></text>
+    </g>
+    <g id="text10160-8-6-7-9-6-8-9-53" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st1" transform="translate(844.6 452.3) rotate(-44.7)"><tspan x="0" y="0">vdj</tspan></text>
+    </g>
+  </g>
+  <g>
+    <g id="g2123-3-6-066" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-46" data-name="g196-6-3-4">
+        <path id="path184-7-94-626" data-name="path184-7-94-62" d="M1387.1,196.4h-1.4v-6.6s0,0,0-.1c0-.3,0-.5-.3-.7l-11-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27.1c-1.2,0-2.2,1-2.2,2.2v18.2h-1.4c-1.8,0-3.2,1.4-3.2,3.2v16.7c0,1.8,1.4,3.2,3.2,3.2h1.4v11.4c0,1.2,1,2.2,2.2,2.2h37.1c1.2,0,2.2-1,2.2-2.2v-11.4h1.4c1.8,0,3.2-1.4,3.2-3.2v-16.7c0-1.8-1.4-3.2-3.2-3.2h0ZM1346.4,178.2h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM1383.5,230.4h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-76" data-name="path194-2-3-7" class="st44" d="M1346.4,178.2h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM1383.5,230.3h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st46" transform="translate(1352.1 212.7)"><tspan x="0" y="0">tsv</tspan></text>
+  </g>
+  <path class="st21" d="M1461.9,458.5"/>
+  <g>
+    <g id="g48228" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-010" data-name="rect4770-6-1-8-0" class="st49" d="M1107.9,62.3h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(1127.6 89.6) rotate(.3)"><tspan x="0" y="0">TRUST4</tspan></text>
+  </g>
+  <g>
+    <g id="g48229" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-011" data-name="rect4770-6-1-8-0" class="st49" d="M936.4,61h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(941.2 88.3) rotate(.3)"><tspan x="0" y="0">cellranger</tspan></text>
+  </g>
+  <path id="path1232-7-7-03" data-name="path1232-7-7-0" class="st12" d="M515.8,557.3h880.3" sodipodi:nodetypes="cssc"/>
+  <path id="path2500-5-2-3-2-87" data-name="path2500-5-2-3-2-8" class="st18" d="M518.5,543.5v27.6" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-13" data-name="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="652.5" cy="559.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-14" data-name="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="839.6" cy="557.8" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-54" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(609.7 615.5) rotate(-44.7)"><tspan x="0" y="0">Fastp</tspan></text>
+  </g>
+  <g>
+    <g id="text10160-8-6-7-9-6-8-9-55" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st1" transform="translate(787 632.1) rotate(-44.7)"><tspan x="0" y="0">TRUST4</tspan></text>
+    </g>
+    <g id="text10160-8-6-7-9-6-8-9-56" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st1" transform="translate(807.2 637.1) rotate(-44.7)"><tspan x="0" y="0">reference</tspan></text>
+    </g>
+  </g>
+  <path class="st21" d="M1460.4,559.6"/>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-15" data-name="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="1011.8" cy="559.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-57" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(957.1 630.6) rotate(-44.7)"><tspan x="0" y="0">TRUST4</tspan></text>
+  </g>
+  <circle id="path3447-6-2-4-8-1-3-7-3-0-8-16" data-name="path3447-6-2-4-8-1-3-7-3-0-8-1" class="st27" cx="1169.8" cy="559.9" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-58" data-name="text10160-8-6-7-9-6-8-9-5" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1090.3 642.4) rotate(-44.7)"><tspan x="0" y="0">Filter locus</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-7-8-04" data-name="g2123-3-6-7-8-0" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-3-1-94" data-name="g196-6-3-3-1-9">
+        <g id="g229044" data-name="g22904">
+          <g id="g67954" data-name="g6795">
+            <g id="g105414" data-name="g10541">
+              <path id="path105434" data-name="path10543" d="M483.9,537.5h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM443.4,519.1h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM480.1,571.2l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path105534" data-name="path10553" class="st44" d="M443.4,519.1h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM480.1,571.2l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+            <g id="g6322-24" data-name="g6322-2">
+              <path id="path5862-64" data-name="path5862-6" d="M477.7,543.5h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM437.3,525.2h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM474,577.3l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path6276-4-84" data-name="path6276-4-8" class="st44" d="M437.3,525.2h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM474,577.3l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <text class="st47" transform="translate(432.8 560.1)"><tspan x="0" y="0">fastq</tspan></text>
+  </g>
+  <text class="st5" transform="translate(286.9 559.9) rotate(.3)"><tspan x="0" y="0">Bulk / </tspan><tspan x="0" y="28.8">single-cell </tspan><tspan x="0" y="57.6">RNAseq</tspan></text>
+  <g id="text10160-8-6-7-9-6-83" data-name="text10160-8-6-7-9-6-8" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(423.6 662.7) rotate(.3)"><tspan x="0" y="0">Samplesheet</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-067" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-47" data-name="g196-6-3-4">
+        <path id="path184-7-94-627" data-name="path184-7-94-62" d="M477.7,609.7h-1.4v-6.6s0,0,0-.1c0-.3,0-.5-.3-.7l-11-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27.1c-1.2,0-2.2,1-2.2,2.2v18.2h-1.4c-1.8,0-3.2,1.4-3.2,3.2v16.7c0,1.8,1.4,3.2,3.2,3.2h1.4v11.4c0,1.2,1,2.2,2.2,2.2h37.1c1.2,0,2.2-1,2.2-2.2v-11.4h1.4c1.8,0,3.2-1.4,3.2-3.2v-16.7c0-1.8-1.4-3.2-3.2-3.2h0ZM437,591.4h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM474.1,643.6h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-77" data-name="path194-2-3-7" class="st44" d="M437,591.4h26v11.5c0,.6.5,1.1,1.1,1.1h9.9v5.6h-37.1v-18.2ZM474.1,643.6h-37.1v-10.8h37.1v10.8h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st46" transform="translate(442.7 626)"><tspan x="0" y="0">tsv</tspan></text>
+  </g>
+  <rect class="st41" x="21.6" y="47.6" width="1288.9" height="697.1" rx="68" ry="68"/>
+  <rect class="st39" x="1320.9" y="45.1" width="389.8" height="917.6" rx="68" ry="68"/>
+  <g>
+    <circle id="path10372" class="st48" cx="1683.9" cy="70.5" r="35.4"/>
+    <g id="text10160-8-6-5-0-2" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st7" transform="translate(1674.1 81.8)"><tspan x="0" y="0">2</tspan></text>
+    </g>
+  </g>
+  <path id="path2500-5-2-3-2-88" data-name="path2500-5-2-3-2-8" class="st35" d="M2359.9,701.7" sodipodi:nodetypes="cc"/>
+  <circle id="path3447-0-7-2-6-6-8-21" data-name="path3447-0-7-2-6-6-8-2" class="st15" cx="2182.5" cy="723.3" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-0-7-2-6-6-8-22" data-name="path3447-0-7-2-6-6-8-2" class="st15" cx="2301.1" cy="723.3" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-92" data-name="text10160-8-6-7-9-6-8-9-5-3-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2161.6 686.5) rotate(-44.7)"><tspan x="0" y="0">Translate</tspan><tspan x="0" y="24">to amino acids</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-93" data-name="text10160-8-6-7-9-6-8-9-5-3-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2278.2 687.8) rotate(-44.7)"><tspan x="0" y="0">Sequence</tspan><tspan x="0" y="24">embeddings</tspan></text>
+  </g>
+  <rect class="st39" x="2112.6" y="593.5" width="350.6" height="366.2" rx="68" ry="68"/>
+  <g>
+    <g id="g2123-3-6-7-8-05" data-name="g2123-3-6-7-8-0" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-3-1-95" data-name="g196-6-3-3-1-9">
+        <g id="g229045" data-name="g22904">
+          <g id="g67955" data-name="g6795">
+            <g id="g105415" data-name="g10541">
+              <path id="path105435" data-name="path10543" d="M2893.4,449.8h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM2852.9,431.4h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM2889.6,483.6l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path105535" data-name="path10553" class="st44" d="M2852.9,431.4h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM2889.6,483.5l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+            <g id="g6322-25" data-name="g6322-2">
+              <path id="path5862-65" data-name="path5862-6" d="M2887.2,455.9h-1.4s0-6.6,0-6.6c0,0,0,0,0-.1,0-.3,0-.5-.3-.7l-10.9-12.6s0,0,0,0c0,0-.1-.1-.2-.2,0,0,0,0,0,0,0,0-.1,0-.2,0,0,0,0,0,0,0,0,0-.2,0-.3,0h-27c-1.2-.1-2.2.9-2.2,2.1v18.2c0,0-1.5,0-1.5,0-1.8,0-3.2,1.4-3.2,3.2v16.6c0,1.8,1.3,3.2,3.1,3.2h1.4s0,11.4,0,11.4c0,1.2,1,2.2,2.2,2.2l36.9.2c1.2,0,2.2-1,2.2-2.2v-11.4c0,0,1.4,0,1.4,0,1.8,0,3.2-1.4,3.2-3.2v-16.6c0-1.8-1.3-3.2-3.1-3.2h0ZM2846.8,437.5h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM2883.4,489.6l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+              <path id="path6276-4-85" data-name="path6276-4-8" class="st44" d="M2846.8,437.5h25.9c0,.1,0,11.6,0,11.6,0,.6.5,1.1,1.1,1.1h9.9s0,5.7,0,5.7l-36.9-.2v-18.2ZM2883.4,489.6l-36.9-.2v-10.8c0,0,37,.2,37,.2v10.8c0,0,0,0,0,0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <text class="st47" transform="translate(2843.3 472.4)"><tspan x="0" y="0">AIRR</tspan></text>
+  </g>
+  <g>
+    <g id="g2123-3-6-068" data-name="g2123-3-6-06" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <g id="g196-6-3-48" data-name="g196-6-3-4">
+        <path id="path184-7-94-628" data-name="path184-7-94-62" d="M2426.6,704.4h-1.6v-7.7s0,0,0-.1c0-.3,0-.6-.3-.8l-12.8-14.6s0,0,0,0c0,0-.2-.2-.3-.2,0,0,0,0,0,0,0,0-.2,0-.3-.1,0,0,0,0,0,0,0,0-.2,0-.3,0h-31.4c-1.4,0-2.6,1.2-2.6,2.6v21.1h-1.6c-2,0-3.7,1.7-3.7,3.7v19.3c0,2,1.7,3.7,3.7,3.7h1.6v13.2c0,1.4,1.2,2.6,2.6,2.6h42.8c1.4,0,2.6-1.2,2.6-2.6v-13.2h1.6c2,0,3.7-1.7,3.7-3.7v-19.3c0-2.1-1.7-3.7-3.7-3.7h0ZM2379.6,683.3h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM2422.4,743.6h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"/>
+        <path id="path194-2-3-78" data-name="path194-2-3-7" class="st44" d="M2379.6,683.2h30.1v13.3c0,.7.6,1.3,1.3,1.3h11.5v6.5h-42.8v-21.1ZM2422.4,743.6h-42.8v-12.5h42.8v12.5h0Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc"/>
+      </g>
+    </g>
+    <text class="st45" transform="translate(2383.1 723.2)"><tspan x="0" y="0">TSV</tspan></text>
+  </g>
+  <circle id="path3447-0-7-2-6-3-1-2" class="st15" cx="1529.4" cy="598.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path class="st20" d="M1526.2,706"/>
+  <path id="path1232-36-5-9-0-9-4" class="st13" d="M1897.2,807.7" sodipodi:nodetypes="csssc"/>
+  <g>
+    <path id="rect4770-6-1-8-012" data-name="rect4770-6-1-8-0" class="st49" d="M2132.5,847.9h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    <text class="st5" transform="translate(2155.4 874.6) rotate(.3)"><tspan x="0" y="0">Amulety</tspan></text>
+  </g>
+  <g>
+    <circle id="path103721" data-name="path10372" class="st48" cx="1757" cy="70.5" r="35.4"/>
+    <g id="text10160-8-6-5-0-21" data-name="text10160-8-6-5-0-2" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st7" transform="translate(1747.1 81.8)"><tspan x="0" y="0">3</tspan></text>
+    </g>
+  </g>
+  <g>
+    <circle id="path103722" data-name="path10372" class="st48" cx="2136.9" cy="926.8" r="35.4"/>
+    <g id="text10160-8-6-5-0-22" data-name="text10160-8-6-5-0-2" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st7" transform="translate(2127.1 938.1)"><tspan x="0" y="0">7</tspan></text>
+    </g>
+  </g>
+  <g>
+    <g id="g482210" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-013" data-name="rect4770-6-1-8-0" class="st49" d="M2295.5,847.9h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(2319.9 874.6) rotate(.3)"><tspan x="0" y="0">IgBLAST</tspan></text>
+  </g>
+  <text class="st8" transform="translate(2188.1 935.3) rotate(.3)"><tspan x="0" y="0">Embeddings</tspan></text>
+  <circle id="path3447-0-7-2-6-6-6" class="st15" cx="1506.9" cy="521.2" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path2500-5-22-8-2-2-8-1-3-6-01" data-name="path2500-5-22-8-2-2-8-1-3-6-0" class="st23" d="M1505.6,346.4v36" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968" sodipodi:nodetypes="cc"/>
+  <path id="path1232-36-5-9-0-9-41" data-name="path1232-36-5-9-0-9-4" class="st13" d="M1520.2,343.4c-5.3,0-13,5.5-13.9,14.1" sodipodi:nodetypes="csssc"/>
+  <path class="st39" d="M1853,1102"/>
+  <path class="st13" d="M2485.3,341.3"/>
+  <path class="st13" d="M2453.6,358"/>
+  <path id="path2500-5-2-3-2-6-31" data-name="path2500-5-2-3-2-6-3" class="st13" d="M2454.4,281.9" sodipodi:nodetypes="cc"/>
+  <path id="path2500-5-2-3-2-6-32" data-name="path2500-5-2-3-2-6-3" class="st13" d="M2454.4,303" sodipodi:nodetypes="cc"/>
+  <path id="path2500-5-2-3-2-89" data-name="path2500-5-2-3-2-8" class="st35" d="M2441.2,280.8" sodipodi:nodetypes="cc"/>
+  <path id="path2500-5-2-3-2-810" data-name="path2500-5-2-3-2-8" class="st35" d="M2466.7,281" sodipodi:nodetypes="cc"/>
+  <text class="st8" transform="translate(2167.7 77.5) rotate(.3) scale(.9 1) skewX(0)"><tspan x="0" y="0">Novel allele detection </tspan><tspan x="44.4" y="33.6">and genotyping</tspan></text>
+  <rect class="st39" x="2112.6" y="43.8" width="350.6" height="532.1" rx="68" ry="68"/>
+  <g>
+    <circle id="path10372-32" data-name="path10372-3" class="st48" cx="2131" cy="70.5" r="35.4"/>
+    <g id="text10160-8-6-5-0-2-62" data-name="text10160-8-6-5-0-2-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st0" transform="translate(2121.5 82.7) scale(.9 1)"><tspan x="0" y="0">4</tspan></text>
+    </g>
+  </g>
+  <g>
+    <g id="g482211" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-014" data-name="rect4770-6-1-8-0" class="st49" d="M2201.4,135.5h120.8c6.2,0,11.2,8.8,11.2,19.7h0c0,10.9-5,19.7-11.2,19.7h-120.8c-6.2,0-11.2-7.8-11.2-18.7h0c0-10.9,5-20.7,11.2-20.7Z"/>
+    </g>
+    <text class="st2" transform="translate(2228.9 162.1) rotate(.3) scale(.9 1) skewX(0)"><tspan x="0" y="0">TIgGER</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-3-5-5-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(1525.9 677.4)"><tspan x="0" y="0">Add metadata</tspan></text>
+  </g>
+  <path id="path2500-5-2-3-2-811" data-name="path2500-5-2-3-2-8" class="st35" d="M2358.2,735.9v-27.6" sodipodi:nodetypes="cc"/>
+  <path class="st37" d="M1892.9,92.4"/>
+  <path class="st37" d="M1892.9,120.7"/>
+  <path class="st43" d="M2007,721.8"/>
+  <g id="text10160-8-6-7-2-4-2-8-0-62" data-name="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st9" transform="translate(2296.1 312.1) rotate(-45) scale(.9 1)"><tspan x="0" y="0">Infer genotype</tspan></text>
+  </g>
+  <g id="text10160-8-6-7-2-4-2-8-0-63" data-name="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st9" transform="translate(2355.3 312.1) rotate(-45) scale(.9 1)"><tspan x="0" y="0">Reassign alleles</tspan></text>
+  </g>
+  <path id="path3447-0-7-2-6-3-0-0-5-8-3-31" data-name="path3447-0-7-2-6-3-0-0-5-8-3-3" class="st15" d="M2180,336.4c-5.3,1-9.8-3.5-8.8-8.8s2.9-5.3,5.9-5.9c5.3-1,9.8,3.5,8.8,8.8s-2.9,5.3-5.9,5.9Z" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path3447-0-7-2-6-3-0-0-5-8-3-32" data-name="path3447-0-7-2-6-3-0-0-5-8-3-3" class="st15" d="M2293.9,336.4c-5.3,1-9.8-3.5-8.8-8.8.6-3,2.9-5.3,5.9-5.9,5.3-1,9.8,3.5,8.8,8.8-.6,3-2.9,5.3-5.9,5.9Z" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <path id="path3447-0-7-2-6-3-0-0-5-8-3-33" data-name="path3447-0-7-2-6-3-0-0-5-8-3-3" class="st15" d="M2368.3,336.4c-5.3,1-9.8-3.5-8.8-8.8.6-3,2.9-5.3,5.9-5.9,5.3-1,9.8,3.5,8.8,8.8s-2.9,5.3-5.9,5.9Z" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-2-4-2-8-0-64" data-name="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st9" transform="translate(2160.4 312.1) rotate(-45) scale(.9 1)"><tspan x="0" y="0">Detect novel alleles</tspan></text>
+  </g>
+  <path class="st37" d="M2710.6,369.3"/>
+  <path class="st13" d="M2221.7,508.5"/>
+  <text/>
+  <g id="text10160-8-6-7-9-6-8-9-5-3-94" data-name="text10160-8-6-7-9-6-8-9-5-3-9" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflow-subway-bcellmagic-inprogress.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2635.2 634.5) rotate(.3)"><tspan x="0" y="0">Airrflow report</tspan></text>
+  </g>
+  <text/>
+  <g id="text10160-8-6-7-2-4-2-8-0-65" data-name="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st1" transform="translate(2724.7 390.1) rotate(-45)"><tspan x="0" y="0">Repertoire analysis</tspan></text>
+  </g>
+  <circle id="path3447-0-7-2-6-3-0-4-4-8-2-6-5-82" data-name="path3447-0-7-2-6-3-0-4-4-8-2-6-5-8" class="st15" cx="2727.9" cy="408.1" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-0-7-2-6-3-0-4-4-8-2-6-5-83" data-name="path3447-0-7-2-6-3-0-4-4-8-2-6-5-8" class="st15" cx="2655.9" cy="407.7" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <circle id="path3447-0-7-2-6-3-0-4-4-8-2-6-5-84" data-name="path3447-0-7-2-6-3-0-4-4-8-2-6-5-8" class="st15" cx="2807.3" cy="407.8" r="7.5" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g class="st52">
+    <g class="st50">
+      <image width="1744" height="501" transform="translate(380.3 799) scale(.3)" xlink:href="metro-map-airrflow-1.png"/>
+    </g>
+  </g>
+  <text/>
+  <path class="st42" d="M2043.3,732.6"/>
+  <path class="st42" d="M2043.3,170.9"/>
+  <path class="st42" d="M1891.2,170.9"/>
+  <path class="st42" d="M1891.2,211.2"/>
+  <path class="st42" d="M2358.1,731.7"/>
+  <path class="st13" d="M2415.4,327.9"/>
+  <path class="st13" d="M2415.4,405.8"/>
+  <path class="st13" d="M2489.6,405.8"/>
+  <g>
+    <g id="g482212" data-name="g4822" inkscape:export-filename="C:\Users\fagernaes\Pictures\eager2\eager2_workflow_review.png" inkscape:export-xdpi="305.81" inkscape:export-ydpi="305.81">
+      <path id="rect4770-6-1-8-015" data-name="rect4770-6-1-8-0" class="st49" d="M2717.3,855.5h130.8c6.7,0,12.1,8.9,12.1,19.9h0c0,11-5.4,19.9-12.1,19.9h-130.8c-6.7,0-12.1-8.9-12.1-19.9h0c0-11,5.4-19.9,12.1-19.9Z"/>
+    </g>
+    <text class="st5" transform="translate(2741.5 882.3) rotate(.3)"><tspan x="0" y="0">EnchantR</tspan></text>
+  </g>
+  <path class="st13" d="M2428.3,409.2c12.8,0-180.7,1.5-270.9,0s-14.9-13.6-14.9-32.3v-51.1"/>
+  <path class="st13" d="M2139.8,328.7"/>
+  <path class="st13" d="M2139.8,413.2"/>
+  <path class="st13" d="M2608.8,413.4"/>
+  <path class="st13" d="M2588,409.3"/>
+  <text class="st51" transform="translate(2154.7 522.8)"><tspan x="0" y="0">BCRs only</tspan></text>
+  <path id="path3447-0-7-2-6-3-0-0-5-8-3-34" data-name="path3447-0-7-2-6-3-0-0-5-8-3-3" class="st15" d="M2227.4,335.7c-5.3,1-9.8-3.5-8.8-8.8.6-3,2.9-5.3,5.9-5.9,5.3-1,9.8,3.5,8.8,8.8-.6,3-2.9,5.3-5.9,5.9Z" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968"/>
+  <g id="text10160-8-6-7-2-4-2-8-0-66" data-name="text10160-8-6-7-2-4-2-8-0-6" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+    <text class="st9" transform="translate(2232 312.1) rotate(-45) scale(.9 1)"><tspan x="0" y="0">Single clone representative</tspan></text>
+  </g>
+  <g>
+    <circle id="path103723" data-name="path10372" class="st48" cx="44.7" cy="70.5" r="35.4"/>
+    <g id="text10160-8-6-5-0-23" data-name="text10160-8-6-5-0-2" class="st6" inkscape:export-filename="/home/susanna/Documents/Work/Yale/projects/software_projects/airrflow/project-management-docs/workflow-subway/airrflowsubway-20220120-1229.png" inkscape:export-xdpi="299.9968" inkscape:export-ydpi="299.9968">
+      <text class="st3" transform="translate(34.8 81.8)"><tspan x="0" y="0">1</tspan></text>
+    </g>
+  </g>
+</svg>

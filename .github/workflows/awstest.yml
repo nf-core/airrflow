@@ -16,7 +16,7 @@ jobs:
         with:
           workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
+          compute_env: ${{ vars.TOWER_COMPUTE_ENV_NO_FUSION }}
           revision: ${{ github.sha }}
           workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/airrflow/work-${{ github.sha }}
           parameters: |
@@ -25,7 +25,7 @@ jobs:
             }
           profiles: test
 
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: Seqera Platform debug log file
           path: |

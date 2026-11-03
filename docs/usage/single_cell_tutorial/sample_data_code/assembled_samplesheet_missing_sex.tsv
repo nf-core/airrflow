@@ -1,0 +1,5 @@
+filename	species	subject_id	sample_id	day	tissue	age	biomaterial_provider	pcr_target_locus	single_cell
+https://zenodo.org/records/11373741/files/AIRR_subject1_FNA_d0_1_Y1.tsv	human	S1	S1_d0	d0	PMBC	NA	NA	IG	TRUE
+https://zenodo.org/records/11373741/files/AIRR_subject1_FNA_d12_3_Y1.tsv	human	S1	S1_d12	d12	PMBC	NA	NA	IG	TRUE
+https://zenodo.org/records/11373741/files/AIRR_subject2_FNA_d0_1_Y1.tsv	human	S2	S2_d0	d0	PMBC	NA	NA	IG	TRUE
+https://zenodo.org/records/11373741/files/AIRR_subject2_FNA_d12_2_Y1.tsv	human	S2	S2_d12	d12	PMBC	NA	NA	IG	TRUE

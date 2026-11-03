@@ -1,17 +1,17 @@
 lint:
   files_exist:
     - conf/igenomes.config
+    - .github/workflows/linting_comment.yml
+  files_unchanged:
+    - .gitignore
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/branch.yml
+    - .github/workflows/linting.yml
   multiqc_config:
     - report_comment
-  nextflow_config:
-    - config_defaults:
-        - params.miairr
-        - params.report_rmd
-        - params.report_css
-        - params.report_logo
-        - params.report_logo_img
-        - params.config_profile_url
-nf_core_version: 3.5.1
+  nextflow_config: false # Ported to params block in main.nf
+  schema_params: false # Ported to params block in main.nf
+nf_core_version: 4.0.2
 repository_type: pipeline
 template:
   author: Gisela Gabernet, Susanna Marquez, Alexander Peltzer, Simon Heumos
@@ -21,4 +21,4 @@ template:
   name: airrflow
   org: nf-core
   outdir: .
-  version: 4.1.0
+  version: 5.1.2

@@ -6,7 +6,7 @@
     "type": "object",
     "$defs": {
         "input_output_options": {
-            "title": "Input/output options",
+            "title": "Input output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
@@ -18,10 +18,17 @@
                     "exists": true,
                     "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
+                    "pattern": "^\\S+\\.tsv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/airrflow/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
+                },
+                "mode": {
+                    "type": "string",
+                    "default": "fastq",
+                    "description": "Specify the processing mode for the pipeline. Available options are \"fastq\" and \"assembled\".",
+                    "enum": ["fastq", "assembled"],
+                    "fa_icon": "fas fa-terminal"
                 },
                 "outdir": {
                     "type": "string",
@@ -36,45 +43,648 @@
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
                 },
-                "multiqc_title": {
+                "miairr": {
                     "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
+                    "default": "${projectDir}/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
+                    "description": "Path to MiAIRR-BioSample mapping",
+                    "fa_icon": "fas fa-table"
+                },
+                "save_intermediate_repertoires": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to save repertoires in each intermediate step",
+                    "fa_icon": "far fa-save"
                 }
             }
+        },
+        "protocol": {
+            "title": "Protocol",
+            "type": "object",
+            "description": "Experimental protocol used to generate the data",
+            "default": "",
+            "properties": {
+                "library_generation_method": {
+                    "type": "string",
+                    "fa_icon": "fas fa-flask",
+                    "description": "Protocol used for the V(D)J amplicon sequencing library generation.",
+                    "enum": [
+                        "specific_pcr_umi",
+                        "specific_pcr",
+                        "dt_5p_race",
+                        "dt_5p_race_umi",
+                        "sc_10x_genomics",
+                        "trust4"
+                    ],
+                    "help_text": "Available protocols are:\n- `specific_pcr_umi`: RT-PCR using transcript-specific primers containing UMIs.\n- `specific_pcr`: RT-PCR using transcript-specific primers.\n- `dt_5p_race_umi`: 5\u2019-RACE PCR using oligo-dT primers and template switch primers containing UMI.\n- `dt_5p_race`: 5\u2019-RACE PCR (i.e. RT is followed by a template switch (TS) step) using oligo-dT primers.\n- `sc_10x_genomics`:10x genomics library preparation protocol for scVDJ sequencing."
+                },
+                "race_linker": {
+                    "type": "string",
+                    "description": "Path to fasta file containing the linker sequence, if no V-region primers were used but a linker sequence is present (e.g. 5' RACE SMARTer TAKARA protocol).",
+                    "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-flask"
+        },
+        "primer_input_and_positions": {
+            "title": "Primer input and positions",
+            "type": "object",
+            "description": "Define the primer region start and how to deal with the primer alignment.",
+            "default": "",
+            "properties": {
+                "vprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containinc the V-region primer sequences."
+                },
+                "cprimers": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to a fasta file containing the C-region primer sequences."
+                },
+                "vprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of V region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna",
+                    "default": 0
+                },
+                "cprimer_start": {
+                    "type": "integer",
+                    "description": "Start position of C region primers (without counting the UMI barcode).",
+                    "fa_icon": "fas fa-dna",
+                    "default": 0
+                },
+                "cprimer_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Indicate if C region primers are in the R1 or R2 reads.",
+                    "enum": ["R1", "R2"]
+                },
+                "primer_revpr": {
+                    "type": "boolean",
+                    "description": "Specify to match the tail-end of the sequence against the reverse complement of the primers. This also reverses the behavior of the --start argument, such that start position is relative to the tail-end of the sequence. (default: False)Maximum scoring error for the Presto MaxPrimer process for the C and/or V region primers identification.",
+                    "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
+        "umi_barcode_handling": {
+            "title": "UMI barcode handling",
+            "type": "object",
+            "description": "Define how UMI barcodes should be treated.",
+            "default": "",
+            "properties": {
+                "umi_position": {
+                    "type": "string",
+                    "default": "R1",
+                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R1 fastq file.",
+                    "help_text": "The pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter to R1 or R2, respectively.",
+                    "enum": ["R1", "R2"],
+                    "fa_icon": "fas fa-barcode"
+                },
+                "umi_length": {
+                    "type": "integer",
+                    "description": "UMI barcode length in nucleotides. Set to 0 if no UMIs present.",
+                    "fa_icon": "fas fa-barcode",
+                    "default": -1
+                },
+                "umi_start": {
+                    "type": "integer",
+                    "description": "UMI barcode start position in the index read.",
+                    "fa_icon": "fas fa-barcode",
+                    "default": 0
+                },
+                "index_file": {
+                    "type": "boolean",
+                    "description": "Indicate if UMI indices are recorded in a separate index file.",
+                    "help_text": "Set to `true` if UMI barcodes are to be read from a separate Illumina index fastq file. If Illumina indices and UMI barcodes are already integrated into the R1 reads, leave the default `--index_file false`.\n\nThe pipeline requires UMI barcodes for identifying unique transcripts. These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter.",
+                    "fa_icon": "fas fa-barcode"
+                }
+            },
+            "help_text": "The pipeline requires indication of UMI barcode treatment (for identifying unique transcripts). These barcodes are typically read from an index file but sometimes can be provided merged with the start of the R1 or R2 reads. If provided in an additional index file, set the `--index_file` parameter, if provided merged with the R1 or R2 reads, set the `--umi_position` parameter. Specify the UMI barcode length with the `--umi_length` parameter. If no UMI barcodes are present, specify `--umi_length = 0` to use the sans-UMI subworkflow.",
+            "fa_icon": "fas fa-barcode"
+        },
+        "adapter_trimming": {
+            "title": "Adapter trimming",
+            "type": "object",
+            "description": "Options for adapter trimming and read clipping",
+            "default": "",
+            "fa_icon": "fas fa-cut",
+            "properties": {
+                "trim_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to trim adapters in fastq reads with fastp.",
+                    "help_text": "By default adapters will be auto-detected, but adapter sequences can also be provided in a `fasta` file with the `--adapter_fasta` option.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "adapter_fasta": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Fasta file with adapter sequences to be trimmed."
+                },
+                "clip_r1": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 5' in R1 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "clip_r2": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 5' in R2 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "three_prime_clip_r1": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 3' in R1 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "three_prime_clip_r2": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to clip 3' in R2 reads.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "trim_nextseq": {
+                    "type": "boolean",
+                    "description": "Trim adapters specific for Nextseq sequencing",
+                    "fa_icon": "fas fa-cut"
+                },
+                "save_trimmed": {
+                    "type": "boolean",
+                    "description": "Option to save trimmed reads.",
+                    "fa_icon": "far fa-save"
+                }
+            }
+        },
+        "sequence_assembly_options": {
+            "title": "Sequence Assembly options",
+            "type": "object",
+            "description": "Options for the pRESTO sequence assembly processes",
+            "default": "",
+            "properties": {
+                "filterseq_q": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Quality threshold for pRESTO FilterSeq sequence filtering.",
+                    "fa_icon": "fas fa-filter"
+                },
+                "primer_consensus": {
+                    "type": "number",
+                    "default": 0.6,
+                    "description": "Maximum error for building the primer consensus in the pRESTO Buildconsensus step.",
+                    "fa_icon": "fas fa-align-left"
+                },
+                "buildconsensus_maxerror": {
+                    "type": "number",
+                    "default": 0.1,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum error for building the sequence consensus in the pRESTO BuildConsensus step."
+                },
+                "buildconsensus_maxgap": {
+                    "type": "number",
+                    "default": 0.5,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum gap for building the sequence consensus in the pRESTO BuildConsensus step."
+                },
+                "cluster_sets": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Cluster sequences by similarity regardless of any annotation with pRESTO ClusterSets and annotate the cluster ID additionally to the UMI barcode."
+                },
+                "primer_r1_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "fa_icon": "fas fa-align-left",
+                    "description": "Maximum allowed error for R1 primer alignment."
+                },
+                "primer_r2_maxerror": {
+                    "type": "number",
+                    "default": 0.2,
+                    "fa_icon": "fas fa-align-right",
+                    "description": "Maximum allowed error for R2 primer alignment."
+                },
+                "maskprimers_align": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Align primers instead of scoring them. Used for protocols without primer fixed positions."
+                },
+                "primer_maxlen": {
+                    "type": "integer",
+                    "default": 50,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed primer length when aligning the primers."
+                },
+                "primer_r1_mask_mode": {
+                    "type": "string",
+                    "fa_icon": "fas fa-mask",
+                    "description": "Masking mode for R1 primers.",
+                    "enum": ["cut", "mask", "trim", "tag"],
+                    "default": "cut",
+                    "help_text": "See [pRESTO MaskPrimers](https://presto.readthedocs.io/en/stable/tools/MaskPrimers.html) for more information."
+                },
+                "primer_r2_mask_mode": {
+                    "type": "string",
+                    "default": "cut",
+                    "fa_icon": "fas fa-mask",
+                    "enum": ["cut", "mask", "trim", "tag"],
+                    "description": "Masking mode for R2 primers.",
+                    "help_text": "See [pRESTO MaskPrimers](https://presto.readthedocs.io/en/stable/tools/MaskPrimers.html) for more information."
+                },
+                "maskprimers_align_race": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Use MaskPrimers align for a 5' RACE protocol.",
+                    "help_text": "It will align the C-primers with pRESTO MaskPrimers align, and extract the template-switch Oligo and/or linker with defined length in `--primer_r2_extract_len`."
+                },
+                "maskprimers_extract": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-cut",
+                    "description": "Use when primer sequences are unknown but when their approximate positions are known.",
+                    "help_text": "Use in combination with `--primer_r1_extract_len` and `--primer_r2_extract_len` to define the sequence regions to cut corresponding to the approximate unknown primer sequence length prior to alignment. It is also possible to define a UMI barcode for extraction if it's position is unknown."
+                },
+                "primer_r1_extract_len": {
+                    "type": "integer",
+                    "default": 0,
+                    "fa_icon": "fas fa-cut",
+                    "description": "R1 primer extract length when using `--maskprimers_extract`."
+                },
+                "primer_r2_extract_len": {
+                    "type": "integer",
+                    "default": 0,
+                    "fa_icon": "fas fa-cut",
+                    "description": "R2 primer extract length when using `--maskprimers_extract`."
+                },
+                "assemblepairs_sequential": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Use AssemblePairs sequential instead of AssemblePairs align when assembling read pairs."
+                },
+                "align_cregion": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Align internal C-region for a more precise isotype characterization."
+                },
+                "internal_cregion_sequences": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Provide internal C-region sequences for a more precise C-region characterization. Then also set the `align_cregion` flag."
+                },
+                "cregion_maxlen": {
+                    "type": "integer",
+                    "default": 100,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed length when aligning the internal C-region."
+                },
+                "cregion_maxerror": {
+                    "type": "number",
+                    "default": 0.3,
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Maximum allowed error when aligning the internal C-region."
+                },
+                "cregion_mask_mode": {
+                    "type": "string",
+                    "default": "tag",
+                    "fa_icon": "fas fa-mask",
+                    "description": "Mask mode for C-region alignment."
+                },
+                "skip_alignment_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip filter step after alignment that ensures that locus should match the v_call chain, the sequence alignment should have at least 200 informative positions (excluding N or gaps), and maximum 10% N nucleotides in the alignment."
+                }
+            },
+            "fa_icon": "fas fa-align-center"
+        },
+        "single_cell_analysis_options": {
+            "title": "Single cell analysis options",
+            "type": "object",
+            "description": "Options specific for raw single cell input.",
+            "default": "",
+            "properties": {
+                "reference_10x": {
+                    "type": "string",
+                    "description": "Path to the reference directory required by cellranger. Can either be directory or tar.gz.",
+                    "help_text": "See for [IMGT](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/advanced/references#imgt) or [default](https://www.10xgenomics.com/support/software/cell-ranger/downloads).",
+                    "fa_icon": "fas fa-database"
+                }
+            },
+            "help_text": "Options for running raw single cell data.",
+            "fa_icon": "fas fa-adjust"
+        },
+        "rnaseq_based_analysis_options": {
+            "title": "Untargeted RNA-seq based analysis options",
+            "type": "object",
+            "description": "Options specific for raw untargeted RNA-seq input.",
+            "default": "",
+            "properties": {
+                "trust4_cell_barcode_read": {
+                    "type": "string",
+                    "description": "Specifies which read holds the barcodes",
+                    "enum": ["R1", "R2"],
+                    "fa_icon": "fas fa-terminal",
+                    "help_text": "file containing the barcodes"
+                },
+                "trust4_umi_read": {
+                    "type": "string",
+                    "description": "Indicate if UMI indices are recorded in the R1 or R2 fastq file.",
+                    "help_text": "file containing 10x Genomics-like UMIs",
+                    "enum": ["R1", "R2"],
+                    "fa_icon": "fas fa-barcode"
+                },
+                "trust4_read_format": {
+                    "type": "string",
+                    "description": "Specifies where in the read the barcodes and UMIs can be found.",
+                    "help_text": "For further information see the TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data).",
+                    "fa_icon": "fas fa-terminal"
+                },
+                "trust4_barcode_whitelist": {
+                    "type": "string",
+                    "description": "path to the barcode whitelist.",
+                    "help_text": "For further information see the TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data).",
+                    "fa_icon": "fas fa-terminal"
+                }
+            },
+            "help_text": "Options for running raw RNA seq data.",
+            "fa_icon": "fas fa-align-justify"
+        },
+        "vdj_annotation_options": {
+            "title": "VDJ annotation options",
+            "type": "object",
+            "description": "Options for the VDJ annotation processes.",
+            "default": "",
+            "properties": {
+                "reassign": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to reassign genes if the input file is an AIRR formatted tabulated file.",
+                    "fa_icon": "fas fa-redo"
+                },
+                "productive_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Subset to productive  sequences.",
+                    "fa_icon": "fab fa-product-hunt"
+                },
+                "save_germlines": {
+                    "type": "boolean",
+                    "description": "Save germline database to reuse the cache in future runs.",
+                    "fa_icon": "fas fa-file-download",
+                    "default": true
+                },
+                "reference_fasta": {
+                    "type": "string",
+                    "description": "Path to the germline reference fasta.",
+                    "help_text": "By default, we provide a pre-downloaded AIRR-C/IMGT reference bundle. It is also possible to provide a custom reference fasta database. To fetch a fresh reference bundle at runtime, set `--fetch_germlines airrc-imgt` or `--fetch_germlines imgt`.",
+                    "fa_icon": "fas fa-database",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/imgtdb_base.zip"
+                },
+                "reference_igblast": {
+                    "type": "string",
+                    "description": "Path to the cached igblast database.",
+                    "help_text": "By default, we provide a pre-downloaded AIRR-C/IMGT IgBLAST database. It is also possible to provide a custom cached IgBLAST database. To fetch a fresh reference bundle at runtime, set `--fetch_germlines airrc-imgt` or `--fetch_germlines imgt`.",
+                    "fa_icon": "fas fa-database",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/igblast_base.zip"
+                },
+                "fetch_germlines": {
+                    "type": ["string"],
+                    "description": "Fetch the selected germline reference bundle at runtime instead of using cached reference inputs.",
+                    "help_text": "This parameter accepts three values. no: use the cached reference inputs. airrc-imgt: the latest version of the human and mouse AIRR-C germline reference will be downloaded from https://ogrdb.airr-community.org/ for all the supported loci and from IMGT for the remaining loci. imgt: the latest version of human and mouse germline reference will be downloaded from IMGT.",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "enum": ["none", "imgt", "airrc-imgt"],
+                    "default": "none"
+                }
+            },
+            "fa_icon": "fas fa-edit"
+        },
+        "bulk_filtering_options": {
+            "title": "Bulk filtering options",
+            "type": "object",
+            "description": "Options for bulk sequence filtering after VDJ assignment.",
+            "default": "",
+            "properties": {
+                "collapseby": {
+                    "type": "string",
+                    "description": "Name of the field used to collapse duplicated sequences.",
+                    "fa_icon": "fas fa-compress-alt",
+                    "default": "sample_id"
+                },
+                "detect_contamination": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-search",
+                    "description": "Whether to run the process to detect contamination."
+                },
+                "remove_chimeric": {
+                    "type": "boolean",
+                    "description": "Whether to apply the chimera removal filter.",
+                    "fa_icon": "fas fa-minus-square"
+                }
+            },
+            "fa_icon": "fas fa-filter"
+        },
+        "clonal_analysis_options": {
+            "title": "Clonal analysis options",
+            "type": "object",
+            "description": "Define how the B-cell clonal trees should be calculated.",
+            "default": "",
+            "properties": {
+                "clonal_threshold": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "enum": ["auto"]
+                        },
+                        {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    ],
+                    "type": ["string", "number"],
+                    "default": "auto",
+                    "fa_icon": "fab fa-pagelines",
+                    "description": "Set the clustering threshold Hamming distance value. Default: 'auto'"
+                },
+                "lineage_trees": {
+                    "type": "boolean",
+                    "description": "Perform clonal lineage tree analysis.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "cloneby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to identify clones.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "crossby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to identify external groups used to identify a clonal threshold.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "lineage_tree_builder": {
+                    "type": "string",
+                    "default": "raxml",
+                    "description": "Lineage tree software to use to build trees within Dowser. If you change the default, also set the `lineage_tree_exec` parameter.",
+                    "enum": ["raxml", "igphyml"],
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "lineage_tree_exec": {
+                    "type": "string",
+                    "default": "/usr/local/bin/raxml-ng",
+                    "description": "Path to lineage tree building executable.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "singlecell": {
+                    "type": "string",
+                    "default": "single_cell",
+                    "description": "Name of the field used to determine if a sample is single cell sequencing or not.",
+                    "fa_icon": "fas fa-adjust"
+                },
+                "skip_all_clones_report": {
+                    "type": "boolean",
+                    "description": "Skip report of EnchantR DefineClones for all samples together.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_report_threshold": {
+                    "type": "boolean",
+                    "description": "Skip report of EnchantR FindThreshold for all samples together.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_clonal_analysis": {
+                    "type": "boolean",
+                    "description": "Skip all clonal analysis processes",
+                    "fa_icon": "fas fa-angle-double-right"
+                }
+            },
+            "help_text": "By default, the pipeline will define clones for each of the samples, as two sequences having the same V-gene assignment, C-gene assignment, J-gene assignment, and junction length. Additionally, the similarity of the CDR3 sequences will be assessed by Hamming distances. \n\nA distance threshold for determining if two sequences come from the same clone or not is automatically determined by the process find threshold. Alternatively, a hamming distance threshold can be  manually set by setting the `--clonal_threshold` parameter.",
+            "fa_icon": "fab fa-pagelines"
+        },
+        "genotyping_and_novel_alleles_options": {
+            "title": "Genotyping and Novel Alleles options",
+            "type": "object",
+            "description": "Options for genotyping and novel allele inference.",
+            "default": "",
+            "properties": {
+                "genotyping": {
+                    "type": "boolean",
+                    "description": "Perform genotype inference and allele reassignment for IG and TR loci, plus optional IG novel allele inference. TR loci skip novel allele inference.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "genotypeby": {
+                    "type": "string",
+                    "default": "subject_id",
+                    "description": "Name of the field used to group data files to infer genotype.",
+                    "fa_icon": "fab fa-pagelines"
+                },
+                "genotyping_clonal_threshold": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Threshold for determining if two sequences come from the same clone or not.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "single_clone_representative": {
+                    "type": "boolean",
+                    "description": "Keep only one representative sequence per clone to perform genotype inference. TR loci always skip this preprocessing.",
+                    "fa_icon": "fas fa-dna"
+                },
+                "novel_allele_inference": {
+                    "type": "boolean",
+                    "description": "Perform TIgGER novel allele inference for IG loci.",
+                    "fa_icon": "fas fa-dna"
+                }
+            },
+            "fa_icon": "fas fa-dna"
+        },
+        "translation_and_embedding_options": {
+            "title": "Translation and embedding options",
+            "type": "object",
+            "description": "Options to generate BCR and TCR embeddings with Amulety",
+            "default": "",
+            "properties": {
+                "translate": {
+                    "type": "boolean",
+                    "description": "Generate a sequence amino acid translation with IgBlast."
+                },
+                "embeddings": {
+                    "type": "string",
+                    "description": "Generate sequence embeddings with amulety.",
+                    "pattern": "^((antiberta2|antiberty|balmpaired|esm2)?,?)*(?<!,)$",
+                    "help_text": "Provide a comma separated list of the embeddings to generate (e.g. antiberty,antiberta2 ). Currently supported embeddings are:\n- BCR embeddings: antiberta2, antiberty, balmpaired.\n- Unspecific embeddings: esm2."
+                },
+                "embedding_chain": {
+                    "type": "string",
+                    "default": "H",
+                    "description": "BCR or TCR chains to include for embedding.",
+                    "help_text": "Provide \"H\" for heavy chain only (BCR: IGH, TCR: TRB, TRD), or \"HL\" for heavy and light chain (requires single-cell paired data with the column \"cell_id\"). Cells with only heavy chains will be removed prior to embedding when HL is selected."
+                },
+                "use_gpu": {
+                    "type": "boolean",
+                    "description": "Use GPU to generate embeddings."
+                }
+            }
+        },
+        "report_options": {
+            "title": "Report options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "report_rmd": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/repertoire_comparison.Rmd",
+                    "description": "Custom report Rmarkdown file.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_css": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core_style.css",
+                    "description": "Custom report style file in css format.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_logo": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core-airrflow_logo_light.png",
+                    "description": "Custom logo for the report.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "report_logo_img": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/nf-core-airrflow_logo_reports.png",
+                    "description": "Custom logo for the EnchantR reports.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "skip_report": {
+                    "type": "boolean",
+                    "description": "Skip repertoire analysis and report generation.",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip multiqc report.",
+                    "fa_icon": "fas fa-angle-double-right"
+                }
+            },
+            "fa_icon": "far fa-file-code"
         },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
             "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
+            "description": "Options for the reference genome indices used to align reads.",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
-                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
+                    "default": true
                 },
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
@@ -166,6 +776,12 @@
                     "fa_icon": "fas fa-remove-format",
                     "hidden": true
                 },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature",
+                    "hidden": true
+                },
                 "max_multiqc_email_size": {
                     "type": "string",
                     "description": "File size limit when attaching MultiQC reports to summary emails.",
@@ -178,13 +794,6 @@
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -203,7 +812,8 @@
                 "multiqc_methods_description": {
                     "type": "string",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
-                    "fa_icon": "fas fa-cog"
+                    "fa_icon": "fas fa-cog",
+                    "hidden": true
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -216,7 +826,7 @@
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/",
                     "hidden": true
                 },
                 "trace_report_suffix": {
@@ -243,6 +853,45 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/protocol"
+        },
+        {
+            "$ref": "#/$defs/primer_input_and_positions"
+        },
+        {
+            "$ref": "#/$defs/umi_barcode_handling"
+        },
+        {
+            "$ref": "#/$defs/adapter_trimming"
+        },
+        {
+            "$ref": "#/$defs/sequence_assembly_options"
+        },
+        {
+            "$ref": "#/$defs/single_cell_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/rnaseq_based_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/vdj_annotation_options"
+        },
+        {
+            "$ref": "#/$defs/bulk_filtering_options"
+        },
+        {
+            "$ref": "#/$defs/clonal_analysis_options"
+        },
+        {
+            "$ref": "#/$defs/genotyping_and_novel_alleles_options"
+        },
+        {
+            "$ref": "#/$defs/translation_and_embedding_options"
+        },
+        {
+            "$ref": "#/$defs/report_options"
         },
         {
             "$ref": "#/$defs/reference_genome_options"

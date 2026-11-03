@@ -1,0 +1,305 @@
+---
+output:
+  html_document:
+    toc: true                               # table of contents
+    toc_float: true                         # float the table of contents to the left of the main document content
+    toc_depth: 3                            # header levels 1,2,3
+    theme: default
+    number_sections: false                  # add section numbering to headers
+    df_print: paged                         # tables are printed as an html table with support for pagination over rows and columns
+    css: ./nf-core_style.css
+    highlight: pygments
+    pdf_document: true
+  html_notebook:
+    toc: yes
+---
+
+
+---
+title: "Airrflow results summary report"
+subtitle: "Interactive summary report produced by the nf-core/airrflow pipeline"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(alakazam)
+library(shazam)
+library(stringr)
+library(plotly)
+library(airr)
+library(DT)
+library(scales)
+
+ggplot_theme <- theme_bw(base_family = "ArialMT") +
+            theme(panel.grid.major = element_blank(),
+            panel.border = element_rect(colour = "black", fill=NA, size=0.5),
+            panel.grid.minor = element_blank(), text = element_text(family="ArialMT"))
+theme_set(ggplot_theme)
+knitr::opts_chunk$set(echo = FALSE)
+
+# Setting data table and creating output folders
+outdir <- "repertoire_comparison"
+dir.create(outdir)
+seq_dir <- paste(outdir, "Sequence_numbers_summary", sep="/")
+dir.create(seq_dir)
+
+# Read data from the work directory
+datadir <- "."
+
+```
+
+# AIRR repertoire results
+
+The repertoires per subject after clonal analysis can be found in the
+subdirectory [clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires](clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires).
+
+Additionally, html reports summarizing the results are provided:
+
+- Report summarizing the clonal threshold found per each specified cloning group [clonal_analysis/find_threshold/all_reps_dist_report/index.html](clonal_analysis/find_threshold/all_reps_dist_report/index.html).
+- Report summarizing the repertoire properties for all the samples [clonal_analysis/repertoire_analysis/repertoire_anaysis_report/index.html](clonal_analysis/repertoire_analysis/repertoire_anaysis_report/index.html).
+- Report summarizing the lineage trees for each specified cloning group [clonal_analysis/dowser_lineages/](clonal_analysis/dowser_lineages/).
+
+A full description of the pipeline results can be found on the Output section of the [nf-core/airrflow website](https://nf-co.re/airrflow).
+
+# Metadata
+
+The table below shows the metadata provided in the input sample sheet for this run.
+
+```{r sample_metadata, echo=FALSE, warning=FALSE}
+samplesheet <- read.table("./samplesheet.valid.tsv", header = TRUE, sep = "\t", check.names = FALSE)
+DT::datatable(samplesheet, rownames = FALSE, options = list(scrollX = TRUE, scrollY = "400px", paging = FALSE, scrollCollapse = TRUE))
+```
+
+# Seqeuencing depth
+Reads per UMI plotted for each of the samples.
+```{r reads_per_UMI_plot, echo=FALSE, warning=FALSE, results='asis'}
+tryCatch( {
+    tab_seq  <- read.table("reads_per_UMI.csv", header=TRUE, sep=",")
+    tab_seq[is.na(tab_seq)] <- 0
+    plot_table <- tidyr::pivot_longer(tab_seq,
+                                      cols=-X,
+                                      names_to = "sample_id",
+                                      values_to ="count")
+
+    x_range <- c(floor(min(plot_table$X)), ceiling(max(plot_table$X)))
+    y_max <- ceiling(max(log10(plot_table$count)))
+    UMI_plot <- ggplot(data=plot_table,
+                        aes(x=X, y=count, group=sample_id)) +
+                  geom_line(aes(colour=sample_id)) +
+                  geom_point(aes(colour=sample_id)) +
+                  xlab('Reads per UMI') + ylab('UMI count') +
+                  scale_x_reverse(breaks=seq(x_range[1], x_range[2], by=ceiling(x_range[2]/10))) +
+                  scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1, base=10),
+                    breaks=c(0,10^seq(1, y_max,length.out=max(3,y_max)))
+                  )
+
+    p <- ggplotly(UMI_plot)
+  p
+
+  },
+  error=function(e){message("No reads per UMI information available.")}
+)
+```
+
+# Number of sequences
+
+## Sequence assembly steps
+
+Number of reads for each of the samples and number of sequences left after performing sequence assembly and alignment to reference data.
+The full table can be found under [Table_sequences_assembly](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembly.tsv).
+
+```{r seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
+tryCatch( {
+    tab_seqs <- read.table("./Table_sequences.tsv", header=TRUE, sep="\t", check.names = FALSE)
+    write.table(tab_seqs, file=paste0(seq_dir,"/Table_sequences_assembly.tsv"), sep="\t", quote=F, row.names=F)
+
+    plot_table <- tidyr::pivot_longer(tab_seqs,
+                                      cols=Sequences:Representative_2,
+                                      names_to = "steps",
+                                      values_to ="count")
+    firstcol = which(colnames(tab_seqs) == "Sequences")
+    lastcol = which(colnames(tab_seqs) == "Representative_2")
+    plot_table$steps <- factor(plot_table$steps, levels=colnames(tab_seqs)[firstcol:lastcol])
+
+    y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(plot_table$count)))
+    y_max <- max(ceiling(max(log10(plot_table$count))),y_min+2)
+    seqs_plot <- ggplot(data=plot_table,
+                        aes(x=steps, y=count, group=sample_id)) +
+                    geom_line(aes(colour=sample_id)) +
+                    geom_point(aes(colour=sample_id)) +
+                    scale_y_continuous(
+                        trans=scales::pseudo_log_trans(sigma=1,base=10),
+                        breaks=10^seq(y_min, y_max,by=1),
+                        limits=c(min(10^y_min,min(plot_table$count)),10^y_max)
+                        ) +
+                    xlab("") + ylab("Sequence count") +
+                    ggtitle("Number of sequences after each of the sequence assembly steps") +
+                    theme(axis.text.x= element_text(angle = 45))
+
+    p <- ggplotly(seqs_plot)
+    p
+  },
+  error=function(e){message("No sequence numbers are available if starting with assembled reads.")}
+)
+```
+
+## V(D)J gene assignment and QC
+
+Number of sequences for each of the samples after each of the downstream filtering and clonal analysis steps.
+The full table can be found under [Table_sequences_assembled](repertoire_comparison/Sequence_numbers_summary/Table_sequences_assembled.tsv).
+
+```{r seq_assembled, echo=FALSE, warning=FALSE, results='asis'}
+tab_seqs_assembled <- read.table("./Table_sequences_assembled.tsv", header=TRUE, sep="\t", check.names = FALSE)
+
+# Splitting on last underscore for sample_id and if there is no underscore split on last dot
+if (is.null(tab_seqs_assembled$sample_id)) {
+  tab_seqs_assembled$sample_id <- sapply(tab_seqs_assembled$input, function(x) {
+    if (grepl("_", x)) {
+      unlist(strsplit(as.character(x), "_(?=[^_]+$)", perl=TRUE))[1]
+    } else if (grepl("\\.", x)) {
+      unlist(strsplit(as.character(x), "\\.(?=[^\\.]+$)", perl=TRUE))[1]
+    } else {
+      x
+    }
+  })
+}
+
+dat <- tab_seqs_assembled %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
+        tidyr::pivot_wider(id_cols=sample_id,
+                            names_from=task,
+                            values_from=output_size)
+dat <- dat %>% dplyr::select(any_of(c("sample_id","ConvertDb-fasta", "AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
+                                "RemoveChimeric","CollapseDuplicates","ClonePass"))) %>% dplyr::arrange(sample_id)
+
+dat <- apply(dat,2,as.character)
+write.table(dat, file=paste0(seq_dir,"/Table_sequences_assembled.tsv"), sep="\t", quote=F, row.names=F)
+```
+
+
+```{r assembled_seq_numbers_plot, echo=FALSE, warning=FALSE, results='asis'}
+
+tab_seqs_assembled <- tab_seqs_assembled %>%
+        filter( !grepl("-fail.tsv", output) ) %>%
+        filter( !grepl("productive-F.tsv", output) ) %>%
+        dplyr::filter( task %in% c("sample_id","AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                "ParseDb-split", "FilterJunctionMod3","AddMetadata","SingleCellQC","CreateGermlines",
+                                "RemoveChimeric","CollapseDuplicates","ClonePass"))
+
+tab_seqs_assembled$task <- factor(tab_seqs_assembled$task, levels=c("AssignGenes-igblast", "MakeDB-igblast", "FilterQuality",
+                                                        "ParseDb-split", "FilterJunctionMod3", "AddMetadata", "SingleCellQC",
+                                                        "CreateGermlines", "RemoveChimeric", "CollapseDuplicates",
+                                                        "ClonePass"))
+
+tab_seqs_assembled$output_size <- as.numeric(tab_seqs_assembled$output_size)
+# Remove rows with NA or zero output_size
+tab_seqs_assembled <- tab_seqs_assembled %>%
+  filter(!is.na(output_size))
+
+y_min <- floor(scales::pseudo_log_trans(sigma=1,base=10)$transform(min(tab_seqs_assembled$output_size)))
+y_max <- max(ceiling(max(log10(tab_seqs_assembled$output_size))),y_min+2)
+seqs_plot_assembled <- ggplot(data=tab_seqs_assembled,
+                    aes(x=task, y=output_size, group=sample_id)) +
+              geom_line(aes(colour=sample_id)) +
+              geom_point(aes(colour=sample_id)) +
+              scale_y_continuous(
+                    trans=scales::pseudo_log_trans(sigma=1,base=10),
+                    breaks=10^seq(y_min, y_max,by=1),
+                    limits=c(min(10^y_min,min(tab_seqs_assembled$output_size)),10^y_max)
+              ) +
+              xlab("") + ylab("Sequence count") +
+              ggtitle("Number of sequences after each of the downstream steps") +
+              theme(axis.text.x = element_text(angle = 45)
+              )
+
+p <- ggplotly(seqs_plot_assembled)
+p
+```
+
+
+
+# Citations
+
+If you use nf-core/airrflow for your analysis, please cite our paper:
+
+> Gisela Gabernet, Susanna Marquez, Robert Bjornson, Alexander Peltzer, Hailong Meng, Edel Aron, Noah Y. Lee, Cole G. Jensen, David Ladd, Mark Polster, Friederike Hanssen, Simon Heumos, nf-core community, Gur Yaari, Markus C. Kowarik, Sven Nahnsen, Steven H. Kleinstein. nf-core/airrflow: an adaptive immune receptor repertoire analysis workflow employing the Immcantation framework. (2024) PLOS Computational Biology, 20(7), e1012265. doi: [https://doi.org/10.1371/journal.pcbi.1012265](https://doi.org/10.1371/journal.pcbi.1012265). Pubmed PMID: 39058741.
+
+In addition, citations for the tools and data used in this pipeline are as follows:
+
+- [pRESTO](https://doi.org/10.1093/bioinformatics/btu138)
+
+  > Vander Heiden, J. A., Yaari, G., Uduman, M., Stern, J. N. H., O’Connor, K. C., Hafler, D. A., … Kleinstein, S. H. (2014). pRESTO: a toolkit for processing high-throughput sequencing raw reads of lymphocyte receptor repertoires. Bioinformatics, 30(13), 1930–1932.
+
+- [SHazaM, Change-O](https://doi.org/10.1093/bioinformatics/btv359)
+
+  > Gupta, N. T., Vander Heiden, J. A., Uduman, M., Gadala-Maria, D., Yaari, G., & Kleinstein, S. H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data: Table 1. Bioinformatics, 31(20), 3356–3358.
+
+- [IgBLAST](https://doi.org/10.1093/nar/gkt382)
+
+  > Ye, J., Ma, N., Madden, T. L., & Ostell, J. M. (2013). IgBLAST: An immunoglobulin variable domain sequence analysis tool. Nucleic Acids Research, 41(Web Server issue), W34.
+
+- [Alakazam](https://doi.org/10.1126/scitranslmed.3008879)
+
+  > Stern, J. N. H., Yaari, G., Vander Heiden, J. A., Church, G., Donahue, W. F., Hintzen, R. Q., … O’Connor, K. C. (2014). B cells populating the multiple sclerosis brain mature in the draining cervical lymph nodes. Science Translational Medicine, 6(248), 248ra107.
+
+- [SCOPer](https://doi.org/10.1093/bioinformatics/bty235)
+
+  > Nouri N, Kleinstein S (2018). “A spectral clustering-based method for identifying clones from high-throughput B cell repertoire sequencing data.” Bioinformatics, i341-i349.
+
+  > Nouri N, Kleinstein S (2020). “Somatic hypermutation analysis for improved identification of B cell clonal families from next-generation sequencing data.” PLOS Computational Biology, 16(6), e1007977.
+
+  > Gupta N, Adams K, Briggs A, Timberlake S, Vigneault F, Kleinstein S (2017). “Hierarchical clustering can identify B cell clones with high confidence in Ig repertoire sequencing data.” The Journal of Immunology, 2489-2499.
+
+- [Dowser](https://doi.org/10.1371/journal.pcbi.1009885)
+
+  > Hoehn K, Pybus O, Kleinstein S (2022). “Phylogenetic analysis of migration, differentiation, and class switching in B cells.” PLoS Computational Biology.
+
+- [IgPhyML](https://www.pnas.org/doi/10.1073/pnas.1906020116)
+
+  > Hoehn K, Van der Heiden J, Zhou J, Lunter G, Pybus O, Kleinstein S (2019). “Repertoire-wide phylogenetic models of B cell molecular evolution reveal evolutionary signatures of aging and vaccination.” PNAS.
+
+- [RAxML](10.1093/bioinformatics/btu033)
+
+  > Stamatakis A. (2014) RAxML version 8: a tool for phylogenetic analysis and post-analysis of large phylogenies. Bioinformatics, 30(9): 1312-1313.
+
+- [TIgGER](https://doi.org/10.1073/pnas.1417683112)
+
+  > Gadala-maria, D., Yaari, G., Uduman, M., & Kleinstein, S. H. (2015). Automated analysis of high-throughput B-cell sequencing data reveals a high frequency of novel immunoglobulin V gene segment alleles. Proceedings of the National Academy of Sciences, 112(8), 1–9.
+
+- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+
+- [Fastp](https://doi.org/10.1093/bioinformatics/bty560)
+
+  > Shifu Chen, Yanqing Zhou, Yaru Chen, Jia Gu, fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics. 2018 Sept 1; 34(17):i884–i890.
+
+- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+
+  > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+
+## Software packaging/containerisation tools
+
+- [Anaconda](https://anaconda.com)
+
+  > Anaconda Software Distribution. Computer software. Vers. 2-2.4.0. Anaconda, Nov. 2016. Web.
+
+- [Bioconda](https://pubmed.ncbi.nlm.nih.gov/29967506/)
+
+  > Grüning B, Dale R, Sjödin A, Chapman BA, Rowe J, Tomkins-Tinch CH, Valieris R, Köster J; Bioconda Team. Bioconda: sustainable and comprehensive software distribution for the life sciences. Nat Methods. 2018 Jul;15(7):475-476. doi: 10.1038/s41592-018-0046-7. PubMed PMID: 29967506.
+
+- [BioContainers](https://pubmed.ncbi.nlm.nih.gov/28379341/)
+
+  > da Veiga Leprevost F, Grüning B, Aflitos SA, Röst HL, Uszkoreit J, Barsnes H, Vaudel M, Moreno P, Gatto L, Weber J, Bai M, Jimenez RC, Sachsenberg T, Pfeuffer J, Alvarez RV, Griss J, Nesvizhskii AI, Perez-Riverol Y. BioContainers: an open-source and community-driven framework for software standardization. Bioinformatics. 2017 Aug 15;33(16):2580-2582. doi: 10.1093/bioinformatics/btx192. PubMed PMID: 28379341; PubMed Central PMCID: PMC5870671.
+
+- [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
+
+- [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
+  > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.

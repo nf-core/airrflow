@@ -1,0 +1,3 @@
+sample_id	filename_R1	filename_R2	subject_id	species	pcr_target_locus	treatment	tissue	population	single_cell	sex	age	biomaterial_provider
+SRR1383456	s3://ngi-igenomes/test-data/airrflow/pcr_umi/SRR1383456_Subject_M4_brain_lesion_section_3_1.fastq.gz	s3://ngi-igenomes/test-data/airrflow/pcr_umi/SRR1383456_Subject_M4_brain_lesion_section_3_2.fastq.gz	M4	human	IG	Brain_lesion	Baseline	Bcell	FALSE	male	80	uni_tue
+SRR1383466	s3://ngi-igenomes/test-data/airrflow/pcr_umi/SRR1383466_Subject_M5_brain_lesion_section_1_1.fastq.gz	s3://ngi-igenomes/test-data/airrflow/pcr_umi/SRR1383466_Subject_M5_brain_lesion_section_1_2.fastq.gz	M5	human	IG	Brain_lesion	Baseline	Bcell	FALSE	female	63	uni_tue

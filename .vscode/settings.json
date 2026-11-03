@@ -1,3 +1,25 @@
 {
-    "markdown.styles": ["public/vscode_markdown.css"]
+    "markdown.styles": ["public/vscode_markdown.css"],
+    "cSpell.words": [
+        "AIRR",
+        "airrc",
+        "airrflow",
+        "bioinformatics",
+        "cellranger",
+        "fasta",
+        "fastq",
+        "genotyping",
+        "Germline",
+        "germlines",
+        "ggplots",
+        "Haza",
+        "hypermutation",
+        "igblast",
+        "imgt",
+        "Immcantation",
+        "Nextflow",
+        "PBMC",
+        "samplesheet"
+    ],
+    "nextflow.telemetry.enabled": false
 }
