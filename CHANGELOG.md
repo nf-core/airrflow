@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
+- [#525](https://github.com/nf-core/airrflow/pull/525) Output compressed intermediate files and added option to not save intermediate repertoires and full cellranger output.
 
 ### `Fixed`
 
@@ -23,8 +24,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | ---------- | ----------- | ----------- |
 | enchantr   | 0.1.25      | 0.1.26.999  |
 | airr       | 1.6.1       | 2.0.0       |
-| alakazam   | 1.4.3       | 1.4.3.999   |
-| tigger     | 1.1.3       | 1.1.3.999   |
+| alakazam   | 1.4.3       | 1.5.0       |
+| tigger     | 1.1.3       | 1.2.0       |
+| changeo    | 1.3.4       | 1.3.5       |
+| scoper     | 1.5.0       | 1.6.0       |
+| dowser     | 2.4.1       | 2.5.2       |
 
 ### `Deprecations and changes`
 
@@ -35,6 +39,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#508](https://github.com/nf-core/airrflow/issues/508) Restructured the final report.
 - Added descriptions to the steps shown in the two 'Number of sequences' plots.
 - Added the ability to restrict plots in the final report to samples selected in the metadata table.
+- [#524](https://github.com/nf-core/airrflow/issues/524) Simplify the contents in cellranger results folder. User can still have full contents if parameter "simple_cellranger_output" is set to be false.
+- [#491](https://github.com/nf-core/airrflow/issues/491) Add a parameter "save_intermediate_repertoires". By default it's true. If it is set to be false, AIRR format repertoire files will not be saved for intermediate steps.
 
 ## 5.1.2 - Ventus hotfix II
 

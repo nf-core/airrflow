@@ -19,15 +19,15 @@
                     "stringr": "1.6.0"
                 },
                 "CHANGEO_ASSIGNGENES": {
-                    "changeo": "1.3.4",
+                    "changeo": "1.3.5",
                     "igblastn": " 1.22.0"
                 },
                 "CHANGEO_MAKEDB": {
-                    "changeo": "1.3.4",
+                    "changeo": "1.3.5",
                     "igblastn": " 1.22.0"
                 },
                 "CHANGEO_PARSEDB_SPLIT": {
-                    "changeo": "1.3.4"
+                    "changeo": "1.3.5"
                 },
                 "CLONAL_ASSIGNMENT": {
                     "enchantr": "0.1.26.999",
@@ -386,25 +386,25 @@
                 "vdj_annotation/01-assign-genes/Sample1/Sample1_igblast.fmt7",
                 "vdj_annotation/02-make-db",
                 "vdj_annotation/02-make-db/Sample1",
-                "vdj_annotation/02-make-db/Sample1/Sample1_db-pass.tsv",
+                "vdj_annotation/02-make-db/Sample1/Sample1_db-pass.tsv.gz",
                 "vdj_annotation/02-make-db/Sample1/Sample1_makedb_command_log.txt",
                 "vdj_annotation/03-quality-filter",
                 "vdj_annotation/03-quality-filter/Sample1",
                 "vdj_annotation/03-quality-filter/Sample1/Sample1_fq_command_log.txt",
-                "vdj_annotation/03-quality-filter/Sample1/Sample1_quality-pass.tsv",
+                "vdj_annotation/03-quality-filter/Sample1/Sample1_quality-pass.tsv.gz",
                 "vdj_annotation/04-select-productive",
                 "vdj_annotation/04-select-productive/Sample1",
-                "vdj_annotation/04-select-productive/Sample1/Sample1_productive-F.tsv",
-                "vdj_annotation/04-select-productive/Sample1/Sample1_productive-T.tsv",
+                "vdj_annotation/04-select-productive/Sample1/Sample1_productive-F.tsv.gz",
+                "vdj_annotation/04-select-productive/Sample1/Sample1_productive-T.tsv.gz",
                 "vdj_annotation/04-select-productive/Sample1/Sample1_split_command_log.txt",
                 "vdj_annotation/05-select-junction-mod3",
                 "vdj_annotation/05-select-junction-mod3/Sample1",
                 "vdj_annotation/05-select-junction-mod3/Sample1/Sample1_jmod3_command_log.txt",
-                "vdj_annotation/05-select-junction-mod3/Sample1/Sample1_junction-pass.tsv",
+                "vdj_annotation/05-select-junction-mod3/Sample1/Sample1_junction-pass.tsv.gz",
                 "vdj_annotation/06-annotate-metadata",
                 "vdj_annotation/06-annotate-metadata/Sample1",
                 "vdj_annotation/06-annotate-metadata/Sample1/Sample1_add-meta_command_log.txt",
-                "vdj_annotation/06-annotate-metadata/Sample1/Sample1_meta-pass.tsv"
+                "vdj_annotation/06-annotate-metadata/Sample1/Sample1_meta-pass.tsv.gz"
             ],
             [
                 "Patient1_clone_command_log.txt:md5,93df7f5966f89974c17cbc829d4ceb52",
@@ -417,17 +417,17 @@
                 "multiqc_fastp.txt:md5,b34a37c2eaef22fd643772fbb9fb8256",
                 "multiqc_fastqc_fastqc-1.txt:md5,5a65617702acf58d648bca1fe97b7a11",
                 "multiqc_general_stats.txt:md5,511d32ad3efa0ef5f4f8840f5154dcf0",
-                "Sample1_collapse_command_log.txt:md5,27643683a819e001d3a0075d638aa69e",
+                "Sample1_collapse_command_log.txt:md5,8e67696dbab4e033cfea20630e4fcff4",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample1_fq_command_log.txt:md5,b0a24cf2bd36a88cc1ebeeada15da12b",
-                "Sample1_jmod3_command_log.txt:md5,31ad1aed917e9c495f78af804289075d",
-                "Sample1_add-meta_command_log.txt:md5,375939c5827b70235b0c68ce79b3fe45"
+                "Sample1_fq_command_log.txt:md5,42fe42c680139ed674468aef35140fe8",
+                "Sample1_jmod3_command_log.txt:md5,93656ee8ff973f52d958b4fc4e038dc6",
+                "Sample1_add-meta_command_log.txt:md5,726cc56a0b1658b56c38f248305279ec"
             ],
             "Table_sequences_assembled.tsv:md5,e3781e06b8759df796e517dba79f29df",
             "Table_sequences_assembly.tsv:md5,a3c840988b32d00ebe6440a8c1b4c8c9"
         ],
-        "timestamp": "2026-10-27T16:42:50.133370091",
+        "timestamp": "2026-10-28T13:02:46.090423798",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
