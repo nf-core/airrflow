@@ -3,6 +3,46 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 5.2.0dev
+
+### `Added`
+
+- [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
+- [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
+- [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
+- [#525](https://github.com/nf-core/airrflow/pull/525) Output compressed intermediate files and added option to not save intermediate repertoires and full cellranger output.
+
+### `Fixed`
+
+- [#489](https://github.com/nf-core/airrflow/pull/489) Fixed number of sequences plots to display zero values correctly.
+- [#507](https://github.com/nf-core/airrflow/issues/507) Fixed the issue that parameters for fastp were not passed correctly since 5.1.0 release.
+- [#522](https://github.com/nf-core/airrflow/pull/522) Add closures in modules.config.
+- [#514](https://github.com/nf-core/airrflow/issues/514) Fixed an issue where with multiple input pairs of fastqs corresponding to the same sample, TRUST4 only processed the first fastq pair.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| enchantr   | 0.1.25      | 0.1.26.999  |
+| airr       | 1.6.1       | 2.0.0       |
+| alakazam   | 1.4.3       | 1.5.0       |
+| tigger     | 1.1.3       | 1.2.0       |
+| changeo    | 1.3.4       | 1.3.5       |
+| scoper     | 1.5.0       | 1.6.0       |
+| dowser     | 2.4.1       | 2.5.2       |
+
+### `Deprecations and changes`
+
+- [#473](https://github.com/nf-core/airrflow/issues/473) Changed to read and write repertoire files in gzip-compressed format.
+- Changed the mutation frequency calculation region from the whole sequences to by default V region.
+- Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.
+- Added the step to save sequences failed contamination detection in single cell QC.
+- [#508](https://github.com/nf-core/airrflow/issues/508) Restructured the final report.
+- Added descriptions to the steps shown in the two 'Number of sequences' plots.
+- Added the ability to restrict plots in the final report to samples selected in the metadata table.
+- [#524](https://github.com/nf-core/airrflow/issues/524) Simplify the contents in cellranger results folder. User can still have full contents if parameter "simple_cellranger_output" is set to be false.
+- [#491](https://github.com/nf-core/airrflow/issues/491) Add a parameter "save_intermediate_repertoires". By default it's true. If it is set to be false, AIRR format repertoire files will not be saved for intermediate steps.
+
 ## 5.1.2 - Ventus hotfix II
 
 ### `Fixed`
