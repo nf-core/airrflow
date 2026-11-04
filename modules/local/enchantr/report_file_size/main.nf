@@ -15,7 +15,7 @@ process REPORT_FILE_SIZE {
     path logs_tabs
 
     output:
-    path "*_report", emit: file_size
+    path "*_report/*", emit: file_size
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
     path "file_size_report/tables/log_data.tsv", emit: table
 
@@ -29,7 +29,7 @@ process REPORT_FILE_SIZE {
         report_params=list('input'='${logs_tabs}', 'metadata'='${metadata}',\\
         'outdir'=getwd()))"
 
-    cp -r enchantr file_size_report && rm -rf enchantr
+    mv enchantr file_size_report
 
 
     """

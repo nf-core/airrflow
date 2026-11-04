@@ -33,8 +33,8 @@ workflow FASTQ_INPUT_CHECK {
         .set { ch_reads }
 
 
-    // Merge multi-lane sample fastq for protocols except for 10x genomics, trust4 (cellranger handles multi-fastq per sample)
-    if (library_generation_method == 'sc_10x_genomics' || library_generation_method == 'trust4')  {
+    // Merge multi-lane sample fastq for protocols except for 10x genomics (cellranger handles multi-fastq per sample)
+    if (library_generation_method == 'sc_10x_genomics')  {
 
         ch_merged_reads = ch_reads.single.mix( ch_reads.multiple )
 
