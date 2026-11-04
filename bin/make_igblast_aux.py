@@ -7,7 +7,7 @@ and optional_file/<species>_gl.aux (J reading frame, conserved PHE/TRP). Both
 encode coordinates of the germline set they were built from, so a custom
 reference needs its own or annotation is wrong.
 
-Reads <reference>/<species>/vdj/*_<CHAIN>.fasta, which sourcerer writes
+Reads <reference>/<species>/vdj/*_<CHAIN>.fasta, which immvoke writes
 IMGT-gapped -- igblast_base/fasta/ cannot be used instead, as those are
 gap-stripped and aggregated per locus class.
 """
