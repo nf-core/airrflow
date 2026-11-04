@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
 - [#525](https://github.com/nf-core/airrflow/pull/525) Output compressed intermediate files and added option to not save intermediate repertoires and full cellranger output.
+- [#482](https://github.com/nf-core/airrflow/pull/482) Genotype inference uses the enchantr `genotype` report (Bayesian): IMGT duplicate alleles are kept, genes with low confidence keep all reference alleles, and by default only sequences with V mutation frequency below 1% (and, for IGH, IgM/IgD) are used.
 
 ### `Fixed`
 

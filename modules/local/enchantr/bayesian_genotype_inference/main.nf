@@ -13,7 +13,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.1dev"
+    container "docker.io/immcantation/airrflow:5.2.2dev"
 
     input:
     tuple val(meta), path(tabs), path(reference_fasta) // meta, compressed sequence tsv in AIRR format
@@ -36,8 +36,9 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     def args = task.ext.args ? asString(task.ext.args) : ''
     def input = tabs.join(',')
     """
-    Rscript -e "enchantr::enchantr_report('tigger_bayesian_genotype', \\
+    Rscript -e "enchantr::enchantr_report('genotype', \\
                                         report_params=list('input'='${input}', \\
+                                        'method'='bayesian', \\
                                         'imgt_db'='${reference_fasta}', \\
                                         'genotypeby'='${genotypeby}', \\
                                         'single_clone_representative'='${single_clone_representative}', \\

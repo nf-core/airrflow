@@ -4,7 +4,7 @@ process FILTER_JUNCTION_MOD3 {
     label 'process_single'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.1dev"
+    container "docker.io/immcantation/airrflow:5.2.2dev"
 
     input:
     tuple val(meta), path(tab) // sequence tsv in AIRR format
