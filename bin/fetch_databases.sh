@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Written by Gisela Gabernet and released under the MIT license (2020).
 # Reworked to fetch and build with sourcerer instead of the fetch/ref2igblast
-# shell scripts. sourcerer's source names match the database types (imgt,
+# shell scripts. immvoke's source names match the database types (imgt,
 # airrc-imgt), so the type is passed through directly.
 set -euo pipefail
 
