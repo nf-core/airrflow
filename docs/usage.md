@@ -669,7 +669,7 @@ IgBLAST needs three germline-specific assets per species alongside the BLAST dat
 - `optional_file/<species>_gl.aux` — the reading frame of every J gene and the position of the conserved PHE/TRP that closes CDR3.
 - `internal_data/<species>/<species>_V` — the database IgBLAST uses to resolve a V hit's chain type.
 
-Both encode coordinates that are derived from a particular germline set. The copies NCBI ships with IgBLAST were derived from NCBI's own reference, so using them with a custom germline reference (for example one supplied with `--reference_fasta`) can mis-annotate the region boundaries and the J reading frames.
+All three are derived from a particular germline set: the `.ndm` and `.aux` files encode coordinates, and the `_V` database holds the alleles themselves. The copies NCBI ships with IgBLAST were derived from NCBI's own reference, so using them with a custom germline reference (for example one supplied with `--reference_fasta`) can mis-annotate the region boundaries and the J reading frames, or leave V hits without a chain type.
 
 Set `--generate_igblast_aux true` to rebuild all three from the germline reference actually in use before the annotation steps run. The reference is read per chain from the IMGT-gapped V and J FASTAs under `<reference>/<species>/vdj/`, one `.ndm` per V chain and one `.aux` per J chain, which are then merged into the single per-species file IgBLAST expects. The regenerated files replace the shipped ones inside the IgBLAST database directory; nothing else in that directory is touched, and other species keep their shipped files.
 
