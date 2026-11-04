@@ -38,6 +38,29 @@ def cleaned(ref, dest):
     return dest
 
 
+def ungapped(seqs):
+    # ndm_from_fasta slices at fixed IMGT positions, so an ungapped V still yields
+    # a record, just with wrong FWR/CDR boundaries. Length is no test: many
+    # alleles end before position 312
+    return [allele_name(k) for k, v in seqs.items() if "." not in v]
+
+
+def require_gapped(ref):
+    # A V that fills every IMGT position has no gaps and is still delineated
+    # correctly, so a lone ungapped allele only warns. A file with no gaps at all
+    # was never gapped.
+    seqs = simple.read_fasta(str(ref))
+    missing = ungapped(seqs)
+    if missing and len(missing) == len(seqs):
+        sys.exit(f"{ref}: none of the {len(seqs)} V sequences are IMGT-gapped. The "
+                 f".ndm boundaries are read from IMGT gap positions, so supply "
+                 f"IMGT-gapped V references.")
+    if missing:
+        print(f"WARNING: {ref}: {len(missing)} V sequence(s) have no IMGT gaps: "
+              f"{', '.join(missing)}. Their FWR/CDR boundaries are correct only if "
+              f"they fill every IMGT position.", file=sys.stderr)
+
+
 def parse(path):
     # Both tools write one "#" header; aux output is CRLF. Concatenating verbatim
     # would repeat the header.
@@ -53,6 +76,7 @@ def build(vdj, work, cdr_coords):
     fasta, out = work / "in.fasta", work / "out"
     for chain, code in V_CODE.items():
         for ref in sorted(vdj.glob(f"*_{chain}.fasta")):
+            require_gapped(ref)
             out.unlink(missing_ok=True)
             aux_formats.ndm_from_fasta(str(cleaned(ref, fasta)), str(out), code, cdr_coords)
             header, rows = parse(out)
@@ -91,6 +115,7 @@ def self_test():
     assert allele_name("J00256|IGHJ1*01|Homo_sapiens|F|J-REGION|723..774|52") == "IGHJ1*01"
     assert allele_name("IGHJ1*01") == "IGHJ1*01"
     assert allele_name("IGHV1-18*01 nt|1|") == "IGHV1-18*01"
+    assert ungapped({"IGHV1-2*01": "CAG...GTG", "X|IGHV1-3*01|": "CAGGTG"}) == ["IGHV1-3*01"]
     with tempfile.TemporaryDirectory() as tmp:
         src = Path(tmp) / "x.ndm"
         src.write_text("#header\r\nIGHV1-2*01\t1\t2\r\n\r\nIGHV1-3*01\t3\t4\r\n")
@@ -130,7 +155,7 @@ def main():
         ndm_header, ndm, aux_header, aux = build(d / "vdj", work, cdr_coords)
         if not ndm or not aux:
             sys.exit(f"{d.name}: derived {len(ndm)} V delineations and {len(aux)} J "
-                     f"annotations from {d / 'vdj'}. Are the V references IMGT-gapped?")
+                     f"annotations from {d / 'vdj'}. Is there a V and a J FASTA per chain?")
         write(a.out / "internal_data" / d.name / f"{d.name}.ndm.imgt", ndm_header, ndm)
         write(a.out / "optional_file" / f"{d.name}_gl.aux", aux_header, aux)
         annotation_db(a.out, d.name)
