@@ -192,6 +192,7 @@ subject_alpha_gradient <- function(df) {
 }
 
 sample_subject_map <- read.table("./samplesheet.valid.tsv", header=TRUE, sep="\t")[c("sample_id","subject_id")]
+sample_subject_map <- unique(sample_subject_map)
 ```
 
 # Seqeuencing depth {.tabset .tabset-fade .tabset-pills}
