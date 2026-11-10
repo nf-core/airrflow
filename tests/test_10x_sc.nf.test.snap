@@ -1,7 +1,7 @@
 {
     "-profile test_10x_sc": {
         "content": [
-            21,
+            20,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.1",
@@ -36,7 +36,7 @@
                 "CHANGEO_PARSEDB_SPLIT": {
                     "changeo": "1.3.5"
                 },
-                "CLONAL_ASSIGNMENT": {
+                "CLONAL_ASSIGNMENT_TR": {
                     "enchantr": "0.1.26.999",
                     "scoper": "1.6.0"
                 },
@@ -59,9 +59,6 @@
                     "enchantr": "0.1.26.999"
                 },
                 "REPORT_FILE_SIZE": {
-                    "enchantr": "0.1.26.999"
-                },
-                "REPORT_THRESHOLD": {
                     "enchantr": "0.1.26.999"
                 },
                 "SAMPLESHEET_CHECK": {
@@ -135,18 +132,6 @@
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_usage_bySequence.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/clone_sizes_table.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/num_clones_table.tsv",
-                "clonal_analysis/report_threshold",
-                "clonal_analysis/report_threshold/all_reps_dist_report",
-                "clonal_analysis/report_threshold/all_reps_dist_report/assets",
-                "clonal_analysis/report_threshold/all_reps_dist_report/assets/logo.png",
-                "clonal_analysis/report_threshold/all_reps_dist_report/assets/style.css",
-                "clonal_analysis/report_threshold/all_reps_dist_report/index.html",
-                "clonal_analysis/report_threshold/all_reps_dist_report/params.RData",
-                "clonal_analysis/report_threshold/all_reps_dist_report/reference-keys.txt",
-                "clonal_analysis/report_threshold/all_reps_dist_report/search_index.json",
-                "clonal_analysis/report_threshold/all_reps_dist_report/tables",
-                "clonal_analysis/report_threshold/all_reps_dist_report/tables/all_reps_threshold-mean.tsv",
-                "clonal_analysis/report_threshold/all_reps_threshold_command_log.txt",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
@@ -236,8 +221,6 @@
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "all_reps_clone_command_log.txt:md5,a9e3d5d21fff4d82e33eec48344d3288",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,e3bce9a8aa9aab5fe13f20e8f746709f",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "all_reps_scqc_command_log.txt:md5,9f4822338422a7f93415e854face46b8",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -250,9 +233,9 @@
             ],
             "Table_sequences_assembled.tsv:md5,389b8fbadf0e1a5718e8a18d40f3781e"
         ],
-        "timestamp": "2026-10-30T10:40:56.383949746",
+        "timestamp": "2026-11-10T14:38:32.873262247",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.4",
             "nextflow": "26.04.4"
         }
     }
