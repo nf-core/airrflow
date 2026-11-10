@@ -1,6 +1,7 @@
 include { FIND_THRESHOLD as FIND_CLONAL_THRESHOLD } from '../../modules/local/enchantr/find_threshold'
 include { FIND_THRESHOLD as REPORT_THRESHOLD } from '../../modules/local/enchantr/find_threshold'
-include { CLONAL_ASSIGNMENT } from '../../modules/local/enchantr/clonal_assignment'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_IG } from '../../modules/local/enchantr/clonal_assignment'
+include { CLONAL_ASSIGNMENT as CLONAL_ASSIGNMENT_TR } from '../../modules/local/enchantr/clonal_assignment'
 include { REPERTOIRE_ANALYSIS} from '../../modules/local/enchantr/repertoire_analysis'
 include { DOWSER_LINEAGES } from '../../modules/local/enchantr/dowser_lineages'
 
@@ -22,9 +23,12 @@ workflow CLONAL_ANALYSIS {
     main:
     ch_logs = channel.empty()
 
+    // TR has no somatic hypermutation: thresholds are found on IG only, TR clones use 0.
+    ch_ig_repertoire_reference = ch_repertoire_reference.filter{ it -> it[0].locus.toUpperCase() != 'TR' }
+
     if (clonal_threshold == 'auto') {
 
-        ch_find_threshold = ch_repertoire_reference.map{ it -> it[1] }
+        ch_find_threshold = ch_ig_repertoire_reference.map{ it -> it[1] }
                                         .collect()
         ch_find_threshold_samplesheet =  ch_find_threshold
                         .flatten()
@@ -71,7 +75,7 @@ workflow CLONAL_ANALYSIS {
     } else {
         clone_threshold = clonal_threshold
 
-        ch_find_threshold = ch_repertoire_reference.map{ it -> it[1] }
+        ch_find_threshold = ch_ig_repertoire_reference.map{ it -> it[1] }
                                         .collect()
         ch_find_threshold_samplesheet =  ch_find_threshold
                         .flatten()
@@ -125,17 +129,33 @@ workflow CLONAL_ANALYSIS {
 
     ch_repertoire_grouped.dump(tag: "ch_repertoire_grouped")
 
-    CLONAL_ASSIGNMENT(
-        ch_repertoire_grouped,
+    ch_repertoire_grouped
+                .branch{ it ->
+                    tr: it[0].locus.toUpperCase() == 'TR'
+                    ig: true
+                }
+                .set{ ch_repertoire_grouped_by_locus }
+
+    CLONAL_ASSIGNMENT_IG(
+        ch_repertoire_grouped_by_locus.ig,
         clone_threshold.collect(),
         [],
         cloneby,
         singlecell
     )
 
+    CLONAL_ASSIGNMENT_TR(
+        ch_repertoire_grouped_by_locus.tr,
+        [0],
+        [],
+        cloneby,
+        singlecell
+    )
+
+    ch_cloned = CLONAL_ASSIGNMENT_IG.out.tab.mix(CLONAL_ASSIGNMENT_TR.out.tab)
 
     // prepare ch for define clones all samples report
-    CLONAL_ASSIGNMENT.out.tab
+    ch_cloned
             .map { it -> it[1]}
             .collect()
             .map { it -> [ [id:'all_reps'], it ] }
@@ -158,7 +178,7 @@ workflow CLONAL_ANALYSIS {
 
     if (lineage_trees){
         DOWSER_LINEAGES(
-            CLONAL_ASSIGNMENT.out.tab,
+            ch_cloned,
             lineage_tree_builder,
             lineage_tree_exec
         )

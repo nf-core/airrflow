@@ -597,16 +597,16 @@ nextflow run nf-core/airrflow \
 
 A key step in analyzing BCR sequences involves assigning the germline V, D and J gene alleles to each sequence by matching against a database of known germline V(D)J alleles. However, analyzed individuals can have alleles not present in the databases (novel alleles), which if undetected can inflate the SHM rates. Additionally, genotyping, i.e. identifying the set of alleles that an individual carries for each gene, can help correct ambiguous V(D)J assignments for individual sequences.
 
-nf-core/airrflow includes optional steps to do genotype inference and V(D)J allele assignments correction using TIgGER. For IG loci, it can also perform novel allele detection before genotype inference.
+nf-core/airrflow includes optional steps to do genotype inference and V(D)J allele assignments correction using [TIgGER](https://tigger.readthedocs.io/en/stable/). For IG loci, it can also perform novel allele detection before genotype inference.
 
 Genotyping supports targeted BCR and TCR sequences. For both IG and TR loci, the pipeline infers the genotype and reassigns V(D)J allele calls based on the inferred personalized reference. Novel allele detection is IG-only and is skipped for TR loci. In addition, due to the large read coverage needed for the algorithm, genotyping does not work well on single-cell data which usually does not have enough read coverage.
 
 ### Genotyping related flags in nf-core/airrflow pipeline
 
-1. `--genotyping`: Perform TIgGER genotype inference, and optional IG novel allele detection, if it is set to be `true`. It is `false` by default.
-2. `--single_clone_representative`: If it is set to be `true`, Keep only one representative sequence per clone for future genotype infernece to reduce the impact of clonal expansion and somatic hypermutation. If `--genotyping` is `true`, `single_clone_representative` is `true` by default. TR loci always skip this preprocessing.
+1. `--genotyping`: Perform genotype inference, and optional IG novel allele detection, if it is set to be `true`. It is `false` by default.
+2. `--single_clone_representative`: If it is set to be `true`, keep only one representative sequence per clone for genotype inference to reduce the impact of clonal expansion and somatic hypermutation. If `--genotyping` is `true`, `single_clone_representative` is `true` by default. TR loci always skip this preprocessing.
 3. `--genotyping_clonal_threshold`: Threshold for determining if two sequences come from the same clone or not while inferring clones to find single clone representative. Default value is 0.2.
-4. `--novel_allele_inference`: whether to perform TIgGER novel allele inference for IG loci. TR loci skip this step. If `--genotyping` is `true`, `--single_clone_representative` is `true` by default.
+4. `--novel_allele_inference`: whether to perform TIgGER novel allele inference for IG loci. TR loci skip this step.
 
 ## Important considerations for clonal analysis
 
@@ -630,7 +630,7 @@ The clonal threshold can also be customized through the `--clonal_threshold` par
 
 For BCR data, we recommend using this default setting initially. After running the pipeline, you can review the automatically calculated threshold in the `find_threshold` report to make sure it is fitting the data appropriately. If the threshold is unsatisfactory, you can re-run the pipeline with a manually specified threshold (e.g. `--clonal_threshold 0.1`) that is appropriate for your data. For a low number of sequences that are insufficient to satisfactorily determine a threshold with this method, we generally recommend a threshold of 0.1 (length-normalized Hamming distance of nearest neighbors) for human BCR data.
 
-Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, the `--clonal_threshold` parameter should be set to 0 for TCR data.
+Since TCRs do not undergo somatic hypermutation, TCR clones are defined strictly by identical junction regions. For this reason, TR loci always use a threshold of 0: `--clonal_threshold`, and the automatic threshold detection, apply to IG loci only. When a run mixes IG and TR samples, they are assigned to clones separately.
 
 ### Including BCR lineage tree computation
 

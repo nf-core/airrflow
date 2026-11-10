@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
 - [#525](https://github.com/nf-core/airrflow/pull/525) Output compressed intermediate files and added option to not save intermediate repertoires and full cellranger output.
 - [#482](https://github.com/nf-core/airrflow/pull/482) Genotype inference uses the enchantr `genotype` report (Bayesian): IMGT duplicate alleles are kept, genes with low confidence keep all reference alleles, and by default only sequences with V mutation frequency below 1% (and, for IGH, IgM/IgD) are used.
+- [#482](https://github.com/nf-core/airrflow/pull/482) Clonal assignment runs separately for IG and TR loci: TR always uses threshold 0, and the clonal threshold is found on IG only. Custom configs selecting `CLONAL_ASSIGNMENT` must now select `CLONAL_ASSIGNMENT_IG|CLONAL_ASSIGNMENT_TR`.
 
 ### `Fixed`
 
