@@ -96,6 +96,7 @@ workflow CLONAL_ANALYSIS {
 
     // Group by the cloneby field and the effective locus: two loci of one subject
     // carry different references and cannot share a clone group.
+    ch_repertoire_reference.dump(tag: "ch_repertoire_reference")
     ch_repertoire_reference.map{ it ->
                             def meta = it[0]
                             def grouping_locus = meta.locus.toUpperCase()
@@ -110,6 +111,7 @@ workflow CLONAL_ANALYSIS {
                                 it[1],
                                 it[2] ] }
                 .set{ ch_repertoire_flat }
+    ch_repertoire_flat.dump(tag: "ch_repertoire_flat")
 
     // Only a cloneby value spanning more than one locus needs the suffix, otherwise
     // every existing clone-group output would be renamed.
@@ -118,6 +120,8 @@ workflow CLONAL_ANALYSIS {
                 .groupTuple()
                 .map{ clone_id, loci -> [ clone_id, loci.unique().size() > 1 ] }
                 .set{ ch_mixed_locus }
+    ch_mixed_locus.dump(tag: "ch_mixed_locus")
+    
 
     ch_repertoire_flat
                 .map{ it -> [ it[0], it ] }
@@ -126,8 +130,8 @@ workflow CLONAL_ANALYSIS {
                 .groupTuple(by: [0,1])
                 .map{ get_meta_tabs(it, genotypeby, cloneby) }
                 .set{ ch_repertoire_grouped }
-
     ch_repertoire_grouped.dump(tag: "ch_repertoire_grouped")
+    
 
     ch_repertoire_grouped
                 .branch{ it ->
