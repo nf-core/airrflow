@@ -129,8 +129,6 @@ workflow CLONAL_ANALYSIS {
     ch_repertoire_grouped.dump(tag: "ch_repertoire_grouped")
     
 
-    ch_repertoire_grouped.dump(tag: "ch_repertoire_grouped")
-
     CLONAL_ASSIGNMENT(
         ch_repertoire_grouped,
         clone_threshold.collect(),
