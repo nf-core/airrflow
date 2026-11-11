@@ -5,7 +5,7 @@ process REMOVE_CHIMERIC {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.2.0dev"
+    container "docker.io/immcantation/airrflow:5.2.1dev"
 
 
     input:

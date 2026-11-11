@@ -294,9 +294,9 @@
             ],
             "Table_sequences_assembled.tsv:md5,c9203f7d14a0d57a365d1bdd4bfb320a"
         ],
-        "timestamp": "2026-10-28T13:10:44.680799696",
+        "timestamp": "2026-09-21T12:58:46.539283444",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.4",
             "nextflow": "26.04.4"
         }
     }
