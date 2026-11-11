@@ -195,7 +195,7 @@ sample_subject_map <- read.table("./samplesheet.valid.tsv", header=TRUE, sep="\t
 sample_subject_map <- unique(sample_subject_map)
 ```
 
-# Seqeuencing depth {.tabset .tabset-fade .tabset-pills}
+# Sequencing depth {.tabset .tabset-fade .tabset-pills}
 Reads per UMI plotted for each of the samples.
 ```{r reads_per_UMI_data, echo=FALSE, warning=FALSE, include=FALSE}
 # prepare reads per UMI table for plotting
