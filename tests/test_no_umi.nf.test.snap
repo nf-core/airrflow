@@ -416,7 +416,7 @@
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,b34a37c2eaef22fd643772fbb9fb8256",
                 "multiqc_fastqc_fastqc-1.txt:md5,5a65617702acf58d648bca1fe97b7a11",
-                "multiqc_general_stats.txt:md5,511d32ad3efa0ef5f4f8840f5154dcf0",
+                "multiqc_general_stats.txt:md5,1075c491d658d4a86b23ff456859793a",
                 "Sample1_collapse_command_log.txt:md5,8e67696dbab4e033cfea20630e4fcff4",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -427,7 +427,7 @@
             "Table_sequences_assembled.tsv:md5,e3781e06b8759df796e517dba79f29df",
             "Table_sequences_assembly.tsv:md5,a3c840988b32d00ebe6440a8c1b4c8c9"
         ],
-        "timestamp": "2026-10-28T13:02:46.090423798",
+        "timestamp": "2026-11-11T16:20:36.440946145",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

@@ -9,9 +9,9 @@ lint:
     - .github/workflows/linting.yml
   multiqc_config:
     - report_comment
-  nextflow_config: false # Ported to params block in main.nf
-  schema_params: false # Ported to params block in main.nf
-nf_core_version: 4.0.2
+  nextflow_config: false
+  schema_params: false
+nf_core_version: 4.2.2
 repository_type: pipeline
 template:
   author: Gisela Gabernet, Susanna Marquez, Alexander Peltzer, Simon Heumos
