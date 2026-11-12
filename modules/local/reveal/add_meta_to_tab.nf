@@ -4,7 +4,7 @@ process ADD_META_TO_TAB {
     label 'process_single'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     cache 'deep' // Without 'deep' this process would run when using -resume
 
@@ -13,7 +13,7 @@ process ADD_META_TO_TAB {
     path(validated_input)
 
     output:
-    tuple val(meta), path("*meta-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*meta-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
     tuple val("${task.process}"), val('dplyr'), eval('Rscript -e "library(dplyr); cat(paste(packageVersion(\'dplyr\'), collapse=\'.\'))"'), emit: versions_dplyr, topic: versions
     tuple val("${task.process}"), val('optparse'), eval('Rscript -e "library(optparse); cat(paste(packageVersion(\'optparse\'), collapse=\'.\'))"'), emit: versions_optparse, topic: versions
