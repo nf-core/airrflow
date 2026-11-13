@@ -4,7 +4,7 @@ process MAKE_IGBLAST_AUX {
     // blast provides makeblastdb, which the internal_data V database rebuild needs.
     conda "bioconda::blast=2.17.0 conda-forge::python=3.11 pip:receptor-utils==0.0.67"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/2540941dbd0f691b5f5cb49cb37118e1efefd538897954e28d05be42e0d17fbe/data' :
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/18/18ee6ebb35530d335f3cb56fe00cfb9c62f7755e1612d1cc52b343757183df71/data' :
         'community.wave.seqera.io/library/blast_python_pip_receptor-utils:9470ae020c3cb9d0' }"
 
     input:
