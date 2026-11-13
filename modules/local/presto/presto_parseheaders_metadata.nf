@@ -18,7 +18,7 @@ process PRESTO_PARSEHEADERS_METADATA {
     script:
     def args = task.ext.args ?: ''
     """
-    ParseHeaders.py add -s $reads -o ${reads.baseName}_reheader-pass.fastq $args -u ${meta.id} ${meta.subject_id} ${meta.species} ${meta.locus}
+    ParseHeaders.py add -s $reads -o ${reads.baseName}_reheader-pass.fastq $args -u ${meta.id} ${meta.subject_id} ${meta.species} ${meta.pcr_target_locus}
 
     """
 }
