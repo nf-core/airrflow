@@ -52,8 +52,9 @@ mkdir -p "${OUTDIR}/fasta" "${OUTDIR}/database"
 
 concat_to_file() {
     local dest=$1
-    local pattern file
+    local pattern file suffix name
     local files=()
+    local prefixes=()
     shift
     shopt -s nullglob
     for pattern in "$@"; do
@@ -61,6 +62,21 @@ concat_to_file() {
             files+=("$file")
         done
     done
+    if [ ${#files[@]} -eq 0 ]; then
+        # A user-supplied reference carries its own source prefix, not imgt_ or
+        # airrc_. The patterns differ only by prefix, so widening the first covers
+        # them all. Only the file name is widened, never the folder path.
+        suffix=${1##*/imgt_}
+        for file in "${1%/*}"/*_${suffix}; do
+            files+=("$file")
+            name=${file##*/}
+            name=${name%_${suffix}}
+            [[ " ${prefixes[*]} " == *" ${name} "* ]] || prefixes+=("$name")
+        done
+        if [ ${#prefixes[@]} -gt 1 ]; then
+            fail "Found more than one reference source (${prefixes[*]}) for '${suffix}' in '${1%/*}'. Keep one source per folder."
+        fi
+    fi
     shopt -u nullglob
     if [ ${#files[@]} -gt 0 ]; then
         cat "${files[@]}" > "$dest"

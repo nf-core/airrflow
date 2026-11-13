@@ -121,11 +121,13 @@ compare_canonical_fasta_dirs() {
     for observed in "$observed_dir"/*.fasta; do
         basename=$(basename "$observed")
         [[ $basename =~ ^(human|mouse)_(ig|tr)_[vdjc]\.fasta$ || $basename =~ ^aa_(human|mouse)_(ig|tr)_v\.fasta$ ]] || continue
+        [[ -s "$observed" ]] || continue  # an empty FASTA is the same as none
         observed_files+=("$basename")
     done
     for expected in "$expected_dir"/*.fasta; do
         basename=$(basename "$expected")
         [[ $basename =~ ^(human|mouse)_(ig|tr)_[vdjc]\.fasta$ || $basename =~ ^aa_(human|mouse)_(ig|tr)_v\.fasta$ ]] || continue
+        [[ -s "$expected" ]] || continue  # an empty FASTA is the same as none
         expected_files+=("$basename")
     done
     shopt -u nullglob
@@ -177,6 +179,10 @@ validate_canonical_assets() {
     shopt -s nullglob
 
     for path in "$fasta_dir"/*.fasta; do
+        # An empty canonical FASTA has no database and cannot have one:
+        # makeblastdb rejects an empty input. A reference that covers only some
+        # species or loci is legitimate, so do not demand a database for it.
+        [[ -s $path ]] || continue
         name=$(basename "$path")
         stem=${name%.fasta}
         if [[ $stem =~ ^(human|mouse)_(ig|tr)_[vdjc]$ || $stem =~ ^aa_(human|mouse)_(ig|tr)_v$ ]]; then
@@ -203,6 +209,25 @@ validate_canonical_assets() {
     done
 }
 
+# Change-O always gives IgBLAST a constant-region database, so a class with V genes
+# but no constant regions takes IMGT's.
+fill_constant_regions() {
+    local v_fasta species class chain query
+    for v_fasta in "$OUTPUT_DIR"/fasta/*_v.fasta; do
+        [[ $(basename "$v_fasta") =~ ^(human|mouse)_(ig|tr)_v\.fasta$ ]] || continue
+        species=${BASH_REMATCH[1]}; class=${BASH_REMATCH[2]}
+        [[ -s $OUTPUT_DIR/fasta/${species}_${class}_c.fasta ]] && continue
+        echo "WARNING: the reference has no ${class^^} constant regions for ${species}; using IMGT's, downloaded now." >&2
+        for chain in $([[ $class == ig ]] && echo IGHC IGKC IGLC || echo TRAC TRBC TRGC TRDC); do
+            query=14.1  # IMGT has no spliced mouse IGKC/IGLC
+            [[ $species == mouse && ($chain == IGKC || $chain == IGLC) ]] && query=7.5
+            wget -qO- "https://www.imgt.org/genedb/GENElect?query=${query}+${chain}&species=$([[ $species == human ]] && echo Homo+sapiens || echo Mus)" |
+                awk '/<pre>/{i++}/<\/pre>/{j++}{if(j==2){exit}}{if(i==2 && j==1 && $0!~"^<pre>"){print}}'
+        done > "$OUTPUT_DIR/fasta/${species}_${class}_c.fasta"
+        [[ -s $OUTPUT_DIR/fasta/${species}_${class}_c.fasta ]] || fail "Could not download IMGT constant regions for ${species} ${class^^}."
+    done
+}
+
 [[ -n $INPUT_DIR ]] || fail "You must provide an input directory with -i."
 [[ -d $INPUT_DIR ]] || fail "Input IgBLAST cache directory not found: $INPUT_DIR"
 [[ -n $REFERENCE_FASTA_DIR ]] || fail "You must provide a reference FASTA directory with -r."
@@ -223,6 +248,7 @@ require_dir "$OUTPUT_DIR/optional_file"
 normalize_fasta_dir "$OUTPUT_DIR/fasta"
 reference_fastas_match_igblast_fastas "$OUTPUT_DIR/fasta" || \
     fail "Canonical FASTAs in reference_igblast/fasta do not match the FASTAs derivable from reference_fasta."
+fill_constant_regions
 clear_rebuildable_database_files "$OUTPUT_DIR/database"
 rebuild_database_from_fasta_dir "$OUTPUT_DIR/fasta"
 validate_canonical_assets "$OUTPUT_DIR/fasta" "$OUTPUT_DIR/database"
