@@ -598,20 +598,20 @@ nextflow run nf-core/airrflow \
 The germline reference is what every V(D)J assignment is made against, so it is worth
 being explicit about which one a run used. There are three ways to supply it.
 
-| Option                            | Parameters                                 | Scope       | Status    |
-| --------------------------------- | ------------------------------------------ | ----------- | --------- |
-| Cached reference bundle (default) | `--reference_fasta`, `--reference_igblast` | all samples | supported |
-| Fetch at runtime                  | `--fetch_germlines imgt` or `airrc-imgt`   | all samples | supported |
-| Your own custom reference         | `--reference_fasta`, `--reference_igblast` | all samples | supported |
+| Option                            | Parameters                                           | Scope       | Status    |
+| --------------------------------- | ---------------------------------------------------- | ----------- | --------- |
+| Cached reference bundle (default) | none                                                 | all samples | supported |
+| Fetch at runtime                  | `--fetch_germlines imgt` or `airrc-imgt`             | all samples | supported |
+| Your own custom reference         | `--reference_fasta` (`--reference_igblast` optional) | all samples | supported |
 
 Nothing changes for an existing run. `--generate_igblast_aux` defaults to `false`; unset,
 no extra process runs and the reference is resolved exactly as it was before.
 
 ### The cached reference bundle (default)
 
-By default the pipeline uses a pre-built IMGT bundle: `--reference_fasta` points at
-`imgtdb_base.zip` (the germline FASTAs) and `--reference_igblast` at
-`igblast_base.zip` (the IgBLAST databases built from them). Both may be a `.zip` or an
+When neither `--reference_fasta` nor `--reference_igblast` is given, the pipeline uses a
+pre-built IMGT bundle: `imgtdb_base.zip` (the germline FASTAs) and `igblast_base.zip`
+(the IgBLAST databases built from them). Both parameters accept a `.zip` or an
 unpacked directory. Because these are pinned files rather than a live download, two runs
 months apart give the same assignments.
 
@@ -625,7 +625,7 @@ from: the built reference is published under `<outdir>/germline_reference/` when
 
 ### Supplying your own reference for all samples
 
-`--reference_fasta` and `--reference_igblast` also accept a reference you built yourself
+`--reference_fasta` also accepts a reference you built yourself
 — an OGRDB set, a curated in-house set, or a set exported from a database such as HUSA.
 It replaces IMGT for **every** sample in the run. This is the right option for "annotate
 everything against my reference"; it needs no samplesheet change.
@@ -633,19 +633,23 @@ everything against my reference"; it needs no samplesheet change.
 ```bash
 nextflow run nf-core/airrflow \
 --input samplesheet.tsv \
---reference_fasta  my_reference_base.zip \
---reference_igblast my_igblast_base.zip \
---generate_igblast_aux true \
+--reference_fasta my_reference_base.zip \
 --outdir results
 ```
 
-The two directories must be laid out as the pipeline's own bundles are:
+Without `--reference_igblast`, the IgBLAST database, including the `.ndm`/`.aux` files
+and the `internal_data` V database, is built from the FASTAs at the start of the run.
+If you already have an IgBLAST database for the same FASTAs, pass it with `--reference_igblast`
+to skip the build.
+
+The directories must be laid out as the pipeline's own bundles are:
 
 - `reference_fasta`: `<species>/vdj/<prefix>_<species>_<CHAIN>.fasta`, with the V
   sequences IMGT-gapped, plus `<species>/constant/<prefix>_<species>_<CHAIN>C.fasta`
   for the constant regions. `<CHAIN>` is `IGHV`, `IGHD`, `IGHJ`, `IGKV` and so on.
-- `reference_igblast`: `database/`, `fasta/`, `internal_data/` and `optional_file/`,
-  as produced by `bin/ref2igblast.sh` from the tree above.
+- `reference_igblast` (optional): `database/`, `fasta/`, `internal_data/` and
+  `optional_file/`. `bin/ref2igblast.sh` builds `database/` and `fasta/` from the tree
+  above; `bin/make_igblast_aux.py` builds `internal_data/` and `optional_file/`.
 
 Three things are easy to get wrong:
 
@@ -653,8 +657,8 @@ Three things are easy to get wrong:
   If the reference has no `<species>/constant/` regions for a class (IG or TR), IMGT's are
   downloaded during validation, with a warning in the task log; this needs network access.
   Provide your own to avoid it.
-- **Set `--generate_igblast_aux true` for any reference whose allele names are not
-  IMGT's.** IgBLAST resolves a V hit's chain type through files that ship as NCBI's IMGT
+- **With `--reference_igblast`, set `--generate_igblast_aux true` for any reference
+  whose allele names are not IMGT's.** IgBLAST resolves a V hit's chain type through files that ship as NCBI's IMGT
   mirror; an allele missing from them gets no chain type, and IgBLAST then returns the V
   call with **no D and no J at all**. This fails silently rather than erroring — see
   [Germline reference auxiliary files](#germline-reference-auxiliary-files).

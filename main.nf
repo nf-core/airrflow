@@ -109,8 +109,8 @@ params {
     // -----------------------
     productive_only: Boolean = true
     reassign: Boolean = true
-    reference_igblast: String = params.pipelines_testdata_base_path + 'database-cache/igblast_base.zip'
-    reference_fasta: String = params.pipelines_testdata_base_path + 'database-cache/imgtdb_base.zip'
+    reference_igblast: String? = null
+    reference_fasta: String? = null
     fetch_germlines: String = 'none'
     generate_igblast_aux: Boolean = false
     skip_alignment_filter: Boolean = false
@@ -245,6 +245,12 @@ workflow NFCORE_AIRRFLOW {
     ch_report_logo      = channel.fromPath(params.report_logo, checkIfExists: true)
     ch_report_logo_img  = channel.fromPath(params.report_logo_img, checkIfExists: true)
 
+    // Neither reference given: the cached bundle. Only --reference_fasta given:
+    // reference_igblast stays null and the IgBLAST database is built from the FASTA.
+    def reference_cache   = params.pipelines_testdata_base_path + 'database-cache/'
+    def reference_fasta   = params.reference_fasta ?: reference_cache + 'imgtdb_base.zip'
+    def reference_igblast = params.reference_igblast ?: (params.reference_fasta ? null : reference_cache + 'igblast_base.zip')
+
     //
     // WORKFLOW: Run pipeline
     //
@@ -272,8 +278,8 @@ workflow NFCORE_AIRRFLOW {
         ch_multiqc_custom_config,
         ch_multiqc_logo,
         params.fetch_germlines,
-        params.reference_igblast,
-        params.reference_fasta,
+        reference_igblast,
+        reference_fasta,
         params.vprimers,
         params.race_linker,
         params.cprimers,

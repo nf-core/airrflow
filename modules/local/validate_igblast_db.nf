@@ -17,8 +17,9 @@ process VALIDATE_IGBLAST_DB {
     tuple val("${task.process}"), val('bash'), eval('bash --version | head -n 1 | sed \'s/^GNU bash, version //; s/(.*$//\''), emit: versions_bash, topic: versions
 
     script:
+    // No IgBLAST cache given ([]): the script builds one from the reference.
+    def input = igblast_dir ? '-i input_igblast_base' : ''
     """
-    validate_igblast_db.sh -i input_igblast_base -r "${reference_fasta_dir}" -o igblast_base
-
+    validate_igblast_db.sh ${input} -r "${reference_fasta_dir}" -o igblast_base
     """
 }

@@ -9,7 +9,8 @@ REFERENCE_FASTA_DIR=""
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 usage() {
-    echo "Usage: $(basename "$0") -i <igblast_dir> -r <reference_fasta_dir> [-o <output_dir>]" >&2
+    echo "Usage: $(basename "$0") [-i <igblast_dir>] -r <reference_fasta_dir> [-o <output_dir>]" >&2
+    echo "  Without -i, the IgBLAST database is built from the reference." >&2
 }
 
 while getopts "i:o:r:h" OPT; do
@@ -228,26 +229,31 @@ fill_constant_regions() {
     done
 }
 
-[[ -n $INPUT_DIR ]] || fail "You must provide an input directory with -i."
-[[ -d $INPUT_DIR ]] || fail "Input IgBLAST cache directory not found: $INPUT_DIR"
 [[ -n $REFERENCE_FASTA_DIR ]] || fail "You must provide a reference FASTA directory with -r."
 [[ -d $REFERENCE_FASTA_DIR ]] || fail "Reference FASTA directory not found: $REFERENCE_FASTA_DIR"
-if [[ -e $OUTPUT_DIR ]] && [[ $(realpath "$INPUT_DIR") == $(realpath "$OUTPUT_DIR") ]]; then
-    fail "Output directory must differ from input directory: $OUTPUT_DIR"
-fi
-
 REFERENCE_FASTA_DIR=$(realpath "$REFERENCE_FASTA_DIR")
-mkdir -p "$OUTPUT_DIR"
-cp -a "$INPUT_DIR"/. "$OUTPUT_DIR"/
 
-require_dir "$OUTPUT_DIR/database"
-require_dir "$OUTPUT_DIR/fasta"
-require_dir "$OUTPUT_DIR/internal_data"
-require_dir "$OUTPUT_DIR/optional_file"
+if [[ -n $INPUT_DIR ]]; then
+    [[ -d $INPUT_DIR ]] || fail "Input IgBLAST cache directory not found: $INPUT_DIR"
+    if [[ -e $OUTPUT_DIR ]] && [[ $(realpath "$INPUT_DIR") == $(realpath "$OUTPUT_DIR") ]]; then
+        fail "Output directory must differ from input directory: $OUTPUT_DIR"
+    fi
+    mkdir -p "$OUTPUT_DIR"
+    cp -a "$INPUT_DIR"/. "$OUTPUT_DIR"/
 
-normalize_fasta_dir "$OUTPUT_DIR/fasta"
-reference_fastas_match_igblast_fastas "$OUTPUT_DIR/fasta" || \
-    fail "Canonical FASTAs in reference_igblast/fasta do not match the FASTAs derivable from reference_fasta."
+    require_dir "$OUTPUT_DIR/database"
+    require_dir "$OUTPUT_DIR/fasta"
+    require_dir "$OUTPUT_DIR/internal_data"
+    require_dir "$OUTPUT_DIR/optional_file"
+
+    normalize_fasta_dir "$OUTPUT_DIR/fasta"
+    reference_fastas_match_igblast_fastas "$OUTPUT_DIR/fasta" || \
+        fail "Canonical FASTAs in reference_igblast/fasta do not match the FASTAs derivable from reference_fasta."
+else
+    # No IgBLAST cache given: build fasta/ and database/ from the reference.
+    # internal_data/ and optional_file/ are added by MAKE_IGBLAST_AUX.
+    "${SCRIPT_DIR}/ref2igblast.sh" -i "$REFERENCE_FASTA_DIR" -o "$OUTPUT_DIR"
+fi
 fill_constant_regions
 clear_rebuildable_database_files "$OUTPUT_DIR/database"
 rebuild_database_from_fasta_dir "$OUTPUT_DIR/fasta"
