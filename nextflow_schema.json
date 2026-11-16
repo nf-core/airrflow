@@ -444,16 +444,14 @@
                 "reference_fasta": {
                     "type": "string",
                     "description": "Path to the germline reference fasta.",
-                    "help_text": "By default, we provide a pre-downloaded AIRR-C/IMGT reference bundle. It is also possible to provide a custom reference fasta database. To fetch a fresh reference bundle at runtime, set `--fetch_germlines airrc-imgt` or `--fetch_germlines imgt`.",
-                    "fa_icon": "fas fa-database",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/imgtdb_base.zip"
+                    "help_text": "By default, we provide a pre-downloaded AIRR-C/IMGT reference bundle. It is also possible to provide a custom reference fasta database. Given without `--reference_igblast`, the IgBLAST database is built from it. To fetch a fresh reference bundle at runtime, set `--fetch_germlines airrc-imgt` or `--fetch_germlines imgt`.",
+                    "fa_icon": "fas fa-database"
                 },
                 "reference_igblast": {
                     "type": "string",
                     "description": "Path to the cached igblast database.",
-                    "help_text": "By default, we provide a pre-downloaded AIRR-C/IMGT IgBLAST database. It is also possible to provide a custom cached IgBLAST database. To fetch a fresh reference bundle at runtime, set `--fetch_germlines airrc-imgt` or `--fetch_germlines imgt`.",
-                    "fa_icon": "fas fa-database",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/airrflow/database-cache/igblast_base.zip"
+                    "help_text": "By default, we provide a pre-downloaded AIRR-C/IMGT IgBLAST database. It is also possible to provide a custom cached IgBLAST database. If `--reference_fasta` is given without it, the IgBLAST database is built from that FASTA instead. To fetch a fresh reference bundle at runtime, set `--fetch_germlines airrc-imgt` or `--fetch_germlines imgt`.",
+                    "fa_icon": "fas fa-database"
                 },
                 "fetch_germlines": {
                     "type": ["string"],

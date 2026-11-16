@@ -14,7 +14,11 @@ workflow DATABASES {
 
     main:
 
-    if( fetch_germlines == "none"){
+    // Only --reference_fasta given: build the IgBLAST database from it.
+    def build_igblast = fetch_germlines == "none" && !reference_igblast
+    ch_igblast = channel.value([])
+
+    if( fetch_germlines == "none" && !build_igblast ){
         if (reference_igblast.endsWith(".zip")) {
             channel.fromPath("${reference_igblast}")
                     .ifEmpty{ error "IGBLAST DB not found: ${reference_igblast}" }
@@ -55,7 +59,9 @@ workflow DATABASES {
     // germline reference actually in use. The boundaries and reading frames they
     // encode are germline-set specific, so the shipped files mis-annotate a
     // custom reference.
-    if (generate_igblast_aux) {
+    // A database built from the FASTA has no internal_data/ or optional_file/, so
+    // the aux files are always generated for it.
+    if (generate_igblast_aux || build_igblast) {
         MAKE_IGBLAST_AUX(ch_igblast, ch_reference_fasta)
         ch_igblast = MAKE_IGBLAST_AUX.out.igblast
     }
