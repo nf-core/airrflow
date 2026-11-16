@@ -691,7 +691,7 @@ nextflow run nf-core/airrflow \
 ```
 
 :::note
-The files are generated with the [receptor_utils](https://pypi.org/project/receptor_utils/) package (`make_igblast_ndm` and `annotate_j`). `receptor_utils` is pip-only and is not in the default nf-core/airrflow image or on bioconda, and rebuilding the chain-type database additionally needs `makeblastdb`, so the `MAKE_IGBLAST_AUX` process runs in its own container carrying both. This means `-profile conda` is not supported for this step; use a container profile such as `docker` or `singularity`.
+The files are generated with the [receptor_utils](https://pypi.org/project/receptor_utils/) package (`make_igblast_ndm` and `annotate_j`). `receptor_utils` is pip-only and is not in the default nf-core/airrflow image or on bioconda, and rebuilding the chain-type database additionally needs `makeblastdb`, so the `MAKE_IGBLAST_AUX` process runs in its own container carrying both. With `-profile conda`, it uses a conda environment that installs `receptor_utils` from PyPI.
 :::
 
 :::note
