@@ -79,6 +79,9 @@
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
                 },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
+                },
                 "REPORT_FILE_SIZE": {
                     "enchantr": "0.1.26.999"
                 },

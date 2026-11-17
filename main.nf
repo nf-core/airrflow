@@ -112,7 +112,7 @@ params {
     reference_igblast: String? = null
     reference_fasta: String? = null
     fetch_germlines: String = 'none'
-    generate_igblast_aux: Boolean = false
+    generate_igblast_aux: Boolean = true
     skip_alignment_filter: Boolean = false
 
     // -----------------------

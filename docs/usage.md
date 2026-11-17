@@ -604,8 +604,9 @@ being explicit about which one a run used. There are three ways to supply it.
 | Fetch at runtime                  | `--fetch_germlines imgt` or `airrc-imgt`             | all samples | supported |
 | Your own custom reference         | `--reference_fasta` (`--reference_igblast` optional) | all samples | supported |
 
-Nothing changes for an existing run. `--generate_igblast_aux` defaults to `false`; unset,
-no extra process runs and the reference is resolved exactly as it was before.
+By default (`--generate_igblast_aux true`), the IgBLAST `.ndm`/`.aux` files and the
+`internal_data` V database are rebuilt from the germline reference in use, for every option
+above. See [Germline reference auxiliary files](#germline-reference-auxiliary-files).
 
 ### The cached reference bundle (default)
 
@@ -657,8 +658,8 @@ Three things are easy to get wrong:
   If the reference has no `<species>/constant/` regions for a class (IG or TR), IMGT's are
   downloaded during validation, with a warning in the task log; this needs network access.
   Provide your own to avoid it.
-- **With `--reference_igblast`, set `--generate_igblast_aux true` for any reference
-  whose allele names are not IMGT's.** IgBLAST resolves a V hit's chain type through files that ship as NCBI's IMGT
+- **Keep `--generate_igblast_aux true` (the default) for any reference whose allele
+  names are not IMGT's.** IgBLAST resolves a V hit's chain type through files that ship as NCBI's IMGT
   mirror; an allele missing from them gets no chain type, and IgBLAST then returns the V
   call with **no D and no J at all**. This fails silently rather than erroring — see
   [Germline reference auxiliary files](#germline-reference-auxiliary-files).
@@ -675,22 +676,22 @@ IgBLAST needs three germline-specific assets per species alongside the BLAST dat
 
 All three are derived from a particular germline set: the `.ndm` and `.aux` files encode coordinates, and the `_V` database holds the alleles themselves. The copies NCBI ships with IgBLAST were derived from NCBI's own reference, so using them with a custom germline reference (for example one supplied with `--reference_fasta`) can mis-annotate the region boundaries and the J reading frames, or leave V hits without a chain type.
 
-Set `--generate_igblast_aux true` to rebuild all three from the germline reference actually in use before the annotation steps run. The reference is read per chain from the IMGT-gapped V and J FASTAs under `<reference>/<species>/vdj/`, one `.ndm` per V chain and one `.aux` per J chain, which are then merged into the single per-species file IgBLAST expects. The regenerated files replace the shipped ones inside the IgBLAST database directory; nothing else in that directory is touched, and other species keep their shipped files.
+By default (`--generate_igblast_aux true`), all three are rebuilt from the germline reference actually in use before the annotation steps run. The reference is read per chain from the IMGT-gapped V and J FASTAs under `<reference>/<species>/vdj/`, one `.ndm` per V chain and one `.aux` per J chain, which are then merged into the single per-species file IgBLAST expects. The regenerated files replace the shipped ones inside the IgBLAST database directory; nothing else in that directory is touched, and other species keep their shipped files.
 
 :::warning
 The chain-type database is the one that fails silently. If a V allele is not in it,
 IgBLAST reports the V call with the chain type unset and then skips the D and J search
 entirely, so every record is dropped downstream with no error naming the cause. Any
-reference whose allele names are not IMGT's needs `--generate_igblast_aux true`.
+reference whose allele names are not IMGT's needs `--generate_igblast_aux true`, the default.
 :::
 
-The parameter defaults to `false`, in which case the shipped files are used unchanged and no extra process runs. The same operation applies whether the reference came from `--fetch_germlines` or from `--reference_fasta`/`--reference_igblast`.
+The same operation applies whether the reference is the cached bundle, came from `--fetch_germlines`, or from `--reference_fasta`/`--reference_igblast`. To use the files shipped with IgBLAST unchanged and skip the extra process, set `--generate_igblast_aux false`. A database built from `--reference_fasta` alone has no shipped files, so it always gets generated ones.
 
 ```bash
 nextflow run nf-core/airrflow \
 --input samplesheet.tsv \
 --fetch_germlines imgt \
---generate_igblast_aux true \
+--generate_igblast_aux false \
 --outdir results
 ```
 

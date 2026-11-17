@@ -61,6 +61,9 @@
                 "GUNZIP_UMI": {
                     "gunzip": "1.14"
                 },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
+                },
                 "MERGE_UMI": {
                     "biopython": "1.81",
                     "python": " 3.12.0"

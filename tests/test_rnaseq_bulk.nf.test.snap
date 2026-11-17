@@ -64,6 +64,9 @@
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
                 },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
+                },
                 "PREPARE_TRUST4_REFERENCE": {
                     "cat": "8.30"
                 },

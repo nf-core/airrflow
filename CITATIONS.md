@@ -46,7 +46,7 @@
 
 - [receptor_utils](https://pypi.org/project/receptor_utils/)
 
-  > Lees, W. Utilities for working with immune receptor sequences. Used, when `--generate_igblast_aux` is set, to derive the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference.
+  > Lees, W. Utilities for working with immune receptor sequences. Used (unless `--generate_igblast_aux false`) to derive the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference.
 
 - [Alakazam](https://doi.org/10.1126/scitranslmed.3008879)
 

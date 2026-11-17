@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 - [#516](https://github.com/nf-core/airrflow/pull/516) Build the IgBLAST database from `--reference_fasta` when `--reference_igblast` is not given.
-- [#516](https://github.com/nf-core/airrflow/pull/516) Added the `--generate_igblast_aux` parameter (default `false`), which regenerates the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference in use with `receptor_utils`, replacing the ones shipped with IgBLAST.
+- [#516](https://github.com/nf-core/airrflow/pull/516) Added the `--generate_igblast_aux` parameter (default `true`), which regenerates the IgBLAST `.ndm` and `.aux` auxiliary files from the germline reference in use with `receptor_utils`, replacing the ones shipped with IgBLAST.
 - [#502](https://github.com/nf-core/airrflow/pull/502) Added subjectID tab to number of sequences plots.
 - [#497](https://github.com/nf-core/airrflow/pull/497) Added a scrollable table containing the metadata from the sample sheet to the airrflow report.
 - [#492](https://github.com/nf-core/airrflow/pull/492) Add sequencing depth plot.
@@ -27,8 +27,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 | ---------- | ----------- | ----------- |
 | enchantr   | 0.1.25      | 0.1.26.999  |
 | airr       | 1.6.1       | 2.0.0       |
-| alakazam   | 1.4.3       | 1.4.3.999   |
-| tigger     | 1.1.3       | 1.1.3.999   |
+| alakazam   | 1.4.3       | 1.5.0       |
+| tigger     | 1.1.3       | 1.2.0       |
+| changeo    | 1.3.4       | 1.3.5       |
+| scoper     | 1.5.0       | 1.6.0       |
+| dowser     | 2.4.1       | 2.5.2       |
 | immvoke    |             | 0.1.0       |
 
 ### `Deprecations and changes`

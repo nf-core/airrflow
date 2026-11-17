@@ -54,6 +54,9 @@
                 "FIND_CLONAL_THRESHOLD": {
                     "enchantr": "0.1.26.999"
                 },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
+                },
                 "REPERTOIRE_ANALYSIS": {
                     "enchantr": "0.1.26.999"
                 },
