@@ -4,14 +4,14 @@
             163,
             {
                 "ADD_META_TO_TAB": {
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2"
                 },
                 "AIRRFLOW_REPORT": {
                     "DT": "0.34.0",
-                    "R": "4.6.1",
-                    "alakazam": "1.5.0",
+                    "R": "4.6.2",
+                    "alakazam": "1.5.0.999",
                     "dplyr": "1.2.1",
                     "knitr": "1.52",
                     "scales": "1.4.0",
@@ -40,16 +40,16 @@
                     "fastqc": "0.12.1"
                 },
                 "FILTER_JUNCTION_MOD3": {
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "airr": "2.0.0",
-                    "alakazam": "1.5.0",
+                    "alakazam": "1.5.0.999",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "airr": "2.0.0",
-                    "alakazam": "1.5.0",
+                    "alakazam": "1.5.0.999",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
@@ -891,7 +891,7 @@
             "Table_sequences_assembled.tsv:md5,503cd5e38ed0a4146337fd4c9e14eb0a",
             "Table_sequences_assembly.tsv:md5,e90cd20af727b5f94a8b48a6c274434e"
         ],
-        "timestamp": "2026-11-11T16:13:15.932575079",
+        "timestamp": "2026-11-18T12:21:01.733653502",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
