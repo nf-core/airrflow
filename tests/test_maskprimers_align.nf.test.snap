@@ -1,7 +1,7 @@
 {
     "-profile test_maskprimers_align": {
         "content": [
-            169,
+            170,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -890,10 +890,10 @@
             "Table_sequences_assembled.tsv:md5,7330606135fab6f1bc7c33de4e455512",
             "Table_sequences_assembly.tsv:md5,e3aff104a5f5855b5fa0ef449a56dcce"
         ],
-        "timestamp": "2026-11-18T12:16:08.263687751",
+        "timestamp": "2026-11-19T13:37:55.834797228",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

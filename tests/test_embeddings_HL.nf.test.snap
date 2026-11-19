@@ -1,7 +1,7 @@
 {
     "-profile test_embeddings_HL": {
         "content": [
-            22,
+            23,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -216,10 +216,10 @@
             ],
             "Table_sequences_assembled.tsv:md5,92960ccb0a58e63be4797400537e822c"
         ],
-        "timestamp": "2026-11-18T10:47:16.759592816",
+        "timestamp": "2026-11-19T11:36:36.107923773",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

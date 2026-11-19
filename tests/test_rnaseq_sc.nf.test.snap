@@ -1,7 +1,7 @@
 {
     "-profile test_rnaseq_sc": {
         "content": [
-            24,
+            25,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -329,16 +329,16 @@
             ],
             [
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sc_01_clone_command_log.txt:md5,45320540ac19a2b4bfde415f13f91c71",
-                "all_reps_clone_command_log.txt:md5,aada0022b75877890d25f54b30606222",
+                "sc_01_clone_command_log.txt:md5,9c3c7ba565eff0d56a780d86ea56a8a0",
+                "all_reps_clone_command_log.txt:md5,8b86856b5f5641a20ad877b122669a9b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,506038596d37514a1e31181bc7699d35",
+                "all_reps_threshold_command_log.txt:md5,e2ad2da81a50457c444716c0787c598c",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,9613dcf590fd9d6c7b21c327ff4cd97c",
                 "multiqc_general_stats.txt:md5,61a6bb0e59eadbd3b23d8578d25120ce",
                 "trust4_reference.fa:md5,a2bd1e99b52d42c49776f55aef6cb00c",
-                "all_reps_scqc_command_log.txt:md5,1bf0fb86378cb3c9e6ac43ca322b40ec",
+                "all_reps_scqc_command_log.txt:md5,fdb05ec33650aed13afc889db2a0fd3f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "sc_test_annot.fa:md5,04f8a52551c98da7f3ee5773611ce66e",
@@ -350,16 +350,16 @@
                 "sc_test_toassemble_2.fq:md5,8ba052f0f9267f971c2cb72b64d4aaea",
                 "sc_test_toassemble_bc.fa:md5,7b8b48c4b911d2592547fad59db0dc88",
                 "sc_test_toassemble_umi.fa:md5,6bcafacbf87c8bc5b04360a65a2bdbaa",
-                "sc_test_fq_command_log.txt:md5,8d4c44a8b47b328cff6c2888531b3c41",
-                "sc_test_jmod3_command_log.txt:md5,72d49765360c9a587319023277ba7d8e",
-                "sc_test_add-meta_command_log.txt:md5,b437227e744925bdbe1a563136fd147a"
+                "sc_test_fq_command_log.txt:md5,18f17f98bb84c841c0126805443805a6",
+                "sc_test_jmod3_command_log.txt:md5,de5337708e8d96f68692835678ff9832",
+                "sc_test_add-meta_command_log.txt:md5,368754ea8ed6619237839a5aa65d8451"
             ],
-            "Table_sequences_assembled.tsv:md5,2e180748d1ffadf7617dbd06c9426138"
+            "Table_sequences_assembled.tsv:md5,b6300359bc355750c904ead0b760a980"
         ],
-        "timestamp": "2026-11-18T12:41:31.487616077",
+        "timestamp": "2026-11-19T15:10:57.057386409",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

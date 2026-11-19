@@ -1,7 +1,7 @@
 {
     "-profile test_fetchimgt": {
         "content": [
-            27,
+            28,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -908,30 +908,30 @@
                 "PGP1_clone_command_log.txt:md5,f2ef1dc43ac9190b18a269197396d157",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_x_clone_command_log.txt:md5,ce73398cb81f85528c8d18302a82f0eb",
+                "subject_x_clone_command_log.txt:md5,ab5cff6ae68d29593f2e9c3e57c83489",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,4fccc7dc2fb534bf31b80d0b63374ab7",
-                "all_reps_clone_command_log.txt:md5,41857fba71aa414c61ee57ed794e7bdd",
+                "all_reps_threshold_command_log.txt:md5,71a3bea9b9a8ca279410c6cec6672885",
+                "all_reps_clone_command_log.txt:md5,7c04e25e9c9a7242d85b22deeadf23ab",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "PGP1_collapse_command_log.txt:md5,7a3eea5da0b2bbdea882880aef568aaf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_scqc_command_log.txt:md5,b2809b8cc502a09871cb7fc2f2b9f77f",
+                "all_reps_scqc_command_log.txt:md5,376c39bc3136dc115f91eafd3402b2a9",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "PGP1_fq_command_log.txt:md5,6446938908140824a498af4c1eef6a97",
-                "sc5p_v2_hs_PBMC_1k_5fb_fq_command_log.txt:md5,f0658e6d176d5741149d80a6a66458ae",
+                "sc5p_v2_hs_PBMC_1k_5fb_fq_command_log.txt:md5,6c465f51bb5f84b6cedfc7dda1848518",
                 "PGP1_jmod3_command_log.txt:md5,9f586b6e2ef943dc4fa158fa963d75e4",
-                "sc5p_v2_hs_PBMC_1k_5fb_jmod3_command_log.txt:md5,da2cb973e56f8793bb60a3397b0a8b07",
+                "sc5p_v2_hs_PBMC_1k_5fb_jmod3_command_log.txt:md5,e1846bcaf36eaf174f94c9eea3284093",
                 "PGP1_add-meta_command_log.txt:md5,53d732e2b98c1bee272007f7d950fb48",
-                "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,01bd9299794d24da1c4f6c13c219f340"
+                "sc5p_v2_hs_PBMC_1k_5fb_add-meta_command_log.txt:md5,277fc40003bbe1c7cfc45c6ff36ad914"
             ],
-            "Table_sequences_assembled.tsv:md5,122703f1b6c4c18666f9f5e8e10f4bad"
+            "Table_sequences_assembled.tsv:md5,f19dfbe4689a6bd7e8076cc9770ddf04"
         ],
-        "timestamp": "2026-11-04T10:06:01.789243117",
+        "timestamp": "2026-11-19T12:04:28.75073574",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }
