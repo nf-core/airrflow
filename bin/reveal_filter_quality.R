@@ -8,9 +8,9 @@
 # - max 10% N nucleotides
 #
 # Arguments:
-#   --repertoire  Tabulated data, in Change-O (TAB) or AIRR (TSV) format.
+#   --repertoire  Tabulated data, in compressed Change-O (TAB) or AIRR (TSV) format.
 #   -h  Display help.
-# Example: ./reveal_filter_quality.R --repertoire test-results/assign-genes/sc5p_v2_hs_PBMC_1k_b_airr_rearrangement_sequences_igblast_db-pass.tsv
+# Example: ./reveal_filter_quality.R --repertoire test-results/assign-genes/sc5p_v2_hs_PBMC_1k_b_airr_rearrangement_sequences_igblast_db-pass.tsv.gz
 
 # Libraries
 suppressPackageStartupMessages(library("optparse"))
@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library("stringi"))
 
 # Define commmandline arguments
 opt_list <- list(
-    make_option(c("-r", "--repertoire"), dest = "REPERTOIRE", default = NULL, help = "Input repertoire .tsv file"),
+    make_option(c("-r", "--repertoire"), dest = "REPERTOIRE", default = NULL, help = "Input repertoire .tsv.gz file"),
     make_option(c("-o", "--outname"), dest = "OUTPUT", default = NULL, help = "Output name")
 )
 # Parse arguments
@@ -100,9 +100,9 @@ if ("locus" %in% colnames(db)) {
 
 
 if (!is.null(opt$OUTPUT)) {
-    output_fn <- paste0(opt$OUTPUT, "_quality-pass.tsv")
+    output_fn <- paste0(opt$OUTPUT, "_quality-pass.tsv.gz")
 } else {
-    output_fn <- sub(".tsv$", "_quality-pass.tsv", basename(opt$REPERTOIRE))
+    output_fn <- sub(".tsv.gz$", "_quality-pass.tsv.gz", basename(opt$REPERTOIRE))
 }
 # don't write if empty
 if (sum(filter_pass)>0) {

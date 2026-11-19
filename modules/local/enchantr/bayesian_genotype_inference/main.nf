@@ -12,17 +12,17 @@ process BAYESIAN_GENOTYPE_INFERENCE {
     label 'process_long_parallelized'
     label 'immcantation'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
-    tuple val(meta), path(tabs), path(reference_fasta) // meta, sequence tsv in AIRR format
+    tuple val(meta), path(tabs), path(reference_fasta) // meta, compressed sequence tsv in AIRR format
     val genotypeby
     val single_clone_representative
 
     output:
     tuple val(meta), path("*_report/references/*/db_genotype"), emit: reference // reference folder
     path("*/*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
     tuple val("${task.process}"), val('tigger'), eval("Rscript -e \"library(tigger); cat(as.character(packageVersion('tigger')))\""), emit: versions_tigger, topic: versions
 
@@ -43,7 +43,7 @@ process BAYESIAN_GENOTYPE_INFERENCE {
                                         'outdir'=getwd(), \\
                                         'log'='${meta.id}_bayesian_genotype_inference_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_bayesian_genotype_inference_report && rm -rf enchantr
+    mv enchantr ${meta.id}_bayesian_genotype_inference_report
 
     """
 }

@@ -48,6 +48,18 @@
                     "default": "${projectDir}/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv",
                     "description": "Path to MiAIRR-BioSample mapping",
                     "fa_icon": "fas fa-table"
+                },
+                "save_intermediate_repertoires": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to save repertoires in each intermediate step",
+                    "fa_icon": "far fa-save"
+                },
+                "save_cellranger_full_output": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Save only repertoire file and summary report by default. If set the value to be true, full cellranger results including bam, fasta and fastq files will be saved in the output folder.",
+                    "fa_icon": "far fa-save"
                 }
             }
         },
@@ -169,7 +181,7 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to trim adapters in fastq reads with fastp.",
-                    "help_text": "By default adapters will be auto-detected, but adapter sequences can also be provided in a `fasta` file with the `--adapter_fasta` option.",
+                    "help_text": "By default, adapter sequences are automatically detected and trimmed. Alternatively, adapter sequences can be provided in a FASTA file using the `--adapter_fasta` option, in which case the specified adapters will be trimmed.",
                     "fa_icon": "fas fa-cut"
                 },
                 "adapter_fasta": {
@@ -384,7 +396,7 @@
                 },
                 "trust4_umi_read": {
                     "type": "string",
-                    "description": "Indicate if UMI indices are recorded in the R1 (default) or R2 fastq file.",
+                    "description": "Indicate if UMI indices are recorded in the R1 or R2 fastq file.",
                     "help_text": "file containing 10x Genomics-like UMIs",
                     "enum": ["R1", "R2"],
                     "fa_icon": "fas fa-barcode"
@@ -549,7 +561,7 @@
                 },
                 "skip_clonal_analysis": {
                     "type": "boolean",
-                    "description": "Skip all clonal anlaysis processes",
+                    "description": "Skip all clonal analysis processes",
                     "fa_icon": "fas fa-angle-double-right"
                 }
             },
@@ -825,7 +837,7 @@
                 },
                 "trace_report_suffix": {
                     "type": "string",
-                    "fa_icon": "far calendar",
+                    "fa_icon": "far fa-calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
                 },

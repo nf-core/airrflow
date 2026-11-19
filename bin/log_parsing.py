@@ -416,7 +416,7 @@ df_final_table = df_final_table.sort_values(["Sample"], ascending=[1])
 
 # incorporating metadata
 metadata = pd.read_csv("metadata.tsv", sep="\t")
-metadata = metadata[metadata.columns.drop(list(metadata.filter(regex="filename")))]
+metadata = metadata[metadata.columns.drop(list(metadata.filter(regex="filename")))].drop_duplicates()
 logs_metadata = metadata.merge(df_final_table, left_on="sample_id", right_on="Sample")
 logs_metadata = logs_metadata.drop(["Sample"], axis=1)
 logs_metadata.to_csv(path_or_buf="Table_sequences_process.tsv", sep="\t", header=True, index=False)

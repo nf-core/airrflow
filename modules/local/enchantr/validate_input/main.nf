@@ -7,7 +7,7 @@ process VALIDATE_INPUT {
     label 'process_single'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
     file samplesheet
@@ -29,7 +29,6 @@ process VALIDATE_INPUT {
     """
     Rscript -e "enchantr:::enchantr_report('validate_input', report_params=list('input'='${samplesheet}','collapseby'='${collapseby}','cloneby'='${cloneby}','reassign'='${reassign}','miairr'='${miairr}','outdir'=getwd()))"
 
-    cp -r enchantr validate_input_report && rm -rf enchantr
-
+    mv enchantr validate_input_report
     """
 }

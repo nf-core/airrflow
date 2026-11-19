@@ -13,11 +13,11 @@ process FIND_THRESHOLD {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
 
     input:
-    path tab // sequence tsv in AIRR format
+    path tab // compressed sequence tsv in AIRR format
     path logo
     path tabs_samplesheet
     val cloneby
@@ -25,9 +25,8 @@ process FIND_THRESHOLD {
     val singlecell
 
     output:
-    // tuple val(meta), path("*threshold-pass.tsv"), emit: tab // sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     path "all_reps_dist_report/tables/*_threshold-summary.tsv", emit: threshold_summary, optional:true
     path "all_reps_dist_report/tables/*_threshold-mean.tsv", emit: mean_threshold
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
@@ -50,7 +49,6 @@ process FIND_THRESHOLD {
             'log'='all_reps_threshold_command_log',\\
             'logo'='${logo}' ${args}))"
 
-    cp -r enchantr all_reps_dist_report && rm -rf enchantr
-
+    mv enchantr all_reps_dist_report
     """
 }

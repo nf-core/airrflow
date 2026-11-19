@@ -13,15 +13,15 @@ process DETECT_CONTAMINATION {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
     path(tabs)
 
     output:
-    path("*cont-flag.tsv"), emit: tab // sequence tsv in AIRR format
+    path("*cont-flag.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
 
     script:
@@ -38,7 +38,7 @@ process DETECT_CONTAMINATION {
         'outname'='cont-flag', \\
         'log'='all_reps_contamination_command_log' ${args}))"
 
-    cp -r enchantr all_reps_cont_report && rm -rf enchantr
+    mv enchantr all_reps_cont_report
 
     """
 }

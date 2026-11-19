@@ -13,16 +13,16 @@ process COLLAPSE_DUPLICATES {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
-    tuple val(meta), path(tabs) // tuple [val(meta), sequence tsv in AIRR format ]
+    tuple val(meta), path(tabs) // tuple [val(meta), compressed sequence tsv in AIRR format ]
     val collapseby
 
     output:
-    tuple val(meta), path("*/*/*collapse-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*/*/*collapse-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
 
     script:
@@ -41,7 +41,6 @@ process COLLAPSE_DUPLICATES {
         'outname'='${meta.id}',\\
         'log'='${meta.id}_collapse_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_collapse_report && rm -r enchantr
-
+    mv enchantr ${meta.id}_collapse_report
     """
 }

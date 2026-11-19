@@ -13,17 +13,17 @@ process REPERTOIRE_ANALYSIS {
     label 'immcantation'
     label 'immcantation_container'
 
-    container "docker.io/immcantation/airrflow:5.1.0"
+    container "docker.io/immcantation/airrflow:5.2.0dev"
 
     input:
-    tuple val(meta), path(tabs) // meta, sequence tsv in AIRR format
+    tuple val(meta), path(tabs) // meta, compressed sequence tsv in AIRR format
     path repertoires_samplesheet
     val cloneby
 
     output:
-    tuple val(meta), path("*/*/*repertoire-pass.tsv"), emit: tab // sequence tsv in AIRR format
+    tuple val(meta), path("*/*/*repertoire-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*/*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
 
 
@@ -48,7 +48,7 @@ process REPERTOIRE_ANALYSIS {
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
-    cp -r enchantr repertoire_analysis_report && rm -rf enchantr
+    mv enchantr repertoire_analysis_report
 
     """
 }
