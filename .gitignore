@@ -7,7 +7,7 @@ testing/
 testing*
 *.pyc
 null/
-.nf-test
-.nf-test.log
 .lineage/
 *reports.tsv
+.nf-test/
+.nf-test.log

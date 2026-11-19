@@ -252,7 +252,7 @@ Assign genes with Igblast, using the a germline reference is performed by the [A
 
 - `vdj_annotation/02-makedb/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*db-pass.tsv`: Rearrangement table in AIRR-C format containing the assigned gene information.
+  - `*db-pass.tsv.gz`: Rearrangement table in AIRR-C format containing the assigned gene information.
 
 </details>
 
@@ -265,7 +265,7 @@ IgBLAST's results are parsed and standardized with [MakeDB](https://changeo.read
 
 - `vdj_annotation/03-quality-filter/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*quality-pass.tsv*`: Rearrangement table in AIRR-C format containing the sequences that passed the quality filtering steps.
+  - `*quality-pass.tsv.gz`: Rearrangement table in AIRR-C format containing the sequences that passed the quality filtering steps.
 
 </details>
 
@@ -278,7 +278,7 @@ A table is generated that retains sequences with concordant locus in the `v_call
 
 - `vdj_annotation/04-select-productive/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*productive-T.tsv*`: Rearrangement table in AIRR-C format, with only productive sequences.
+  - `*productive-T.tsv.gz`: Rearrangement table in AIRR-C format, with only productive sequences.
 
 </details>
 
@@ -291,7 +291,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 - `vdj_annotation/05-select-junction-mod3/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*junction-pass.tsv*`: Rearrangement table in AIRR-C format, with only sequences that have a nucleotide junction length multiple of 3.
+  - `*junction-pass.tsv.gz`: Rearrangement table in AIRR-C format, with only sequences that have a nucleotide junction length multiple of 3.
 
 </details>
 
@@ -302,7 +302,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 - `vdj_annotation/06-annotate-metadata/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*meta-pass.tsv*`: Rearrangement table in AIRR-C format annotated with metadata provided in the starting metadata sheet.
+  - `*meta-pass.tsv.gz`: Rearrangement table in AIRR-C format annotated with metadata provided in the starting metadata sheet.
 
 </details>
 
@@ -315,7 +315,7 @@ Non-functional sequences identified with IgBLAST are removed with [ParseDb](http
 
 - `qc-filtering/bulk-qc-filtering/01-create-germlines/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*germ-pass.tsv`: Rearrangement table in AIRR-C format with an additional
+  - `*germ-pass.tsv.gz`: Rearrangement table in AIRR-C format with an additional
     field with the reconstructed germline sequence for each sequence.
 
 </details>
@@ -329,7 +329,7 @@ Reconstructing the germline sequences with the [CreateGermlines](https://changeo
 
 - `qc-filtering/bulk-qc-filtering/02-chimera-filter/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*chimera-pass.tsv`: Rearrangement table in AIRR-C format sequences that
+  - `*chimera-pass.tsv.gz`: Rearrangement table in AIRR-C format sequences that
     passed the chimera removal filter.
   - `<sampleID>_chimera_report`: Report with plots showing the mutation patterns
 
@@ -345,7 +345,7 @@ the Immcantation R package [SHazaM](https://shazam.readthedocs.io/en/stable/).
 
 - `qc-filtering/bulk-qc-filtering/03-detect_contamination`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
-  - `*cont-flag.tsv`: Rearrangement table in AIRR-C format with sequences that
+  - `*cont-flag.tsv.gz`: Rearrangement table in AIRR-C format with sequences that
     passed the chimera removal filter.
   - `all_reps_cont_report`: Report.
 
@@ -361,7 +361,7 @@ This folder is generated when `detect_contamination` is set to `true`.
 - `qc-filtering/bulk-qc-filtering/04-collapse-duplicates/<sampleID>`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*collapse_report/`: Report.
-    - `repertoires/*collapse-pass.tsv`: Rearrangement table in AIRR-C format with duplicated
+    - `repertoires/*collapse-pass.tsv.gz`: Rearrangement table in AIRR-C format with duplicated
       sequences removed.
 
 </details>
@@ -374,8 +374,9 @@ This folder is generated when `detect_contamination` is set to `true`.
 - `qc-filtering/single-cell-qc/all_reps_scqc_report`
   - `*log.txt`: Log of the process that will be parsed to generate a report.
   - `*all_reps_scqc_report/`: Report.
-    - `*scqc-pass.tsv`: Rearrangement table in AIRR-C format with sequences that
+    - `*scqc-pass.tsv.gz`: Rearrangement table in AIRR-C format with sequences that
       passed the quality filtering.
+    - `*scqc-contaminated.tsv.gz`: Rearrangement table in AIRR-C format containing suspected sequence contaminants across samples, if any are detected.
 
 </details>
 
@@ -432,7 +433,7 @@ Assigning clones to the sequences obtained from IgBlast with the [scoper::hierar
 
 - `clonal_analysis/clonal_assignment/<subjectID>`
   - `*log`: Log of the process that will be parsed to generate a report.
-  - `repertoires/<subjectID>_clone-pass.tsv`: Rearrangement tables in AIRR-C format with sequences that
+  - `repertoires/<subjectID>_clone-pass.tsv.gz`: Rearrangement tables in AIRR-C format with sequences that
     passed the clonal assignment step. The field `clone_id` contains the clonal clusters identifiers.
 
 </details>
@@ -449,7 +450,12 @@ Assigning clones to the sequences obtained from IgBlast with the [scoper::hierar
     - `clonal_diversity.tsv`
     - `clonal_overlap.tsv`
     - `clone_sizes_table.tsv`
-    - `num_clones_table.tsv`
+    - `isotype_Distribution.tsv`, (for BCR)
+    - `num_clones_table.tsv`,
+    - `V_family_usage_byClone.tsv`,
+    - `V_family_usage_bySequence.tsv`,
+    - `V_usage_byClone.tsv`,
+    - `V_usage_bySequence.tsv`
   - `ggplots/`: Abundance, diversity, clonal overlap and mutation frequency plots as `ggplot` objects.
 
 </details>
@@ -475,7 +481,6 @@ Reconstructing clonal lineage with [IgPhyML](https://igphyml.readthedocs.io/en/s
 
 - `repertoire_comparison/`
   - `Sequence_numbers_summary`: contains number of sequences left after each step.
-  - `V_family`: contains V gene and family distribution calculation plots and tables.
 
 </details>
 
@@ -548,7 +553,7 @@ Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQ
 
 </details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+[Nextflow](https://docs.seqera.io/platform-cloud/reports/overview) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
 
 ## Airrflow report
 

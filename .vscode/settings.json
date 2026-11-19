@@ -1,5 +1,5 @@
 {
-    "markdown.styles": ["public/vscode_markdown.css"],
+    "markdown.styles": ["https://nf-co.re/vscode_markdown.css"],
     "cSpell.words": [
         "AIRR",
         "airrc",
@@ -17,6 +17,7 @@
         "igblast",
         "imgt",
         "Immcantation",
+        "isotype",
         "Nextflow",
         "PBMC",
         "samplesheet"

@@ -25,7 +25,7 @@ process CLONAL_ASSIGNMENT {
     output:
     tuple val(meta), path("*/*/*clone-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*/*_command_log.txt"), emit: logs //process logs
-    path "*_report"
+    path "*_report/*"
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
     tuple val("${task.process}"), val('scoper'), eval("Rscript -e \"library(scoper); cat(as.character(packageVersion('scoper')))\""), emit: versions_scoper, topic: versions
 
@@ -57,7 +57,7 @@ process CLONAL_ASSIGNMENT {
                                         'nproc'=${task.cpus}, \\
                                         'log'='${meta.id}_clone_command_log' ${args}))"
 
-    cp -r enchantr ${meta.id}_clone_report && rm -rf enchantr
+    mv enchantr ${meta.id}_clone_report
 
     """
 }

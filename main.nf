@@ -39,6 +39,7 @@ params {
     miairr: String = "$projectDir/assets/reveal/mapping_MiAIRR_BioSample_v1.3.1.tsv"
     index_file: Boolean = false
     save_intermediate_repertoires: Boolean = true
+    save_cellranger_full_output: Boolean = false
 
     // ----------------------------
     // sequencing protocol options

@@ -20,7 +20,7 @@ process SINGLE_CELL_QC {
     output:
     path("*/*/*scqc-pass.tsv.gz"), emit: tab // compressed sequence tsv in AIRR format
     path("*_command_log.txt"), emit: logs //process logs
-    path("*_report"), emit: report
+    path("*_report/*"), emit: report
     tuple val("${task.process}"), val('enchantr'), eval('Rscript -e "library(enchantr); cat(as.character(packageVersion(\'enchantr\')))"'), emit: versions_enchantr, topic: versions
 
     script:
@@ -36,7 +36,7 @@ process SINGLE_CELL_QC {
         'outdir'=getwd(), \\
         'log'='all_reps_scqc_command_log'  ${args} ))"
 
-    cp -r enchantr all_reps_scqc_report && rm -rf enchantr
+    mv enchantr all_reps_scqc_report
 
     """
 }
