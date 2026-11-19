@@ -450,7 +450,7 @@ Assigning clones to the sequences obtained from IgBlast with the [scoper::hierar
     - `clonal_diversity.tsv`
     - `clonal_overlap.tsv`
     - `clone_sizes_table.tsv`
-    - `isotype_Distribution.tsv`, if applicable
+    - `isotype_Distribution.tsv`, (for BCR)
     - `num_clones_table.tsv`,
     - `V_family_usage_byClone.tsv`,
     - `V_family_usage_bySequence.tsv`,
