@@ -376,7 +376,7 @@ This folder is generated when `detect_contamination` is set to `true`.
   - `*all_reps_scqc_report/`: Report.
     - `*scqc-pass.tsv.gz`: Rearrangement table in AIRR-C format with sequences that
       passed the quality filtering.
-    - `*scqc-contaminated.tsv.gz`: Rearrangement table in AIRR-C format containing contaminated sequences, if any are detected.
+    - `*scqc-contaminated.tsv.gz`: Rearrangement table in AIRR-C format containing suspected sequence contaminants across samples, if any are detected.
 
 </details>
 
