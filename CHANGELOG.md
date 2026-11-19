@@ -35,8 +35,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#473](https://github.com/nf-core/airrflow/issues/473) Changed to read and write repertoire files in gzip-compressed format.
 - Changed the mutation frequency calculation region from the whole sequences to by default V region.
-- Removed V gene usage plot from Airrflow_report.html. Added V gene usage and Isotype distribution plots to repertoire analysis report.
-- Added the step to save sequences failed contamination detection in single cell QC.
+- Removed V gene usage plot from Airrflow_report.html. Added V gene usage and isotype distribution plots to repertoire analysis report.
+- Added a step to save sequences flagged as contaminated during single-cell quality control (QC). By default, contamination detection is performed, but contaminated sequences are retained in the repertoire and also saved to separate files.
 - [#508](https://github.com/nf-core/airrflow/issues/508) Restructured the final report.
 - Added descriptions to the steps shown in the two 'Number of sequences' plots.
 - Added the ability to restrict plots in the final report to samples selected in the metadata table.
@@ -108,7 +108,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Fixed`
 
 - [#413](https://github.com/nf-core/airrflow/pull/413) Add amulety versions in multiQC report.
-- [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi worklfow `revpr` parameter.
+- [#413](https://github.com/nf-core/airrflow/pull/413) Fixed bug in sans-umi workflow `revpr` parameter.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Subsample reads for report_threshold process.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Removed a variable that was defined twice.
 - [#416](https://github.com/nf-core/airrflow/pull/416) Renamed define_clones to clonal_assignment.
@@ -153,7 +153,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added embeddings to full size tests.
 - [#379](https://github.com/nf-core/airrflow/pull/379) Added option to skip clonal analysis.
 - [#384](https://github.com/nf-core/airrflow/pull/384) Bumped versions to 4.3.0.
-- [#385](https://github.com/nf-core/airrflow/pull/385) Added trust4 barcodewhitelist parameter
+- [#385](https://github.com/nf-core/airrflow/pull/385) Added trust4 barcode whitelist parameter
 
 ### `Fixed`
 

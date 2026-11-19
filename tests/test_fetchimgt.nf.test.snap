@@ -4,14 +4,14 @@
             27,
             {
                 "ADD_META_TO_TAB": {
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2"
                 },
                 "AIRRFLOW_REPORT": {
                     "DT": "0.34.0",
-                    "R": "4.6.1",
-                    "alakazam": "1.5.0",
+                    "R": "4.6.2",
+                    "alakazam": "1.5.0.999",
                     "dplyr": "1.2.1",
                     "knitr": "1.52",
                     "scales": "1.4.0",
@@ -45,16 +45,16 @@
                     "igblastn": " 1.22.0"
                 },
                 "FILTER_JUNCTION_MOD3": {
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "airr": "2.0.0",
-                    "alakazam": "1.5.0",
+                    "alakazam": "1.5.0.999",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "airr": "2.0.0",
-                    "alakazam": "1.5.0",
+                    "alakazam": "1.5.0.999",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
@@ -698,7 +698,6 @@
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/params.RData",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/reference-keys.txt",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires",
-                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/_scqc-contamination-fail.tsv.gz",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/sc5p_v2_hs_PBMC_1k_5fb__scqc-pass.tsv.gz",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/search_index.json",
                 "repertoire_comparison",
@@ -799,7 +798,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,122703f1b6c4c18666f9f5e8e10f4bad"
         ],
-        "timestamp": "2026-10-28T12:25:51.67321502",
+        "timestamp": "2026-11-18T11:52:43.789652176",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

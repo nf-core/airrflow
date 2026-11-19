@@ -81,9 +81,9 @@ nextflow run nf-core/airrflow \
 --mode fastq \
 --input input_samplesheet.tsv \
 --library_generation_method trust4 \
---umi_read R1 \
---cell_barcode_read R1 \
---read_format bc:0:15,um:16:27 \
+--trust4_umi_read R1 \
+--trust4_cell_barcode_read R1 \
+--trust4_read_format bc:0:15,um:16:27 \
 --outdir results
 ```
 

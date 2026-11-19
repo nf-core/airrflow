@@ -4,14 +4,14 @@
             21,
             {
                 "ADD_META_TO_TAB": {
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2"
                 },
                 "AIRRFLOW_REPORT": {
                     "DT": "0.34.0",
-                    "R": "4.6.1",
-                    "alakazam": "1.5.0",
+                    "R": "4.6.2",
+                    "alakazam": "1.5.0.999",
                     "dplyr": "1.2.1",
                     "knitr": "1.52",
                     "scales": "1.4.0",
@@ -41,16 +41,16 @@
                     "scoper": "1.6.0"
                 },
                 "FILTER_JUNCTION_MOD3": {
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "airr": "2.0.0",
-                    "alakazam": "1.5.0",
+                    "alakazam": "1.5.0.999",
                     "optparse": "1.8.2"
                 },
                 "FILTER_QUALITY": {
                     "DT": "0.34.0",
-                    "R": "4.6.1",
+                    "R": "4.6.2",
                     "airr": "2.0.0",
-                    "alakazam": "1.5.0",
+                    "alakazam": "1.5.0.999",
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
@@ -114,7 +114,6 @@
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/assets/logo.png",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/assets/style.css",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots",
-                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/isotype_distribution_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v-gene-family.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_family_clone_plot.RData",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/ggplots/v_gene_by_clone_plot_TRA.RData",
@@ -128,7 +127,6 @@
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/repertoires/All_samples__repertoire-pass.tsv.gz",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/search_index.json",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables",
-                "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/Isotype_Distribution.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_family_usage_byClone.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_family_usage_bySequence.tsv",
                 "clonal_analysis/repertoire_analysis/repertoire_analysis_report/tables/V_usage_byClone.tsv",
@@ -174,7 +172,6 @@
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/reference-keys.txt",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/Sample1__scqc-pass.tsv.gz",
-                "qc-filtering/single-cell-qc/all_reps_scqc_report/repertoires/_scqc-contamination-fail.tsv.gz",
                 "qc-filtering/single-cell-qc/all_reps_scqc_report/search_index.json",
                 "repertoire_comparison",
                 "repertoire_comparison/Sequence_numbers_summary",
@@ -250,7 +247,7 @@
             ],
             "Table_sequences_assembled.tsv:md5,389b8fbadf0e1a5718e8a18d40f3781e"
         ],
-        "timestamp": "2026-10-30T10:40:56.383949746",
+        "timestamp": "2026-11-18T10:13:16.668411378",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
