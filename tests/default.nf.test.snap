@@ -1,7 +1,7 @@
 {
     "-profile test": {
         "content": [
-            171,
+            172,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -67,6 +67,9 @@
                 },
                 "GUNZIP_UMI": {
                     "gunzip": "1.14"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "MERGE_UMI": {
                     "biopython": "1.81",
@@ -918,10 +921,10 @@
             "Table_sequences_assembled.tsv:md5,7330606135fab6f1bc7c33de4e455512",
             "Table_sequences_assembly.tsv:md5,708c03c18168a00001ae2d590d63a9e9"
         ],
-        "timestamp": "2026-11-18T10:10:46.216823157",
+        "timestamp": "2026-11-19T10:39:35.219435405",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

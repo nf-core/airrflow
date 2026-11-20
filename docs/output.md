@@ -524,6 +524,8 @@ This folder is only present when `--fetch_germlines` is set, for example `--fetc
 
 </details>
 
+By default (`--generate_igblast_aux true`), the IgBLAST `.ndm` and `.aux` auxiliary files are regenerated from this germline reference and replace the ones shipped with IgBLAST. The rebuilt IgBLAST database directory is used by the annotation steps but is not published, so this folder still holds the reference as it was downloaded.
+
 ## MultiQC
 
 <details markdown="1">

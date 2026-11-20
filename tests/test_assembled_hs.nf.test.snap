@@ -1,7 +1,7 @@
 {
     "-profile test_assembled_hs": {
         "content": [
-            33,
+            34,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -65,6 +65,9 @@
                 },
                 "FIND_CLONAL_THRESHOLD": {
                     "enchantr": "0.1.26.999"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "REMOVE_CHIMERIC": {
                     "enchantr": "0.1.26.999"
@@ -364,10 +367,10 @@
             ],
             "Table_sequences_assembled.tsv:md5,0053f605acaef6440d0a17593ce2048f"
         ],
-        "timestamp": "2026-11-18T10:17:29.259983222",
+        "timestamp": "2026-11-19T10:54:28.077756828",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

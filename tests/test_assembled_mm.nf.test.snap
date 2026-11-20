@@ -1,7 +1,7 @@
 {
     "-profile test_assembled_mm": {
         "content": [
-            21,
+            22,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -58,6 +58,9 @@
                 },
                 "FIND_CLONAL_THRESHOLD": {
                     "enchantr": "0.1.26.999"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "REPERTOIRE_ANALYSIS": {
                     "enchantr": "0.1.26.999"
@@ -251,27 +254,27 @@
             ],
             [
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "mouse_x_clone_command_log.txt:md5,4668385a1e4bac7c04abf5e8a830e083",
-                "mouse_x_dowser_command_log.txt:md5,5f685c591f48be13a4ef7b52727a8fcd",
+                "mouse_x_clone_command_log.txt:md5,53c0da9fe18ec1e7df0e223378f521e7",
+                "mouse_x_dowser_command_log.txt:md5,64531250d95d11c3217d9a488e864bff",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,3e9ba139cd829e9f6639e29760c5cd57",
-                "all_reps_clone_command_log.txt:md5,68dd44e05cb15eeb5e2695c324ab0367",
+                "all_reps_threshold_command_log.txt:md5,31d376bfe3d6054716b63c74f5a16195",
+                "all_reps_clone_command_log.txt:md5,b5b0f37364b3b366f3422d90620ae504",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "all_reps_scqc_command_log.txt:md5,d7ac8dc3246d1cb483ecc05bf377a676",
+                "all_reps_scqc_command_log.txt:md5,fafec337490b95d0fbafb43c52b303eb",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sc5p_v2_mm_c57bl6_splenocyte_1k_b_fq_command_log.txt:md5,e148f52ce5e30f26fd58e4ab55830c7f",
-                "sc5p_v2_mm_c57bl6_splenocyte_1k_b_jmod3_command_log.txt:md5,b829ed663f6e8890c2726b826feef5c3",
-                "sc5p_v2_mm_c57bl6_splenocyte_1k_b_add-meta_command_log.txt:md5,ce560dd7031099b47b06389c50684249"
+                "sc5p_v2_mm_c57bl6_splenocyte_1k_b_fq_command_log.txt:md5,5eb5baa6b5591438759afb9aa81a2c6d",
+                "sc5p_v2_mm_c57bl6_splenocyte_1k_b_jmod3_command_log.txt:md5,8d0849f7eb77a4f1896247cf77a4df29",
+                "sc5p_v2_mm_c57bl6_splenocyte_1k_b_add-meta_command_log.txt:md5,a8891c87a67744d479518b427d33091d"
             ],
-            "Table_sequences_assembled.tsv:md5,fa2a115a49801b12ff26c8e64cae061a"
+            "Table_sequences_assembled.tsv:md5,ed1601e4d115517e244c8e51fe9663c8"
         ],
-        "timestamp": "2026-11-18T10:21:45.586222273",
+        "timestamp": "2026-11-19T11:08:14.255572099",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

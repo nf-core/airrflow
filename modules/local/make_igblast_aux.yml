@@ -1,0 +1,10 @@
+# receptor-utils is on PyPI only, and an inline conda directive cannot install pip packages.
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::blast=2.17.0
+  - conda-forge::python=3.11
+  - conda-forge::pip
+  - pip:
+      - receptor-utils==0.0.67

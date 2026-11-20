@@ -1,7 +1,7 @@
 {
     "-profile test_genotyping": {
         "content": [
-            48,
+            49,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -62,6 +62,9 @@
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "NOVEL_ALLELE_INFERENCE": {
                     "enchantr": "0.1.26.999",
@@ -511,10 +514,10 @@
             ],
             [
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_A_clone_command_log.txt:md5,f19ba5a233bceaa3435542c6ef1e8f44",
+                "subject_A_clone_command_log.txt:md5,0c15c31b7894d1c378712cbc9217ea8f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subject_B_clone_command_log.txt:md5,f31f723a777a3cbefdbc4fd1a3fd240a",
-                "all_reps_clone_command_log.txt:md5,4d7eb9771dae1553ce149729ad2fc1c8",
+                "subject_B_clone_command_log.txt:md5,64f267dd2e51819aaa59d3c95b0996c6",
+                "all_reps_clone_command_log.txt:md5,68af746ebbb657a29da384d54d9e7df9",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
@@ -533,29 +536,29 @@
                 "subject_B_bayesian_genotype_inference_command_log.txt:md5,e15dd8c5f530934e1743ad8ddcefc923",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "subject_B_reassign_alleles_command_log.txt:md5,6b704a7431b7a23ccee2b22d57f1ac8b",
-                "sample_A_collapse_command_log.txt:md5,571b92a502b1b833f560fe8edb1d2f7a",
+                "sample_A_collapse_command_log.txt:md5,024e4a4140d63c433a2c34a6d51556d0",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sample_B_collapse_command_log.txt:md5,8983abaa46da7c1c89a4b9c69ca2542e",
+                "sample_B_collapse_command_log.txt:md5,8b4819e93700ad7eb2ef76c48318eb91",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sample_C_collapse_command_log.txt:md5,70f5ad10a00b5e0732d322bf14a0a54d",
+                "sample_C_collapse_command_log.txt:md5,8a8af8ed3d2210a7c48f47d2f85c9bb6",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "sample_A_fq_command_log.txt:md5,366d8088772d4e5474c76a77c08f6051",
-                "sample_B_fq_command_log.txt:md5,c147d91eaccf64b3154851a0c31b2cc1",
-                "sample_C_fq_command_log.txt:md5,733f417406bd42d40bbdcff730b1cee5",
-                "sample_A_jmod3_command_log.txt:md5,c0cd0ed52ef7b173a513c4a989492f62",
-                "sample_B_jmod3_command_log.txt:md5,ffd5a88c5ba259a7e161408bdc082d62",
-                "sample_C_jmod3_command_log.txt:md5,5a6166467f1577e64b0faac10e0b3035",
-                "sample_A_add-meta_command_log.txt:md5,86e018778fd47122539971cbbd4004cb",
-                "sample_B_add-meta_command_log.txt:md5,d4da2cb60817e86b27d01dc5f9aa4caa",
-                "sample_C_add-meta_command_log.txt:md5,a54b4da4712bb3dcd5aa0bbcaaaa1435"
+                "sample_A_fq_command_log.txt:md5,9f21410dfd866c973ba9b9a90f7fde25",
+                "sample_B_fq_command_log.txt:md5,e750c2f496b222f7777c9d473cc9f03f",
+                "sample_C_fq_command_log.txt:md5,f129759b0433a886bad8594c438884bd",
+                "sample_A_jmod3_command_log.txt:md5,5b08ba0cc7760587d8874f7aad29e44e",
+                "sample_B_jmod3_command_log.txt:md5,4aa2baa10412491ef4dcb28b6f512129",
+                "sample_C_jmod3_command_log.txt:md5,98d5e7c7ac141ed0302eb4590b4e5eeb",
+                "sample_A_add-meta_command_log.txt:md5,2ebcf6f7d51644174e0554483af5d75d",
+                "sample_B_add-meta_command_log.txt:md5,c6ecc7b9bdcf41a7f99f95774cd63ba2",
+                "sample_C_add-meta_command_log.txt:md5,1c2e0232fa42cef5295eddfd44f796b6"
             ],
-            "Table_sequences_assembled.tsv:md5,b9d360d0d4ba37b485e4542ff6281fcd"
+            "Table_sequences_assembled.tsv:md5,c07ea071c06b4dade012a50720d8c849"
         ],
-        "timestamp": "2026-11-18T12:11:05.482878079",
+        "timestamp": "2026-11-19T13:18:38.243605903",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

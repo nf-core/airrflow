@@ -2,6 +2,7 @@ include { FETCH_DATABASES } from '../../modules/local/fetch_databases'
 include { UNZIP_DB as UNZIP_IGBLAST } from '../../modules/local/unzip_db'
 include { UNZIP_DB as UNZIP_REFERENCE_FASTA } from '../../modules/local/unzip_db'
 include { VALIDATE_IGBLAST_DB } from '../../modules/local/validate_igblast_db'
+include { MAKE_IGBLAST_AUX } from '../../modules/local/make_igblast_aux'
 
 workflow DATABASES {
 
@@ -9,10 +10,15 @@ workflow DATABASES {
     fetch_germlines
     reference_igblast
     reference_fasta
+    generate_igblast_aux
 
     main:
 
-    if( fetch_germlines == "none"){
+    // Only --reference_fasta given: build the IgBLAST database from it.
+    def build_igblast = fetch_germlines == "none" && !reference_igblast
+    ch_igblast = channel.value([])
+
+    if( fetch_germlines == "none" && !build_igblast ){
         if (reference_igblast.endsWith(".zip")) {
             channel.fromPath("${reference_igblast}")
                     .ifEmpty{ error "IGBLAST DB not found: ${reference_igblast}" }
@@ -47,6 +53,17 @@ workflow DATABASES {
         FETCH_DATABASES(channel.value(fetch_germlines))
         ch_igblast = FETCH_DATABASES.out.igblast
         ch_reference_fasta = FETCH_DATABASES.out.reference_fasta
+    }
+
+    // Replace the stock NCBI .ndm / .aux files with ones derived from the
+    // germline reference actually in use. The boundaries and reading frames they
+    // encode are germline-set specific, so the shipped files mis-annotate a
+    // custom reference.
+    // A database built from the FASTA has no internal_data/ or optional_file/, so
+    // the aux files are always generated for it.
+    if (generate_igblast_aux || build_igblast) {
+        MAKE_IGBLAST_AUX(ch_igblast, ch_reference_fasta)
+        ch_igblast = MAKE_IGBLAST_AUX.out.igblast
     }
 
     emit:

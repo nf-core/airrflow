@@ -1,7 +1,7 @@
 {
     "-profile test_rnaseq_bulk": {
         "content": [
-            24,
+            25,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -63,6 +63,9 @@
                     "dplyr": "1.2.1",
                     "optparse": "1.8.2",
                     "stringi": "1.8.9"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "PREPARE_TRUST4_REFERENCE": {
                     "cat": "8.30"
@@ -347,10 +350,10 @@
             ],
             "Table_sequences_assembled.tsv:md5,025f970900bca7a66881543d46a02e2e"
         ],
-        "timestamp": "2026-11-18T12:38:52.317988689",
+        "timestamp": "2026-11-19T15:03:31.538849888",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

@@ -1,7 +1,7 @@
 {
     "-profile test_rnaseq_sc": {
         "content": [
-            24,
+            25,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -61,6 +61,9 @@
                 "GET_READS_PER_UMI": {
                     "pandas": "1.1.5",
                     "python": " 3.9.1"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "PREPARE_TRUST4_REFERENCE": {
                     "cat": "8.30"
@@ -335,7 +338,7 @@
                 "multiqc_fastp.txt:md5,9613dcf590fd9d6c7b21c327ff4cd97c",
                 "multiqc_general_stats.txt:md5,61a6bb0e59eadbd3b23d8578d25120ce",
                 "trust4_reference.fa:md5,a2bd1e99b52d42c49776f55aef6cb00c",
-                "all_reps_scqc_command_log.txt:md5,1bf0fb86378cb3c9e6ac43ca322b40ec",
+                "all_reps_scqc_command_log.txt:md5,a1682e18267b9ef43d215360d625b05d",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "sc_test_annot.fa:md5,04f8a52551c98da7f3ee5773611ce66e",
@@ -347,15 +350,15 @@
                 "sc_test_toassemble_2.fq:md5,8ba052f0f9267f971c2cb72b64d4aaea",
                 "sc_test_toassemble_bc.fa:md5,7b8b48c4b911d2592547fad59db0dc88",
                 "sc_test_toassemble_umi.fa:md5,6bcafacbf87c8bc5b04360a65a2bdbaa",
-                "sc_test_fq_command_log.txt:md5,8d4c44a8b47b328cff6c2888531b3c41",
-                "sc_test_jmod3_command_log.txt:md5,72d49765360c9a587319023277ba7d8e",
-                "sc_test_add-meta_command_log.txt:md5,b437227e744925bdbe1a563136fd147a"
+                "sc_test_fq_command_log.txt:md5,551756d47ad2d5763800a817af9e830f",
+                "sc_test_jmod3_command_log.txt:md5,19286a2f1c30348506668ce4b6dbb113",
+                "sc_test_add-meta_command_log.txt:md5,03c164856895fc4f989a684f21b4e0bc"
             ],
-            "Table_sequences_assembled.tsv:md5,2e180748d1ffadf7617dbd06c9426138"
+            "Table_sequences_assembled.tsv:md5,45813dd5c9d7a9f9e1d0d1a9dbcd0728"
         ],
-        "timestamp": "2026-11-18T12:41:31.487616077",
+        "timestamp": "2026-11-20T14:54:18.401432755",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.4",
             "nextflow": "26.04.4"
         }
     }

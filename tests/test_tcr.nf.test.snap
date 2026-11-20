@@ -1,7 +1,7 @@
 {
     "-profile test_tcr": {
         "content": [
-            65,
+            66,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -60,6 +60,9 @@
                 },
                 "GUNZIP_UMI": {
                     "gunzip": "1.14"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "PARSE_LOGS": {
                     "pandas": "1.1.5",
@@ -529,34 +532,34 @@
             [
                 "Patient1_clone_command_log.txt:md5,593bd12c5baa68dabbb91769c9147e3e",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Patient2_clone_command_log.txt:md5,df975d73b4527c45b5e901a31a795d35",
+                "Patient2_clone_command_log.txt:md5,a813734cebfb4410732a6418c8bc5dd8",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_clone_command_log.txt:md5,b1e335720db3557ab518d47a2b3aad6e",
+                "all_reps_clone_command_log.txt:md5,ff1aed254df54739a7647fb89b25eeca",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,055f2853529d4376bf7339fcd199c352",
+                "all_reps_threshold_command_log.txt:md5,516f1a5b8e8f05b3bd42854da8ded59f",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,28c34e6b9565b940d10e5afe549bd425",
                 "multiqc_fastqc_fastqc-1.txt:md5,60cde1beac3b5cee601b9887f7685b4f",
                 "multiqc_general_stats.txt:md5,67023d95757a2698c986ae7298ff5df6",
                 "Sample1_collapse_command_log.txt:md5,b4beb2266707f000436f65c63a488f9b",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "Sample2_collapse_command_log.txt:md5,5bd97edcc30e5ce8c91d54362ed40f9c",
+                "Sample2_collapse_command_log.txt:md5,53ba5f65658c8dc5db465c32a0a6b3db",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "Sample1_fq_command_log.txt:md5,dcfe70ee5186a4fa256cafa290907772",
                 "Sample2_fq_command_log.txt:md5,f667ab1f95231399c45aa1561d5076ed",
                 "Sample1_jmod3_command_log.txt:md5,42352186e2ccb2c95f3dddd5d7b228b8",
-                "Sample2_jmod3_command_log.txt:md5,bd1bde1e2afac521f60ec7898d26f0da",
+                "Sample2_jmod3_command_log.txt:md5,b35d8f417752ff9fb49803b2650f0668",
                 "Sample1_add-meta_command_log.txt:md5,f30418b320cf77c745c8d2a0c8c04fce",
-                "Sample2_add-meta_command_log.txt:md5,07d6a2f6d8e841ef49105a0a48c8aebf"
+                "Sample2_add-meta_command_log.txt:md5,01282a5ba16611ef9d963d4fbde8bd6f"
             ],
-            "Table_sequences_assembled.tsv:md5,b772b1d8da1ab5ca4f3991705a43bb57",
+            "Table_sequences_assembled.tsv:md5,dbe38d6dcb016b19638e20085caf2b7d",
             "Table_sequences_assembly.tsv:md5,f6e4d87dcfc9ae96b300a5ba31b91975"
         ],
-        "timestamp": "2026-11-18T12:50:19.560258161",
+        "timestamp": "2026-11-20T15:12:03.091982808",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.4",
             "nextflow": "26.04.4"
         }
     }

@@ -593,6 +593,116 @@ nextflow run nf-core/airrflow \
 - If UMI's are present, the read containing them must be specified using the `--trust4_umi_read` parameter.
 - The `--trust4_read_format` parameter can be used to specify the Cell Barcode and UMI position within the reads (see TRUST4 [docs](https://github.com/liulab-dfci/TRUST4?tab=readme-ov-file#10x-genomics-data-and-barcode-based-single-cell-data)). For scRNA-seq with 10X Genomics the R1 read usually contains both the cell barcode (barcode) and UMI. So we specify "R1" for both `--trust4_umi_read` and `--trust4_cell_barcode_read`, and the positions of both the cell barcode and UMI with the `--trust4_read_format` parameter as in the example ("bc:0:15,um:16:27"). Then specify the R1 read in the filename_R1 column of the samplesheet, and the read containing the actual sequence (usually R2) in the filename_R2 column of the samplesheet.
 
+## Germline reference options
+
+The germline reference is what every V(D)J assignment is made against, so it is worth
+being explicit about which one a run used. There are three ways to supply it.
+
+| Option                            | Parameters                                           | Scope       | Status    |
+| --------------------------------- | ---------------------------------------------------- | ----------- | --------- |
+| Cached reference bundle (default) | none                                                 | all samples | supported |
+| Fetch at runtime                  | `--fetch_germlines imgt` or `airrc-imgt`             | all samples | supported |
+| Your own custom reference         | `--reference_fasta` (`--reference_igblast` optional) | all samples | supported |
+
+By default (`--generate_igblast_aux true`), the IgBLAST `.ndm`/`.aux` files and the
+`internal_data` V database are rebuilt from the germline reference in use, for every option
+above. See [Germline reference auxiliary files](#germline-reference-auxiliary-files).
+
+### The cached reference bundle (default)
+
+When neither `--reference_fasta` nor `--reference_igblast` is given, the pipeline uses a
+pre-built IMGT bundle: `imgtdb_base.zip` (the germline FASTAs) and `igblast_base.zip`
+(the IgBLAST databases built from them). Both parameters accept a `.zip` or an
+unpacked directory. Because these are pinned files rather than a live download, two runs
+months apart give the same assignments.
+
+### Fetching the reference at runtime
+
+`--fetch_germlines imgt` or `--fetch_germlines airrc-imgt` downloads and builds the
+reference at the start of the run instead, the latter overlaying the AIRR-C set on IMGT.
+This always takes the current upstream release, so record which release a result came
+from: the built reference is published under `<outdir>/germline_reference/` when
+`--save_germlines` is set.
+
+### Supplying your own reference for all samples
+
+`--reference_fasta` also accepts a reference you built yourself
+— an OGRDB set, a curated in-house set, or a set exported from a database such as HUSA.
+It replaces IMGT for **every** sample in the run. This is the right option for "annotate
+everything against my reference"; it needs no samplesheet change.
+
+```bash
+nextflow run nf-core/airrflow \
+--input samplesheet.tsv \
+--reference_fasta my_reference_base.zip \
+--outdir results
+```
+
+Without `--reference_igblast`, the IgBLAST database, including the `.ndm`/`.aux` files
+and the `internal_data` V database, is built from the FASTAs at the start of the run.
+If you already have an IgBLAST database for the same FASTAs, pass it with `--reference_igblast`
+to skip the build.
+
+The directories must be laid out as the pipeline's own bundles are:
+
+- `reference_fasta`: `<species>/vdj/<prefix>_<species>_<CHAIN>.fasta`, with the V
+  sequences IMGT-gapped, plus `<species>/constant/<prefix>_<species>_<CHAIN>C.fasta`
+  for the constant regions. `<CHAIN>` is `IGHV`, `IGHD`, `IGHJ`, `IGKV` and so on.
+- `reference_igblast` (optional): `database/`, `fasta/`, `internal_data/` and
+  `optional_file/`. `bin/ref2igblast.sh` builds `database/` and `fasta/` from the tree
+  above; `bin/make_igblast_aux.py` builds `internal_data/` and `optional_file/`.
+
+Three things are easy to get wrong:
+
+- **Constant regions.** `AssignGenes.py` always passes a C-region database to IgBLAST.
+  If the reference has no `<species>/constant/` regions for a class (IG or TR), IMGT's are
+  downloaded during validation, with a warning in the task log; this needs network access.
+  Provide your own to avoid it.
+- **Keep `--generate_igblast_aux true` (the default) for any reference whose allele
+  names are not IMGT's.** IgBLAST resolves a V hit's chain type through files that ship as NCBI's IMGT
+  mirror; an allele missing from them gets no chain type, and IgBLAST then returns the V
+  call with **no D and no J at all**. This fails silently rather than erroring — see
+  [Germline reference auxiliary files](#germline-reference-auxiliary-files).
+- **Allele names must be bare**, such as `IGHV1-18*01`, not full pipe-delimited IMGT
+  headers. The source prefix itself is free: `imgt_`, `airrc_` or your own.
+
+## Germline reference auxiliary files
+
+IgBLAST needs three germline-specific assets per species alongside the BLAST databases themselves:
+
+- `internal_data/<species>/<species>.ndm.imgt` — the FWR/CDR boundaries of every V gene.
+- `optional_file/<species>_gl.aux` — the reading frame of every J gene and the position of the conserved PHE/TRP that closes CDR3.
+- `internal_data/<species>/<species>_V` — the database IgBLAST uses to resolve a V hit's chain type.
+
+All three are derived from a particular germline set: the `.ndm` and `.aux` files encode coordinates, and the `_V` database holds the alleles themselves. The copies NCBI ships with IgBLAST were derived from NCBI's own reference, so using them with a custom germline reference (for example one supplied with `--reference_fasta`) can mis-annotate the region boundaries and the J reading frames, or leave V hits without a chain type.
+
+By default (`--generate_igblast_aux true`), all three are rebuilt from the germline reference actually in use before the annotation steps run. The reference is read per chain from the IMGT-gapped V and J FASTAs under `<reference>/<species>/vdj/`, one `.ndm` per V chain and one `.aux` per J chain, which are then merged into the single per-species file IgBLAST expects. The regenerated files replace the shipped ones inside the IgBLAST database directory; nothing else in that directory is touched, and other species keep their shipped files.
+
+:::warning
+The chain-type database is the one that fails silently. If a V allele is not in it,
+IgBLAST reports the V call with the chain type unset and then skips the D and J search
+entirely, so every record is dropped downstream with no error naming the cause. Any
+reference whose allele names are not IMGT's needs `--generate_igblast_aux true`, the default.
+:::
+
+The same operation applies whether the reference is the cached bundle, came from `--fetch_germlines`, or from `--reference_fasta`/`--reference_igblast`. To use the files shipped with IgBLAST unchanged and skip the extra process, set `--generate_igblast_aux false`. A database built from `--reference_fasta` alone has no shipped files, so it always gets generated ones.
+
+```bash
+nextflow run nf-core/airrflow \
+--input samplesheet.tsv \
+--fetch_germlines imgt \
+--generate_igblast_aux false \
+--outdir results
+```
+
+:::note
+The files are generated with the [receptor_utils](https://pypi.org/project/receptor_utils/) package (`make_igblast_ndm` and `annotate_j`). `receptor_utils` is pip-only and is not in the default nf-core/airrflow image or on bioconda, and rebuilding the chain-type database additionally needs `makeblastdb`, so the `MAKE_IGBLAST_AUX` process runs in its own container carrying both. With `-profile conda`, it uses a conda environment that installs `receptor_utils` from PyPI.
+:::
+
+:::note
+The allele names in the germline reference must be plain allele names such as `IGHV1-18*01`, which is what the reference bundles the pipeline builds contain. The chain type recorded in the `.aux` file is derived from the allele name, so full pipe-delimited IMGT FASTA headers would produce incorrect annotations.
+:::
+
 ## Important considerations for novel allele detection and genotyping
 
 A key step in analyzing BCR sequences involves assigning the germline V, D and J gene alleles to each sequence by matching against a database of known germline V(D)J alleles. However, analyzed individuals can have alleles not present in the databases (novel alleles), which if undetected can inflate the SHM rates. Additionally, genotyping, i.e. identifying the set of alleles that an individual carries for each gene, can help correct ambiguous V(D)J assignments for individual sequences.

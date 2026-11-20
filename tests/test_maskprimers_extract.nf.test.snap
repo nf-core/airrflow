@@ -1,7 +1,7 @@
 {
     "-profile test_maskprimers_extract": {
         "content": [
-            163,
+            164,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -63,6 +63,9 @@
                 },
                 "GUNZIP_UMI": {
                     "gunzip": "1.14"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "MERGE_UMI": {
                     "biopython": "1.81",
@@ -891,10 +894,10 @@
             "Table_sequences_assembled.tsv:md5,503cd5e38ed0a4146337fd4c9e14eb0a",
             "Table_sequences_assembly.tsv:md5,e90cd20af727b5f94a8b48a6c274434e"
         ],
-        "timestamp": "2026-11-18T12:21:01.733653502",
+        "timestamp": "2026-11-19T13:57:27.566233869",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }

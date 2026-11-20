@@ -1,7 +1,7 @@
 {
     "-profile test_takara_smartseq_umi_bcr": {
         "content": [
-            35,
+            36,
             {
                 "ADD_META_TO_TAB": {
                     "R": "4.6.2",
@@ -60,6 +60,9 @@
                 },
                 "GUNZIP_UMI": {
                     "gunzip": "1.14"
+                },
+                "MAKE_IGBLAST_AUX": {
+                    "receptor_utils": "0.0.67"
                 },
                 "PARSE_LOGS": {
                     "pandas": "1.1.5",
@@ -438,29 +441,29 @@
             ],
             [
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "subj1_clone_command_log.txt:md5,634b7424b18d6a3797de61255aa2af3c",
-                "all_reps_clone_command_log.txt:md5,7caffd218440df3860ce8239542aa4eb",
+                "subj1_clone_command_log.txt:md5,f5e7090ff7f4c52f5940d1b19faf3c9a",
+                "all_reps_clone_command_log.txt:md5,d6c098a791d4ea6d1a546549aef3a5e8",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "all_reps_threshold_command_log.txt:md5,1e28a8bbd00d6d4bf5b376a7c5118a5d",
+                "all_reps_threshold_command_log.txt:md5,0fdf98da99009e6439086e038d11986b",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,e581aa65862e771176ff3d0009307a47",
                 "multiqc_fastqc_fastqc-1.txt:md5,bc0f191959124224eeda8c30f574a7c4",
                 "multiqc_general_stats.txt:md5,4f7ef3dad501c4c480a7c49158429052",
-                "SRR23055142_collapse_command_log.txt:md5,660596ddd94161d4cbf091f72143d860",
+                "SRR23055142_collapse_command_log.txt:md5,d24ace8c0bc3df6ce18cb17910dcdd5f",
                 "style.css:md5,d0833d790556369103776a429102fedf",
                 "style.css:md5,d0833d790556369103776a429102fedf",
-                "SRR23055142_fq_command_log.txt:md5,a85715123b98bbd33e937d7eb2987898",
-                "SRR23055142_jmod3_command_log.txt:md5,9807ce41ec1c324c872a59a076f5fc03",
-                "SRR23055142_add-meta_command_log.txt:md5,8da10781813436c6edd47ae83e801761"
+                "SRR23055142_fq_command_log.txt:md5,9760aa9d9abcafc0b1040dbf8f88b3a9",
+                "SRR23055142_jmod3_command_log.txt:md5,905e17d2141765f86bc3772f2a8543b1",
+                "SRR23055142_add-meta_command_log.txt:md5,1e3cc4ed695eb41ac6429de4d1bae179"
             ],
-            "Table_sequences_assembled.tsv:md5,964556082c8a25a54cc208f760e9fb1a",
+            "Table_sequences_assembled.tsv:md5,6ad486127ea29c1beb309e5bc661dc4f",
             "Table_sequences_assembly.tsv:md5,f06b8b387afc6afc7ca99494554691fc"
         ],
-        "timestamp": "2026-11-18T12:46:52.535055591",
+        "timestamp": "2026-11-19T15:32:19.22672513",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
         }
     }
 }
