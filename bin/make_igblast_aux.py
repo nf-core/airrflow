@@ -71,6 +71,13 @@ def parse(path):
     return header, [l for l in lines if l.strip() and not l.startswith("#")]
 
 
+def first_per_allele(rows):
+    # Alleles shared by TRA and TRD (TRAV29/DV5) are in both the TRAV and TRDV FASTAs.
+    # Keep the TRAV row (VA), as NCBI's file does; a VD row sets locus TRD for TRAJ hits.
+    seen = set()
+    return [r for r in rows if not (r.split("\t")[0] in seen or seen.add(r.split("\t")[0]))]
+
+
 def build(vdj, work, cdr_coords):
     ndm_header, aux_header, ndm, aux = "", "", [], []
     fasta, out = work / "in.fasta", work / "out"
@@ -80,7 +87,7 @@ def build(vdj, work, cdr_coords):
             out.unlink(missing_ok=True)
             aux_formats.ndm_from_fasta(str(cleaned(ref, fasta)), str(out), code, cdr_coords)
             header, rows = parse(out)
-            ndm_header, ndm = ndm_header or header, ndm + rows
+            ndm_header, ndm = ndm_header or header, first_per_allele(ndm + rows)
     for chain in J_CHAINS:
         for ref in sorted(vdj.glob(f"*_{chain}.fasta")):
             out.unlink(missing_ok=True)
@@ -114,6 +121,8 @@ def self_test():
     import tempfile
     assert allele_name("J00256|IGHJ1*01|Homo_sapiens|F|J-REGION|723..774|52") == "IGHJ1*01"
     assert allele_name("IGHJ1*01") == "IGHJ1*01"
+    assert first_per_allele(["TRAV29/DV5*01\t1\tVA", "TRBV1*01\t1\tVB", "TRAV29/DV5*01\t1\tVD"]) == \
+        ["TRAV29/DV5*01\t1\tVA", "TRBV1*01\t1\tVB"]
     assert allele_name("IGHV1-18*01 nt|1|") == "IGHV1-18*01"
     assert ungapped({"IGHV1-2*01": "CAG...GTG", "X|IGHV1-3*01|": "CAGGTG"}) == ["IGHV1-3*01"]
     with tempfile.TemporaryDirectory() as tmp:
